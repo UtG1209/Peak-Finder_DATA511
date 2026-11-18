@@ -1,0 +1,5 @@
+# Tested with Python 3.13 (3.10+ should work)
+networkx==3.7       # trail graph + shortest path
+numpy==2.5.3        # elevation tile maths
+Pillow==12.3.0      # read/write PNG/JPEG tiles, resize photos
+requests==2.34.2    # downloads

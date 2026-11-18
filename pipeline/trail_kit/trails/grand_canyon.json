@@ -1,0 +1,414 @@
+{
+  "id": "grand_canyon",
+  "title": "Bright Angel Trail: Rim to River",
+  "brand": "When to Go · Trail test",
+  "map_label": "3D view of the Grand Canyon following the hiker down the Bright Angel Trail to the Colorado River",
+  "park": "Grand Canyon National Park, Arizona",
+  "start": {
+    "name": "Bright Angel Trailhead (South Rim)",
+    "lat": 36.0572825,
+    "lon": -112.1436308
+  },
+  "end": {
+    "name": "Phantom Ranch",
+    "lat": 36.1058,
+    "lon": -112.0946
+  },
+  "gap_bridge_m": 50,
+  "osm_bbox": [
+    -112.152,
+    36.05,
+    -112.088,
+    36.112
+  ],
+  "bounds": {
+    "wide": [
+      -112.25,
+      35.97,
+      -111.97,
+      36.19
+    ],
+    "mid": [
+      -112.18,
+      36.01,
+      -112.05,
+      36.14
+    ],
+    "core": [
+      -112.154,
+      36.05,
+      -112.086,
+      36.114
+    ],
+    "corridor_m": 1000
+  },
+  "camera": {
+    "pitch": 45,
+    "zoom": 15.3,
+    "scroll_vh": 6500,
+    "heading_window_m": [
+      500,
+      1200
+    ]
+  },
+  "profile_labels": {
+    "start": "South Rim",
+    "end": "Phantom Ranch",
+    "key_stop": {
+      "label": "Indian Garden",
+      "at_m": 7640
+    }
+  },
+  "stops": [
+    {
+      "at": 0.005,
+      "photo": "vista_rim",
+      "commons_file": "Last light in the Canyon. (51429129959).jpg",
+      "alt": "Layered red cliffs of the Grand Canyon glowing in the last light of the day",
+      "eyebrow": "Start · South Rim · {elev}",
+      "title": "The edge of the canyon",
+      "text": "You start on the rim, with the whole canyon below you. The trail drops {gain} to the Colorado River, and every step down is a step back up.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "spring": "vista_rim_spring",
+        "autumn": "vista_rim",
+        "winter": "vista_rim_winter"
+      },
+      "season_text": {
+        "winter": {
+          "text": "The rim sits at about 2,100 m (6,900 ft), so it gets real winter: snow and ice can lie on the first part of the trail even when the river is warm. Many hikers carry traction on the upper trail in winter."
+        }
+      }
+    },
+    {
+      "at": 0.149,
+      "photo": "buttes",
+      "commons_file": "Grand Canyon National Park, Sunset From Bright Angel Trail 3379 - Flickr - Grand Canyon NPS.jpg",
+      "alt": "Red and orange buttes glowing at sunset under a dramatic sky, seen from the Bright Angel Trail",
+      "eyebrow": "Views from the trail",
+      "title": "Buttes at sunset",
+      "text": "Across the canyon, each butte and ridge glows a different shade of red as the sun drops.",
+      "season_photos": {
+        "spring": "buttes",
+        "summer": "buttes_summer",
+        "autumn": "buttes_autumn",
+        "winter": "buttes_winter"
+      },
+      "season_text": {
+        "winter": {
+          "title": "Buttes above the snow",
+          "text": "Across the canyon, each butte and ridge shows a different shade of red. In winter, snow and ice can linger on the upper trail."
+        }
+      }
+    },
+    {
+      "at": 0.233,
+      "photo": "ladder",
+      "commons_file": "408 Bright Angel Trail - Grand Canyon - Jacob's Ladder (4753750420).jpg",
+      "alt": "Switchbacks of Jacob's Ladder cut into the canyon wall",
+      "eyebrow": "The switchbacks",
+      "title": "Jacob's Ladder",
+      "text": "Tight switchbacks cut into the canyon wall, one of the best-known landmarks of the trail.",
+      "season_photos": {
+        "spring": "ladder_spring",
+        "summer": "ladder",
+        "winter": "ladder_winter"
+      },
+      "season_text": {
+        "winter": {
+          "text": "The long switchbacks below the rim are the part that holds snow and ice in winter. Go slowly: it is steep, and everything you descend you have to climb back."
+        }
+      }
+    },
+    {
+      "at": 0.308,
+      "photo": "threemile",
+      "commons_file": "201003 3573 Bright Angel Trail - 3 Mile Resthouse. (4753113083).jpg",
+      "alt": "The stone 3-Mile Resthouse on the Bright Angel Trail below the rim",
+      "eyebrow": "3-Mile Resthouse · {elev}",
+      "title": "The second resthouse",
+      "text": "Another stone shelter with seasonal water. Indian Garden is still ahead, and so is the climb back.",
+      "elev_at_m": 4850,
+      "season_photos": {
+        "spring": "threemile",
+        "summer": "threemile_summer",
+        "winter": "threemile_winter"
+      }
+    },
+    {
+      "at": 0.435,
+      "photo": "inner",
+      "commons_file": "The Battleship - Flickr - brewbooks (2).jpg",
+      "alt": "A rocky butte rising from the inner canyon under a hazy sky",
+      "eyebrow": "Inner canyon",
+      "title": "Buttes above the trail",
+      "text": "Down here the buttes rise above you, and the rim is far overhead.",
+      "season_photos": {
+        "spring": "inner_spring",
+        "summer": "inner",
+        "winter": "inner_winter"
+      }
+    },
+    {
+      "at": 0.485,
+      "photo": "oasis",
+      "commons_file": "Grand Canyon National Park Indian Garden 3511 (6063712657).jpg",
+      "alt": "A shaded shelter among green trees at Indian Garden, with red cliffs behind",
+      "eyebrow": "Halfway · Indian Garden · {elev}",
+      "title": "Indian Garden",
+      "text": "Green cottonwoods in the middle of the desert, in the oasis NPS now calls Havasupai Gardens. The river is still about 3 miles ahead.",
+      "elev_at_m": 7640,
+      "season_photos": {
+        "spring": "oasis",
+        "summer": "oasis_summer",
+        "autumn": "oasis_autumn",
+        "winter": "oasis_winter"
+      }
+    },
+    {
+      "at": 0.619,
+      "photo": "corkscrew",
+      "commons_file": "Grand Canyon NP- Bright Angel Trail - Devil's Corkscrew 50247 (52028292714).jpg",
+      "alt": "Switchbacks of Devil's Corkscrew dropping into the inner gorge below Indian Garden",
+      "eyebrow": "Inner gorge",
+      "title": "Devil's Corkscrew",
+      "text": "Below Indian Garden the trail zigzags down steep switchbacks into the dark rock of the inner gorge, and the river is almost in reach.",
+      "season_photos": {
+        "spring": "corkscrew",
+        "winter": "corkscrew_winter"
+      }
+    },
+    {
+      "at": 0.796,
+      "photo": "river",
+      "commons_file": "Colorado River from Above - Flickr - brewbooks (1).jpg",
+      "alt": "The Colorado River far below, with the Silver Bridge crossing it",
+      "eyebrow": "The river · {elev}",
+      "title": "The Colorado River",
+      "text": "The trail reaches the river at {elev}, about {gain} below where you started. The Silver Bridge is just ahead.",
+      "elev_at_m": 12550,
+      "season_photos": {
+        "spring": "river",
+        "summer": "river_summer",
+        "winter": "river_winter"
+      },
+      "season_text": {
+        "summer": {
+          "text": "In summer the inner canyon is far hotter than the rim, and heat is the main danger on this trail. The park advises against hiking to the river and back in a day in summer."
+        }
+      }
+    },
+    {
+      "at": 0.857,
+      "photo": "riverbank",
+      "commons_file": "Colorado River near sunset - Flickr - brewbooks.jpg",
+      "alt": "The Colorado River between steep red canyon walls",
+      "eyebrow": "River Trail",
+      "title": "Beside the river",
+      "text": "For the next stretch the trail follows the river bank, between the water and the walls of the inner gorge.",
+      "season_photos": {
+        "spring": "riverbank",
+        "summer": "riverbank_summer",
+        "winter": "riverbank_winter"
+      }
+    },
+    {
+      "at": 0.921,
+      "photo": "silver",
+      "commons_file": "Grand Canyon National Park - Silver Bridge 1277 (50545174893).jpg",
+      "alt": "The Silver Bridge suspension footbridge over the Colorado River",
+      "eyebrow": "Silver Bridge · {elev}",
+      "title": "Crossing the Colorado",
+      "text": "The Silver Bridge, also called the Bright Angel Suspension Bridge, carries you over the Colorado River to the north side.",
+      "elev_at_m": 14510,
+      "season_photos": {
+        "spring": "silver_spring",
+        "summer": "silver_summer",
+        "autumn": "silver",
+        "winter": "silver_winter"
+      }
+    },
+    {
+      "at": 0.965,
+      "photo": "campground",
+      "commons_file": "Grand Canyon Bright Angel Campground 0649 (5941471259).jpg",
+      "alt": "Cottonwood trees beside Bright Angel Creek at Bright Angel Campground",
+      "eyebrow": "Bright Angel Campground",
+      "title": "Bright Angel Creek",
+      "text": "Cottonwoods shade the creek at the campground, a cool, green stop at the bottom of the canyon.",
+      "season_photos": {
+        "spring": "campground_spring",
+        "summer": "campground_summer",
+        "autumn": "campground",
+        "winter": "campground_winter"
+      }
+    },
+    {
+      "at": 0.998,
+      "photo": "phantom",
+      "commons_file": "Grand Canyon Phantom Ranch 0632 (5935382911).jpg",
+      "alt": "Stone cabins and cottonwood trees at Phantom Ranch",
+      "eyebrow": "End · Phantom Ranch · {elev}",
+      "title": "Phantom Ranch",
+      "text": "About {gain} below the rim, at the stone cabins of Phantom Ranch, the lodge at the bottom of the canyon.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "spring": "phantom_spring",
+        "autumn": "phantom",
+        "winter": "phantom_winter"
+      },
+      "season_text": {
+        "summer": {
+          "text": "Down here it is the hottest place on the trail in summer, with air temperatures far above the rim's. Rest in the shade and carry plenty of water and salty food."
+        }
+      }
+    }
+  ],
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1750,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 250,
+        "steep_from": 35,
+        "steep_to": 50,
+        "patchy": 0.4,
+        "alpha": 0.78,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2000,
+        "soft_m": 150,
+        "noise_m": 120,
+        "north_m": 200,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.5,
+        "alpha": 0.8,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  },
+  "season_photo_files": {
+    "vista_rim_winter": "Winter sunset from the Bright Angel Trailhead (50534362657).jpg",
+    "vista_rim_spring": "Bright Angel Trailhead01.jpg",
+    "buttes_winter": "Snow on Bright Angel Trail.JPG",
+    "buttes_summer": "Hike out from Indian Garden - Flickr - brewbooks (2).jpg",
+    "buttes_autumn": "Bright Angel Trail 20081125 (3072991055).jpg",
+    "ladder_winter": "Grand Canyon National Park, Bright Angel Trail, Winter Hiking 2871 - Flickr - Grand Canyon NPS.jpg",
+    "ladder_spring": "Grand Canyon National Park Bright Angel Trail 3298 (6167943447).jpg",
+    "threemile_winter": "Bright Angel Trail above Indian Garden.JPG",
+    "threemile_summer": "A peek over the shoulder down the Bright Angel Trail, here about 3, long, slow steep miles left to go (9050641971).jpg",
+    "inner_winter": "Winter on Bright Angel Trail.JPG",
+    "inner_spring": "Leaving Indian Garden near sunrise - Flickr - brewbooks.jpg",
+    "oasis_winter": "Bright Angel Trail ascending to Indian Graden.JPG",
+    "oasis_summer": "D3127 Grand Canyon Indian Gardens (4666619195).jpg",
+    "oasis_autumn": "Bright Cottonwoods at Indian Garden (50673539216).jpg",
+    "corkscrew_winter": "Bright Angel switchbacks.JPG",
+    "river_winter": "Colorado River as Seen from Plateau Point off the Bright Angel Trail - Grand Canyon National Park 2130.jpg",
+    "river_summer": "Grand Canyon from Plateau Point - Flickr - brewbooks (1).jpg",
+    "riverbank_winter": "Colorado River downstream from Silver Bridge.JPG",
+    "riverbank_summer": "Grand Canyon National Park Colorado River from Silver Bridge 0678 (6697173569).jpg",
+    "silver_winter": "On the Silver Bridge.JPG",
+    "silver_spring": "Crossing the River on the Silver Bridge (17218109052).jpg",
+    "silver_summer": "Grand Canyon National Park Colorado River Silver Bridge 0682 (6697172055).jpg",
+    "campground_winter": "Grand Canyon Nat Park Bright Angel Campground - Winter 2471 (6752219209).jpg",
+    "campground_spring": "Bright Bright Angel Creek (17218077072).jpg",
+    "campground_summer": "Cooling off in Bright Angel creek - Flickr - brewbooks.jpg",
+    "phantom_winter": "Buildings near Phantom Ranch.JPG",
+    "phantom_spring": "Grand Canyon Phantom Ranch Cabin 2889 (5941414147).jpg"
+  }
+}

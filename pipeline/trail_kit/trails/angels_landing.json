@@ -1,0 +1,333 @@
+{
+  "id": "angels_landing",
+  "title": "Angels Landing Walk",
+  "brand": "When to Go · Trail test",
+  "map_label": "3D view of Zion Canyon following the hiker along the Angels Landing trail",
+  "park": "Zion National Park, Utah",
+  "start": {
+    "name": "The Grotto shuttle stop",
+    "lat": 37.25897,
+    "lon": -112.9509699
+  },
+  "end": {
+    "name": "Angels Landing summit",
+    "lat": 37.2693119,
+    "lon": -112.9479191
+  },
+  "gap_bridge_m": 50,
+  "osm_bbox": [
+    -112.965,
+    37.25,
+    -112.935,
+    37.275
+  ],
+  "bounds": {
+    "wide": [
+      -113.1,
+      37.14,
+      -112.8,
+      37.38
+    ],
+    "mid": [
+      -113.03,
+      37.2,
+      -112.87,
+      37.33
+    ],
+    "core": [
+      -112.975,
+      37.245,
+      -112.925,
+      37.285
+    ]
+  },
+  "camera": {
+    "pitch": 64,
+    "zoom": 15.9,
+    "scroll_vh": 1500
+  },
+  "profile_labels": {
+    "start": "The Grotto",
+    "end": "Summit",
+    "key_stop": {
+      "label": "Scout Lookout",
+      "at_m": 2610
+    }
+  },
+  "stops": [
+    {
+      "at": 0.02,
+      "photo": "start",
+      "commons_file": "Angel's Landing, Lower Trail 5-1-14e (13927327979).jpg",
+      "alt": "Angels Landing rising above the Virgin River from the lower trail",
+      "eyebrow": "Start · canyon floor",
+      "title": "The Grotto shuttle stop",
+      "text": "You start beside the Virgin River at {elev}. The fin you can see ahead is Angels Landing.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "spring": "start",
+        "summer": "start_summer",
+        "winter": "start_winter"
+      }
+    },
+    {
+      "at": 0.3,
+      "photo": "climb",
+      "commons_file": "Angels Landing, Zion National Park, Utah (8096062363).jpg",
+      "alt": "Angels Landing seen from the switchbacks below",
+      "eyebrow": "West Rim Trail",
+      "title": "Up the canyon wall",
+      "text": "Paved switchbacks climb the cliff face, with Angels Landing towering beside you.",
+      "season_photos": {
+        "spring": "climb_spring",
+        "autumn": "climb",
+        "winter": "climb_winter"
+      },
+      "season_text": {
+        "winter": {
+          "text": "Paved switchbacks climb the cliff face. Snow and ice can make the trail slippery in winter. The photo, from the West Rim Trail, shows the same canyon under snow."
+        }
+      }
+    },
+    {
+      "at": 0.62,
+      "photo": "refrigerator",
+      "commons_file": "Zion NP33.jpg",
+      "alt": "Paved trail through the narrow, shaded Refrigerator Canyon",
+      "eyebrow": "Side canyon · {elev}",
+      "title": "Refrigerator Canyon",
+      "text": "A shaded slot between sheer walls. It stays cool even in summer, and the trail goes nearly flat.",
+      "elev_at_m": 2050,
+      "season_photos": {
+        "spring": "refrigerator"
+      },
+      "season_text": {
+        "winter": {
+          "text": "A shaded slot between sheer walls where the trail goes nearly flat. The shade means ice can linger here after the sun has cleared the open parts of the trail."
+        }
+      }
+    },
+    {
+      "at": 0.73,
+      "photo": "wiggles",
+      "commons_file": "Walter's Wiggles, Utah from below.JPG",
+      "alt": "Stone switchbacks of Walter's Wiggles seen from below",
+      "eyebrow": "The steepest climb",
+      "title": "Walter's Wiggles",
+      "text": "Twenty-one tight stone switchbacks stacked up the rock, the steepest part before Scout Lookout.",
+      "season_photos": {
+        "summer": "wiggles",
+        "winter": "wiggles_winter"
+      }
+    },
+    {
+      "at": 0.8,
+      "photo": "scout",
+      "commons_file": "Towards Angel's Landing, Zion National Park, UT (8586599892).jpg",
+      "alt": "The narrow trail leading from Scout Lookout toward the Angels Landing fin",
+      "eyebrow": "Scout Lookout · {elev}",
+      "title": "Where most hikers stop",
+      "text": "The final half-mile follows a narrow fin with drops on both sides, and needs a permit.",
+      "elev_at_m": 2610,
+      "season_photos": {
+        "summer": "scout"
+      },
+      "season_text": {
+        "winter": {
+          "text": "The final half-mile follows a narrow fin with drops on both sides, and needs a permit. Ice and snow make the chains section more dangerous, so check the park's current conditions first."
+        }
+      }
+    },
+    {
+      "at": 0.89,
+      "photo": "chains",
+      "commons_file": "Angels Landing Trail Zion NP 27-08-2025 01.jpg",
+      "alt": "Hikers using chains along the sandstone ridge of Angels Landing",
+      "eyebrow": "The final fin",
+      "title": "Holding the chains",
+      "text": "Steel chains bolted into the sandstone guide you up the last stretch.",
+      "season_photos": {
+        "summer": "chains"
+      },
+      "season_text": {
+        "winter": {
+          "text": "Steel chains bolted into the sandstone guide you up the last stretch. In winter they can be icy, so check the park's current conditions before you go."
+        }
+      }
+    },
+    {
+      "at": 0.985,
+      "photo": "summit",
+      "commons_file": "Zion angels landing view.jpg",
+      "alt": "View down Zion Canyon from the summit of Angels Landing",
+      "eyebrow": "Summit · {elev}",
+      "title": "Angels Landing",
+      "text": "About {gain} above where you started, with Zion Canyon spread out below.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "spring": "summit_spring",
+        "summer": "summit",
+        "autumn": "summit_autumn",
+        "winter": "summit_winter"
+      }
+    }
+  ],
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1750,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 250,
+        "steep_from": 35,
+        "steep_to": 50,
+        "patchy": 0.4,
+        "alpha": 0.78,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 1950,
+        "soft_m": 200,
+        "noise_m": 200,
+        "north_m": 250,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.4,
+        "alpha": 0.85,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "band_m": [
+          1150,
+          2300
+        ],
+        "colour_a": [
+          70,
+          105,
+          45
+        ],
+        "colour_b": [
+          115,
+          140,
+          60
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "band_m": [
+          1150,
+          1900
+        ],
+        "colour_a": [
+          205,
+          100,
+          35
+        ],
+        "colour_b": [
+          238,
+          178,
+          55
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  },
+  "season_photo_files": {
+    "start_summer": "Grotto Shuttle Stop, Zion Canyon, Zion National Park, Utah (1026359358).jpg",
+    "start_winter": "View of Angels Landing from canyon floor, snow along banks of the Virgin River. ; ZION Museum and Archives Image 901 02 01002 (cbc0f5561ab6401299881323b5d12313).jpg",
+    "climb_spring": "Zion NP, Angel's Landing Trail 5-1-14u (14206596667).jpg",
+    "climb_winter": "View from West Rim Trail Zion January 2011.jpg",
+    "wiggles_winter": "Walters Wiggles in Winter (6912687823).jpg",
+    "summit_spring": "On the way up to Angel's Landing (Unsplash).jpg",
+    "summit_autumn": "View from Angels Landing (37454914304).jpg",
+    "summit_winter": "Zion National Park from Angel's Landing.jpg"
+  }
+}
