@@ -1,12 +1,25 @@
+# dependencies and build output
 node_modules/
 dist/
+*.tsbuildinfo
+
+# pipeline: raw downloads are cached locally, never committed
 data/raw/
+cache/
+output/
+__pycache__/
+*.pyc
+.venv/
+
+# secrets: API keys live in .env (copy .env.example), never in git
 .env
 .env.*
 !.env.example
+
+# OS / editor
 .DS_Store
-__pycache__/
-*.pyc
-cache/
-output/
+.idea/
+
+# loose copy of the plan PDF (the tracked copy is docs/implementation-plan.pdf)
 /Peak Finder*.pdf
+.playwright-mcp/
