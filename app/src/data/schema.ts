@@ -91,7 +91,6 @@ export const CostSchema = z.object({
   meals_per_day: num,
   entry_fee_vehicle: num,
   permit_fee: num,
-  sources: z.object({ fare: z.string(), lodging: z.string(), gas: z.string(), fees: z.string() }),
 })
 
 export const CheckpointSchema = z.object({
@@ -120,9 +119,14 @@ export const AdviceSchema = z.object({
   url: z.string(),
 })
 
+/** Where one cost input comes from. Lives in meta.json (not on every cost row) to keep cost.json small. */
+export const CostSourceSchema = z.object({ label: z.string(), detail: z.string(), url: z.string() })
+
 export const MetaSchema = z
   .object({
     fake: z.boolean().optional(),
+    // keys: fare, lodging, gas, fees, assumed (the keys CostLine.source uses)
+    cost_sources: z.record(z.string(), CostSourceSchema),
     pipeline_version: z.string(),
     generated: z.string(),
     sources: z.array(z.object({ name: z.string(), url: z.string(), as_of: z.string() })),
@@ -138,4 +142,5 @@ export type Checkpoint = z.infer<typeof CheckpointSchema>
 export type Profile = z.infer<typeof ProfileSchema>
 export type Advice = z.infer<typeof AdviceSchema>
 export type Meta = z.infer<typeof MetaSchema>
+export type CostSource = z.infer<typeof CostSourceSchema>
 export type Quarter = 1 | 2 | 3 | 4

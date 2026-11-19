@@ -19,7 +19,6 @@ export const travelSeaAngels: Travel = { hike_id: 'angels-landing', city: 'SEA',
 export const costSeaAngelsQ3: CostRow = {
   hike_id: 'angels-landing', city: 'SEA', quarter: 3, fare_one_way: 169.78, car_per_day: 60, drive_mi: 1060,
   gas_per_gal: 4.1, mpg: 25, lodging_per_night: 110, meals_per_day: 68, entry_fee_vehicle: 35, permit_fee: 6,
-  sources: { fare: 'DOT Table 6, Q3 2025', lodging: 'GSA FY2026', gas: 'EIA West Coast', fees: 'NPS' },
 }
 
 /** A 1 km flat profile, one-way, no scaling, with a midpoint and a turnaround checkpoint. */

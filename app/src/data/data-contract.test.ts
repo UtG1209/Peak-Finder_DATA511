@@ -21,7 +21,7 @@ const meta = MetaSchema.parse(read('meta.json'))
 const ids = new Set(hikes.map((h) => h.id))
 
 describe('data contract', () => {
-  it('has at least 40 hikes with unique ids', () => {
+  it('has the curated 40 hikes (at least 40) with unique ids', () => {
     expect(hikes.length).toBeGreaterThanOrEqual(40)
     expect(ids.size).toBe(hikes.length)
   })
@@ -82,6 +82,10 @@ describe('data contract', () => {
 
   it('every photo licence is one we may use', () => {
     for (const h of hikes) expect(['Public domain', 'CC0', 'CC BY', 'CC BY-SA']).toContain(h.photo.license)
+  })
+
+  it('has a source note for every cost input', () => {
+    for (const k of ['fare', 'lodging', 'gas', 'fees', 'assumed']) expect(meta.cost_sources[k]?.label, k).toBeTruthy()
   })
 
   it('has between 5 and 10 advice cards', () => {

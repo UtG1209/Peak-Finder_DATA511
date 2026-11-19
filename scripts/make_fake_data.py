@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate FAKE data for ~50 lower-48 national park hikes.
+"""Generate FAKE data for the 40 most famous, most data-complete lower-48 national park hikes.
 
 Writes the files the app reads (shapes: CLAUDE.md section 4) into app/public/data/:
   hikes.json, hike_month.json, travel.json, cost.json, advice.json, meta.json,
@@ -97,24 +97,17 @@ h("lady-bird-johnson-grove", "Lady Bird Johnson Grove Loop", "REDW", "Redwood Na
 h("pinnacles-high-peaks", "High Peaks Loop", "PINN", "Pinnacles National Park", "CA", "Bear Gulch Day Use Area", 36.4752, -121.1859, "High Peaks Overlook", 36.4871, -121.1830, 5.3, 1500, 2650, "loop", "moderate", "mediterranean", 6, "desert", "06069", "San Benito County, CA", ["no-shade", "exposure"], None, ())
 h("ryan-mountain", "Ryan Mountain", "JOTR", "Joshua Tree National Park", "CA", "Ryan Mountain Trailhead", 34.0113, -116.1585, "Summit", 34.0126, -116.1507, 3.0, 1050, 5457, "out-and-back", "moderate", "desert", -10, "winter", "06071", "San Bernardino County, CA", ["no-shade", "extra-water"], None, ())
 h("golden-canyon", "Golden Canyon to Red Cathedral", "DEVA", "Death Valley National Park", "CA", "Golden Canyon Trailhead", 36.4209, -116.8271, "Red Cathedral", 36.4283, -116.8135, 3.0, 600, 400, "out-and-back", "easy", "hotdesert", 0, "winter", "06027", "Inyo County, CA", ["no-shade", "extra-water"], None, ())
-h("wasson-peak", "Wasson Peak via Hugh Norris Trail", "SAGU", "Saguaro National Park", "AZ", "Hugh Norris Trailhead", 32.2457, -111.1983, "Wasson Peak", 32.2370, -111.1655, 8.0, 1800, 4687, "out-and-back", "moderate", "desert", 4, "winter", "04019", "Pima County, AZ", ["no-shade", "extra-water"], None, ())
 h("lost-mine-trail", "Lost Mine Trail", "BIBE", "Big Bend National Park", "TX", "Lost Mine Trailhead", 29.2755, -103.2990, "Juniper Canyon Overlook", 29.2720, -103.3040, 4.8, 1100, 6850, "out-and-back", "moderate", "desert", -8, "winter", "48043", "Brewster County, TX", ["exposure", "no-shade", "extra-water"], None, ())
 h("guadalupe-peak", "Guadalupe Peak", "GUMO", "Guadalupe Mountains National Park", "TX", "Pine Springs Trailhead", 31.8886, -104.8218, "Guadalupe Peak", 31.8912, -104.8607, 8.4, 3000, 8751, "out-and-back", "hard", "desert", -8, "desert", "48109", "Culberson County, TX", ["steep", "exposure", "extra-water"], None, ())
 h("alkali-flat", "Alkali Flat Trail", "WHSA", "White Sands National Park", "NM", "Alkali Flat Trailhead", 32.7790, -106.1780, "Alkali Flat Loop", 32.8040, -106.2350, 5.0, 100, 4000, "loop", "easy", "desert", -10, "year", "35035", "Otero County, NM", ["no-shade", "extra-water"], None, ())
 h("emerald-lake", "Emerald Lake", "ROMO", "Rocky Mountain National Park", "CO", "Bear Lake Trailhead", 40.3114, -105.6450, "Emerald Lake", 40.3070, -105.6660, 3.2, 650, 10110, "out-and-back", "moderate", "alpine", -4, "summer", "08069", "Larimer County, CO", ["snow-gear"], None, ())
 h("high-dune", "High Dune", "GRSA", "Great Sand Dunes National Park", "CO", "Dunes Parking Area", 37.7503, -105.5144, "High Dune", 37.7480, -105.5400, 2.6, 700, 8700, "out-and-back", "moderate", "montane", 8, "summer", "08003", "Alamosa County, CO", ["no-shade", "extra-water", "steep"], None, ())
-h("petroglyph-point", "Petroglyph Point Trail", "MEVE", "Mesa Verde National Park", "CO", "Spruce Tree House Trailhead", 37.1952, -108.4883, "Petroglyph Point", 37.1926, -108.4860, 2.4, 400, 7000, "loop", "moderate", "montane", 6, "summer", "08083", "Montezuma County, CO", ["exposure", "steep"], None, ())
-h("warner-point", "Warner Point Nature Trail", "BLCA", "Black Canyon of the Gunnison National Park", "CO", "Warner Point Trailhead", 38.5260, -107.6908, "Warner Point", 38.5290, -107.6930, 1.5, 200, 8300, "out-and-back", "easy", "montane", 8, "summer", "08085", "Montrose County, CO", ["exposure"], None, ())
 h("inspiration-point", "Hidden Falls and Inspiration Point", "GRTE", "Grand Teton National Park", "WY", "Jenny Lake Visitor Center", 43.7569, -110.7264, "Inspiration Point", 43.7587, -110.7524, 7.6, 700, 7200, "out-and-back", "moderate", "alpine", 6, "summer", "56039", "Teton County, WY", ["bear-spray"], None, ())
-h("notch-trail", "Notch Trail", "BADL", "Badlands National Park", "SD", "Notch Trail Trailhead", 43.7335, -101.9890, "Notch Overlook", 43.7345, -101.9940, 1.5, 150, 2500, "out-and-back", "easy", "plains", 4, "summer", "46071", "Jackson County, SD", ["scramble", "no-shade"], None, ())
-h("painted-canyon", "Painted Canyon Nature Trail", "THRO", "Theodore Roosevelt National Park", "ND", "Painted Canyon Overlook", 46.9183, -103.5500, "Nature Trail Loop", 46.9111, -103.5391, 1.0, 150, 2700, "loop", "easy", "plains", 0, "summer", "38007", "Billings County, ND", [], None, ())
 h("cadillac-north-ridge", "Cadillac North Ridge", "ACAD", "Acadia National Park", "ME", "Cadillac North Ridge Trailhead", 44.3650, -68.2150, "Summit", 44.3527, -68.2240, 4.4, 1300, 1530, "out-and-back", "moderate", "northeast", 0, "east", "23009", "Hancock County, ME", ["exposure"], None, ())
 h("alum-cave-leconte", "Alum Cave to Mount LeConte", "GRSM", "Great Smoky Mountains National Park", "TN", "Alum Cave Trailhead", 35.6307, -83.4428, "LeConte Lodge", 35.6540, -83.4390, 11.0, 2763, 6593, "out-and-back", "hard", "humid-east", -10, "east", "47155", "Sevier County, TN", ["exposure", "steep", "headlamp"], None, ())
 h("clingmans-dome", "Clingmans Dome Tower", "GRSM", "Great Smoky Mountains National Park", "NC", "Clingmans Dome Trailhead", 35.5628, -83.4983, "Observation Tower", 35.5633, -83.4985, 1.0, 330, 6643, "out-and-back", "easy", "humid-east", -12, "east", "37173", "Swain County, NC", ["steep"], None, (12, 1, 2, 3))
 h("old-rag", "Old Rag Mountain Loop", "SHEN", "Shenandoah National Park", "VA", "Old Rag Trailhead", 38.5523, -78.2965, "Summit", 38.5547, -78.3103, 9.3, 2600, 3284, "loop", "hard", "humid-east", -2, "east", "51113", "Madison County, VA", ["scramble", "exposure", "extra-water"], "Day-use ticket", ())
 h("anhinga-trail", "Anhinga Trail", "EVER", "Everglades National Park", "FL", "Anhinga Trailhead", 25.3829, -80.5822, "Anhinga Boardwalk", 25.3846, -80.5810, 0.8, 0, 10, "loop", "easy", "subtropical", 0, "winter", "12086", "Miami-Dade County, FL", ["no-shade", "bug-spray"], None, ())
-h("brandywine-falls", "Brandywine Falls", "CUVA", "Cuyahoga Valley National Park", "OH", "Brandywine Falls Parking", 41.2610, -81.5410, "Brandywine Falls", 41.2640, -81.5400, 1.5, 150, 900, "loop", "easy", "humid-east", 0, "east", "39153", "Summit County, OH", [], None, ())
-h("blue-mesa", "Blue Mesa Trail", "PEFO", "Petrified Forest National Park", "AZ", "Blue Mesa Trailhead", 34.9946, -109.7690, "Blue Mesa Loop", 34.9960, -109.7680, 1.0, 100, 5600, "loop", "easy", "desert", -8, "desert", "04001", "Apache County, AZ", ["no-shade"], None, ())
 h("wheeler-peak", "Wheeler Peak", "GRBA", "Great Basin National Park", "NV", "Summit Trailhead", 38.9858, -114.3092, "Wheeler Peak", 38.9870, -114.3133, 8.6, 2900, 13063, "out-and-back", "hard", "alpine", -4, "summer", "32033", "White Pine County, NV", ["exposure", "extra-water", "snow-gear", "headlamp"], None, (11, 12, 1, 2, 3, 4, 5, 6))
 h("south-kaibab-skeleton-point", "South Kaibab to Skeleton Point", "GRCA", "Grand Canyon National Park", "AZ", "South Kaibab Trailhead", 36.0544, -112.0836, "Skeleton Point", 36.0771, -112.0889, 6.0, 2040, 7260, "out-and-back", "hard", "montane", 0, "grca", "04005", "Coconino County, AZ", ["steep", "no-shade", "extra-water", "exposure"], None, (), el=(7260, 5220))
 h("zion-narrows", "The Narrows, bottom-up", "ZION", "Zion National Park", "UT", "Riverside Walk Trailhead", 37.2850, -112.9470, "Big Spring", 37.3240, -112.9420, 9.4, 200, 4900, "out-and-back", "moderate", "canyon", 0, "zion", "49053", "Washington County, UT", ["water-crossing", "extra-water"], None, ())
@@ -122,16 +115,13 @@ h("longs-peak", "Longs Peak Keyhole Route", "ROMO", "Rocky Mountain National Par
 h("general-sherman-tree", "General Sherman Tree", "SEKI", "Sequoia and Kings Canyon National Parks", "CA", "Sherman Tree Trailhead", 36.5819, -118.7519, "General Sherman Tree", 36.5817, -118.7512, 1.2, 200, 7050, "out-and-back", "easy", "sierra", -10, "summer", "06107", "Tulare County, CA", [], None, ())
 h("hall-of-mosses", "Hoh Hall of Mosses", "OLYM", "Olympic National Park", "WA", "Hoh Rain Forest Visitor Center", 47.8600, -123.9350, "Hall of Mosses", 47.8610, -123.9370, 0.8, 100, 700, "loop", "easy", "northwest", 0, "summer", "53031", "Jefferson County, WA", [], None, ())
 h("devils-garden", "Devils Garden Loop", "ARCH", "Arches National Park", "UT", "Devils Garden Trailhead", 38.7826, -109.5948, "Double O Arch", 38.7881, -109.5890, 7.2, 700, 5200, "loop", "moderate", "desert", -2, "desert", "49019", "Grand County, UT", ["exposure", "no-shade", "extra-water"], None, ())
-h("zumwalt-meadow", "Zumwalt Meadow Loop", "KICA", "Sequoia and Kings Canyon National Parks", "CA", "Zumwalt Meadow Trailhead", 36.7966, -118.5667, "Zumwalt Meadow", 36.7940, -118.5680, 1.5, 100, 5000, "loop", "easy", "sierra", -8, "summer", "06019", "Fresno County, CA", [], None, (12, 1, 2, 3, 4))
-h("hot-springs-mountain", "Hot Springs Mountain Tower Trail", "HOSP", "Hot Springs National Park", "AR", "Hot Springs Mountain Trailhead", 34.5139, -93.0588, "Mountain Tower", 34.5167, -93.0522, 2.0, 300, 1000, "out-and-back", "easy", "humid-east", 6, "year", "05051", "Garland County, AR", [], None, ())
-h("congaree-boardwalk", "Congaree Boardwalk Loop", "CONG", "Congaree National Park", "SC", "Harry Hampton Visitor Center", 33.7864, -80.7769, "Boardwalk Loop", 33.7880, -80.7770, 2.4, 0, 130, "loop", "easy", "humid-east", 6, "year", "45079", "Richland County, SC", ["bug-spray"], None, ())
 
 FEATURED = {
     "angels-landing": "walks/angels_landing/",
     "bright-angel-trail": "walks/grand_canyon/",
     "cascade-pass-sahale": "walks/north_cascades/",
 }
-NO_STATION = {"wasson-peak", "warner-point"}  # demonstrates the "No station within 50 km" state
+NO_STATION: set[str] = set()  # the curated 40 all have a station; add ids here to test the "No station within 50 km" state
 
 # checkpoints for the three featured hikes: (name, fraction of one-way distance)
 FEATURED_STOPS = {
@@ -354,11 +344,9 @@ def build_cost(hikes, mrows, travel):
                     "lodging_per_night": round(base_lodging * (QTR_LODGING[q - 1] if seasonal else 1.0)),
                     "meals_per_day": MEALS.get(code, 68), "entry_fee_vehicle": ENTRY.get(code, 35),
                     "permit_fee": PERMIT.get(m["hid"], 0),
-                    "sources": {"fare": "DOT Table 6 (fake)", "lodging": "GSA FY2026 (fake)", "gas": "EIA (fake)", "fees": "NPS (fake)"},
                 }
                 if m["hid"] == "angels-landing" and city == "SEA" and q == 3:  # CLAUDE.md example row (real inputs)
-                    row.update(fare_one_way=169.78, gas_per_gal=4.10, lodging_per_night=110,
-                               sources={"fare": "DOT Table 6, Q3 2025", "lodging": "GSA FY2026", "gas": "EIA West Coast", "fees": "NPS"})
+                    row.update(fare_one_way=169.78, gas_per_gal=4.10, lodging_per_night=110)
                 out.append(row)
     return out
 
@@ -435,6 +423,14 @@ def build_meta(n_hikes):
         "fake_notice": "Placeholder data generated by scripts/make_fake_data.py. Not real. Replace with pipeline output.",
         "pipeline_version": "fake-0.1.0", "generated": date.today().isoformat(), "typical_years": "2015-2024 (2020 excluded)",
         "hike_count": n_hikes,
+        # one entry per cost input; the hike page popover shows these next to each line item (moved here from every cost row)
+        "cost_sources": {
+            "fare": {"label": "DOT Consumer Airfare Report, Table 6 (fake)", "detail": "Average one-way fare for the same quarter, home-city airport to the hike's nearest airport", "url": "https://www.transportation.gov/policy/aviation-policy/domestic-airline-consumer-airfare-report"},
+            "lodging": {"label": "GSA per diem, FY2026 (fake)", "detail": "Lodging and meals rate for the county; varies by month at only 18 of 51 parks", "url": "https://www.gsa.gov/travel/plan-a-trip/per-diem-rates"},
+            "gas": {"label": "EIA regional gasoline price (fake)", "detail": "Regional average for the home city, at 25 mpg", "url": "https://www.eia.gov/petroleum/gasdiesel/"},
+            "fees": {"label": "NPS entrance and permit fees (fake)", "detail": "Per-vehicle entrance fee (capped at the $80 annual pass) plus any permit", "url": "https://www.nps.gov/planyourvisit/fees-and-passes.htm"},
+            "assumed": {"label": "Team assumption", "detail": "Rental car at $60 a day. Not from a data source", "url": ""},
+        },
         "sources": [
             {"name": "NPS Visitor Use Statistics (IRMA)", "url": "https://irma.nps.gov/STATS/", "as_of": "not loaded (fake)"},
             {"name": "NOAA GHCN-Daily", "url": "https://www.ncei.noaa.gov/access/search/data-search/daily-summaries", "as_of": "not loaded (fake)"},
@@ -473,6 +469,10 @@ def main():
     args = ap.parse_args()
     out = Path(args.out)
     photos = out.parent / "photos"
+
+    # start clean so hikes dropped from the list leave no stale profiles or photos behind
+    for stale in list((out / "profiles").glob("*.json")) + list(photos.glob("*.svg")):
+        stale.unlink()
 
     hikes, mrows = build_hikes()
     months = build_months(hikes, mrows)
