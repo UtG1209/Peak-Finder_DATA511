@@ -22,6 +22,7 @@ Node 22 is pinned in `.nvmrc` (`nvm use`). Same commands exist as `make setup`, 
 | `npm run build` | Production build into `app/dist`, including the 3D walks (`SKIP_WALKS=1` leaves them out) |
 | `npm run check` | Everything CI runs: CLAUDE.md consistency, lint, tests, build (no walks), performance budget |
 | `npm run docs:check` | Only the CLAUDE.md consistency check |
+| `npm run e2e` | Browser smoke test (needs `npx playwright install chromium` once, in `app/`): Show hikes, map visible, hike page, Back |
 | `npm run validate:data` | Check `app/public/data/*.json` against the schemas. **Run this on any data you produce** |
 | `npm run fake-data` | Regenerate the placeholder data (deterministic: same output every run) |
 
