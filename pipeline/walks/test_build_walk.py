@@ -63,6 +63,16 @@ class Helpers(unittest.TestCase):
     def test_referenced_files(self):
         self.assertEqual(bw.referenced_files(HTML), ["clouds/mass.webp", "photos/start.jpg"])
 
+    def test_referenced_files_sees_the_dynamic_cloud_preloader(self):
+        html = HTML + "<script>im.src = 'clouds/' + n + '.webp';</script>"
+        self.assertIn("clouds/cumulus.webp", bw.referenced_files(html))
+        shared = html.replace("'clouds/'", "'../_shared/clouds/'")
+        self.assertIn("../_shared/clouds/wisps.webp", bw.referenced_files(shared))
+
+    def test_referenced_files_includes_shared_clouds(self):
+        html = HTML.replace("clouds/mass.webp", "../_shared/clouds/mass.webp")
+        self.assertEqual(bw.referenced_files(html), ["../_shared/clouds/mass.webp", "photos/start.jpg"])
+
     def test_season_photo_counts(self):
         with tempfile.TemporaryDirectory() as t:
             d = Path(t) / "w"
@@ -157,6 +167,33 @@ class Manifest(unittest.TestCase):
     def test_plan_has_every_phase(self):
         self.assertEqual({p[0][0] for p in bw.PLAN}, set("ABCDE"))
         self.assertEqual(len({p[0] for p in bw.PLAN}), len(bw.PLAN))
+
+
+try:
+    import optimize_walk as ow  # needs Pillow and numpy; the CI job without them skips these tests
+except ImportError:
+    ow = None
+
+
+@unittest.skipIf(ow is None, "Pillow/numpy not installed")
+class OptimizePatch(unittest.TestCase):
+    PAGE = ("<style>#cFar>div{background-image:url(clouds/wisps.webp)} #cMid>div{background-image:url(clouds/cumulus.webp)} "
+            "#cNear>div{background-image:url(clouds/mass.webp)}</style><script>"
+            "const dem = {tiles: [base + 'dem/{z}/{x}/{y}.png']}; const s = {tiles: [base + 'season/' + name + '/{z}/{x}/{y}.png']};"
+            "const i = {tiles: [base + 'img/{z}/{x}/{y}.jpg']}; im.src = 'clouds/' + n + '.webp';</script>")
+
+    def test_every_form_is_redirected(self):
+        out, n = ow.patch_page(self.PAGE)
+        self.assertNotIn(".png", out.replace("{y}.png", "X") if "{y}.png" in out else out)
+        self.assertIn("dem/{z}/{x}/{y}.webp'", out)
+        self.assertIn("'/{z}/{x}/{y}.webp'", out)
+        self.assertIn("img/{z}/{x}/{y}.jpg'", out)  # imagery stays JPEG
+        self.assertEqual(out.count("../_shared/clouds/"), 4)
+        self.assertEqual(n, 3 + 1 + 2)
+
+    def test_a_stray_cloud_reference_is_an_error(self):
+        with self.assertRaises(SystemExit):
+            ow.patch_page(self.PAGE + "<img src=\"photos/x.jpg\"><i style=\"x:url('clouds/other.webp')\">")
 
 
 if __name__ == "__main__":

@@ -40,13 +40,20 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
 - [ ] Contract changes need a PR labelled `contract` approved by all four.
 
 ## Walks: size and hosting (needs a team decision before lane 2 builds more)
-- [ ] The 3 finished walks are **108 MB** (35 to 40 MB each; mostly terrain and imagery tiles plus season overlays). GitHub Pages publishes at most **1 GB** per site and
-      repos should stay under about 1 GB. At today's size **40 walks would be about 1.4 GB, which does not fit**.
-- [ ] **We build a walk for every hike (requested), so each new walk gets a budget of 15 MB or less** (about 600 MB for 40, plus the 3 existing). Levers in the trail kit config:
-      a tighter `bounds` box, a corridor around the route (`bounds.corridor_m`), fewer zoom levels, WebP or smaller season overlay tiles, JPEG quality for photos, fewer season photos.
-      Lane 2 adds `scripts/check-walk-size.py` (fails over 15 MB) to the kit run.
-- [ ] If we still outgrow Pages, host walks in a second repo or bucket and set `VITE_WALKS_BASE` (already supported by `app/src/lib/walks.ts`); no app code changes.
-- [ ] Everyone clones the walks with the repo. If clone size becomes a problem: `git clone --filter=blob:none` and sparse-checkout `walks/` only where needed.
+- [ ] The 3 finished walks are **108 MB** (32 to 39 MB each). A visitor downloads only about **7 MB on opening and about 15 MB for a whole walk** (measured), so this is **not a speed problem**; it is a
+      **storage and hosting** problem: GitHub Pages publishes at most **1 GB** per site, repos should stay under about 1 GB, and every rebuilt walk adds to git history for good.
+- [x] **Quality-safe trimming is built** (`pipeline/walks/optimize_walk.py`, runs inside the walk build): elevation tiles to lossless WebP (pixel-exact), season overlays to lossless WebP, one shared copy of the
+      cloud images. Measured on the real walks: Angels Landing 35.5 to 26.8 MB, Bright Angel 31.7 to 26.3 MB, Cascade Pass 38.7 to 31.0 MB (about 20% smaller). Proof it did not change what people see:
+      every converted tile is checked against its original (elevation tiles 100% pixel-exact), and the same screens rendered from the original and the optimized walk are identical
+      (3 of 4 compared screens 100% identical pixels; the 4th 98.5% identical with a maximum difference of 1/255, SSIM 0.99996: render noise).
+- [x] **What was tried and rejected for quality:** pruning tiles far from the route (a 2844 px-wide window requests terrain up to 11 km away, so pruning lowers quality on big screens); re-encoding the
+      imagery or photos (no gain, or small gain with extra JPEG loss); lossy season overlays (q95 is visually identical at 48 dB but only 15% smaller than lossless, so it is off by default: `--season-lossy`).
+- [ ] **The honest numbers:** a 15 MB walk is not reachable without lowering quality. New walks get a budget of **30 MB after optimization, aim for 25** (manifest `size_budget_mb`).
+      40 walks at about 27 MB is about **1.1 GB: it does not fit on one Pages site.** Options: (a) a separate walks repo (its own Pages site, `VITE_WALKS_BASE` already supported), split in two if needed;
+      (b) fewer walks (about 25 fit on one site with the app); (c) object storage/CDN (R2, S3) for walks. Recommendation: (a), starting with the optimized copies of the three walks.
+- [ ] **Do not commit optimized copies of the 3 existing walks to this repo**: they are already in history, so it would add about 85 MB to every clone to save about 22 MB per deploy.
+      The optimized copies are in `Peak-Finder-walks-optimized/` next to the repo, ready to be the first commit of the walks repo.
+- [ ] Everyone clones the walks with the repo. If clone size becomes a problem: `git clone --filter=blob:none` and sparse-checkout.
 - [x] **Walks never load on the first screen.** The app only builds a link; the walk page and its tiles are fetched when someone opens it. `scripts/check-budget.mjs` fails CI if the entry
       or Explore chunk ever references `walks/`.
 
