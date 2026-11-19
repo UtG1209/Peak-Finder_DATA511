@@ -5,20 +5,27 @@
 You make the numbers behind Where and When. The app already reads fake versions of your files; your job is to
 replace them with real, checked data, one file at a time, without the UI team noticing.
 
-## Step 0, with the whole team: freeze the hike list
-At least **40 hikes** (target about 50): the signature day hike or peak of each lower-48 park that has one, plus a
-second hike in the biggest parks. A hike is in only if it has (1) an official NPS page with length and gain, (2) an OSM
-trail line, (3) at least one open-licence Commons photo. Save it as `pipeline/catalogue/hikes_seed.csv`
-(`id, name, park_code, nps_url`). Everyone else's lane starts from this list. The fake list in
-`scripts/make_fake_data.py` is a placeholder you can use as a starting point.
+## Step 0 (you, then the whole team signs off): the 40 hikes
+The list is the **40 most famous hikes that also have complete data**. Two rules, in this order:
+1. **Data-completeness gate (hard).** A hike is a candidate only if it has all of: an official NPS page with length and gain; an OSM trail line;
+   at least one open-licence Commons photo; a GHCN station within 50 km with at least 80% of days present (TMAX, PRCP); an EPA AQI monitor
+   in the trailhead county; and NPS monthly recreation visits for its park. Write the result of each check per candidate into
+   `pipeline/catalogue/candidates.csv` (one column per check, plus `complete = all checks pass`).
+2. **Fame ranking (among complete ones).** Rank by how well known the hike is: the park's annual recreation visits (NPS IRMA) first, then the hike's
+   own prominence (it is the park's signature hike, named on the NPS page, many Commons photos). Take the top 40, at most 2 per park, 1 per park where
+   the park is small. Prefer a spread of Easy / Moderate / Hard and of regions, so the map and the three difficulty colours are not lopsided.
+
+Save the final list as `pipeline/catalogue/hikes_seed.csv` (`id, name, park_code, nps_url`). Everyone else's lane starts from it. The three
+featured 3D hikes (Angels Landing, Bright Angel, Cascade Pass to Sahale) are always in. The fake list in `scripts/make_fake_data.py` is a placeholder
+you can start from; replace it. If a famous hike fails the gate (no nearby station, no AQI monitor), note it in the About page's limits rather than faking data.
 
 ## What you produce (shapes: CLAUDE.md section 4, enforced by `app/src/data/schema.ts`)
 | File | Rows | Source | Notes |
 |---|---|---|---|
-| `hikes.json` | ~50 | NPS pages, OSM, Commons, by hand | id, name, park, trailhead and end (lat/lon), **NPS** length and gain, difficulty, permit/closure note, gear icons, photo + credit, `featured`, `station`, `aqi_county` |
-| `hike_month.json` | ~600 | IRMA, GHCN, EPA, computed | 12 months per hike: crowd, temperature percentiles, wet/snow/smoky/ozone/heat days, daylight, closure flag, `missing[]` |
+| `hikes.json` | 40 | NPS pages, OSM, Commons, by hand | id, name, park, trailhead and end (lat/lon), **NPS** length and gain, difficulty, permit/closure note, gear icons, photo + credit, `featured`, `station`, `aqi_county` |
+| `hike_month.json` | 480 | IRMA, GHCN, EPA, computed | 12 months per hike: crowd, temperature percentiles, wet/snow/smoky/ozone/heat days, daylight, closure flag, `missing[]` |
 | `advice.json` | 5 to 10 | `docs/ai-vs-data-check.md` | "Advice vs data" cards; the Glacier September card is the demo closer |
-| `meta.json` | 1 | you | Source names, links, **as-of dates**, pipeline version. Set `"fake": false` only when every file is real |
+| `meta.json` | 1 | you (lane 2 adds `cost_sources`) | Source names, links, **as-of dates**, pipeline version, and `cost_sources` (where each cost input comes from; lane 2 fills it). Set `"fake": false` only when every file is real |
 
 ## Scripts (one per source, in `pipeline/`)
 `hikes.py`, `nps_visits.py`, `ghcn.py`, `epa_aqi.py`, `daylight.py`, `build.py` (merges everything, including lane 2's files,

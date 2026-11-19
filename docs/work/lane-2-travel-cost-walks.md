@@ -8,10 +8,12 @@ You make the numbers behind How much and the timed trail, and you connect the fi
 | File | Rows | Source | Notes |
 |---|---|---|---|
 | `travel.json` | hike x 10 cities | OpenRouteService matrix, DOT Table 6 | `drive_hr`, `drive_mi`, nearest `airport`, `fly_drive_hr`, `default_mode` (whichever is shorter door to trailhead) |
-| `cost.json` | hike x 10 cities x 4 quarters (~2,000) | DOT Table 6 (Socrata, no key), GSA per diem, EIA gas, NPS fees | **Unit inputs**, not totals, so the browser applies party size, nights, mode live: `fare_one_way`, `car_per_day` (60, assumed), `drive_mi`, `gas_per_gal`, `mpg` (25), `lodging_per_night`, `meals_per_day`, `entry_fee_vehicle`, `permit_fee`, and a `sources` object |
+| `cost.json` | hike x 10 cities x 4 quarters (1,600) | DOT Table 6 (Socrata, no key), GSA per diem, EIA gas, NPS fees | **Unit inputs**, not totals, so the browser applies party size, nights, mode live: `fare_one_way`, `car_per_day` (60, assumed), `drive_mi`, `gas_per_gal`, `mpg` (25), `lodging_per_night`, `meals_per_day`, `entry_fee_vehicle`, `permit_fee`. **No per-row sources**: write each source once into `meta.json` under `cost_sources` (keys `fare`, `lodging`, `gas`, `fees`, `assumed`: label, detail, url) and coordinate with lane 1, who owns the rest of `meta.json` |
 | `profiles/<id>.json` | 1 per hike | trail kit s1 to s3 (OSM + AWS Terrarium tiles) | `points` = `[dist_m, elev_m]` every 10 m, `osm_length_m`, `nps_length_m` (one way for out-and-back), `scale`, `checkpoints` with names and photos |
 | `walks/<id>/` | 3 | trail kit output | `angels_landing`, `grand_canyon`, `north_cascades`; copied into the Pages build by `deploy.yml` |
 | `CloudTransition` | 1 component | the 29 Oct prototype | See below |
+
+Walks: the three finished walks are published as Claude artifacts (Angels Landing `https://claude.ai/artifact/Pz6FoNxhKieBDwRQz5fQfY`, Bright Angel `https://claude.ai/artifact/S7TwV6S4vg9deUWA5DiJ2x`, Cascade Pass `https://claude.ai/artifact/4inTrYXBRQoY1eT7XWkZpc`). Their built folders are the kit's `output/<id>/`; copy those into `walks/` (the artifact versions are the same files, 435 to 459 each). All three open on a season with `?season=winter|spring|summer|autumn`.
 
 ## Scripts (in `pipeline/`)
 `travel.py`, `cost.py`, `profiles.py`. Raw downloads cached in `data/raw/`. The trail kit lives in `pipeline/trail_kit/` (read its
@@ -44,7 +46,7 @@ the props with them (suggest `{ hikeId, season, onDone }`).
 - [ ] `npm run validate:data` passes (from `app/`).
 - [ ] Known answers: SEA-LAS Q3 2025 fare $169.78; Springdale GSA lodging $110 (July and October); Angels Landing profile scale about 1.31.
 - [ ] Every hike has 10 travel rows and 40 cost rows, and a profile within 15% of the NPS length or a documented `scale`.
-- [ ] Every `sources` string names a real source and period, never "(fake)".
+- [ ] `meta.json` `cost_sources` names a real source and period for each key (never "(fake)"); the hike page popover shows them.
 - [ ] Three walks load from `https://utg1209.github.io/Peak-Finder_DATA511/walks/<id>/` with credits intact.
 - [ ] The cloud transition works forward and in reverse, and respects reduced motion.
 

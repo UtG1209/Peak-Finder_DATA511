@@ -56,8 +56,8 @@ python3 scripts/make_fake_data.py   # regenerate the fake data (lane 1/2 replace
 - `app/src/data/`: zod schemas (the contract), loaders, `useData()` hook, loading and error states.
 - `app/src/models/`: `match.ts`, `checkpoints.ts`, `cost.ts` with 60 tests, including the Angels Landing Q3 case.
 - `app/src/lib/`: URL filter state (`filters.ts`, `useFilters`), `explore.ts` (score every hike, empty-state fix), cities, quarters.
-- `app/src/screens/`: Explore (working starter), Hike and About (placeholders).
-- `scripts/make_fake_data.py`: 50 hikes, 600 months, 500 travel rows, 2,000 cost rows, 50 profiles, 7 advice cards.
+- `app/src/screens/`: Explore (working, with a guided start: blurred map until "Show hikes", and one colour per difficulty), Hike (header, quarter cards, cost graph; month strip and timed profile still to build), About (placeholder).
+- `scripts/make_fake_data.py`: the 40 hikes, 480 months, 400 travel rows, 1,600 cost rows, 40 profiles, 7 advice cards (about 585 KB, profiles aside).
 - `.github/workflows/`: `ci.yml` (lint, tests, build, artifact) and `deploy.yml` (GitHub Pages from `main`).
 
 ## Dates (from the plan)

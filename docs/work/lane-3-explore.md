@@ -10,7 +10,7 @@ look of the 29 Oct prototype (`docs/reference/oct29-prototype.html`, open it in 
 and `app/src/models/match.ts`. You may add components. Changes to `styles.css` tokens need a PR everyone sees.
 
 ## What is built
-Home city dropdown, quarter chips, five filters (dual temperature range, crowd chips, smoky and wet day sliders, max travel time) with tiny histograms,
+**Guided start**: the map is blurred with a card that walks through the three steps and a "Show hikes" button (`components/Navigator.tsx`, `go=1` in the URL); after it, a "What next?" tip. **Difficulty colours**: bubbles, legend, list dots, chips and the hike card use one colour per difficulty from `lib/difficulty.ts`. Home city dropdown, quarter chips, five filters (dual temperature range, crowd chips, smoky and wet day sliders, max travel time) with tiny histograms,
 difficulty chips, "Only 3D" switch, ranked list that doubles as the screen-reader map, MapLibre bubbles (area = match %, grey hollow dots for hikes past a
 limit, a ring for featured), hover card with reasons and typical cost, zoom controls, empty-state fix suggestion, all state in the URL.
 
@@ -19,7 +19,7 @@ limit, a ring for featured), hover card with reasons and typical cost, zoom cont
 2. **Motion**: bubbles resize over about 400 ms when the quarter changes (the layers have a radius transition: check it) and the list re-sorts with a
    slide (Framer Motion `layout`). With `prefers-reduced-motion`, everything is instant or a fade.
 3. **Hover linking**: hovering a bubble highlights its list row and the other way round (started: check list scroll-into-view).
-4. **Random picker**: "Not sure? Spin the wheel" opens a wheel of the **top 12 matching** hikes, weighted by match %, lands, shows the card with
+4. **Random picker** (after the guided start; it can be offered on the guide card too): "Not sure? Spin the wheel" opens a wheel of the **top 12 matching** hikes, weighted by match %, lands, shows the card with
    **Open** and **Spin again**. Reduced motion picks at once. Put it in `app/src/components/Wheel.tsx`; pure `pickWeighted(rows, rng)` in `lib/` with Vitest tests.
 5. **Share link** button (copies the URL), metric toggle (km, m, °C) stored in the URL (`units=metric`) and honoured by the card, list and sliders.
 6. **States**: loading skeletons for bubbles and rows (the shell shows a basic one), no home city (travel slider greyed, done), no match with the nearest misses
@@ -30,6 +30,9 @@ limit, a ring for featured), hover card with reasons and typical cost, zoom cont
    colour is never the only signal (amber hazards always with an icon and words), alt text on photos.
 9. **Tests**: Vitest for `lib/explore.ts`, `lib/filters.ts`, wheel weighting. A Playwright smoke test (`app/e2e/explore.spec.ts`): load, change quarter,
    see the count change, click a bubble, land on the hike page. Add `npm run e2e` and a CI job.
+
+## Polish for the guided start
+User-test it: can a new person tell what to do next without help? Make the step list reflect real progress, keep the blur transition instant with reduced motion, and make sure Back from a hike page returns to an unblurred map (it does while `go=1` is in the URL).
 
 ## Decisions waiting on the team (see [DECISIONS](../DECISIONS.md))
 - Hikes with a skipped factor (e.g. no station) can score 100% and rank first. Should they rank lower, with a "partial data" tag?

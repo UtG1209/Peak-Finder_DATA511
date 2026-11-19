@@ -2,8 +2,7 @@
 
 **Owner:** ______________  **Language:** React + TypeScript, D3 as React SVG  **Needs keys:** none
 
-You own the page people read before they decide: one scrolling page per hike. Placeholders exist at `app/src/screens/Hike/Hike.tsx`
-and `app/src/screens/About/About.tsx`. The paper prototypes are in `docs/paper-prototype/`. The pie chart on the orange sticky note was rejected: use stacked bars.
+You own the page people read before they decide: one scrolling page per hike. **Already built as a starter** in `app/src/screens/Hike/Hike.tsx`: header (difficulty colour, NPS length, gain, highest point, permit and closure notes), the four quarter cards with match % and "Best fit", and the **cost graph** (`components/charts/CostBars.tsx`: stacked bars Q1 to Q4 with lodging, food, transport, park fees and the hatched 15% buffer, cheapest and best-fit labels, party size, nights, fly or drive, click a segment for line items and source from `meta.json` `cost_sources`). Placeholders remain for the month strip, the timed profile and `app/src/screens/About/About.tsx`. Review the starter against CLAUDE.md, then build the rest. The paper prototypes are in `docs/paper-prototype/`. The pie chart on the orange sticky note was rejected: use stacked bars.
 
 ## Files you own
 `app/src/screens/Hike/`, `app/src/screens/About/`, new chart components under `app/src/components/charts/`, and the models
@@ -24,7 +23,7 @@ The selected quarter, home city and filters arrive in the URL (`parseFilters(use
    clock time going up **and** coming back (`timeline`). Time scrubber (drag the profile or a time slider) with a hiker marker (`positionAt`), elapsed time,
    distance, elevation and the current stop photo. Back/Forward buttons and arrow keys step between checkpoints in both directions. Daylight band
    (sunrise to sunset) and a warning in words if the finish (`finishTime`) is after dark (`beforeDark`).
-5. **What it costs**: four stacked bars Q1 to Q4 (lodging, food, transport, activity) plus a hatched 15% buffer on top; total on each bar; cheapest and best
+5. **What it costs** (starter built; verify and polish): four stacked bars Q1 to Q4 (lodging, food, transport, activity) plus a hatched 15% buffer on top; total on each bar; cheapest and best
    quarter labelled; controls for party size, nights, drive or fly (default = shorter door to trailhead, from `travel.json`); click a segment for a popover
    with its line items and source (`tripCost(...).lines`). Label: "Typical, from past data. Not a price quote." No pie.
 6. **About**: sources with links and as-of dates (from `meta.json`), how match % is computed with a worked example (Angels Landing Q3, limit 60 to 85 F:

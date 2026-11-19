@@ -9,7 +9,7 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
       Worry: the plan says "2 levels (1 level = 0.5)", which reads as a different scale.
 - [ ] **"Fits" vs "filtered out".** A hike is a grey hollow dot when **any active factor scores 0** (past its full tolerance), as in CLAUDE.md section 5.
       A hike slightly past a limit stays a coloured bubble, smaller. The count "N of 50 fit" counts non-grey hikes. The empty state says "No hike fits all your limits".
-- [ ] **Hikes with missing data can rank first.** A skipped factor is left out of the mean (spec), so a hike with no weather station and a temperature limit
+- [ ] **Hikes with missing data can rank first** (less likely now that the 40 are chosen for completeness, but a factor can still go missing in real data). A skipped factor is left out of the mean (spec), so a hike with no weather station and a temperature limit
       scores 100%. Proposal: add a "partial data" tag and sort such hikes after complete ones. Lane 3.
 - [ ] **Tobler slope after scaling.** Distances are scaled by `nps_length_m / osm_length_m` before the slope is computed, so a longer official trail has gentler slopes.
 - [ ] **Stops.** +10 min at every checkpoint except the trailhead at the start and the final arrival. `dir` is "up" for the outbound leg (even if it descends, e.g. Bright Angel)
@@ -22,18 +22,18 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
 - [ ] `station` can be `null` and `hike_month` temperature, wet, snow, heat fields can be `null` when no station is within 50 km; `missing` then contains `"temp"` and `"wet"`.
 - [ ] `route_type` is one of `out-and-back`, `loop`, `point-to-point`; `length_type` is `round-trip`, `loop` or `one-way`.
 - [ ] `difficulty` is `easy`, `moderate` or `hard`. `gear` uses: chains, exposure, no-shade, steep, snow-gear, bear-spray, water-crossing, scramble, extra-water, headlamp, bug-spray.
-- [ ] **Size budget.** Fake `cost.json` alone is about 640 KB because every row repeats the `sources` object; small files total about 941 KB before the 115 KB states outline.
-      Real sources are longer strings, so we will exceed 1 MB. Proposal (a contract change): move `sources` to `meta.json` keyed by factor and drop it from each row. The files compress to about
-      10% over gzip on GitHub Pages, so this is a raw-size budget issue only.
+- [x] **Cost sources moved to `meta.json`** (approved). `cost.json` rows no longer carry `sources`; `meta.cost_sources` holds fare, lodging, gas, fees and assumed once. Small files are about 585 KB.
 - [ ] **Bundle size.** The app JS is about 1.4 MB raw (407 KB gzip), mostly MapLibre, plus a 550 KB map worker loaded separately. Budget says 1.5 MB app plus data; gzip is the honest number.
 
 ## Design and screens
+- [x] **Guided start** (requested): the map is blurred until the user presses "Show hikes" (`go=1` in the URL); a card explains the three steps. This replaces "all filters start wide open so the map is never empty on arrival" with "wide open, but behind a short guide". Shared links include `go=1`, so they open unblurred.
+- [x] **Difficulty colours** (requested): bubble colour = difficulty (Easy light teal, Moderate gold, Violet for Hard), size = match, hollow grey = filtered out. The label stays "Moderate" (the data value), not "Intermediate", so it matches CLAUDE.md. Colours are in `app/src/lib/difficulty.ts`.
 - [ ] **Look**: the dark, sand-orange look of the 29 Oct prototype (as requested), not the teal in CLAUDE.md section 3. One token (`--accent` in `app/src/styles.css`) switches it.
 - [ ] **No landing page, no top-bar quarter slider, no "18 of 52" counter** (CLAUDE.md wins over the plan PDF). The counter "N of 50 hikes fit in Q4" is kept on the map as in the prototype.
 - [ ] **Routing** uses `HashRouter` so deep links work on GitHub Pages without a 404 fallback: `https://.../#/?from=SEA&q=3` and `#/hike/angels-landing`. Filters live in the query part,
       with the parameter names from CLAUDE.md (not the prototype's `#q4-t50-85-...` hash).
 - [ ] **US outline** is a static asset, `app/public/data/us-states.topo.json` (us-atlas, ISC licence, from US Census). Not one of the section 4 data files.
-- [ ] **Hike list** in the fake data is a placeholder of 50 real hikes with approximate coordinates and numbers written from memory. The team freezes the real list (at least 40) in lane 1.
+- [x] **Hike list = the 40 most famous hikes that also have complete data** (approved). Gate first (station within 50 km, AQI monitor, NPS visits, NPS page, OSM line, open photo), then fame. The fake list is a placeholder; lane 1 produces the real one.
 
 ## Process
 - [ ] Models are split: lane 3 owns `match.ts`; lane 4 owns `checkpoints.ts` and `cost.ts`; shared files change only through a PR everyone sees.
