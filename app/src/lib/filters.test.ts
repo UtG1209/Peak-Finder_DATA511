@@ -7,7 +7,14 @@ const params = (s: string) => new URLSearchParams(s)
 describe('URL filter state', () => {
   it('parses the CLAUDE.md example URL', () => {
     const f = parseFilters(params('from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1'))
-    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true })
+    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, go: false })
+  })
+
+  it('go=1 marks that the user pressed Show hikes, and survives a round trip', () => {
+    const f = parseFilters(params('from=SEA&q=2&go=1'))
+    expect(f.go).toBe(true)
+    expect(serializeFilters(f).get('go')).toBe('1')
+    expect(parseFilters(params('q=2')).go).toBe(false)
   })
 
   it('round-trips through serialize', () => {

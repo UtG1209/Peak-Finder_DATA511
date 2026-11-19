@@ -8,6 +8,8 @@ import { feature } from 'topojson-client'
 import type { FeatureCollection, Geometry } from 'geojson'
 import type { Topology } from 'topojson-specification'
 import { bubbleRadius } from '../lib/bubbles'
+import { DIFFICULTY_COLORS, hexToRgba } from '../lib/difficulty'
+import type { Difficulty } from '../lib/difficulty'
 
 export interface MapPoint {
   id: string
@@ -19,6 +21,7 @@ export interface MapPoint {
   /** Fails a limit: drawn as a small hollow grey dot (never removed). */
   greyed: boolean
   featured: boolean
+  difficulty: Difficulty
 }
 
 /** Imperative controls for the buttons around the map (zoom, zoom to results, whole US). */
@@ -41,13 +44,20 @@ interface Props {
 maplibregl.setWorkerUrl(workerUrl)
 
 const WHOLE_US: [[number, number], [number, number]] = [[-125.5, 23.5], [-66, 50]]
+const byDifficulty = (fn: (hex: string) => string): maplibregl.ExpressionSpecification => [
+  'match', ['get', 'difficulty'],
+  'easy', fn(DIFFICULTY_COLORS.easy),
+  'moderate', fn(DIFFICULTY_COLORS.moderate),
+  'hard', fn(DIFFICULTY_COLORS.hard),
+  '#b4bcc3',
+]
 const reduceMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const toGeoJson = (points: MapPoint[]): FeatureCollection => ({
   type: 'FeatureCollection',
   features: points.map((p) => ({
     type: 'Feature',
-    properties: { id: p.id, name: p.name, match: Math.round(p.match), r: bubbleRadius(p.match, p.greyed), greyed: p.greyed, featured: p.featured },
+    properties: { id: p.id, name: p.name, match: Math.round(p.match), r: bubbleRadius(p.match, p.greyed), greyed: p.greyed, featured: p.featured, difficulty: p.difficulty },
     geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
   })),
 })
@@ -112,14 +122,14 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
 
       m.addSource('hikes', { type: 'geojson', data: toGeoJson(latest.current.points) })
       const notGrey = ['!', ['get', 'greyed']] as maplibregl.ExpressionSpecification
-      m.addLayer({ id: 'hikes-halo', type: 'circle', source: 'hikes', filter: notGrey, paint: { 'circle-radius': ['+', ['get', 'r'], 5], 'circle-color': 'rgba(240,138,75,0.28)', 'circle-radius-transition': { duration: 400, delay: 0 } } })
+      m.addLayer({ id: 'hikes-halo', type: 'circle', source: 'hikes', filter: notGrey, paint: { 'circle-radius': ['+', ['get', 'r'], 5], 'circle-color': byDifficulty((h) => hexToRgba(h, 0.28)), 'circle-radius-transition': { duration: 400, delay: 0 } } })
       // featured 3D hikes carry a thin outer ring
       m.addLayer({ id: 'hikes-ring', type: 'circle', source: 'hikes', filter: ['==', ['get', 'featured'], true], paint: { 'circle-radius': ['+', ['get', 'r'], 8], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#f2efe9', 'circle-stroke-width': 1.2, 'circle-radius-transition': { duration: 400, delay: 0 } } })
       m.addLayer({
         id: 'hikes', type: 'circle', source: 'hikes',
         paint: {
           'circle-radius': ['get', 'r'],
-          'circle-color': ['case', ['get', 'greyed'], '#101418', '#f08a4b'],
+          'circle-color': ['case', ['get', 'greyed'], '#101418', byDifficulty((h) => h)],
           'circle-stroke-color': ['case', ['get', 'greyed'], '#7b8791', '#101418'],
           'circle-stroke-width': ['case', ['get', 'greyed'], 1.5, 1],
           'circle-radius-transition': { duration: 400, delay: 0 }, // bubbles resize over ~400 ms when the quarter changes
