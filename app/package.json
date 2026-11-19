@@ -26,6 +26,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@emnapi/core": "^2.0.0-beta.2",
+    "@emnapi/runtime": "^2.0.0-beta.2",
     "@eslint/js": "^10.0.1",
     "@types/d3": "^7.4.3",
     "@types/geojson": "^7946.0.16",
