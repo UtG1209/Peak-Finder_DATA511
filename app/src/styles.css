@@ -98,7 +98,9 @@ input.r:disabled::-webkit-slider-thumb { cursor: not-allowed; border-color: var(
 
 /* ---------- map pane ---------- */
 #mapPane { flex: 1 1 0; min-width: 0; position: relative; overflow: hidden; background: radial-gradient(ellipse at 50% 42%, #1d2830 0%, #101418 72%); }
-.us-map { position: absolute; inset: 0; }
+/* #mapPane is in the selector on purpose: MapLibre's own stylesheet (.maplibregl-map { position: relative }) loads AFTER this file now that the map is a lazy chunk,
+   and would otherwise win and collapse the map to height 0. An id beats a class regardless of order. */
+#mapPane .us-map { position: absolute; inset: 0; width: 100%; height: 100%; }
 .us-map .maplibregl-canvas { outline: none; }
 .maplibregl-ctrl-attrib { background: var(--scrim) !important; color: var(--muted) !important; }
 .maplibregl-ctrl-attrib a { color: var(--muted) !important; }

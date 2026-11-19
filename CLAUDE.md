@@ -28,7 +28,7 @@ Overview and working rules: `docs/work/README.md`. Setup and commands: `docs/SET
 API keys (pipeline only, none needed to run the app): `docs/CREDENTIALS.md`.
 
 **Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (lint, tests, build, performance budget: run it
-before every PR), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data).
+before every PR), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run e2e` (real-browser smoke test of the production build under the Pages base path: run it after touching the map, CSS or routing).
 
 **Hard rules for any agent.**
 1. Do not change the data shapes (section 4), the screen list (section 2) or the UX rules (section 3) without the user's explicit approval. Shapes live in `app/src/data/schema.ts`.

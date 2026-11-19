@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "validate:data": "vitest run src/data/data-contract.test.ts"
+    "validate:data": "vitest run src/data/data-contract.test.ts",
+    "e2e": "playwright test"
   },
   "engines": {
     "node": ">=22"
@@ -29,6 +30,7 @@
     "@emnapi/core": "^2.0.0-beta.2",
     "@emnapi/runtime": "^2.0.0-beta.2",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@types/d3": "^7.4.3",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^26.6.6",

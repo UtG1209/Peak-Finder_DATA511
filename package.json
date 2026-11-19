@@ -13,7 +13,10 @@
     "doctor": "bash scripts/doctor.sh",
     "walk:verify": "python3 pipeline/walks/build_walk.py --verify-all && python3 -m unittest discover -s pipeline/walks",
     "docs:check": "node scripts/check-claude-md.mjs",
-    "check": "npm run docs:check && npm run lint && npm test && SKIP_WALKS=1 npm run build && node scripts/check-budget.mjs"
+    "check": "npm run docs:check && npm run lint && npm test && SKIP_WALKS=1 npm run build && node scripts/check-budget.mjs",
+    "e2e": "npm --prefix app run e2e"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }
