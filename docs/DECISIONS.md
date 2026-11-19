@@ -1,0 +1,40 @@
+# Decisions made while building the base (please confirm or change)
+
+These were open or ambiguous in `CLAUDE.md` / the plan PDF. The base was built with the defaults below so nobody is blocked.
+Each is one small change if the team disagrees. Tick the box when confirmed.
+
+## Modelling
+- [ ] **Crowd scale.** `crowd_level` (0 to 1) is mapped to "levels" so one level is one band: 0 to 0.4 = Quiet (levels 0 to 1), 0.4 to 0.7 = Moderate (1 to 2),
+      0.7 to 1 = Busy (2 to 3). A limit of Quiet / Moderate / Busy is 1 / 2 / 3. Tolerance = 2 levels past the limit. (`models/match.ts`, `crowdLevel`.)
+      Worry: the plan says "2 levels (1 level = 0.5)", which reads as a different scale.
+- [ ] **"Fits" vs "filtered out".** A hike is a grey hollow dot when **any active factor scores 0** (past its full tolerance), as in CLAUDE.md section 5.
+      A hike slightly past a limit stays a coloured bubble, smaller. The count "N of 50 fit" counts non-grey hikes. The empty state says "No hike fits all your limits".
+- [ ] **Hikes with missing data can rank first.** A skipped factor is left out of the mean (spec), so a hike with no weather station and a temperature limit
+      scores 100%. Proposal: add a "partial data" tag and sort such hikes after complete ones. Lane 3.
+- [ ] **Tobler slope after scaling.** Distances are scaled by `nps_length_m / osm_length_m` before the slope is computed, so a longer official trail has gentler slopes.
+- [ ] **Stops.** +10 min at every checkpoint except the trailhead at the start and the final arrival. `dir` is "up" for the outbound leg (even if it descends, e.g. Bright Angel)
+      and "down" for the return. Loops and point-to-point routes have no return leg.
+- [ ] **Cost details.** Entry fee = fee per vehicle x vehicles, **capped at $80 in total**; permit fee is **per party**; the 1.12 tax applies to lodging only; one rental car in
+      "fly" mode regardless of party size; buffer = 15% of the sum.
+- [ ] **Checkpoint `dist_m` is in profile (OSM) metres** (before scaling). `nps_length_m` is the one-way length for out-and-back hikes.
+
+## Shapes (no shape was changed; these are the readings I used)
+- [ ] `station` can be `null` and `hike_month` temperature, wet, snow, heat fields can be `null` when no station is within 50 km; `missing` then contains `"temp"` and `"wet"`.
+- [ ] `route_type` is one of `out-and-back`, `loop`, `point-to-point`; `length_type` is `round-trip`, `loop` or `one-way`.
+- [ ] `difficulty` is `easy`, `moderate` or `hard`. `gear` uses: chains, exposure, no-shade, steep, snow-gear, bear-spray, water-crossing, scramble, extra-water, headlamp, bug-spray.
+- [ ] **Size budget.** Fake `cost.json` alone is about 640 KB because every row repeats the `sources` object; small files total about 941 KB before the 115 KB states outline.
+      Real sources are longer strings, so we will exceed 1 MB. Proposal (a contract change): move `sources` to `meta.json` keyed by factor and drop it from each row. The files compress to about
+      10% over gzip on GitHub Pages, so this is a raw-size budget issue only.
+- [ ] **Bundle size.** The app JS is about 1.4 MB raw (407 KB gzip), mostly MapLibre, plus a 550 KB map worker loaded separately. Budget says 1.5 MB app plus data; gzip is the honest number.
+
+## Design and screens
+- [ ] **Look**: the dark, sand-orange look of the 29 Oct prototype (as requested), not the teal in CLAUDE.md section 3. One token (`--accent` in `app/src/styles.css`) switches it.
+- [ ] **No landing page, no top-bar quarter slider, no "18 of 52" counter** (CLAUDE.md wins over the plan PDF). The counter "N of 50 hikes fit in Q4" is kept on the map as in the prototype.
+- [ ] **Routing** uses `HashRouter` so deep links work on GitHub Pages without a 404 fallback: `https://.../#/?from=SEA&q=3` and `#/hike/angels-landing`. Filters live in the query part,
+      with the parameter names from CLAUDE.md (not the prototype's `#q4-t50-85-...` hash).
+- [ ] **US outline** is a static asset, `app/public/data/us-states.topo.json` (us-atlas, ISC licence, from US Census). Not one of the section 4 data files.
+- [ ] **Hike list** in the fake data is a placeholder of 50 real hikes with approximate coordinates and numbers written from memory. The team freezes the real list (at least 40) in lane 1.
+
+## Process
+- [ ] Models are split: lane 3 owns `match.ts`; lane 4 owns `checkpoints.ts` and `cost.ts`; shared files change only through a PR everyone sees.
+- [ ] Contract changes need a PR labelled `contract` approved by all four.
