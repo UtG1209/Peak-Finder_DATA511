@@ -1,6 +1,9 @@
-# Changes to the project's contract need the lead's review.
+# Every change needs the owner's review (branch protection requires code-owner approval on main).
+*                              @UtG1209
+# Extra emphasis on the project's contract and automation:
 /CLAUDE.md                     @UtG1209
 /AGENTS.md                     @UtG1209
 /app/src/data/schema.ts        @UtG1209
 /docs/DECISIONS.md             @UtG1209
 /.github/                      @UtG1209
+/.githooks/                    @UtG1209
