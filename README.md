@@ -13,3 +13,6 @@ npm run check                                    # lint + tests + build + perfor
 Full setup, commands and troubleshooting: [`docs/SETUP.md`](docs/SETUP.md). No API key is needed to run the app.
 
 The app currently runs on **fake data** (yellow banner). The pipeline (`pipeline/`) replaces it file by file.
+
+## Licence
+Code and documentation: [MIT](LICENSE). Photos, imagery, terrain and data keep their own terms: see [NOTICE.md](NOTICE.md). Contributing and the approval rules: [CONTRIBUTING.md](CONTRIBUTING.md).

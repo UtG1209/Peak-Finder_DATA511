@@ -1,7 +1,7 @@
 name: Deploy to GitHub Pages
 
 # Every push to main tests, builds and publishes the app. The live link is the shared UI for the team:
-#   https://utg1209.github.io/Peak-Finder_DATA511/
+#   https://utg1209.github.io/Peak-Finder_DATA511/  (or the custom domain set in Settings, Pages)
 # One-time setup: repo Settings -> Pages -> Source: "GitHub Actions".
 
 on:
@@ -23,6 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Find the site's base path (the repo path on github.io, or / on a custom domain)
+        id: pages
+        uses: actions/configure-pages@v5
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,7 +40,7 @@ jobs:
       - name: Build (the Vite config copies walks/ into dist/walks/, so the 3D walks ship with the site)
         working-directory: app
         env:
-          VITE_BASE: /${{ github.event.repository.name }}/
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/
         run: npm run build
       - name: Performance budget
         run: node scripts/check-budget.mjs
