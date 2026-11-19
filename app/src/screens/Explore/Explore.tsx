@@ -1,121 +1,188 @@
-// MINIMAL Explore screen, enough to prove data -> models -> map works and deploys.
-// Lane 3 (docs/work/lane-3-explore.md) replaces the rail, list and map interactions.
-import { useMemo, useState } from 'react'
+// Explore: filter rail | map. Starter built to the 29 Oct prototype look so lane 3 can extend it.
+// Lane 3 (docs/work/lane-3-explore.md) adds: wheel picker, share link, metric toggle, list/map polish, tests.
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
-import { quarterMonths, travelFor } from '../../data/loaders'
+import { costFor, travelFor } from '../../data/loaders'
 import { CITIES } from '../../lib/cities'
-import { toLimits } from '../../lib/filters'
+import { bestRelaxation, countFitting, evaluate } from '../../lib/explore'
+import { DIFFICULTIES, RANGES, type Difficulty } from '../../lib/filters'
+import { reasonRows } from '../../lib/reasons'
 import { useFilters } from '../../lib/useFilters'
 import { QUARTERS } from '../../lib/quarters'
-import { computeMatch } from '../../models'
-import { UsMap, type MapPoint } from '../../components/UsMap'
+import { quarterValues, travelHours } from '../../models/match'
+import { tripCost } from '../../models/cost'
+import { HikeCard } from '../../components/HikeCard'
+import { RangeSlider } from '../../components/RangeSlider'
+import { UsMap, type MapApi, type MapPoint } from '../../components/UsMap'
 
-const CROWD_OPTIONS = [
-  { value: '', label: 'Any' },
-  { value: '0', label: 'Quiet' },
-  { value: '1', label: 'Moderate' },
-  { value: '2', label: 'Busy' },
+const CROWD_CHIPS: { label: string; value: 0 | 1 | 2 | null }[] = [
+  { label: 'Quiet', value: 0 },
+  { label: 'Moderate', value: 1 },
+  { label: 'Busy', value: 2 },
+  { label: 'Any', value: null },
 ]
+const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 export default function Explore() {
   const { data, index } = useData()
   const navigate = useNavigate()
   const [filters, update, reset] = useFilters()
   const [hoverId, setHoverId] = useState<string | null>(null)
-  const limits = toLimits(filters)
+  const apiRef = useRef<MapApi | null>(null)
+  const quarter = QUARTERS[filters.q - 1]
 
-  const rows = useMemo(
-    () =>
-      data.hikes
-        .map((h) => {
-          const result = computeMatch(quarterMonths(index, h.id, filters.q), travelFor(index, h.id, filters.from), limits)
-          return { hike: h, result }
-        })
-        // list rows: hikes that pass the difficulty / 3D filters
-        .filter(({ hike }) => (!filters.diff.length || filters.diff.includes(hike.difficulty)) && (!filters.has3d || hike.featured))
-        .sort((a, b) => Number(a.result.greyed) - Number(b.result.greyed) || b.result.match - a.result.match || a.hike.name.localeCompare(b.hike.name)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [data.hikes, index, filters.q, filters.from, filters.diff, filters.has3d, filters.temp, filters.crowd, filters.smoke, filters.rain, filters.travel],
+  const rows = useMemo(() => evaluate(data, index, filters), [data, index, filters])
+  const fitting = countFitting(rows)
+  const relax = useMemo(() => (fitting === 0 ? bestRelaxation(data, index, filters) : null), [fitting, data, index, filters])
+
+  // values behind the tiny histograms (all hikes, chosen quarter)
+  const dist = useMemo(() => {
+    const temp: number[] = [], smoke: number[] = [], wet: number[] = [], travel: number[] = []
+    for (const r of rows) {
+      const q = quarterValues(r.months)
+      if (q.temp !== null) temp.push(q.temp)
+      if (q.smoky !== null) smoke.push(q.smoky)
+      if (q.wet !== null) wet.push(q.wet)
+      const t = travelFor(index, r.hike.id, filters.from)
+      if (t) travel.push(travelHours(t))
+    }
+    return { temp, smoke, wet, travel }
+  }, [rows, index, filters.from])
+
+  const points: MapPoint[] = useMemo(
+    () => rows.map(({ hike, result, out }) => ({ id: hike.id, name: hike.name, lat: hike.trailhead.lat, lon: hike.trailhead.lon, match: result.match, greyed: out, featured: hike.featured })),
+    [rows],
   )
 
-  const points: MapPoint[] = rows.map(({ hike, result }) => ({
-    id: hike.id, name: hike.name, lat: hike.trailhead.lat, lon: hike.trailhead.lon,
-    match: result.match, greyed: result.greyed, featured: hike.featured,
-  }))
-  const fitting = rows.filter((r) => !r.result.greyed).length
-  const open = (id: string) => navigate({ pathname: `/hike/${id}`, search: window.location.hash.split('?')[1] ? `?${window.location.hash.split('?')[1]}` : '' })
+  const shown = rows.find((r) => r.hike.id === hoverId) ?? rows[0]
+  const costLine = useMemo(() => {
+    if (!shown || !filters.from) return null
+    const row = costFor(index, shown.hike.id, filters.from, filters.q)
+    if (!row) return null
+    const mode = travelFor(index, shown.hike.id, filters.from)?.default_mode ?? 'fly'
+    const total = Math.round(tripCost(row, { travellers: 2, nights: 3, mode }).total / 10) * 10
+    return `Typical cost about $${total.toLocaleString()} for 2 people, 3 nights (${mode === 'fly' ? 'flying' : 'driving'}). Past years, not a quote.`
+  }, [shown, filters.from, filters.q, index])
+
+  const open = (id: string) => {
+    const hike = index.hikeById.get(id)
+    const go = () => navigate({ pathname: `/hike/${id}`, search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '')}` })
+    if (hike && apiRef.current) apiRef.current.flyTo(hike.trailhead.lat, hike.trailhead.lon, go) // zoom first so the jump has a direction
+    else go()
+  }
+
+  const tempText = filters.temp ? `${filters.temp[0]}–${filters.temp[1]}°F` : 'Any'
+  const noCity = filters.from === null
 
   return (
     <div className="explore">
-      <aside className="rail" aria-label="Filters">
-        <h1 className="brand">Peak Finder</h1>
-        <label className="field">
-          <span>Home city</span>
-          <select value={filters.from ?? ''} onChange={(e) => update({ from: e.target.value || null })}>
-            <option value="">Skip</option>
-            {CITIES.map((c) => (
-              <option key={c.code} value={c.code}>{c.name} ({c.code})</option>
-            ))}
-          </select>
-        </label>
+      <aside className="rail" aria-label="Filters and ranked hikes">
+        <div className="brand">Peak Finder <span className="tag">Beta</span></div>
 
-        <fieldset className="field">
-          <legend>Quarter</legend>
-          <div className="chips">
+        <section className="group">
+          <h2>Where are you starting?</h2>
+          <select className="select" aria-label="Home city" value={filters.from ?? ''} onChange={(e) => update({ from: e.target.value || null })}>
+            <option value="">Skip</option>
+            {CITIES.map((c) => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
+          </select>
+        </section>
+
+        <section className="group">
+          <h2>When are you going?</h2>
+          <div className="qrow">
             {QUARTERS.map(({ q, label, months }) => (
-              <button key={q} type="button" className="chip" aria-pressed={filters.q === q} onClick={() => update({ q })}>
-                <b>{label}</b>
-                <span>{months}</span>
+              <button key={q} type="button" className="q" aria-pressed={filters.q === q} onClick={() => update({ q })}>
+                <b>{label}</b><span>{months}</span>
               </button>
             ))}
           </div>
-        </fieldset>
+          <div className="hintline">Typical values from past years. 3D walks open on {cap(quarter.season)}.</div>
+        </section>
 
-        <label className="field">
-          <span>Crowds (max)</span>
-          <select value={filters.crowd === null ? '' : String(filters.crowd)} onChange={(e) => update({ crowd: e.target.value === '' ? null : (Number(e.target.value) as 0 | 1 | 2) })}>
-            {CROWD_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-        </label>
-
-        <fieldset className="field">
-          <legend>Typical daytime high (°F)</legend>
-          <div className="pair">
-            <input type="number" aria-label="Lowest comfortable high, °F" placeholder="any" value={filters.temp?.[0] ?? ''} onChange={(e) => update({ temp: e.target.value === '' ? null : [Number(e.target.value), filters.temp?.[1] ?? 110] })} />
-            <span>to</span>
-            <input type="number" aria-label="Highest comfortable high, °F" placeholder="any" value={filters.temp?.[1] ?? ''} onChange={(e) => update({ temp: e.target.value === '' ? null : [filters.temp?.[0] ?? 0, Number(e.target.value)] })} />
+        <section className="group">
+          <h2>What do you need?</h2>
+          <RangeSlider
+            label="Typical daytime high" unitLabel="degrees Fahrenheit" valueText={tempText} anyActive={!filters.temp}
+            min={RANGES.temp[0]} max={RANGES.temp[1]} value={filters.temp ?? [RANGES.temp[0], RANGES.temp[1]]} histogram={dist.temp}
+            onChange={(v) => { const [lo, hi] = v as [number, number]; update({ temp: lo === RANGES.temp[0] && hi === RANGES.temp[1] ? null : [lo, hi] }) }}
+          />
+          <div className="ctl">
+            <div className="ctl-h"><span>Crowds (busiest you accept)</span><span className={`val${filters.crowd === null ? ' off' : ''}`}>{filters.crowd === null ? 'Any' : cap(CROWD_CHIPS[filters.crowd].label)}</span></div>
+            <div className="fits" role="group" aria-label="Busiest crowd level you will accept" style={{ marginTop: 8 }}>
+              {CROWD_CHIPS.map((c) => <button key={c.label} type="button" className="fit" aria-pressed={filters.crowd === c.value} onClick={() => update({ crowd: c.value })}>{c.label}</button>)}
+            </div>
           </div>
-        </fieldset>
+          <RangeSlider
+            label="Smoky days in the quarter" unitLabel="smoky days" valueText={filters.smoke === null ? 'Any' : `up to ${filters.smoke}`} anyActive={filters.smoke === null}
+            min={0} max={RANGES.smoke[1]} value={filters.smoke ?? RANGES.smoke[1]} histogram={dist.smoke} spoken={(v) => (v >= RANGES.smoke[1] ? 'any number of smoky days' : `up to ${v} smoky days`)}
+            onChange={(v) => update({ smoke: (v as number) >= RANGES.smoke[1] ? null : (v as number) })}
+          />
+          <RangeSlider
+            label="Wet days in the quarter" unitLabel="wet days" valueText={filters.rain === null ? 'Any' : `up to ${filters.rain}`} anyActive={filters.rain === null}
+            min={0} max={RANGES.rain[1]} value={filters.rain ?? RANGES.rain[1]} histogram={dist.wet} spoken={(v) => (v >= RANGES.rain[1] ? 'any number of wet days' : `up to ${v} wet days`)}
+            onChange={(v) => update({ rain: (v as number) >= RANGES.rain[1] ? null : (v as number) })}
+          />
+          <RangeSlider
+            label="Max travel time, door to trailhead" unitLabel="hours" valueText={noCity ? 'Pick a city' : filters.travel === null ? 'Any' : `up to ${filters.travel} h`} anyActive={noCity || filters.travel === null}
+            min={1} max={RANGES.travel[1]} value={filters.travel ?? RANGES.travel[1]} histogram={dist.travel} disabled={noCity} note={noCity ? 'Pick a home city to use this' : undefined}
+            spoken={(v) => (v >= RANGES.travel[1] ? 'any travel time' : `up to ${v} hours`)}
+            onChange={(v) => update({ travel: (v as number) >= RANGES.travel[1] ? null : (v as number) })}
+          />
+          <div className="fits" role="group" aria-label="Difficulty">
+            {DIFFICULTIES.map((d: Difficulty) => (
+              <button key={d} type="button" className="fit" aria-pressed={filters.diff.includes(d)} onClick={() => update({ diff: filters.diff.includes(d) ? filters.diff.filter((x) => x !== d) : [...filters.diff, d] })}>{cap(d)}</button>
+            ))}
+          </div>
+          <label className="check"><input type="checkbox" checked={filters.has3d} onChange={(e) => update({ has3d: e.target.checked })} /><span>Only hikes with a 3D walk ({data.hikes.filter((h) => h.featured).length})</span></label>
+        </section>
 
-        <button type="button" className="link" onClick={reset}>Reset filters</button>
-        <p className="fine">Starter screen. Real sliders, histograms, wheel and empty states are lane 3.</p>
+        <section className="group">
+          <h2>Hikes that fit</h2>
+          {fitting === 0 && (
+            <p className="empty hintline">
+              No hike fits all your limits.{' '}
+              {relax ? <>Allowing {relax.label} adds {relax.gain}. <button type="button" className="linkbtn" style={{ minHeight: 0 }} onClick={() => update(relax.patch)}>Allow it</button></> : 'Try the nearest misses below.'}
+            </p>
+          )}
+          <ol className="ranked">
+            {rows.map(({ hike, result, out }) => (
+              <li key={hike.id} className={hoverId === hike.id ? 'hot' : ''} onMouseEnter={() => setHoverId(hike.id)} onMouseLeave={() => setHoverId(null)}>
+                <button type="button" onClick={() => open(hike.id)} aria-label={`${hike.name}, ${hike.park_name}, ${Math.round(result.match)} percent match${out ? ', past a limit' : ''}`}>
+                  <span className="name">{hike.name}{hike.featured && <em title="Has a 3D walk">3D</em>}</span>
+                  <span className="park">{hike.park_name}</span>
+                  <span className={`pct${out ? ' out' : ''}`}>{Math.round(result.match)}%</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <button type="button" className="linkbtn" onClick={reset}>Reset filters</button>
+        </section>
+        <p className="fine">Sample numbers while the pipeline is built. Match % = how well a hike's typical conditions fit your limits.</p>
       </aside>
 
-      <main className="stage">
-        <div className="stage-top">
-          <strong>{fitting}</strong> of {rows.length} hikes fit {QUARTERS[filters.q - 1].label} ({QUARTERS[filters.q - 1].months})
-          <span className="legend"><i className="dot fit" /> Fits your filters <i className="dot out" /> Filtered out</span>
+      <main id="mapPane">
+        <UsMap points={points} highlightId={hoverId} onSelect={open} onHover={setHoverId} apiRef={apiRef} />
+        <div id="count" className="pill"><b>{fitting}</b> <span>of {rows.length} hikes fit in {quarter.label}</span></div>
+        {shown && (
+          <HikeCard
+            hike={shown.hike} quarterLabel={quarter.label} match={shown.result.match} fits={!shown.out}
+            rows={reasonRows(shown.result, shown.months)} costLine={costLine} onOpen={() => open(shown.hike.id)}
+          />
+        )}
+        <div id="legend" className="pill" aria-hidden="true">
+          <div><i className="lg-fit" /> Fits your filters</div>
+          <div><i className="lg-out" /> Filtered out</div>
+          <div><i className="lg-ring" /> 3D walk ready</div>
         </div>
-        <UsMap points={points} highlightId={hoverId} onSelect={open} onHover={setHoverId} />
+        <div id="hint" className="pill">Scroll to zoom · drag to pan · click a bubble</div>
+        <div id="zoomctl">
+          <button type="button" className="zb txt" onClick={() => apiRef.current?.fit(rows.filter((r) => !r.out).map((r) => r.hike.trailhead).map((t) => ({ lat: t.lat, lon: t.lon })))}>Zoom to results</button>
+          <button type="button" className="zb" aria-label="Zoom in" onClick={() => apiRef.current?.zoomIn()}>+</button>
+          <button type="button" className="zb" aria-label="Zoom out" onClick={() => apiRef.current?.zoomOut()}>−</button>
+          <button type="button" className="zb txt" onClick={() => apiRef.current?.wholeUs()}>Whole US</button>
+        </div>
       </main>
-
-      <section className="list" aria-label="Ranked hikes">
-        <h2>Ranked hikes</h2>
-        <ol>
-          {rows.map(({ hike, result }) => (
-            <li key={hike.id} className={hoverId === hike.id ? 'hot' : ''} onMouseEnter={() => setHoverId(hike.id)} onMouseLeave={() => setHoverId(null)}>
-              <button type="button" onClick={() => open(hike.id)}>
-                <span className="name">{hike.name}{hike.featured && <em title="Has a 3D walk"> 3D</em>}</span>
-                <span className="park">{hike.park_name}</span>
-                <span className={`pct${result.greyed ? ' grey' : ''}`}>{Math.round(result.match)}%</span>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </section>
     </div>
   )
 }

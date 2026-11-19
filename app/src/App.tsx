@@ -31,6 +31,7 @@ export default function App() {
   return (
     <DataContext.Provider value={{ data: state.data, index: state.index }}>
       <HashRouter>
+        <div className="shell">
         <FakeBanner meta={state.data.meta} />
         <Routes>
           <Route path="/" element={<Explore />} />
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="*" element={<p className="boot">Page not found. <Link to="/">Back to the map</Link></p>} />
         </Routes>
+        </div>
       </HashRouter>
     </DataContext.Provider>
   )

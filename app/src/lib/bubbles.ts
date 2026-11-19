@@ -1,4 +1,4 @@
-const MAX_R = 17 // px radius of a 100% bubble
+const MAX_R = 11 // px radius of a 100% bubble
 const MIN_R = 4
 const GREY_R = 3.5 // a hike that fails a limit is a small hollow grey dot, never removed
 

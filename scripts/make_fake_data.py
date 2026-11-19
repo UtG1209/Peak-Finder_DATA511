@@ -456,8 +456,8 @@ def placeholder_svg(name: str, park: str) -> str:
         f'{escape(name)}"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl({hue},45%,78%)"/>'
         f'<stop offset="1" stop-color="hsl({hue},40%,38%)"/></linearGradient></defs><rect width="900" height="600" fill="url(#g)"/>'
         f'<path d="M0 430 L170 270 L290 360 L470 170 L640 340 L760 260 L900 380 V600 H0Z" fill="hsl({hue},45%,22%)" opacity=".85"/>'
-        f'<text x="40" y="520" font-family="Inter,Arial,sans-serif" font-size="44" font-weight="700" fill="#fff">{escape(name)}</text>'
-        f'<text x="40" y="568" font-family="Inter,Arial,sans-serif" font-size="26" fill="#fff" opacity=".9">{escape(park)} · placeholder image</text></svg>'
+        f'<text x="450" y="330" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="700" fill="#fff">{escape(name)}</text>'
+        f'<text x="450" y="378" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="26" fill="#fff" opacity=".9">{escape(park)} · placeholder image</text></svg>'
     )
 
 

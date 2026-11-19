@@ -47,6 +47,9 @@ export function crowdLevel(ratio: number): number {
   return 2 + ((ratio - b) / (1 - b)) * 1
 }
 
+/** Band word for a 0..1 crowd ratio, shared by the match model, cards and the month strip. */
+export const crowdBand = (ratio: number): 'quiet' | 'moderate' | 'busy' => (ratio < CROWD_EDGES[0] ? 'quiet' : ratio < CROWD_EDGES[1] ? 'moderate' : 'busy')
+
 export interface FactorResult {
   key: FactorKey
   /** The hike's typical value for the quarter (°F, level, days, hours). null when unknown. */
