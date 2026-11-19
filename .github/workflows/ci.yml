@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main] # main is built and tested by the deploy workflow
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test # models, URL state, and the data contract on app/public/data
+      - run: npm run build
+      # Every branch gets a downloadable build, so a teammate can look at the UI before it is merged.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-build-${{ github.sha }}
+          path: app/dist
+          retention-days: 14
+
+  pipeline:
+    # Placeholder for lanes 1 and 2: runs pipeline/checks once they exist (CLAUDE.md section 6).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Fake data generator still runs
+        run: python scripts/make_fake_data.py --out "$RUNNER_TEMP/fake-data"
+      - name: Pipeline checks
+        run: |
+          if [ -d pipeline/checks ] && ls pipeline/checks/*.py >/dev/null 2>&1; then
+            python -m pip install -r pipeline/requirements.txt
+            python -m pytest pipeline/checks -q
+          else
+            echo "No pipeline/checks yet (lanes 1 and 2 add them)."
+          fi
