@@ -1,0 +1,435 @@
+{
+  "id": "north_cascades",
+  "title": "Cascade Pass to Sahale Glacier",
+  "brand": "When to Go · Trail test",
+  "map_label": "3D view of North Cascades National Park following the hiker up the Cascade Pass and Sahale Arm trails to Sahale Glacier",
+  "park": "North Cascades National Park, Washington",
+  "start": {
+    "name": "Cascade Pass Trailhead",
+    "lat": 48.4754883,
+    "lon": -121.0751562
+  },
+  "end": {
+    "name": "Sahale Glacier (end of Sahale Arm Trail)",
+    "lat": 48.4852501,
+    "lon": -121.0460024
+  },
+  "gap_bridge_m": 50,
+  "osm_bbox": [
+    -121.09,
+    48.458,
+    -121.03,
+    48.495
+  ],
+  "bounds": {
+    "wide": [
+      -121.2,
+      48.39,
+      -120.92,
+      48.56
+    ],
+    "mid": [
+      -121.125,
+      48.435,
+      -120.995,
+      48.518
+    ],
+    "core": [
+      -121.092,
+      48.456,
+      -121.028,
+      48.497
+    ]
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.4,
+    "scroll_vh": 4060,
+    "heading_window_m": [
+      500,
+      1200
+    ]
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Sahale Glacier",
+    "key_stop": {
+      "label": "Cascade Pass",
+      "at_m": 5610
+    }
+  },
+  "stops": [
+    {
+      "at": 0.005,
+      "photo": "trailhead",
+      "commons_file": "Cascade Pass Trail at North Cascades in Washington 14.jpg",
+      "alt": "A dirt trail through pink alpine flowers toward a snow-patched peak on the Cascade Pass Trail",
+      "eyebrow": "Start · Cascade Pass Trailhead · {elev}",
+      "title": "Into the high country",
+      "text": "The Cascade River Road ends here, and the trail climbs about {gain} to Sahale Glacier. The photo is from higher up the Cascade Pass Trail, where the trail runs through alpine meadow.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead",
+        "autumn": "trailhead_autumn"
+      },
+      "season_text": {
+        "winter": {
+          "text": "The trail climbs about {gain} to Sahale Glacier. In winter it lies under snow and the road can be closed, so check conditions with the park first. The photo shows the same trail in better weather."
+        }
+      }
+    },
+    {
+      "at": 0.453,
+      "photo": "peaks",
+      "commons_file": "Cascade Pass at North Cascades in WA - Flickr - landscapesinthewest.jpg",
+      "alt": "A rocky, snow-streaked peak seen from the trail below Cascade Pass",
+      "eyebrow": "Climbing to the pass",
+      "title": "The high peaks appear",
+      "text": "The trail climbs steadily, and the rocky peaks around the pass start to show above you.",
+      "season_photos": {
+        "summer": "peaks",
+        "autumn": "peaks_autumn",
+        "spring": "peaks_spring",
+        "winter": "peaks_winter"
+      }
+    },
+    {
+      "at": 0.554,
+      "photo": "valley",
+      "commons_file": "Cascade Pass (52313898664).jpg",
+      "alt": "A wide green glacier-carved valley seen from the trail just below Cascade Pass",
+      "eyebrow": "Almost at the pass",
+      "title": "The valley opens up",
+      "text": "Just below the pass, a wide green valley opens out beside the trail.",
+      "season_photos": {
+        "summer": "valley",
+        "autumn": "valley_autumn",
+        "spring": "valley_spring",
+        "winter": "valley_winter"
+      },
+      "season_text": {
+        "autumn": {
+          "text": "Just below the pass, the valley slopes turn red and gold beside the trail."
+        },
+        "winter": {
+          "text": "Just below the pass, the valley fills with snow and the trail disappears under it."
+        },
+        "spring": {
+          "text": "Just below the pass, snow still lies in the valley while the lower slopes turn green."
+        }
+      }
+    },
+    {
+      "at": 0.597,
+      "photo": "pass",
+      "commons_file": "The Triplets and Cascade Peak.jpeg",
+      "alt": "Jagged rock peaks above a meadow at Cascade Pass",
+      "eyebrow": "Cascade Pass · {elev}",
+      "title": "Cascade Pass",
+      "text": "Cascade Pass. NPS lists it at 3.7 miles from the trailhead; the trail on this map measures about 3.5. The Triplets and Cascade Peak rise above the meadow, and here the trail turns onto Sahale Arm.",
+      "elev_at_m": 5610,
+      "season_photos": {
+        "autumn": "pass_autumn",
+        "summer": "pass",
+        "spring": "pass_spring"
+      }
+    },
+    {
+      "at": 0.694,
+      "photo": "triplets",
+      "commons_file": "The Triplets from Sahale Arm (42126630090).jpg",
+      "alt": "Wildflowers beside the trail on Sahale Arm with the jagged Triplets behind",
+      "eyebrow": "Sahale Arm",
+      "title": "Meadows on the arm",
+      "text": "Past the pass the trail follows Sahale Arm. Flowers line the path, with the Triplets across the valley.",
+      "season_photos": {
+        "summer": "triplets",
+        "spring": "triplets_spring"
+      },
+      "season_text": {
+        "autumn": {
+          "text": "Past the pass the trail follows Sahale Arm, with the Triplets across the valley. The flowers are over and the meadows are turning."
+        },
+        "winter": {
+          "text": "Past the pass the trail would follow Sahale Arm, but in winter it is buried in snow, with the Triplets across the valley."
+        },
+        "spring": {
+          "text": "Past the pass the trail follows Sahale Arm, with the Triplets across the valley. Snow is still melting back from the path."
+        }
+      }
+    },
+    {
+      "at": 0.755,
+      "photo": "doubtful",
+      "commons_file": "Doubtful Lake 4.jpg",
+      "alt": "Doubtful Lake, a dark blue lake in a rocky basin below a snow-patched peak, seen from Sahale Arm",
+      "eyebrow": "Above Doubtful Lake",
+      "title": "Doubtful Lake",
+      "text": "A dark blue lake sits in the basin below the arm, under a snow-patched peak.",
+      "season_photos": {
+        "summer": "doubtful",
+        "autumn": "doubtful_autumn",
+        "spring": "doubtful_spring"
+      }
+    },
+    {
+      "at": 0.807,
+      "photo": "arm",
+      "commons_file": "Sahale Arm and Cascade Pass at North Cascades in Washington 09.jpg",
+      "alt": "A dirt trail across red and gold autumn meadow on Sahale Arm toward a pale rocky peak",
+      "eyebrow": "Sahale Arm",
+      "title": "Autumn colour on the arm",
+      "text": "In autumn the meadows of Sahale Arm turn red and gold, with the trail winding across them toward the peaks.",
+      "season_photos": {
+        "autumn": "arm",
+        "summer": "arm_summer",
+        "winter": "arm_winter"
+      },
+      "season_text": {
+        "summer": {
+          "title": "Sahale Arm in summer",
+          "text": "In summer the meadows of Sahale Arm are green, with the trail winding across them toward the peaks."
+        },
+        "winter": {
+          "title": "Sahale Arm under snow",
+          "text": "In winter Sahale Arm is buried in snow and the trail is not visible. The photo shows the snow-covered slopes above the arm."
+        },
+        "spring": {
+          "title": "Sahale Arm in spring",
+          "text": "In spring much of Sahale Arm is still under snow, and the meadows have not come out yet."
+        }
+      }
+    },
+    {
+      "at": 0.854,
+      "photo": "ridges",
+      "commons_file": "NCNP.jpg",
+      "alt": "Dark rocky ridges with patches of snow under a deep blue sky",
+      "eyebrow": "High on the arm",
+      "title": "Rock and snow",
+      "text": "Higher up the meadows give way to bare rock, with snow patches clinging to the ridges.",
+      "season_photos": {
+        "summer": "ridges",
+        "autumn": "ridges_autumn",
+        "winter": "ridges_winter"
+      }
+    },
+    {
+      "at": 0.895,
+      "photo": "clouds",
+      "commons_file": "Clouds rolling over Cascade Pass.jpg",
+      "alt": "Clouds drifting through a mountain valley beneath snow-covered peaks",
+      "eyebrow": "Above the clouds",
+      "title": "Clouds below you",
+      "text": "Cloud drifts through the valley far below, with the pass somewhere beneath it.",
+      "season_photos": {
+        "summer": "clouds",
+        "autumn": "clouds_autumn"
+      }
+    },
+    {
+      "at": 0.962,
+      "photo": "doubtful_top",
+      "commons_file": "Doubtful Lake from Sahale Glacier 3.jpg",
+      "alt": "Rocky moraine in the foreground with Doubtful Lake and ranks of peaks beyond",
+      "eyebrow": "Near the glacier",
+      "title": "The drop to Doubtful Lake",
+      "text": "Near the top the rocky ground falls away to Doubtful Lake, far below.",
+      "season_photos": {
+        "summer": "doubtful_top",
+        "winter": "doubtful_top_winter"
+      }
+    },
+    {
+      "at": 0.998,
+      "photo": "end",
+      "commons_file": "Sahale moraine.jpeg",
+      "alt": "A rocky moraine mound and a bright snow slope at Sahale Glacier, with rows of snowy peaks behind",
+      "eyebrow": "End · Sahale Glacier · {elev}",
+      "title": "Sahale Glacier",
+      "text": "You are about {gain} above the trailhead, at the end of the trail by Sahale Glacier, 5.9 miles from the start by NPS. The photo shows the moraine beside the glacier.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "end_summer",
+        "autumn": "end"
+      },
+      "season_text": {
+        "summer": {
+          "text": "You are about {gain} above the trailhead, at the end of the trail by Sahale Glacier, 5.9 miles from the start by NPS. The photo shows the snow of the glacier."
+        }
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 600,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 1450,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "band_m": [
+          800,
+          2250
+        ],
+        "colour_a": [
+          70,
+          105,
+          45
+        ],
+        "colour_b": [
+          115,
+          140,
+          60
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "band_m": [
+          1400,
+          2150
+        ],
+        "colour_a": [
+          205,
+          100,
+          35
+        ],
+        "colour_b": [
+          238,
+          178,
+          55
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  },
+  "season_photo_files": {
+    "arm_summer": "Sahale Arm at North Cascades in WA (50181272901).jpg",
+    "arm_winter": "Sahale and Sahale Arm.jpg",
+    "clouds_autumn": "Sahale Arm in WA.jpg",
+    "doubtful_autumn": "Doubtful Lake and Sahale Arm in WA.jpg",
+    "doubtful_spring": "Doubtful Lake with snow.jpg",
+    "doubtful_top_winter": "Doubtful Lake and Mount Formidable.jpeg",
+    "end_summer": "Sahale Glacier 1994.jpeg",
+    "pass_autumn": "Cascade Pass and Sahale Arm in WA - 52420045758.jpg",
+    "pass_spring": "Looking to Cascade Pass - Flickr - brewbooks.jpg",
+    "peaks_autumn": "Cascade Pass in WA - 52416778246.jpg",
+    "peaks_spring": "Cascade Pass (4887272386).jpg",
+    "peaks_winter": "Mix-up Peak in winter.jpg",
+    "ridges_autumn": "Sahale Mountain at North Cascades in WA (52408853905).jpg",
+    "ridges_winter": "Eldorado Peak from Sahale Mountain.jpeg",
+    "trailhead_autumn": "On way up to Cascade Pass trail head southeast of Marblemount (5016667326).jpg",
+    "triplets_spring": "Cascade Pass at North Cascades National Park in Washington 1.jpg",
+    "valley_autumn": "Cascade Pass in WA.jpg",
+    "valley_spring": "Cascade Pass and Pelton Basin.jpg",
+    "valley_winter": "Johannesburg Mountain southwest aspect.jpg"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "size_budget_mb": 15,
+  "note": "Single source of truth for the 3D walks. A walk is listed here once it is built and verified. app data (featured, walk_path) is derived from this file. Set legacy=true only for walks built before the size budget existed.",
+  "walks": {
+    "angels_landing": { "hike_id": "angels-landing", "kit_trail": "angels_landing", "legacy": true, "built": "2026-11-18" },
+    "grand_canyon": { "hike_id": "bright-angel-trail", "kit_trail": "grand_canyon", "legacy": true, "built": "2026-11-18" },
+    "north_cascades": { "hike_id": "cascade-pass-sahale", "kit_trail": "north_cascades", "legacy": true, "built": "2026-11-18" }
+  }
+}

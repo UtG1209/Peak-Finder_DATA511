@@ -1,0 +1,6 @@
+# Python dependencies for the data pipeline (lanes 1 and 2). Python 3.13 recommended.
+# scripts/make_fake_data.py needs none of these (standard library only).
+pandas>=2.2
+requests>=2.32
+python-dotenv>=1.0
+pytest>=8.0

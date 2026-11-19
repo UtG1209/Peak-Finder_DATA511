@@ -1,0 +1,6 @@
+# Changes to the project's contract need the lead's review.
+/CLAUDE.md                     @UtG1209
+/AGENTS.md                     @UtG1209
+/app/src/data/schema.ts        @UtG1209
+/docs/DECISIONS.md             @UtG1209
+/.github/                      @UtG1209
