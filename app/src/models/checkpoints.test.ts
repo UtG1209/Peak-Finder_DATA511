@@ -1,0 +1,100 @@
+import { describe, expect, it } from 'vitest'
+import { flatProfile } from '../test/fixtures'
+import { beforeDark, defaultStartMin, finishTime, formatClock, parseClock, positionAt, STOP_MINUTES, timeline, toblerSpeedKmh } from './checkpoints'
+
+describe('Tobler speed', () => {
+  it('peaks at 6 km/h on a slight downhill (S = -0.05)', () => expect(toblerSpeedKmh(-0.05)).toBeCloseTo(6, 6))
+  it('is about 5.04 km/h on the flat', () => expect(toblerSpeedKmh(0)).toBeCloseTo(6 * Math.exp(-0.175), 6))
+  it('slows on steep climbs and steep descents', () => {
+    expect(toblerSpeedKmh(0.3)).toBeLessThan(toblerSpeedKmh(0.1))
+    expect(toblerSpeedKmh(-0.4)).toBeLessThan(toblerSpeedKmh(-0.1))
+  })
+})
+
+describe('timeline', () => {
+  const flatMinutesPerHalf = (500 / 1000 / toblerSpeedKmh(0)) * 60
+
+  it('times a flat out-and-back with 10 minute stops', () => {
+    const tl = timeline(flatProfile(), 7 * 60)
+    expect(tl.map((e) => `${e.checkpoint.id}:${e.dir}`)).toEqual(['c0:up', 'c1:up', 'c2:up', 'c1:down', 'c0:down'])
+    expect(tl[0].time).toBe(420) // no stop at the trailhead
+    expect(tl[1].time).toBeCloseTo(420 + flatMinutesPerHalf, 6)
+    expect(tl[2].time).toBeCloseTo(420 + 2 * flatMinutesPerHalf + STOP_MINUTES, 6)
+    // two stops going out (c1, c2) and one coming back (c1); none at the start or the finish
+    expect(finishTime(tl)).toBeCloseTo(420 + 4 * flatMinutesPerHalf + 3 * STOP_MINUTES, 6)
+  })
+
+  it('scales distances by nps / osm length (Angels Landing: 3.3 km on the map, 4.3 km official)', () => {
+    const plain = finishTime(timeline(flatProfile(), 0))
+    const scaled = finishTime(timeline(flatProfile({ nps_length_m: 1314, scale: 1.314 }), 0))
+    const stops = 3 * STOP_MINUTES
+    expect((scaled - stops) / (plain - stops)).toBeCloseTo(1.314, 3) // walking time grows with the length
+  })
+
+  it('climbing is slower than the way down for the same stretch', () => {
+    const climb = flatProfile({ points: Array.from({ length: 101 }, (_, i) => [i * 10, 100 + i * 1.5] as [number, number]) }) // 15% grade
+    const tl = timeline(climb, 0)
+    const up = tl[2].time - tl[0].time - STOP_MINUTES
+    const down = tl[4].time - tl[2].time - STOP_MINUTES - STOP_MINUTES
+    expect(down).toBeLessThan(up)
+  })
+
+  it('a one-way route has no return leg and no stop at the end', () => {
+    const tl = timeline(flatProfile(), 0, false)
+    expect(tl.map((e) => e.dir)).toEqual(['up', 'up', 'up'])
+    expect(tl[2].stopMin).toBe(0)
+  })
+
+  it('checkpoint walked distance is in scaled metres', () => {
+    const tl = timeline(flatProfile({ nps_length_m: 2000, scale: 2 }), 0)
+    expect(tl[2].walkedM).toBeCloseTo(2000)
+    expect(tl[4].walkedM).toBeCloseTo(4000)
+  })
+})
+
+describe('positionAt', () => {
+  const tl = timeline(flatProfile(), 7 * 60)
+
+  it('is at the trailhead before the start and after the finish', () => {
+    expect(positionAt(tl, 0).dist).toBe(0)
+    expect(positionAt(tl, 24 * 60).dist).toBe(0)
+    expect(positionAt(tl, 24 * 60).nextCheckpoint).toBeNull()
+  })
+
+  it('walks outward: halfway between c0 and c1 at half the time', () => {
+    const half = (tl[1].time - tl[0].time) / 2
+    const p = positionAt(tl, tl[0].time + half)
+    expect(p.dist).toBeCloseTo(250, 3)
+    expect(p.dir).toBe('up')
+    expect(p.nextCheckpoint?.checkpoint.id).toBe('c1')
+  })
+
+  it('stays put during a stop', () => {
+    const p = positionAt(tl, tl[2].time + 5)
+    expect(p.dist).toBe(1000)
+    expect(p.dir).toBe('up')
+  })
+
+  it('walks back on the return leg', () => {
+    const depart = tl[2].time + STOP_MINUTES
+    const p = positionAt(tl, depart + (tl[3].time - depart) / 2)
+    expect(p.dir).toBe('down')
+    expect(p.dist).toBeCloseTo(750, 3)
+    expect(p.nextCheckpoint?.checkpoint.id).toBe('c1')
+  })
+})
+
+describe('daylight and clocks', () => {
+  it('beforeDark compares the finish with sunset', () => {
+    const tl = timeline(flatProfile(), 7 * 60)
+    expect(beforeDark(tl, finishTime(tl) + 1)).toBe(true)
+    expect(beforeDark(tl, finishTime(tl) - 1)).toBe(false)
+  })
+  it('parses and formats clock times', () => {
+    expect(parseClock('06:38')).toBe(398)
+    expect(formatClock(398)).toBe('6:38 am')
+    expect(formatClock(13 * 60 + 5)).toBe('1:05 pm')
+    expect(formatClock(0)).toBe('12:00 am')
+  })
+  it('default start is one hour after sunrise', () => expect(defaultStartMin('06:38')).toBe(458))
+})
