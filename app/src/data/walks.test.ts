@@ -45,8 +45,8 @@ describe('each walk is complete, credited and within budget', () => {
     const dir = join(root, 'walks', id)
     const html = readFileSync(join(dir, 'index.html'), 'utf8')
 
-    it(`${id}: every photo and cloud file the page names exists`, () => {
-      const files = [...new Set(html.match(/(?:photos|clouds)\/[A-Za-z0-9_.-]+\.(?:jpg|jpeg|png|webp)/g) ?? [])]
+    it(`${id}: every photo and cloud file the page names exists (clouds may be in walks/_shared)`, () => {
+      const files = [...new Set(html.match(/(?:\.\.\/_shared\/)?(?:photos|clouds)\/[A-Za-z0-9_.-]+\.(?:jpg|jpeg|png|webp)/g) ?? [])]
       expect(files.length).toBeGreaterThan(3)
       for (const f of files) expect(existsSync(join(dir, f)), f).toBe(true)
     })

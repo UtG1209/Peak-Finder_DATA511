@@ -15,9 +15,10 @@ You make the numbers behind How much and the timed trail, and you connect the fi
 
 Walks: the three finished walks are published as Claude artifacts (Angels Landing `https://claude.ai/artifact/Pz6FoNxhKieBDwRQz5fQfY`, Bright Angel `https://claude.ai/artifact/S7TwV6S4vg9deUWA5DiJ2x`, Cascade Pass `https://claude.ai/artifact/4inTrYXBRQoY1eT7XWkZpc`). Their built folders are the kit's `output/<id>/`; copy those into `walks/` (the artifact versions are the same files, 435 to 459 each). All three open on a season with `?season=winter|spring|summer|autumn`.
 
-**Walks for every hike, with a size budget.** We build a 3D walk for all 40 hikes, but the three existing ones are already 108 MB and GitHub Pages stops at 1 GB, so every
-new walk must be **15 MB or less** (see DECISIONS, "Walks: size and hosting"). Add a size check to your kit run and tune the config (tighter bounds, corridor, fewer zoom levels,
-lighter season tiles). Order the work: featured three (done), then the most famous hikes, and stop adding when we hit the budget; the rest keep the 2D profile and photos.
+**Walks for every hike, with a size budget.** We build a 3D walk for all 40 hikes, but the three existing ones are 108 MB and GitHub Pages stops at 1 GB. Measured: the lossless optimizer
+(`optimize_walk.py`, part of the build) takes a walk from about 35 MB to about 27 MB with no quality change (proved by pixel comparison). A hard 15 MB was **not** reachable without lowering quality, so the budget
+is **30 MB after optimization, aim for 25** (see DECISIONS, "Walks: size and hosting"). To go lower, tighten the config (route-hugging bounds, corridor, fewer season photos), never lower image quality.
+Order the work: featured three (done), then the most famous hikes. Because 40 walks at 27 MB is about 1.1 GB, **walks will live in a separate repo/site** (decision pending); do not add more walks to this repo's history.
 
 **How to build a walk: `docs/WALKS.md`.** One command (`pipeline/walks/build_walk.py`) shows the plan, runs the kit, verifies, integrates and writes a report with a checklist; the manifest
 `walks/manifest.json` is the single source of truth. Never build a walk by running kit scripts by hand. The walk template also needs the **Back button** (design track).

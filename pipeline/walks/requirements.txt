@@ -1,0 +1,4 @@
+# Only for optimize_walk.py (the rest of the walk tooling is standard library). Python 3.13 recommended.
+pillow>=11
+numpy>=2
+scikit-image>=0.24

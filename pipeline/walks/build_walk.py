@@ -52,9 +52,11 @@ PLAN = [
     ("C1", "Structure", "Every file the page names exists (photos, clouds); tile folders are not empty; the route profile parses.", "no missing files", False),
     ("C2", "Credits and seasons", "The page credits USGS, Terrain Tiles, OpenStreetMap and Wikimedia Commons, says the season view is illustrative, offers all four seasons and reads ?season=.", "all strings and buttons present", False),
     ("C3", "Route vs the hike", "Compares the walk's own route with the hike in app data: start near the trailhead, end near the end point, length vs the NPS length, highest point vs the NPS elevation.", "within tolerance (strict when data is real, loose while data is fake)", False),
-    ("C4", "Size budget", "Total size must be 15 MB or less for new walks (the 3 original walks are exempt); no single file over 5 MB. Pages publishes at most 1 GB for the whole site.", "size within budget", False),
+    ("C4", "Size budget", "Total size must be within the manifest budget (30 MB after lossless optimization) for new walks; the 3 original walks are exempt; no single file over 5 MB. Pages publishes at most 1 GB for the whole site.", "size within budget", False),
     ("C5", "Season photos", "Counts real photos per season; seasons without one borrow another season (the page says so). Reported, never hidden.", "counts reported", False),
     ("D1", "Copy into walks/", "Copies output/<trail>/ to walks/<walk>/ (without screenshots).", "files copied", False),
+    ("D1b", "Optimize (lossless)", "Runs optimize_walk.py on the copy: elevation tiles to lossless WebP (pixel-exact, verified per file), season overlays to lossless WebP, one shared copy of the cloud images in walks/_shared/. Never lowers quality; never prunes tiles.",
+     "every converted tile checked against the original; page references re-checked", False),
     ("D2", "Manifest", "Adds the walk to walks/manifest.json. The app's `featured` and `walk_path` are derived from this file.", "manifest valid", False),
     ("D3", "Hike-page profile", "Writes walks/<walk>/profile.json from the walk's own route, in the app's profile shape, so the hike page and the walk agree.", "profile valid", False),
     ("D4", "App data", "While data is fake: regenerates app/public/data with scripts/make_fake_data.py. When data is real: tells you to run the pipeline build.", "data regenerated", False),
@@ -119,7 +121,13 @@ def route_summary(profile: list[list[float]]) -> dict:
 
 
 def referenced_files(html: str) -> list[str]:
-    return sorted(set(re.findall(r"(?:photos|clouds)/[A-Za-z0-9_.\-]+\.(?:jpg|jpeg|png|webp)", html)))
+    # clouds may live in walks/_shared/clouds/ (optimize_walk.py shares the identical cloud images across walks)
+    files = set(re.findall(r"(?:\.\./_shared/)?(?:photos|clouds)/[A-Za-z0-9_.\-]+\.(?:jpg|jpeg|png|webp)", html))
+    # the page preloads clouds with  'clouds/' + name + '.webp'  (dynamic): the three standard names must exist where the page points
+    dyn = re.search(r"'((?:\.\./_shared/)?clouds/)'\s*\+", html)
+    if dyn:
+        files |= {f"{dyn.group(1)}{n}.webp" for n in ("cumulus", "mass", "wisps")}
+    return sorted(files)
 
 
 REQUIRED_CREDITS = {
@@ -309,6 +317,14 @@ def phase_integrate(run: Run, trail_id: str, walk_id: str, hike: dict, cfg: dict
             shutil.rmtree(walk_dir)
         shutil.copytree(src, walk_dir, ignore=shutil.ignore_patterns("_shots"))
         run.add("D1", "PASS", f"copied {src.relative_to(ROOT)} -> walks/{walk_id}/")
+        try:
+            import optimize_walk  # Pillow and numpy come with the kit's requirements
+            rep = optimize_walk.optimize(walk_dir, None, False)
+            run.add("D1b", "PASS", f"{rep['before_bytes'] / 1048576:.1f} MB -> {rep['after_bytes'] / 1048576:.1f} MB, worst quality score " + ", ".join(f"{k} {t['worst']:.4f}" for k, t in rep["types"].items()))
+        except ImportError:
+            run.add("D1b", "WARN", "Pillow/numpy missing: not optimized (pip install -r pipeline/walks/requirements.txt); the size check below may fail")
+        except SystemExit as e:
+            run.add("D1b", "FAIL", str(e))
     else:
         run.add("D1", "SKIP", "verify mode: nothing to copy")
 
@@ -384,7 +400,7 @@ Open the walk locally: `npm run dev` then http://localhost:5173/walks/{walk_id}/
       Screenshots: `cd pipeline/trail_kit && SEASON=winter SHOTS=0,0.5,1 node tools/screenshot_test.js {trail_id}`.
 - [ ] **Illustrative**: the page says the season map is illustrative (snow lines are assumptions); you agree the snow line looks plausible.
 - [ ] **Hike page**: open `#/hike/{run.hike_id}`; "Walk it in 3D" opens this walk on the season of the chosen quarter.
-- [ ] **Size**: within the 15 MB budget (or an exemption is noted in walks/manifest.json).
+- [ ] **Size**: within the manifest budget (or an exemption is noted in walks/manifest.json).
 - [ ] **Credits**: USGS, Terrain Tiles (Mapzen / AWS), OpenStreetMap and each photo's Commons credit appear on the page.
 """
     p = WALKS / walk_id / "BUILD_REPORT.md"
@@ -455,7 +471,7 @@ def cmd_build(a) -> int:
     phase_integrate(run, trail, walk_id, hike, cfg, a.force, copy=True)
     if run.failed:
         return 1
-    phase_verify(run, WALKS / walk_id, hike, legacy=False, budget_mb=load_manifest().get("size_budget_mb", 15))
+    phase_verify(run, WALKS / walk_id, hike, legacy=False, budget_mb=load_manifest().get("size_budget_mb", 30))
     if run.failed:
         print("\nVerification failed: the walk was copied to walks/%s/ but is NOT added to the manifest. Fix it and re-run with --force." % walk_id)
         write_report(run, trail, walk_id, hike, "build (failed verification)")
@@ -482,7 +498,7 @@ def cmd_verify(walk_id: str, write_files: bool, run_tests: bool) -> Run | None:
     run = Run(walk_id, entry["hike_id"])
     print(f"\nVerifying walk '{walk_id}' (hike '{entry['hike_id']}')")
     hike = load_hike(entry["hike_id"])
-    phase_verify(run, WALKS / walk_id, hike, bool(entry.get("legacy")), m.get("size_budget_mb", 15))
+    phase_verify(run, WALKS / walk_id, hike, bool(entry.get("legacy")), m.get("size_budget_mb", 30))
     if write_files and hike and not run.failed:
         cfg = load_json(KIT / "trails" / f"{entry['kit_trail']}.json")
         write_profile(run, walk_id, cfg, hike)

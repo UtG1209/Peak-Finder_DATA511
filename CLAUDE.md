@@ -287,7 +287,7 @@ data/processed/      outputs before copy to the app
 app/                 Vite app: src/screens/ (Explore, Hike, About), src/components/, src/models/, src/data/ (schema = the contract),
                      src/lib/ (URL filters, difficulty colours, walks link), public/data/*.json, public/data/profiles/
 walks/<id>/          finished trail-walk sites (angels_landing, grand_canyon, north_cascades); served at /walks/<id>/, copied into the build,
-                     loaded only when a walk is opened (~35 MB each; new walks must be <= 15 MB, see docs/DECISIONS.md)
+                     loaded only when a walk is opened (~35 MB each as built, ~27 MB after lossless optimization; new walks must be <= 30 MB, see docs/DECISIONS.md)
 scripts/             make_fake_data.py, check-budget.mjs, check-claude-md.mjs, doctor.sh
 docs/                SETUP.md, DECISIONS.md, CREDENTIALS.md, work/ (the four lane briefs), plan PDF, paper prototype, reference/
 .github/             workflows/ci.yml (lint, tests, build, budgets, CLAUDE.md check), deploy.yml (Pages), pull_request_template.md, CODEOWNERS
@@ -295,7 +295,7 @@ docs/                SETUP.md, DECISIONS.md, CREDENTIALS.md, work/ (the four lan
 
 ## 8. Trail kit notes (when touching walks or profiles)
 - **Every walk is built the same way, with one command** (`docs/WALKS.md`): `python3 pipeline/walks/build_walk.py <trail> --hike-id <id>` prints the step plan, asks, runs the kit,
-  verifies (structure, credits, four seasons, route vs the hike's NPS numbers, size <= 15 MB), copies into `walks/`, updates `walks/manifest.json` (the single source of truth: `featured` and
+  verifies (structure, credits, four seasons, route vs the hike's NPS numbers, size <= 30 MB after lossless optimization), copies into `walks/`, updates `walks/manifest.json` (the single source of truth: `featured` and
   `walk_path` in app data come from it), writes the hike-page profile from the walk's own route and a `BUILD_REPORT.md` with a checklist to tick by hand. Re-check any time:
   `python3 pipeline/walks/build_walk.py --verify-all`. A walk not in the manifest does not exist for the app. Every walk needs a Back button to the hike page (`docs/work/design-track.md`).
 

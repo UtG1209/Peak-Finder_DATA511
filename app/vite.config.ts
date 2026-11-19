@@ -19,7 +19,11 @@ function walks(): Plugin {
     let file = normalize(join(walksDir, path.slice(prefix.length)))
     if (!file.startsWith(walksDir)) return next() // no path traversal
     if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html')
-    if (!existsSync(file)) return next()
+    if (!existsSync(file)) {
+      // a missing walk file is a real 404 (like GitHub Pages), not the app's index.html: this is how we detect tiles a trimmed walk still needs
+      res.statusCode = 404
+      return res.end()
+    }
     res.setHeader('Content-Type', MIME[extname(file)] ?? 'application/octet-stream')
     createReadStream(file).pipe(res)
   }
