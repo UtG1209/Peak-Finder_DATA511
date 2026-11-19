@@ -7,9 +7,9 @@ Where should I hike, when (which quarter), and how much will it cost? A static w
 - **Who does what:** [`docs/work/README.md`](docs/work/README.md) (four lanes, one brief each).
 
 ```bash
-cd app && npm ci && npm run dev     # http://localhost:5173/
-npm test && npm run lint && npm run build
-python3 scripts/make_fake_data.py   # regenerate the placeholder data
+npm run doctor && npm run setup && npm run dev   # http://localhost:5173/
+npm run check                                    # lint + tests + build + performance budget (what CI runs)
 ```
+Full setup, commands and troubleshooting: [`docs/SETUP.md`](docs/SETUP.md). No API key is needed to run the app.
 
 The app currently runs on **fake data** (yellow banner). The pipeline (`pipeline/`) replaces it file by file.

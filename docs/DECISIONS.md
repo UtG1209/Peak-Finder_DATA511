@@ -38,3 +38,19 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
 ## Process
 - [ ] Models are split: lane 3 owns `match.ts`; lane 4 owns `checkpoints.ts` and `cost.ts`; shared files change only through a PR everyone sees.
 - [ ] Contract changes need a PR labelled `contract` approved by all four.
+
+## Walks: size and hosting (needs a team decision before lane 2 builds more)
+- [ ] The 3 finished walks are **108 MB** (35 to 40 MB each; mostly terrain and imagery tiles plus season overlays). GitHub Pages publishes at most **1 GB** per site and
+      repos should stay under about 1 GB. At today's size **40 walks would be about 1.4 GB, which does not fit**.
+- [ ] **We build a walk for every hike (requested), so each new walk gets a budget of 15 MB or less** (about 600 MB for 40, plus the 3 existing). Levers in the trail kit config:
+      a tighter `bounds` box, a corridor around the route (`bounds.corridor_m`), fewer zoom levels, WebP or smaller season overlay tiles, JPEG quality for photos, fewer season photos.
+      Lane 2 adds `scripts/check-walk-size.py` (fails over 15 MB) to the kit run.
+- [ ] If we still outgrow Pages, host walks in a second repo or bucket and set `VITE_WALKS_BASE` (already supported by `app/src/lib/walks.ts`); no app code changes.
+- [ ] Everyone clones the walks with the repo. If clone size becomes a problem: `git clone --filter=blob:none` and sparse-checkout `walks/` only where needed.
+- [x] **Walks never load on the first screen.** The app only builds a link; the walk page and its tiles are fetched when someone opens it. `scripts/check-budget.mjs` fails CI if the entry
+      or Explore chunk ever references `walks/`.
+
+## Time model on real data
+- [ ] Real DEM profiles are noisy (the Angels Landing walk had a 4:1 slope in one 10 m step, which Tobler turned into 90 hours). The checkpoint model now smooths elevation over about 50 m and caps
+      slope at ±0.6 (`MAX_SLOPE`, `SMOOTH_WINDOW_M` in `models/checkpoints.ts`). With real routes it gives Angels Landing 4.6 h, Bright Angel 11.7 h, Cascade Pass 8.7 h round trip. Lane 4 validates against NPS times for 5 hikes.
+- [x] Walks are built by one verified process (`docs/WALKS.md`); `walks/manifest.json` is the single source of truth for `featured` and `walk_path`.

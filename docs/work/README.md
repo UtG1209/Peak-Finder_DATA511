@@ -11,7 +11,7 @@ Four lanes, one repo, one live link. Each lane has its own brief in this folder.
 | 3 | [lane-3-explore.md](lane-3-explore.md) | The Explore screen: filters, map, ranked list, wheel | `app/src/screens/Explore`, map and filter components, `match` model |
 | 4 | [lane-4-hike-page-about.md](lane-4-hike-page-about.md) | Hike page, About page, user testing | `app/src/screens/Hike`, `About`, charts, `checkpoints` and `cost` models |
 
-Names go in each brief's "Owner" line. Lanes 1 and 2 are Python (`pipeline/`). Lanes 3 and 4 are React (`app/`).
+Plus the **[design track](design-track.md)** (UI polish with Claude Design) and **[the walk process](../WALKS.md)** (how every 3D walk is built and checked). Names go in each brief's "Owner" line. Lanes 1 and 2 are Python (`pipeline/`). Lanes 3 and 4 are React (`app/`).
 
 ## The shared UI (everyone sees the same thing, any time)
 
@@ -47,7 +47,8 @@ python3 scripts/make_fake_data.py   # regenerate the fake data (lane 1/2 replace
    passes `npm run validate:data`. Do not commit half-real files: replace a whole file or none.
 5. **Never commit secrets.** Keys live in `.env` (git-ignored). See [../CREDENTIALS.md](../CREDENTIALS.md).
 6. **Every number has a source; "typical", not exact.** The seven UX rules in CLAUDE.md section 3 apply to every screen.
-7. **Decisions we made on our own** (and need the team to confirm) are in [../DECISIONS.md](../DECISIONS.md).
+7. **CLAUDE.md is what every agent reads first, so keep it true.** Change a shape, screen, rule, command or the layout? Update CLAUDE.md in the same PR. CI (`scripts/check-claude-md.mjs`) catches fields, paths and commands that drift; the PR template reminds you of the rest. Using your own agent? Start it in the repo root: it reads `CLAUDE.md` (and `AGENTS.md` points there).
+8. **Decisions we made on our own** (and need the team to confirm) are in [../DECISIONS.md](../DECISIONS.md).
 
 ## What is already built (the base)
 

@@ -5,6 +5,41 @@ Vanshika Nehra, Adnan Kalim. Read this file fully before writing code. The long-
 `docs/implementation-plan.pdf`; where this file and the PDF disagree, **this file wins** (it includes the
 paper-prototype decisions made after the PDF).
 
+## 0. Start here (agents: read this block first, then the section for your task)
+
+**State of the repo.** The app runs end to end on **fake data** (`app/public/data/meta.json` has `"fake": true`; a yellow banner shows it).
+Built: data contract (zod schemas) and loaders, the three models with tests, Explore (guided start with a blurred map until "Show hikes",
+difficulty colours, filters, ranked list, hover card), Hike page (header, quarter fit, cost graph), the three 3D walks in `walks/`, CI and
+GitHub Pages deploy, setup tooling. Not built yet: real pipeline data, month strip, timed elevation profile, About page, wheel picker,
+cloud transition, similar hikes, walks for the other hikes.
+
+**Which lane are you in?** The work is split in four independent lanes, each with a brief. If the user has not said, ask which one they own, then read
+only that brief and stay in its files.
+
+| Lane | Brief | Owns |
+|---|---|---|
+| 1 Data core | `docs/work/lane-1-data-core.md` | hikes catalogue, crowds, weather, air quality, daylight, checks |
+| 2 Travel, cost, walks | `docs/work/lane-2-travel-cost-walks.md` | travel, cost, elevation profiles, 3D walks, cloud transition |
+| 3 Explore | `docs/work/lane-3-explore.md` | Explore screen, map, filters, wheel, `models/match.ts` |
+| 4 Hike page and About | `docs/work/lane-4-hike-page-about.md` | Hike page, About, charts, `models/checkpoints.ts` and `cost.ts`, user testing |
+| Design track | `docs/work/design-track.md` | UI polish with Claude Design: type scale, tokens, mobile, the Back button on the 3D walk |
+
+Overview and working rules: `docs/work/README.md`. Setup and commands: `docs/SETUP.md`. Open decisions and defaults we chose: `docs/DECISIONS.md`.
+API keys (pipeline only, none needed to run the app): `docs/CREDENTIALS.md`.
+
+**Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (lint, tests, build, performance budget: run it
+before every PR), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data).
+
+**Hard rules for any agent.**
+1. Do not change the data shapes (section 4), the screen list (section 2) or the UX rules (section 3) without the user's explicit approval. Shapes live in `app/src/data/schema.ts`.
+2. Never hand-edit `app/public/data/*.json`: change `scripts/make_fake_data.py` or the pipeline.
+3. Nothing from `walks/` may load on the first screen (CI enforces it); never re-run the trail kit's tile steps on a finished walk.
+4. No secrets in git (`.env` is ignored). The browser app never calls an API.
+5. Small PRs into `main`, one feature each, `npm run check` green.
+
+**Keep this file true.** If your change alters a data shape, a screen, a rule, a command, the repo layout or the "State of the repo" above, **update CLAUDE.md in the same PR**.
+CI runs `scripts/check-claude-md.mjs` (section 4 fields match `schema.ts`, referenced files exist, `npm run` commands exist, required sections present) and fails if this file drifts.
+
 ## 1. What we are building
 
 One static web app that helps a hiker answer three questions in order:
@@ -114,8 +149,9 @@ park-level crowds, county-level AQI, station-based weather, typical not quoted c
 6. Motion explains change; with `prefers-reduced-motion`, everything is instant or a fade.
 7. Same words everywhere: Q1 = Jan–Mar = Winter on every screen, including the 3D walk.
 
-Visual: one calm hue (teal) for match; amber/red only for hazards and always with an icon and words; never
-red/green pairs. °F, miles, feet by default, with a metric toggle. Fonts: Archivo (headings), Inter (text),
+Visual: the dark look of the 29 Oct prototype (`docs/reference/oct29-prototype.html`) with ONE accent colour (sand-orange, token `--accent` in
+`app/src/styles.css`; teal was the earlier proposal and is a one-token switch). Bubble colour = difficulty (Easy light teal, Moderate gold, Hard violet;
+`app/src/lib/difficulty.ts`), size = match %. Amber/red only for hazards and always with an icon and words; never red/green pairs. °F, miles, feet by default, with a metric toggle. Fonts: Archivo (headings), Inter (text),
 same as the walks. Accessibility: contrast ≥ 4.5:1, full keyboard use, native inputs with spoken values,
 alt text + Commons credit on photos.
 
@@ -195,6 +231,7 @@ Scale distances by `nps_length_m / osm_length_m` (OSM shortens switchbacks: 3.3 
 Landing). +10 min stop at each checkpoint. Out-and-back: run the profile backwards for the return.
 Functions needed: `timeline(profile, startTime) → [{checkpoint, dir: "up"|"down", time}]`,
 `positionAt(timeline, t) → {dist, elev, dir, nextCheckpoint}`, `finishTime`, `beforeDark(sunset)`.
+Real profiles are noisy, so elevations are smoothed over ~50 m and slope is capped at ±0.6 before Tobler (a single 4:1 spike would add days).
 Validate the totals against NPS time estimates for 5 hikes; if far off, apply one global correction factor
 and note it on the About page.
 
@@ -242,19 +279,25 @@ Checks that must pass before data reaches the app (`pipeline/checks/`, run in CI
 - Performance: first screen < 2 s; app code + data < 1.5 MB; photos lazy-loaded at 900 px; walks only on request.
 
 ```
-pipeline/            one script per source: hikes.py, nps_visits.py, ghcn.py, epa_aqi.py, travel.py, cost.py,
-                     daylight.py, profiles.py, build.py ; checks/ ; trail_kit/ (s1–s6 from the kit)
+pipeline/            one script per source (lanes 1 and 2, to be written): hikes.py, nps_visits.py, ghcn.py, epa_aqi.py,
+                     travel.py, cost.py, daylight.py, profiles.py, build.py ; checks/ ; requirements.txt ;
+                     trail_kit/ (s1–s6 from the kit, present)
 data/raw/            download cache (gitignored)
 data/processed/      outputs before copy to the app
-app/                 Vite app: src/screens/ (Explore, Hike, About), src/components/, src/models/, src/data/,
-                     public/data/*.json, public/data/profiles/
-walks/<id>/          finished trail-walk sites copied from the kit output (angels_landing, grand_canyon,
-                     north_cascades); copied into the Pages build
-docs/                plan PDF, paper prototype photos, data notes, trail kit docs
-.github/workflows/   ci.yml (lint, tests, pipeline checks), deploy.yml (Pages)
+app/                 Vite app: src/screens/ (Explore, Hike, About), src/components/, src/models/, src/data/ (schema = the contract),
+                     src/lib/ (URL filters, difficulty colours, walks link), public/data/*.json, public/data/profiles/
+walks/<id>/          finished trail-walk sites (angels_landing, grand_canyon, north_cascades); served at /walks/<id>/, copied into the build,
+                     loaded only when a walk is opened (~35 MB each; new walks must be <= 15 MB, see docs/DECISIONS.md)
+scripts/             make_fake_data.py, check-budget.mjs, check-claude-md.mjs, doctor.sh
+docs/                SETUP.md, DECISIONS.md, CREDENTIALS.md, work/ (the four lane briefs), plan PDF, paper prototype, reference/
+.github/             workflows/ci.yml (lint, tests, build, budgets, CLAUDE.md check), deploy.yml (Pages), pull_request_template.md, CODEOWNERS
 ```
 
 ## 8. Trail kit notes (when touching walks or profiles)
+- **Every walk is built the same way, with one command** (`docs/WALKS.md`): `python3 pipeline/walks/build_walk.py <trail> --hike-id <id>` prints the step plan, asks, runs the kit,
+  verifies (structure, credits, four seasons, route vs the hike's NPS numbers, size <= 15 MB), copies into `walks/`, updates `walks/manifest.json` (the single source of truth: `featured` and
+  `walk_path` in app data come from it), writes the hike-page profile from the walk's own route and a `BUILD_REPORT.md` with a checklist to tick by hand. Re-check any time:
+  `python3 pipeline/walks/build_walk.py --verify-all`. A walk not in the manifest does not exist for the app. Every walk needs a Back button to the hike page (`docs/work/design-track.md`).
 
 - Kit docs (in `pipeline/trail_kit/docs/` once copied): `START_HERE_NEW_TRAIL.md`, `NEW_TRAIL_RUNBOOK.md`,
   `LESSONS_LEARNED.md`, `BUILD_LOG.md`. Read them before running the kit.
@@ -271,6 +314,7 @@ docs/                plan PDF, paper prototype photos, data notes, trail kit doc
 - `scripts/make_fake_data.py` (or `.ts`) generates plausible fake data for the 40 hikes so the UI can be built
   before the pipeline is done. Fake data must be clearly marked in `meta.json` (`"fake": true`) and shown
   as a banner in the app.
-- Small PRs, one feature each, into `main`; CI must pass. Never commit API keys (`.env` is gitignored).
+- Small PRs, one feature each, into `main`; CI must pass (`npm run check`). Never commit API keys (`.env` is gitignored).
+- Update this file in the same PR as any change it describes (see "Keep this file true" in section 0).
 - Ask before changing the data shapes, the screen list, or anything in section 3.
 - Not in scope: crowds by hour, review scraping, login, Amtrak, pie charts.

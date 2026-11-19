@@ -11,6 +11,7 @@ import { toLimits } from '../../lib/filters'
 import { usd } from '../../lib/money'
 import { QUARTERS } from '../../lib/quarters'
 import { useFilters } from '../../lib/useFilters'
+import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
 import { CostBars, CostLegend } from '../../components/charts/CostBars'
@@ -84,7 +85,10 @@ export default function Hike() {
           {hike.permit_note && <p className="note-line">Permit: {hike.permit_note}</p>}
           {hike.closure_note && <p className="note-line warn">Closure: {hike.closure_note}</p>}
           <div className="hp-actions">
-            {hike.featured && <button type="button" className="go" disabled title="Lane 2 connects the 3D walk and the cloud transition">Walk it in 3D <span aria-hidden="true">→</span></button>}
+            {hike.featured && walkUrl(hike, sel.season) && (
+              // Plain link for now (opens the finished walk on the season of the chosen quarter). Lane 2 wraps it in the cloud transition.
+              <a className="go" href={walkUrl(hike, sel.season)!}>Walk it in 3D <span aria-hidden="true">→</span></a>
+            )}
           </div>
         </div>
       </header>

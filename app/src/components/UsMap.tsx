@@ -85,6 +85,11 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
       maxZoom: 9,
     })
     map.current = m
+    let disposed = false
+    // If the container had no size when the map was created (e.g. right after a route change), redraw once it has one.
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => { if (!disposed) m.resize() }) : null
+    ro?.observe(el.current)
+    if (import.meta.env.DEV) (window as unknown as { __map?: maplibregl.Map }).__map = m // handy for debugging and e2e tests
 
     if (apiRef) {
       const pad = { top: 70, bottom: 70, left: 40, right: 360 }
@@ -113,6 +118,7 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
     m.on('load', async () => {
       const res = await fetch(`${import.meta.env.BASE_URL}data/us-states.topo.json`)
       const topo = (await res.json()) as Topology
+      if (disposed) return // the map was removed while the outline was loading (fast route changes)
       const all = feature(topo, topo.objects.states) as unknown as FeatureCollection<Geometry>
       // lower 48 + DC only: drop Alaska (02), Hawaii (15) and territories (>56)
       const lower48 = { ...all, features: all.features.filter((f) => !['02', '15'].includes(String(f.id)) && Number(f.id) <= 56) }
@@ -151,6 +157,8 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
       })
     })
     return () => {
+      disposed = true
+      ro?.disconnect()
       if (apiRef) apiRef.current = null
       m.remove()
       map.current = null

@@ -251,3 +251,4 @@ input.r:disabled::-webkit-slider-thumb { cursor: not-allowed; border-color: var(
   .qcards { grid-template-columns: repeat(2, 1fr); }
   .facts { grid-template-columns: 1fr 1fr 1fr; }
 }
+a.go { text-decoration: none; padding: 0 22px; }

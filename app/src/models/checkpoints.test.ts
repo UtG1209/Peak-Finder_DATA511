@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { flatProfile } from '../test/fixtures'
-import { beforeDark, defaultStartMin, finishTime, formatClock, parseClock, positionAt, STOP_MINUTES, timeline, toblerSpeedKmh } from './checkpoints'
+import { beforeDark, defaultStartMin, finishTime, formatClock, parseClock, positionAt, smoothElevations, STOP_MINUTES, timeline, toblerSpeedKmh } from './checkpoints'
 
 describe('Tobler speed', () => {
   it('peaks at 6 km/h on a slight downhill (S = -0.05)', () => expect(toblerSpeedKmh(-0.05)).toBeCloseTo(6, 6))
@@ -49,6 +49,23 @@ describe('timeline', () => {
     const tl = timeline(flatProfile({ nps_length_m: 2000, scale: 2 }), 0)
     expect(tl[2].walkedM).toBeCloseTo(2000)
     expect(tl[4].walkedM).toBeCloseTo(4000)
+  })
+})
+
+describe('noisy real-world profiles', () => {
+  it('a single elevation spike does not add days to the total (smoothing and slope cap)', () => {
+    const flat = finishTime(timeline(flatProfile(), 0))
+    const spiky = flatProfile()
+    spiky.points = spiky.points.map((p, i) => (i === 40 ? ([p[0], p[1] + 39] as [number, number]) : p)) // a 39 m spike in one 10 m step
+    const t = finishTime(timeline(spiky, 0))
+    expect(t).toBeLessThan(flat * 1.6)
+    expect(t).toBeGreaterThan(flat)
+  })
+  it('smoothing keeps a steady ramp essentially unchanged in the middle', () => {
+    const ramp = Array.from({ length: 21 }, (_, i) => [i * 10, i * 1.5] as [number, number])
+    const sm = smoothElevations(ramp, 10)
+    expect(sm[10]).toBeCloseTo(ramp[10][1], 6)
+    expect(sm).toHaveLength(21)
   })
 })
 

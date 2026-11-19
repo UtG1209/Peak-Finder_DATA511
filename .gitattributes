@@ -1,0 +1,11 @@
+* text=auto eol=lf
+# Binary assets: never normalise line endings
+*.png binary
+*.jpg binary
+*.webp binary
+*.pdf binary
+# The built walks are generated output: keep them out of diffs and language stats
+walks/** linguist-generated=true
+walks/** -diff
+pipeline/trail_kit/output/** linguist-generated=true
+app/public/data/** linguist-generated=true

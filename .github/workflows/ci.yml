@@ -22,10 +22,18 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
+      - name: CLAUDE.md matches the code (every agent reads it first)
+        working-directory: .
+        run: node scripts/check-claude-md.mjs
       - run: npm ci
       - run: npm run lint
       - run: npm test # models, URL state, and the data contract on app/public/data
       - run: npm run build
+        env:
+          SKIP_WALKS: '1' # branch builds leave out the ~110 MB of 3D walks; the deploy build includes them
+      - name: Performance budget (initial JS, map chunk, data size, no walks on first load)
+        working-directory: .
+        run: node scripts/check-budget.mjs
       # Every branch gets a downloadable build, so a teammate can look at the UI before it is merged.
       - uses: actions/upload-artifact@v4
         with:
@@ -41,8 +49,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Fake data generator still runs
-        run: python scripts/make_fake_data.py --out "$RUNNER_TEMP/fake-data"
+      - name: Fake data is reproducible (generator output equals what is committed)
+        run: |
+          python scripts/make_fake_data.py
+          git diff --exit-code app/public || { echo "Fake data is out of date: run  npm run fake-data  and commit the result"; exit 1; }
       - name: Pipeline checks
         run: |
           if [ -d pipeline/checks ] && ls pipeline/checks/*.py >/dev/null 2>&1; then
@@ -51,3 +61,14 @@ jobs:
           else
             echo "No pipeline/checks yet (lanes 1 and 2 add them)."
           fi
+
+  walks:
+    # The 3D walk tooling: unit tests and a read-only verification of every walk in walks/manifest.json (no network, standard library only).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m unittest discover -s pipeline/walks -v
+      - run: python pipeline/walks/build_walk.py --verify-all

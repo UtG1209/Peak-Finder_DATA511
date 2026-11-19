@@ -6,6 +6,10 @@
 import type { Checkpoint, Profile } from '../data/schema'
 
 export const STOP_MINUTES = 10
+/** Real elevation profiles come from a ~30 m DEM and are noisy: one bad 10 m step (slope 4.0) would add days to the total.
+ *  So elevations are smoothed over about 50 m and the slope is capped before Tobler is applied. */
+export const SMOOTH_WINDOW_M = 50
+export const MAX_SLOPE = 0.6
 export const toblerSpeedKmh = (slope: number) => 6 * Math.exp(-3.5 * Math.abs(slope + 0.05))
 
 export type Direction = 'up' | 'down' // "up" = outbound from the trailhead, "down" = the return leg
@@ -36,16 +40,31 @@ interface Step {
 
 export type Timeline = TimelineEvent[] & { readonly startMin: number; readonly profile: Profile }
 
+/** Centered moving average of the elevations over ~SMOOTH_WINDOW_M (the ends use a shorter window). */
+export function smoothElevations(points: [number, number][], stepM: number): number[] {
+  const half = Math.max(0, Math.round(SMOOTH_WINDOW_M / Math.max(1, stepM) / 2))
+  return points.map((_, i) => {
+    const lo = Math.max(0, i - half)
+    const hi = Math.min(points.length - 1, i + half)
+    let sum = 0
+    for (let j = lo; j <= hi; j++) sum += points[j][1]
+    return sum / (hi - lo + 1)
+  })
+}
+
 function stepsFor(profile: Profile, reverse: boolean): Step[] {
   const scale = profile.nps_length_m / profile.osm_length_m
-  const pts = reverse ? [...profile.points].reverse() : profile.points
+  const raw = reverse ? [...profile.points].reverse() : profile.points
+  const smooth = smoothElevations(raw, profile.step_m)
+  const pts = raw.map((p, i) => [p[0], smooth[i]] as [number, number])
   const steps: Step[] = []
   for (let i = 0; i < pts.length - 1; i++) {
     const [d0, e0] = pts[i]
     const [d1, e1] = pts[i + 1]
     const runM = Math.abs(d1 - d0) * scale
     if (runM === 0) continue
-    const speed = toblerSpeedKmh((e1 - e0) / runM) // km/h
+    const slope = Math.max(-MAX_SLOPE, Math.min(MAX_SLOPE, (e1 - e0) / runM))
+    const speed = toblerSpeedKmh(slope) // km/h
     steps.push({ from: d0, to: d1, elevFrom: e0, elevTo: e1, runM, minutes: (runM / 1000 / speed) * 60 })
   }
   return steps

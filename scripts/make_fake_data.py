@@ -116,11 +116,23 @@ h("general-sherman-tree", "General Sherman Tree", "SEKI", "Sequoia and Kings Can
 h("hall-of-mosses", "Hoh Hall of Mosses", "OLYM", "Olympic National Park", "WA", "Hoh Rain Forest Visitor Center", 47.8600, -123.9350, "Hall of Mosses", 47.8610, -123.9370, 0.8, 100, 700, "loop", "easy", "northwest", 0, "summer", "53031", "Jefferson County, WA", [], None, ())
 h("devils-garden", "Devils Garden Loop", "ARCH", "Arches National Park", "UT", "Devils Garden Trailhead", 38.7826, -109.5948, "Double O Arch", 38.7881, -109.5890, 7.2, 700, 5200, "loop", "moderate", "desert", -2, "desert", "49019", "Grand County, UT", ["exposure", "no-shade", "extra-water"], None, ())
 
-FEATURED = {
-    "angels-landing": "walks/angels_landing/",
-    "bright-angel-trail": "walks/grand_canyon/",
-    "cascade-pass-sahale": "walks/north_cascades/",
-}
+# Featured hikes (the ones with a finished 3D walk) come from walks/manifest.json: that file is the single source of truth.
+# Add a walk with pipeline/walks/build_walk.py and it shows up here, in hikes.json and on the hike page automatically.
+def _load_walks():
+    try:
+        m = json.loads((ROOT / "walks" / "manifest.json").read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}, {}
+    featured, profiles = {}, {}
+    for wid, w in m["walks"].items():
+        featured[w["hike_id"]] = f"walks/{wid}/"
+        pj = ROOT / "walks" / wid / "profile.json"
+        if pj.exists():  # real route from the walk itself: the hike page and the walk then agree
+            profiles[w["hike_id"]] = json.loads(pj.read_text(encoding="utf-8"))
+    return featured, profiles
+
+
+FEATURED, WALK_PROFILES = _load_walks()
 NO_STATION: set[str] = set()  # the curated 40 all have a station; add ids here to test the "No station within 50 km" state
 
 # checkpoints for the three featured hikes: (name, fraction of one-way distance)
@@ -352,6 +364,8 @@ def build_cost(hikes, mrows, travel):
 
 
 def build_profile(hk, m):
+    if m["hid"] in WALK_PROFILES:
+        return WALK_PROFILES[m["hid"]]
     rng = rng_for(m["hid"] + "-profile")
     start, end = m["start_ft"] * FT, m["end_ft"] * FT
     top = m["maxft"] * FT

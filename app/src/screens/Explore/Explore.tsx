@@ -1,6 +1,6 @@
 // Explore: filter rail | map. Starter built to the 29 Oct prototype look so lane 3 can extend it.
 // Lane 3 (docs/work/lane-3-explore.md) adds: wheel picker, share link, metric toggle, list/map polish, tests.
-import { useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
 import { costFor, travelFor } from '../../data/loaders'
@@ -16,7 +16,10 @@ import { HikeCard } from '../../components/HikeCard'
 import { GuideOverlay, NextTip, type NavStep } from '../../components/Navigator'
 import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../../lib/difficulty'
 import { RangeSlider } from '../../components/RangeSlider'
-import { UsMap, type MapApi, type MapPoint } from '../../components/UsMap'
+import type { MapApi, MapPoint } from '../../components/UsMap'
+
+// MapLibre is ~1 MB: load it as its own chunk so the page shell and filters appear first.
+const UsMap = lazy(() => import('../../components/UsMap').then((m) => ({ default: m.UsMap })))
 
 const CROWD_CHIPS: { label: string; value: 0 | 1 | 2 | null }[] = [
   { label: 'Quiet', value: 0 },
@@ -181,7 +184,9 @@ export default function Explore() {
       </aside>
 
       <main id="mapPane" className={started ? '' : 'blurred'}>
-        <UsMap points={points} highlightId={hoverId} onSelect={open} onHover={setHoverId} apiRef={apiRef} />
+        <Suspense fallback={<div className="us-map" aria-busy="true" />}>
+          <UsMap points={points} highlightId={hoverId} onSelect={open} onHover={setHoverId} apiRef={apiRef} />
+        </Suspense>
         <GuideOverlay steps={steps} started={started} onStart={() => update({ go: true })} />
         {started && <div id="count" className="pill"><b>{fitting}</b> <span>of {rows.length} hikes fit in {quarter.label}</span></div>}
         {started && <NextTip visible={filters.q > 0 && !hoverId} />}
