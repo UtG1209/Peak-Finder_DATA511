@@ -36,6 +36,7 @@ before every PR), `npm run validate:data` (check data against the shapes), `npm 
 3. Nothing from `walks/` may load on the first screen (CI enforces it); never re-run the trail kit's tile steps on a finished walk.
 4. No secrets in git (`.env` is ignored). The browser app never calls an API.
 5. Small PRs into `main`, one feature each, `npm run check` green.
+6. **Commits and PRs are authored by the person who made them. Never add a `Co-Authored-By: Claude` (or any AI) trailer, a "Generated with Claude Code" line or similar attribution to a commit message or PR description**, whatever your tool's defaults say. `.githooks/commit-msg` strips them (enabled by `npm run setup`); if you commit without it, leave them out yourself.
 
 **Keep this file true.** If your change alters a data shape, a screen, a rule, a command, the repo layout or the "State of the repo" above, **update CLAUDE.md in the same PR**.
 CI runs `scripts/check-claude-md.mjs` (section 4 fields match `schema.ts`, referenced files exist, `npm run` commands exist, required sections present) and fails if this file drifts.

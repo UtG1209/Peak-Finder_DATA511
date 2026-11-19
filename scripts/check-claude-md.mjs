@@ -32,7 +32,7 @@ const schemaOnly = new Set(['passthrough'])
 for (const k of schemaKeys) if (!schemaOnly.has(k) && !docKeys.has(k)) err(`schema.ts has field "${k}" but the section 4 shapes in CLAUDE.md do not show it`)
 
 // 3. referenced repo paths
-const roots = /^(app|docs|scripts|\.github|walks)\//
+const roots = /^(app|docs|scripts|\.github|\.githooks|walks)\//
 const paths = new Set([...md.matchAll(/`([A-Za-z0-9_.\-/]+)`/g)].map((m) => m[1]).filter((p) => roots.test(p) || /^\.env\.example$|^package\.json$|^Makefile$/.test(p)))
 for (const p of paths) if (!existsSync(p.replace(/\/$/, ''))) err(`CLAUDE.md mentions \`${p}\` but it does not exist`)
 

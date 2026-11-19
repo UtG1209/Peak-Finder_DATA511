@@ -3,7 +3,7 @@
   "private": true,
   "description": "Convenience scripts so you can run everything from the repo root. The app itself lives in app/.",
   "scripts": {
-    "setup": "npm --prefix app ci",
+    "setup": "git config core.hooksPath .githooks && npm --prefix app ci",
     "dev": "npm --prefix app run dev",
     "lint": "npm --prefix app run lint",
     "test": "npm --prefix app test",

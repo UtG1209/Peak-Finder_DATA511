@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Commit messages in this repo must not carry AI co-author or "Generated with" lines (CLAUDE.md, hard rule 6).
+# Agents add them by default; this hook removes them automatically so commits are authored by the person who made them.
+# Enabled by `npm run setup` (git config core.hooksPath .githooks).
+f="$1"
+tmp="$(mktemp)"
+grep -v -i -E '^(Co-Authored-By:.*(claude|anthropic|noreply@anthropic\.com)|.*Generated with \[?Claude Code)' "$f" > "$tmp" || true
+# drop trailing blank lines left behind
+sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$tmp" > "$f"
+rm -f "$tmp"

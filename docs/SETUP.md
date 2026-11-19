@@ -6,7 +6,7 @@ Works on macOS, Linux and Windows (use WSL or Git Bash on Windows). You do **not
 git clone https://github.com/UtG1209/Peak-Finder_DATA511.git
 cd Peak-Finder_DATA511
 npm run doctor      # checks Node >= 22, npm, Python >= 3.9 (changes nothing)
-npm run setup       # npm ci inside app/
+npm run setup       # npm ci inside app/, and enables the commit-msg hook (strips AI co-author lines)
 npm run dev         # http://localhost:5173/   (hot reload; the 3D walks are served at /walks/<id>/)
 ```
 

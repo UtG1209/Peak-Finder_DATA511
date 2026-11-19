@@ -3,8 +3,8 @@
 
 help:      ## show this help
 	@grep -E '^[a-z-]+:.*##' Makefile | awk -F':.*## ' '{printf "  make %-10s %s\n", $$1, $$2}'
-setup:     ## install app dependencies (npm ci)
-	cd app && npm ci
+setup:     ## install app dependencies (npm ci) and enable the commit-msg hook
+	git config core.hooksPath .githooks && cd app && npm ci
 dev:       ## run the app with hot reload at http://localhost:5173/
 	cd app && npm run dev
 test:      ## models, URL state and the data contract
