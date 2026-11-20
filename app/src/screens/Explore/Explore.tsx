@@ -4,7 +4,7 @@ import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
 import { costFor, travelFor } from '../../data/loaders'
-import { CITIES } from '../../lib/cities'
+import { CITIES, cityByCode } from '../../lib/cities'
 import { bestRelaxation, countFitting, evaluate } from '../../lib/explore'
 import { DIFFICULTIES, RANGES, type Difficulty } from '../../lib/filters'
 import { reasonRows } from '../../lib/reasons'
@@ -185,7 +185,7 @@ export default function Explore() {
 
       <main id="mapPane" className={started ? '' : 'blurred'}>
         <Suspense fallback={<div className="us-map" aria-busy="true" />}>
-          <UsMap points={points} highlightId={hoverId} onSelect={open} onHover={setHoverId} apiRef={apiRef} />
+          <UsMap points={points} home={cityByCode(filters.from)} highlightId={hoverId} onSelect={open} onHover={setHoverId} apiRef={apiRef} />
         </Suspense>
         <GuideOverlay steps={steps} started={started} onStart={() => update({ go: true })} />
         {started && <div id="count" className="pill"><b>{fitting}</b> <span>of {rows.length} hikes fit in {quarter.label}</span></div>}

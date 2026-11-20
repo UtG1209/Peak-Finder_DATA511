@@ -11,6 +11,15 @@ export interface ReasonRow {
   note: string
   /** The value is past the user's limit (an amber hazard with an icon and words, never colour alone). */
   warn: boolean
+  /** No data for this factor: shown as a grey cell and left out of the match. */
+  missing?: boolean
+}
+
+/** Words for a grey cell when a factor has no data (CLAUDE.md section 3). Temperature and rain come from the nearest weather station. */
+const MISSING_NOTE: Record<string, string> = {
+  temp: 'No station within 50 km',
+  wet: 'No station within 50 km',
+  smoky: 'No air-quality data',
 }
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
@@ -18,9 +27,9 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? o
 export function reasonRows(result: MatchResult, months: HikeMonth[]): ReasonRow[] {
   const q = quarterValues(months)
   const f = (k: string) => result.factors.find((x) => x.key === k)!
-  const status = (k: string, unit: string, round = 0): { note: string; warn: boolean } => {
+  const status = (k: string, unit: string, round = 0): { note: string; warn: boolean; missing?: boolean } => {
     const x = f(k)
-    if (x.skippedBecause === 'missing') return { note: 'No data', warn: false }
+    if (x.skippedBecause === 'missing' || x.value === null) return { note: MISSING_NOTE[k] ?? 'No data', warn: false, missing: true }
     if (!x.active) return { note: 'No limit', warn: false }
     if (x.distancePast <= 0) return { note: k === 'temp' ? 'In range' : 'OK', warn: false }
     return { note: `Over by ${x.distancePast.toFixed(round)}${unit}`, warn: true }

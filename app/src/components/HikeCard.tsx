@@ -42,13 +42,14 @@ export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOp
         <div className="rows">
           {rows.map((r) => (
             <div key={r.key} className={`row${r.warn ? ' warn' : ''}`}>
-              {r.warn ? <Warn /> : r.note === 'No data' || r.note === 'No limit' ? <Dash /> : <Check />}
+              {r.warn ? <Warn /> : r.missing || r.note === 'No limit' ? <Dash /> : <Check />}
               <span className="l">{r.label}</span>
               <span className="v">{r.value}</span>
               <span className="n">{r.note}</span>
             </div>
           ))}
         </div>
+        {rows.some((r) => r.missing) && <div className="cost">Left out of the match: {rows.filter((r) => r.missing).map((r) => r.label.toLowerCase()).join(', ')} (no data for this hike).</div>}
         <div className="cost">{costLine ?? 'Pick a home city to see a typical cost.'}</div>
         <button type="button" className="go" onClick={onOpen}>
           View hike <span aria-hidden="true">→</span>

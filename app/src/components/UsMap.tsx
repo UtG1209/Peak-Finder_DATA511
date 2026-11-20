@@ -35,6 +35,8 @@ export interface MapApi {
 
 interface Props {
   points: MapPoint[]
+  /** The chosen home city, drawn as a marker. null = "Skip". */
+  home?: { name: string; lat: number; lon: number } | null
   highlightId?: string | null
   onSelect: (id: string) => void
   onHover?: (id: string | null) => void
@@ -63,7 +65,7 @@ const toGeoJson = (points: MapPoint[]): FeatureCollection => ({
 })
 
 /** MapLibre map of the lower 48: states outline as a vector layer, one bubble per hike. No tiles, no API keys. */
-export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props) {
+export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: Props) {
   const el = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const latest = useRef({ points, onSelect, onHover })
@@ -169,6 +171,18 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
     const src = map.current?.getSource('hikes') as maplibregl.GeoJSONSource | undefined
     src?.setData(toGeoJson(points))
   }, [points])
+
+  // home city marker: a labelled diamond, kept as a DOM marker so it needs no font files
+  useEffect(() => {
+    const m = map.current
+    if (!m || !home) return
+    const node = document.createElement('div')
+    node.className = 'home-marker'
+    node.innerHTML = '<i aria-hidden="true"></i><span></span>'
+    node.querySelector('span')!.textContent = `${home.name} (home)`
+    const marker = new maplibregl.Marker({ element: node }).setLngLat([home.lon, home.lat]).addTo(m)
+    return () => { marker.remove() }
+  }, [home?.name, home?.lat, home?.lon]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const m = map.current

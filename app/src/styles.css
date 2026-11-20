@@ -254,3 +254,8 @@ input.r:disabled::-webkit-slider-thumb { cursor: not-allowed; border-color: var(
   .facts { grid-template-columns: 1fr 1fr 1fr; }
 }
 a.go { text-decoration: none; padding: 0 22px; }
+
+/* Home city marker on the Explore map (lane 3) */
+.home-marker { display: flex; align-items: center; gap: 6px; pointer-events: none; }
+.home-marker i { width: 12px; height: 12px; background: var(--text); border: 2px solid var(--accent); transform: rotate(45deg); flex: none; }
+.home-marker span { font-size: 12px; font-weight: 600; color: var(--text); text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; }
