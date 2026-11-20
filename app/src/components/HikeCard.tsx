@@ -1,6 +1,7 @@
 import type { Hike } from '../data/schema'
 import type { ReasonRow } from '../lib/reasons'
 import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../lib/difficulty'
+import { fmtLength, type Units } from '../lib/units'
 
 const Check = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="var(--accent)" /><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -24,10 +25,11 @@ interface Props {
   /** True when the user clicked this hike (tile stays open until closed); false while it is only a hover or the default preview. */
   selected?: boolean
   onClose?: () => void
+  units?: Units
 }
 
 /** The preview tile (hover to peek, click a peak to keep it open): photo, name, park, three-plus reasons in words, typical cost, one button. */
-export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen, selected = false, onClose }: Props) {
+export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen, selected = false, onClose, units = 'us' }: Props) {
   return (
     <aside id="detail" className={selected ? 'selected' : ''} aria-live="polite" aria-label={`${hike.name} summary`}>
       <div className="ph">
@@ -39,20 +41,21 @@ export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOp
           <div className={`eyebrow${fits ? '' : ' out'}`}>
             {fits ? `Fits ${quarterLabel}` : `Past a limit in ${quarterLabel}`} · {Math.round(match)}% match{hike.featured ? ' · 3D walk ready' : ''}
           </div>
-          <div className="diff-tag"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]} · {hike.length_mi} mi {hike.length_type}</div>
+          <div className="diff-tag"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]} · {fmtLength(hike.length_mi, units)} {hike.length_type}</div>
           <h3>{hike.name}</h3>
           <div className="sub">{hike.park_name}</div>
         </div>
         <div className="rows">
           {rows.map((r) => (
             <div key={r.key} className={`row${r.warn ? ' warn' : ''}`}>
-              {r.warn ? <Warn /> : r.note === 'No data' || r.note === 'No limit' ? <Dash /> : <Check />}
+              {r.warn ? <Warn /> : r.missing || r.note === 'No limit' ? <Dash /> : <Check />}
               <span className="l">{r.label}</span>
               <span className="v">{r.value}</span>
               <span className="n">{r.note}</span>
             </div>
           ))}
         </div>
+        {rows.some((r) => r.missing) && <div className="cost">Left out of the match: {rows.filter((r) => r.missing).map((r) => r.label.toLowerCase()).join(', ')} (no data for this hike).</div>}
         <div className="cost">{costLine ?? 'Pick a home city to see a typical cost.'}</div>
         <button type="button" className="go" onClick={onOpen}>
           Open this hike <span aria-hidden="true">→</span>

@@ -10,10 +10,12 @@ interface Props {
   steps: NavStep[]
   started: boolean
   onStart: () => void
+  /** Offer the random picker on the guide card too (optional). */
+  onWheel?: () => void
 }
 
 /** Overlay on the blurred map: the steps, a one-line next action, and the Show hikes button. */
-export function GuideOverlay({ steps, started, onStart }: Props) {
+export function GuideOverlay({ steps, started, onStart, onWheel }: Props) {
   if (started) return null
   const next = steps.find((s) => !s.done)
   return (
@@ -31,6 +33,7 @@ export function GuideOverlay({ steps, started, onStart }: Props) {
       </ol>
       <p className="next" aria-live="polite">{next ? <>Next: <b>{next.label}</b></> : <>All set. Press <b>Show hikes</b>.</>}</p>
       <button type="button" className="go" onClick={onStart}>Show hikes <span aria-hidden="true">→</span></button>
+      {onWheel && <button type="button" className="fit wide" onClick={onWheel}>Not sure? Spin the wheel</button>}
       <p className="fine">You can skip any step. Every limit starts wide open, so nothing is hidden by accident.</p>
     </div>
   )

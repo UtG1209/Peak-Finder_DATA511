@@ -32,10 +32,23 @@ export interface MapApi {
   fit: (points: { lat: number; lon: number }[]) => void
   /** Centre on a point in the part of the map not covered by the hike tile. */
   flyTo: (lat: number, lon: number, done?: () => void, zoom?: number) => void
+  /** Where the map is looking now, so Back from a hike page can return to the same view. */
+  getView: () => MapView
+}
+
+export interface MapView {
+  center: [number, number]
+  zoom: number
+  /** The map's padding (it leaves room for the hike tile), so the same hike stays in the same place on screen. */
+  padding?: maplibregl.PaddingOptions
 }
 
 interface Props {
   points: MapPoint[]
+  /** The chosen home city, drawn as a marker. null = "Skip". */
+  home?: { name: string; lat: number; lon: number } | null
+  /** Open at this view instead of the whole US (used when coming Back from a hike page). */
+  initialView?: MapView | null
   highlightId?: string | null
   onSelect: (id: string) => void
   onHover?: (id: string | null) => void
@@ -78,10 +91,11 @@ const toGeoJson = (points: MapPoint[]): FeatureCollection => ({
 })
 
 /** MapLibre map of the lower 48: states outline as a vector layer, one bubble per hike. No tiles, no API keys. */
-export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props) {
+export function UsMap({ points, home, initialView, highlightId, onSelect, onHover, apiRef }: Props) {
   const el = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const latest = useRef({ points, onSelect, onHover })
+  const startView = useRef(initialView) // only read when the map is created
   const shownR = useRef(new Map<string, number>()) // radius currently on screen per hike
   const raf = useRef(0)
   useEffect(() => {
@@ -94,19 +108,22 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
       container: el.current,
       // no background layer: the pane's CSS gradient shows through, like the prototype
       style: { version: 8, sources: {}, layers: [] },
-      bounds: WHOLE_US,
-      fitBoundsOptions: { padding: { top: 70, bottom: 70, left: 40, right: 360 } },
+      ...(startView.current
+        ? { center: startView.current.center, zoom: startView.current.zoom }
+        : { bounds: WHOLE_US, fitBoundsOptions: { padding: { top: 70, bottom: 70, left: 40, right: 360 } } }),
       attributionControl: { compact: true, customAttribution: 'US Census via us-atlas' },
       dragRotate: false,
       pitchWithRotate: false,
       maxZoom: 9,
     })
     map.current = m
+    if (startView.current?.padding) m.jumpTo({ center: startView.current.center, zoom: startView.current.zoom, padding: startView.current.padding })
     let disposed = false
     // If the container had no size when the map was created (e.g. right after a route change), redraw once it has one.
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => { if (!disposed) m.resize() }) : null
     ro?.observe(el.current)
-    if (import.meta.env.DEV) (window as unknown as { __map?: maplibregl.Map }).__map = m // handy for debugging and e2e tests
+    // Handy for debugging, and the browser test uses it to click a bubble (it runs against the production build).
+    ;(window as unknown as { __map?: maplibregl.Map }).__map = m
 
     if (apiRef) {
       const pad = { top: 70, bottom: 70, left: 40, right: 360 }
@@ -120,6 +137,7 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
           pts.forEach((p) => b.extend([p.lon, p.lat]))
           m.fitBounds(b, { padding: pad, maxZoom: 6, duration: reduceMotion() ? 0 : 500 })
         },
+        getView: () => ({ center: [m.getCenter().lng, m.getCenter().lat], zoom: m.getZoom(), padding: { ...m.getPadding() } }),
         flyTo: (lat, lon, done, zoom = 6) => {
           if (reduceMotion()) {
             m.jumpTo({ center: [lon, lat], zoom, padding: { right: 340, top: 0, bottom: 0, left: 0 } })
@@ -216,6 +234,18 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
     raf.current = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf.current)
   }, [points])
+
+  // home city marker: a labelled diamond, kept as a DOM marker so it needs no font files
+  useEffect(() => {
+    const m = map.current
+    if (!m || !home) return
+    const node = document.createElement('div')
+    node.className = 'home-marker'
+    node.innerHTML = '<i aria-hidden="true"></i><span></span>'
+    node.querySelector('span')!.textContent = `${home.name} (home)`
+    const marker = new maplibregl.Marker({ element: node }).setLngLat([home.lon, home.lat]).addTo(m)
+    return () => { marker.remove() }
+  }, [home?.name, home?.lat, home?.lon]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const m = map.current
