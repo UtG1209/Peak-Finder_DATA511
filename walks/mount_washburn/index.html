@@ -1,0 +1,449 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mount Washburn via Dunraven Pass Walk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one sticky full-screen 3D stage; a tall scroll track drives the hiker; story cards scroll over the stage. */
+:root {
+  --ink: #101418;
+  --panel: rgba(16, 20, 24, 0.82);
+  --line: #2A333B;
+  --text: #F2EFE9;
+  --muted: #B4BCC3;
+  --sand: #F08A4B;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
+body { margin: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
+.maplibregl-canvas { outline: none; }
+#stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
+#map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
+#hud {
+  position: absolute; z-index: 3; display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+}
+.chip { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; min-width: 120px; backdrop-filter: blur(6px); }
+.chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+.chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: max(16px, env(safe-area-inset-left, 0px)); font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backToHike { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 64px); left: max(16px, env(safe-area-inset-left, 0px)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: 600 14px var(--body); text-decoration: none; backdrop-filter: blur(6px); }
+#backToHike:hover { border-color: var(--sand); }
+#backToHike:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+#profile {
+  position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 8px; backdrop-filter: blur(6px);
+}
+#profile svg { display: block; width: 100%; height: 70px; }
+#profile .lab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#timeMarkers line { stroke: rgba(242,239,233,.86); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers circle { fill: var(--sand); stroke: var(--text); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers text { fill: var(--text); stroke: rgba(16,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 700 10px var(--body); text-anchor: middle; }
+#backTransition { position: fixed; z-index: 20; inset: 0; display: none; overflow: hidden; pointer-events: none; background: linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%); }
+#backTransition.active { display: block; }
+#backTransition > div { position: absolute; inset: -10%; opacity: 0; background-repeat: repeat-x; background-position: center; will-change: transform,opacity; }
+#backFar { background-image: url(../_shared/clouds/wisps.webp); background-size: auto 110%; }
+#backMid { background-image: url(../_shared/clouds/cumulus.webp); background-size: auto 125%; }
+#backNear { background-image: url(../_shared/clouds/mass.webp); background-size: auto 150%; }
+#backVeil { inset: 0 !important; background: #edf4fb; }
+#backTitle { inset: 0 !important; display: flex; justify-content: center; align-items: center; color: #15222d; font: 800 clamp(24px,4vw,48px) var(--display); text-align: center; }
+#backTransition.active #backFar { opacity: .68; transform: scale(1.5); transition: transform 1.7s ease, opacity 1.7s ease; }
+#backTransition.active #backMid { opacity: .86; transform: scale(2); transition: transform 1.5s ease .12s, opacity 1.5s ease .12s; }
+#backTransition.active #backNear { opacity: 1; transform: scale(3.2); transition: transform 1.3s ease .24s, opacity 1.3s ease .24s; }
+#backTransition.active #backVeil { opacity: .9; transition: opacity .5s ease .8s; }
+#backTransition.active #backTitle { opacity: 1; transition: opacity .4s ease .8s; }
+@media (prefers-reduced-motion: reduce) { #backTransition *, #backTransition.active * { transition-duration: .01ms !important; } }
+#credits { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 126px); font-size: 10.5px; color: var(--text); background: rgba(16,20,24,0.6); padding: 4px 8px; border-radius: 6px; max-width: 70%; text-align: right; }
+#credits a { color: var(--text); }
+#status { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+#status[hidden], #hint[hidden] { display: none; }
+#track { position: relative; margin-top: -100vh; margin-top: -100dvh; height: 2350vh; pointer-events: none; }
+.step {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); width: min(380px, calc(100% - 32px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; box-sizing: border-box;
+  backdrop-filter: blur(6px); pointer-events: auto;
+}
+.step { padding: 0; overflow: hidden; width: min(400px, calc(100% - 32px)); }
+.step img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; max-width: 100%; background: #2a2018; }
+.step .body { padding: 14px 18px 14px; }
+.step .credit { margin-top: 10px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.step .credit a { color: var(--muted); }
+.step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
+.step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons[hidden] { display: none; }
+#seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+#seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
+#seasons button:focus-visible { outline: 2px solid var(--text); outline-offset: 1px; }
+.step .note { margin: 8px 0 0; font-size: 12px; line-height: 1.4; color: var(--sand); }
+.step .note[hidden] { display: none; }
+.hint { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); font-size: 13px; color: var(--text); background: var(--panel); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); }
+@media (max-width: 640px) {
+  #hud .chip { min-width: 0; padding: 8px 10px; }
+  #hud .chip .v { font-size: 18px; }
+  #brand { display: none; }
+  #backToHike { top: calc(env(safe-area-inset-top, 0px) + 12px); }
+  #seasons { top: calc(env(safe-area-inset-top, 0px) + 78px); }
+  #seasons button { padding: 7px 10px; }
+  #credits { bottom: calc(env(safe-area-inset-bottom, 0px) + 118px); max-width: 90%; }
+}
+</style>
+
+<style id="ciCss">
+/* Match the clouds-parting arrival used by the original trail walks. */
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro.ci-done{display:none}
+@keyframes ciGone{to{visibility:hidden;pointer-events:none}}
+#cloudIntro>*{position:absolute}
+#ciSky{inset:0;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%);opacity:1}
+.ciL{inset:-10%;opacity:1;will-change:transform,opacity}
+.ciL>div{position:absolute;inset:0;background-repeat:repeat}
+#ciFar{transform:scale(1.5)}#ciMid{transform:scale(2)}#ciNear{transform:scale(3.2)}
+#ciFar>div{background-image:url(../_shared/clouds/wisps.webp);background-size:1800px 900px;animation:ciDriftFar 140s linear infinite}
+#ciMid>div{background-image:url(../_shared/clouds/cumulus.webp);background-size:1500px 750px;animation:ciDriftMid 90s linear infinite}
+#ciNear>div{background-image:url(../_shared/clouds/mass.webp);background-size:2200px 1100px;animation:ciDriftNear 55s linear infinite}
+@keyframes ciDriftFar{from{background-position:0 0}to{background-position:-1800px 0}}
+@keyframes ciDriftMid{from{background-position:0 0}to{background-position:-1500px 0}}
+@keyframes ciDriftNear{from{background-position:0 0}to{background-position:-2200px 0}}
+#ciVeil{inset:0;background:#edf4fb;opacity:1}
+#ciTitle{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 24px;text-align:center;color:#1e3a5c;opacity:1}
+#ciTitle b{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.05;text-wrap:balance}
+#ciTitle span{font:600 14px "Inter",system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){#cloudIntro{display:none}}
+</style>
+
+<div id="cloudIntro" aria-hidden="true">
+  <div id="ciSky"></div><div id="ciFar" class="ciL"><div></div></div>
+  <div id="ciMid" class="ciL"><div></div></div><div id="ciNear" class="ciL"><div></div></div>
+  <div id="ciVeil"></div><div id="ciTitle"><b>Mount Washburn via Dunraven Pass</b><span>Yellowstone National Park, Wyoming</span></div>
+</div>
+<div id="stage">
+  <div id="map" role="img" aria-label="A 3D walk from Dunraven Pass up the Mount Washburn Trail to the summit lookout."></div>
+  <div id="status">Loading terrain…</div>
+  <div id="brand">Peak Finder · Trail walk</div>
+  <a id="backToHike" href="../../">← Back to <span>Mount Washburn via Dunraven Pass</span></a>
+  <div id="hud" aria-live="polite">
+    <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
+    <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
+  </div>
+  <div id="seasons" role="group" aria-label="Season" hidden></div>
+  <div class="hint" id="hint">Scroll to walk the trail</div>
+  <div id="credits"><span id="seasonNote"></span> Imagery: <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener">USGS The National Map</a> · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, USGS 3DEP) · Trail: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div>
+  <div id="profile">
+    <svg id="profSvg" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-label="Elevation profile of the trail with your position marked" role="img">
+      <path id="profArea" fill="rgba(240,138,75,0.22)" stroke="none"></path>
+      <path id="profWalk" fill="rgba(240,138,75,0.55)" stroke="none"></path>
+      <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+      <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
+      <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+      <g id="timeMarkers" aria-hidden="true"></g>
+    </svg>
+    <div class="lab" style="position:relative"><span>Trailhead · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">Summit</span><span>Summit · <span id="profEnd"></span> km</span></div>
+  </div>
+</div>
+
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
+
+<div id="track">
+  <section class="step" data-at="0.01" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mt._Washburn_Dunraven_Pass_Trailhead_(9321bafd-7544-4e97-9e05-b5059b6df524).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Diane Renkin&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Dunraven Pass Trailhead&quot;,&quot;text&quot;:&quot;The route starts here. Follow the marked trail toward Summit.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mt._Washburn_Dunraven_Pass_Trailhead_(9321bafd-7544-4e97-9e05-b5059b6df524).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Diane Renkin&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Dunraven Pass Trailhead&quot;,&quot;text&quot;:&quot;The route starts here. Follow the marked trail toward Summit.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mt._Washburn_Dunraven_Pass_Trailhead_(9321bafd-7544-4e97-9e05-b5059b6df524).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Diane Renkin&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Dunraven Pass Trailhead&quot;,&quot;text&quot;:&quot;The route starts here. Follow the marked trail toward Summit.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mt._Washburn_Dunraven_Pass_Trailhead_(9321bafd-7544-4e97-9e05-b5059b6df524).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Diane Renkin&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Dunraven Pass Trailhead&quot;,&quot;text&quot;:&quot;The route starts here. Follow the marked trail toward Summit.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/trailhead.jpg" alt="A small group begins the climb from the Dunraven Pass trailhead." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">Start · Dunraven Pass Trailhead</div><h2>Dunraven Pass Trailhead</h2><p class="txt">The route starts here. Follow the marked trail toward Summit.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Mt._Washburn_Dunraven_Pass_Trailhead_(9321bafd-7544-4e97-9e05-b5059b6df524).jpg" target="_blank" rel="noopener">Diane Renkin</a> · Public domain · Wikimedia Commons</p></div></section>
+  <section class="step" data-at="0.99" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:The_sign_at_the_summit_of_Mount_Washburn_(54266636009).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;YellowstoneNPS&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Summit&quot;,&quot;text&quot;:&quot;You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:The_sign_at_the_summit_of_Mount_Washburn_(54266636009).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;YellowstoneNPS&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Summit&quot;,&quot;text&quot;:&quot;You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:The_sign_at_the_summit_of_Mount_Washburn_(54266636009).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;YellowstoneNPS&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Summit&quot;,&quot;text&quot;:&quot;You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:The_sign_at_the_summit_of_Mount_Washburn_(54266636009).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;YellowstoneNPS&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Summit&quot;,&quot;text&quot;:&quot;You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/destination.jpg" alt="The summit lookout stands above Yellowstone’s high country." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">End · Summit</div><h2>Summit</h2><p class="txt">You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:The_sign_at_the_summit_of_Mount_Washburn_(54266636009).jpg" target="_blank" rel="noopener">YellowstoneNPS</a> · Public domain · Wikimedia Commons</p></div></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const PROFILE = [[-110.4415,44.7915,0,2811.9],[-110.441384,44.791464,10,2815.2],[-110.441268,44.791428,20,2817.1],[-110.441152,44.791391,30,2823.2],[-110.441036,44.791355,40,2826.6],[-110.44092,44.791319,50,2833.6],[-110.440804,44.791283,60,2837.7],[-110.440688,44.791246,70,2841.4],[-110.440572,44.79121,80,2848.7],[-110.440456,44.791174,90,2853.6],[-110.440334,44.79115,100,2856.6],[-110.440256,44.79108,110,2858.9],[-110.440178,44.791009,120,2861.2],[-110.4401,44.790938,130,2863.9],[-110.440023,44.790867,140,2865.9],[-110.439945,44.790796,150,2866.6],[-110.439867,44.790725,160,2864.4],[-110.439822,44.790647,170,2863.2],[-110.439825,44.790557,180,2862.9],[-110.439828,44.790467,190,2863.6],[-110.439831,44.790377,200,2864.2],[-110.439834,44.790287,210,2865.7],[-110.439833,44.790197,220,2866.5],[-110.439831,44.790107,230,2868.7],[-110.43983,44.790017,240,2870.2],[-110.439828,44.789927,250,2873.3],[-110.439827,44.789837,260,2874.5],[-110.439815,44.789748,270,2876.1],[-110.4398,44.789659,280,2881.2],[-110.439786,44.789569,290,2882.1],[-110.439779,44.78948,300,2883.0],[-110.439788,44.78939,310,2884.0],[-110.439797,44.7893,320,2885.1],[-110.439806,44.789211,330,2881.2],[-110.439815,44.789121,340,2881.4],[-110.439814,44.789031,350,2881.9],[-110.439813,44.788941,360,2883.6],[-110.439812,44.788851,370,2884.3],[-110.43981,44.788761,380,2885.5],[-110.439809,44.788671,390,2885.8],[-110.439807,44.788581,400,2886.3],[-110.439806,44.788491,410,2886.3],[-110.439805,44.788402,420,2889.9],[-110.439809,44.788312,430,2885.2],[-110.43982,44.788222,440,2884.2],[-110.439831,44.788133,450,2884.2],[-110.439843,44.788043,460,2886.1],[-110.439843,44.787953,470,2887.4],[-110.439839,44.787863,480,2889.1],[-110.439835,44.787773,490,2889.8],[-110.439825,44.787684,500,2890.0],[-110.43981,44.787595,510,2888.3],[-110.439725,44.787612,520,2892.1],[-110.439715,44.787699,530,2897.2],[-110.439713,44.787789,540,2897.6],[-110.439708,44.787879,550,2897.5],[-110.439681,44.787966,560,2896.8],[-110.439653,44.788054,570,2895.0],[-110.439624,44.788142,580,2898.8],[-110.439589,44.788228,590,2898.4],[-110.439554,44.788315,600,2898.8],[-110.439519,44.788401,610,2903.6],[-110.439484,44.788487,620,2904.3],[-110.439459,44.788576,630,2909.0],[-110.43944,44.788664,640,2908.0],[-110.43942,44.788753,650,2907.4],[-110.439394,44.788841,660,2905.4],[-110.439354,44.788926,670,2908.7],[-110.439315,44.789012,680,2907.9],[-110.439276,44.789098,690,2911.1],[-110.439237,44.789183,700,2911.1],[-110.439198,44.789269,710,2914.1],[-110.439159,44.789354,720,2913.5],[-110.43912,44.78944,730,2913.1],[-110.439081,44.789525,740,2916.5],[-110.439042,44.789611,750,2916.1],[-110.439003,44.789697,760,2917.6],[-110.438964,44.789782,770,2916.6],[-110.438925,44.789868,780,2918.3],[-110.438886,44.789953,790,2915.8],[-110.438847,44.790039,800,2917.1],[-110.438808,44.790124,810,2914.1],[-110.438769,44.79021,820,2917.2],[-110.43875,44.790299,830,2917.5],[-110.438732,44.790388,840,2918.1],[-110.438714,44.790477,850,2917.7],[-110.438696,44.790566,860,2916.2],[-110.438678,44.790655,870,2920.8],[-110.438659,44.790744,880,2921.9],[-110.438662,44.790833,890,2922.0],[-110.438682,44.790921,900,2921.3],[-110.438703,44.79101,910,2916.5],[-110.438723,44.791099,920,2919.1],[-110.438743,44.791188,930,2921.5],[-110.438763,44.791277,940,2924.4],[-110.438783,44.791365,950,2925.0],[-110.438807,44.791454,960,2927.5],[-110.438837,44.791541,970,2931.8],[-110.438866,44.791629,980,2928.5],[-110.438895,44.791716,990,2931.3],[-110.438925,44.791804,1000,2932.4],[-110.438954,44.791891,1010,2927.9],[-110.438953,44.791981,1020,2927.5],[-110.438951,44.792071,1030,2926.7],[-110.438948,44.792161,1040,2926.2],[-110.438931,44.792249,1050,2930.6],[-110.4389,44.792336,1060,2931.2],[-110.438857,44.792419,1070,2935.6],[-110.438761,44.792461,1080,2938.5],[-110.438707,44.792395,1090,2940.1],[-110.438708,44.792306,1100,2940.5],[-110.438746,44.79222,1110,2940.6],[-110.438727,44.792132,1120,2940.9],[-110.438699,44.792045,1130,2941.6],[-110.438668,44.791958,1140,2946.9],[-110.438605,44.79188,1150,2948.3],[-110.438542,44.791802,1160,2952.9],[-110.438479,44.791724,1170,2955.1],[-110.438416,44.791646,1180,2956.5],[-110.438352,44.791568,1190,2954.8],[-110.438289,44.79149,1200,2953.5],[-110.438226,44.791412,1210,2950.8],[-110.438169,44.791332,1220,2948.3],[-110.43812,44.791249,1230,2947.1],[-110.43807,44.791166,1240,2950.9],[-110.438021,44.791083,1250,2950.4],[-110.437971,44.791001,1260,2955.8],[-110.437922,44.790918,1270,2955.3],[-110.437872,44.790835,1280,2955.8],[-110.437846,44.790747,1290,2954.1],[-110.437824,44.790659,1300,2957.5],[-110.437801,44.79057,1310,2958.5],[-110.437779,44.790482,1320,2961.1],[-110.437756,44.790393,1330,2961.7],[-110.437734,44.790305,1340,2964.8],[-110.437712,44.790216,1350,2964.4],[-110.437698,44.790128,1360,2964.2],[-110.437717,44.790039,1370,2963.8],[-110.437735,44.78995,1380,2964.0],[-110.437753,44.789861,1390,2963.0],[-110.437771,44.789772,1400,2965.1],[-110.43779,44.789683,1410,2968.5],[-110.437808,44.789594,1420,2970.3],[-110.437827,44.789505,1430,2972.9],[-110.437846,44.789416,1440,2970.6],[-110.437864,44.789327,1450,2972.3],[-110.437878,44.789238,1460,2973.1],[-110.437886,44.789148,1470,2974.1],[-110.437895,44.789058,1480,2975.6],[-110.437903,44.788968,1490,2975.9],[-110.437912,44.788879,1500,2976.4],[-110.43792,44.788789,1510,2973.2],[-110.437929,44.788699,1520,2974.6],[-110.437938,44.788609,1530,2975.5],[-110.437946,44.78852,1540,2977.1],[-110.437955,44.78843,1550,2977.7],[-110.437963,44.78834,1560,2977.9],[-110.437972,44.788251,1570,2977.6],[-110.43798,44.788161,1580,2976.9],[-110.437997,44.788072,1590,2977.0],[-110.438021,44.787984,1600,2973.8],[-110.438046,44.787895,1610,2974.3],[-110.438068,44.787807,1620,2974.7],[-110.438085,44.787718,1630,2973.9],[-110.438101,44.787629,1640,2966.8],[-110.438085,44.78754,1650,2976.7],[-110.438067,44.787451,1660,2979.1],[-110.437997,44.787377,1670,2988.2],[-110.437912,44.787318,1680,2987.0],[-110.437785,44.787321,1690,2984.1],[-110.437701,44.787376,1700,2982.9],[-110.437633,44.787452,1710,2988.1],[-110.437593,44.787537,1720,2990.4],[-110.437556,44.787623,1730,2992.1],[-110.437577,44.787708,1740,2992.2],[-110.437619,44.787792,1750,2992.5],[-110.437661,44.787877,1760,2990.8],[-110.437649,44.787964,1770,2992.0],[-110.437622,44.788052,1780,2990.9],[-110.437594,44.78814,1790,2990.8],[-110.437567,44.788228,1800,2992.4],[-110.43754,44.788316,1810,2993.9],[-110.437513,44.788403,1820,2994.8],[-110.43746,44.788483,1830,2998.2],[-110.437388,44.788557,1840,3000.3],[-110.437315,44.788631,1850,3001.2],[-110.437237,44.788702,1860,3000.2],[-110.437159,44.788773,1870,3001.6],[-110.43711,44.788853,1880,3002.9],[-110.437082,44.788941,1890,3002.7],[-110.437049,44.789027,1900,3005.4],[-110.436997,44.78911,1910,3005.3],[-110.436945,44.789192,1920,3007.5],[-110.436893,44.789274,1930,3006.3],[-110.436831,44.789352,1940,3007.8],[-110.436768,44.78943,1950,3009.1],[-110.436704,44.789508,1960,3010.3],[-110.436636,44.789583,1970,3008.9],[-110.436562,44.789656,1980,3010.1],[-110.436488,44.789729,1990,3011.3],[-110.436414,44.789802,2000,3012.0],[-110.43634,44.789875,2010,3012.1],[-110.436281,44.789954,2020,3011.8],[-110.436232,44.790037,2030,3012.0],[-110.436182,44.79012,2040,3013.7],[-110.436133,44.790203,2050,3014.0],[-110.436122,44.790292,2060,3014.3],[-110.43611,44.790382,2070,3020.1],[-110.436098,44.790472,2080,3021.7],[-110.436087,44.790561,2090,3022.6],[-110.436075,44.790651,2100,3022.6],[-110.436075,44.79074,2110,3023.5],[-110.43608,44.79083,2120,3024.2],[-110.436086,44.79092,2130,3025.7],[-110.436101,44.791009,2140,3026.6],[-110.436117,44.791099,2150,3027.0],[-110.436135,44.791188,2160,3028.7],[-110.436163,44.791275,2170,3030.1],[-110.43619,44.791363,2180,3031.8],[-110.436218,44.791451,2190,3029.1],[-110.43622,44.79154,2200,3029.6],[-110.436204,44.791629,2210,3029.6],[-110.436187,44.791718,2220,3032.6],[-110.436171,44.791807,2230,3032.8],[-110.436129,44.791891,2240,3032.8],[-110.436073,44.791971,2250,3035.1],[-110.436017,44.792052,2260,3037.3],[-110.43596,44.792133,2270,3036.9],[-110.435905,44.792213,2280,3038.6],[-110.435853,44.792295,2290,3040.3],[-110.435801,44.792377,2300,3039.8],[-110.435749,44.792459,2310,3041.2],[-110.435697,44.792541,2320,3040.8],[-110.435645,44.792623,2330,3041.8],[-110.435593,44.792705,2340,3043.2],[-110.435541,44.792787,2350,3042.9],[-110.435489,44.792869,2360,3044.2],[-110.435437,44.792952,2370,3044.5],[-110.435398,44.793037,2380,3046.1],[-110.435371,44.793124,2390,3049.3],[-110.435364,44.793212,2400,3050.0],[-110.435401,44.793298,2410,3050.9],[-110.435439,44.793383,2420,3048.7],[-110.435445,44.793472,2430,3048.8],[-110.435435,44.793561,2440,3048.9],[-110.435424,44.793651,2450,3050.9],[-110.435413,44.793741,2460,3052.0],[-110.435403,44.79383,2470,3053.1],[-110.435394,44.79392,2480,3054.4],[-110.435386,44.79401,2490,3054.1],[-110.435373,44.794099,2500,3052.3],[-110.435311,44.794177,2510,3053.4],[-110.435249,44.794255,2520,3056.7],[-110.435196,44.794337,2530,3060.5],[-110.435151,44.794421,2540,3064.5],[-110.435105,44.794505,2550,3065.0],[-110.43506,44.794589,2560,3064.0],[-110.435015,44.794673,2570,3061.3],[-110.434969,44.794757,2580,3064.5],[-110.434924,44.794841,2590,3064.8],[-110.434895,44.794928,2600,3069.6],[-110.434869,44.795016,2610,3067.9],[-110.434843,44.795104,2620,3066.9],[-110.434817,44.795192,2630,3067.7],[-110.434791,44.79528,2640,3066.5],[-110.434765,44.795368,2650,3065.5],[-110.43474,44.795456,2660,3066.6],[-110.434714,44.795544,2670,3065.1],[-110.434657,44.795622,2680,3063.8],[-110.434579,44.795693,2690,3063.8],[-110.4345,44.795763,2700,3065.6],[-110.434436,44.795839,2710,3066.5],[-110.434397,44.795925,2720,3070.4],[-110.434359,44.796011,2730,3072.1],[-110.43432,44.796096,2740,3074.2],[-110.434278,44.79618,2750,3075.8],[-110.434187,44.796243,2760,3075.5],[-110.434097,44.796306,2770,3076.0],[-110.434007,44.796369,2780,3076.9],[-110.433916,44.796433,2790,3077.4],[-110.433826,44.796496,2800,3079.3],[-110.433731,44.796555,2810,3081.3],[-110.433629,44.796609,2820,3080.8],[-110.433528,44.796662,2830,3074.8],[-110.433426,44.796716,2840,3074.0],[-110.433325,44.79677,2850,3074.5],[-110.433234,44.796831,2860,3074.7],[-110.433158,44.796903,2870,3074.0],[-110.433081,44.796975,2880,3072.7],[-110.433005,44.797047,2890,3070.9],[-110.432989,44.797134,2900,3074.8],[-110.43298,44.797224,2910,3077.0],[-110.432953,44.797311,2920,3082.1],[-110.432899,44.797392,2930,3079.3],[-110.432846,44.797473,2940,3076.7],[-110.432777,44.797547,2950,3078.9],[-110.432686,44.79761,2960,3075.8],[-110.432598,44.797675,2970,3075.2],[-110.432517,44.797744,2980,3072.9],[-110.432567,44.797795,2990,3074.0],[-110.432647,44.797862,3000,3080.6],[-110.432713,44.797939,3010,3087.2],[-110.43278,44.798015,3020,3090.4],[-110.432849,44.79809,3030,3089.7],[-110.432925,44.798162,3040,3088.8],[-110.433015,44.798225,3050,3088.8],[-110.433122,44.798271,3060,3091.3],[-110.433241,44.798302,3070,3090.1],[-110.43336,44.798333,3080,3091.3],[-110.433483,44.798354,3090,3091.0],[-110.433609,44.798363,3100,3092.2],[-110.433735,44.798362,3110,3094.2],[-110.433862,44.798356,3120,3094.8],[-110.433985,44.798343,3130,3095.2],[-110.434098,44.798302,3140,3097.9],[-110.434211,44.798261,3150,3100.3],[-110.434324,44.798221,3160,3102.3],[-110.434437,44.79818,3170,3101.9],[-110.43455,44.798139,3180,3103.8],[-110.434663,44.798098,3190,3104.0],[-110.43478,44.798065,3200,3102.9],[-110.434898,44.798031,3210,3103.5],[-110.435001,44.797987,3220,3101.6],[-110.435053,44.797905,3230,3103.0],[-110.434988,44.797835,3240,3104.2],[-110.434887,44.797784,3250,3104.0],[-110.434773,44.797743,3260,3106.0],[-110.43466,44.797703,3270,3107.2],[-110.434547,44.797662,3280,3111.7],[-110.434438,44.797617,3290,3113.6],[-110.434337,44.797563,3300,3113.6],[-110.434249,44.797498,3310,3115.0],[-110.434161,44.797434,3320,3115.7],[-110.434073,44.797369,3330,3115.5],[-110.433985,44.797304,3340,3110.5],[-110.433886,44.797248,3350,3114.8],[-110.433766,44.797247,3360,3117.6],[-110.433671,44.797305,3370,3115.3],[-110.43361,44.797381,3380,3116.8],[-110.433582,44.797467,3390,3118.2],[-110.433594,44.797557,3400,3120.1],[-110.433644,44.79764,3410,3123.6],[-110.433726,44.797705,3420,3124.1],[-110.433844,44.797737,3430,3123.0],[-110.433896,44.797745,3434,3123.2]]; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
+const TOTAL = PROFILE[PROFILE.length - 1][2];
+const WALK_TIMES = (() => {
+  try {
+    const rows = JSON.parse(new URLSearchParams(location.search).get('times') || '[]');
+    return Array.isArray(rows) ? rows.filter(x => Number.isFinite(+x.dist_m) && Number.isFinite(+x.time) && (x.dir === 'up' || x.dir === 'down')) : [];
+  } catch (_) { return []; }
+})();
+const base = new URL('.', location.href).href;
+const WIDE = [-110.4865, 44.7591, -110.38889999999999, 44.830200000000005];
+const CORE = [-110.46650000000001, 44.7735, -110.40889999999999, 44.8158];
+const MID = [-110.47275, 44.769, -110.40265, 44.8203];
+const KEY_M = 3000;   // distance (m) of the marked stop on the profile
+const PITCH = 50, ZOOM = 15.2;
+const HEADING = null; // null = short lookahead (old behaviour) or [metres behind, metres ahead] = long chord, smoother on switchbacks
+const SEASONS = {"default":"by_month","labels":{"spring":"Spring","summer":"Summer","autumn":"Autumn","winter":"Winter"},"map":{"winter":{"overlay":true,"paint":{"saturation":-0.2,"contrast":0.0,"brightness_min":0.0,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#8aa3bd","horizon-color":"#dfe6ec","fog-color":"#dfe6ec"},"shade":{"exaggeration":0.55,"shadow":"rgba(40,62,110,0.50)","highlight":"rgba(255,255,255,0.45)","accent":"rgba(40,62,110,0.25)"}},"spring":{"overlay":true,"paint":{"saturation":0.55,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":6},"sky":{"sky-color":"#4a8fdc","horizon-color":"#eadfce","fog-color":"#e6d9c6"},"shade":{"exaggeration":0.45,"shadow":"rgba(40,50,80,0.45)","highlight":"rgba(255,240,220,0.40)","accent":"rgba(50,40,60,0.25)"}},"summer":{"overlay":false,"paint":{"saturation":0.12,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":8},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null},"autumn":{"overlay":false,"paint":{"saturation":0.18,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null}},"note":"Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real."}; // null, or {default, labels, map: {season: {overlay, paint, sky}}, note}
+const fmt1 = n => (n / 1000).toFixed(1);
+const ft = m => Math.round(m * 3.28084).toLocaleString('en-US');
+
+document.getElementById('hudTotal').textContent = fmt1(TOTAL);
+document.getElementById('profEnd').textContent = fmt1(TOTAL);
+const elevAt = d => { const i = Math.max(0, Math.min(PROFILE.length - 1, Math.round(d / 10))); return PROFILE[i][3]; };
+const gain = Math.abs(PROFILE[PROFILE.length - 1][3] - PROFILE[0][3]); // size of the net change, so descents read as positive
+function fillTokens(root) {
+  root.querySelectorAll('[data-elev]').forEach(el => {
+    const d = Math.min(+el.dataset.elev, TOTAL); const e = elevAt(d);
+    el.textContent = Math.round(e).toLocaleString('en-US') + ' m (' + ft(e) + ' ft)';
+  });
+  root.querySelectorAll('[data-gain]').forEach(el => { el.textContent = Math.round(gain).toLocaleString('en-US') + ' m (' + ft(gain) + ' ft)'; });
+}
+fillTokens(document);
+
+// Elevation profile
+(function drawProfile() {
+  const emin = Math.min(...PROFILE.map(p => p[3])) - 20, emax = Math.max(...PROFILE.map(p => p[3])) + 10;
+  const X = d => d / TOTAL * 1000, Y = e => 66 - (e - emin) / (emax - emin) * 60;
+  const line = PROFILE.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ');
+  document.getElementById('profLine').setAttribute('d', line);
+  document.getElementById('profArea').setAttribute('d', line + ' L1000 70 L0 70 Z');
+  window.__prof = { X, Y };
+  const marks = document.getElementById('timeMarkers');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const clock = minutes => { const n = ((Math.round(minutes) % 1440) + 1440) % 1440; return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
+  WALK_TIMES.forEach(mark => {
+    const x = X(Math.max(0, Math.min(TOTAL, +mark.dist_m))), y = mark.dir === 'up' ? 18 : 53;
+    const line = document.createElementNS(svgNS, 'line'); line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', y + 4); line.setAttribute('y2', mark.dir === 'up' ? 37 : 49); marks.appendChild(line);
+    const dot = document.createElementNS(svgNS, 'circle'); dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', 3); marks.appendChild(dot);
+    const text = document.createElementNS(svgNS, 'text'); text.setAttribute('x', x); text.setAttribute('y', mark.dir === 'up' ? 11 : 68); text.textContent = `${clock(+mark.time)} ${mark.dir === 'up' ? '↑' : '↓'}`; marks.appendChild(text);
+  });
+  const sx = X(KEY_M); document.getElementById('profScout').setAttribute('x1', sx); document.getElementById('profScout').setAttribute('x2', sx);
+  document.getElementById('scoutLab').style.left = (KEY_M / TOTAL * 100) + '%';
+})();
+function setProfile(d) {
+  const { X, Y } = window.__prof; const x = X(d);
+  document.getElementById('profCursor').setAttribute('x1', x); document.getElementById('profCursor').setAttribute('x2', x);
+  const pts = PROFILE.filter(p => p[2] <= d);
+  if (pts.length > 1) document.getElementById('profWalk').setAttribute('d', pts.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ') + ' L' + x.toFixed(1) + ' 70 L0 70 Z');
+}
+
+// Geometry helpers
+function pointAt(d) {
+  d = Math.max(0, Math.min(TOTAL, d));
+  const i = Math.min(PROFILE.length - 2, Math.floor(d / 10));
+  const a = PROFILE[i], b = PROFILE[i + 1]; const span = (b[2] - a[2]) || 1; const t = Math.max(0, Math.min(1, (d - a[2]) / span));
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+function bearing(p, q) {
+  const r = Math.PI / 180, l1 = p[1] * r, l2 = q[1] * r, dl = (q[0] - p[0]) * r;
+  const y = Math.sin(dl) * Math.cos(l2), x = Math.cos(l1) * Math.sin(l2) - Math.sin(l1) * Math.cos(l2) * Math.cos(dl);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+function headingAt(d) {
+  if (HEADING) {
+    // direction of the straight line from a point behind to a point well ahead: ignores individual hairpins
+    const end = d > TOTAL - 150;
+    const from = end ? TOTAL - 600 : d - HEADING[0], to = end ? TOTAL : d + HEADING[1];
+    return (bearing(pointAt(from), pointAt(to)));
+  }
+  // average direction over the next 60–260 m so the camera turns smoothly on switchbacks
+  const p = pointAt(d); let sx = 0, sy = 0;
+  for (let k = 60; k <= 260; k += 20) { const b = bearing(p, pointAt(Math.min(TOTAL, d + k))) * Math.PI / 180; sx += Math.sin(b); sy += Math.cos(b); }
+  if (d > TOTAL - 70) { const b = bearing(pointAt(TOTAL - 120), pointAt(TOTAL)) * Math.PI / 180; sx = Math.sin(b); sy = Math.cos(b); }
+  return (Math.atan2(sx, sy) * 180 / Math.PI + 360) % 360;
+}
+
+// Place story cards along the track
+const track = document.getElementById('track');
+function layoutSteps() {
+  const H = track.offsetHeight - innerHeight;
+  document.querySelectorAll('.step').forEach(s => { s.style.top = (innerHeight * 0.18 + H * (+s.dataset.at)) + 'px'; });
+}
+layoutSteps(); addEventListener('resize', layoutSteps);
+
+// Season overlays: one raster source and layer per season that draws something (snow, green or autumn tint); hidden until chosen
+const seasonSources = {}, seasonLayers = [];
+if (SEASONS) for (const [name, m] of Object.entries(SEASONS.map)) if (m.overlay) {
+  seasonSources['season_' + name] = { type: 'raster', tileSize: 512, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'season/' + name + '/{z}/{x}/{y}.webp'] };
+  seasonLayers.push({ id: 'season_' + name, type: 'raster', source: 'season_' + name, layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0 } });
+}
+const map = new maplibregl.Map({
+  container: 'map',
+  interactive: false,
+  attributionControl: false,
+  maxPitch: 85,
+  pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+  center: pointAt(0), zoom: ZOOM, pitch: PITCH, bearing: headingAt(0),
+  style: {
+    version: 8,
+    sky: { 'sky-color': '#3f86d8', 'horizon-color': '#f6d2a8', 'fog-color': '#efc9a0', 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 },
+    sources: {
+      dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      demHs: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      imgLow: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      imgMid: { type: 'raster', tileSize: 256, minzoom: 13, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      imgHigh: { type: 'raster', tileSize: 256, minzoom: 14, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      ahead: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: PROFILE.map(p => [p[0], p[1]]) } } },
+      walked: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [pointAt(0), pointAt(1)] } } },
+      hiker: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: pointAt(0) } } },
+      ...seasonSources
+    },
+    layers: [
+      { id: 'bg', type: 'background', paint: { 'background-color': '#b98a62' } },
+      { id: 'imgLow', type: 'raster', source: 'imgLow', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgMid', type: 'raster', source: 'imgMid', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgHigh', type: 'raster', source: 'imgHigh', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      ...seasonLayers,
+      { id: 'shade', type: 'hillshade', source: 'demHs', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-illumination-direction': 300, 'hillshade-shadow-color': 'rgba(40, 14, 4, 0.55)', 'hillshade-highlight-color': 'rgba(255, 226, 180, 0.35)', 'hillshade-accent-color': 'rgba(60, 20, 6, 0.25)' } },
+      { id: 'ahead', type: 'line', source: 'ahead', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 3, 'line-opacity': 0.75, 'line-dasharray': [1.5, 1.5] } },
+      { id: 'walked', type: 'line', source: 'walked', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#F08A4B', 'line-width': 5 } },
+      { id: 'hikerHalo', type: 'circle', source: 'hiker', paint: { 'circle-radius': 14, 'circle-color': '#F08A4B', 'circle-opacity': 0.35, 'circle-pitch-alignment': 'map' } },
+      { id: 'hiker', type: 'circle', source: 'hiker', paint: { 'circle-radius': 7, 'circle-color': '#F08A4B', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5, 'circle-pitch-alignment': 'map' } }
+    ],
+    terrain: { source: 'dem', exaggeration: 1 }
+  }
+});
+// Season switch: swaps the overlay, the imagery grading, the sky and each card's photo and wording
+function setSeason(name) {
+  const m = SEASONS.map[name];
+  Object.keys(SEASONS.map).forEach(n => { if (map.getLayer('season_' + n)) map.setLayoutProperty('season_' + n, 'visibility', n === name ? 'visible' : 'none'); });
+  for (const id of ['imgLow', 'imgMid', 'imgHigh']) {
+    map.setPaintProperty(id, 'raster-saturation', m.paint.saturation);
+    map.setPaintProperty(id, 'raster-contrast', m.paint.contrast);
+    map.setPaintProperty(id, 'raster-brightness-min', m.paint.brightness_min);
+    map.setPaintProperty(id, 'raster-brightness-max', m.paint.brightness_max);
+    map.setPaintProperty(id, 'raster-hue-rotate', m.paint.hue);
+  }
+  const sh = m.shade || { exaggeration: 0.35, shadow: 'rgba(40, 14, 4, 0.55)', highlight: 'rgba(255, 226, 180, 0.35)', accent: 'rgba(60, 20, 6, 0.25)' };
+  map.setPaintProperty('shade', 'hillshade-exaggeration', sh.exaggeration);
+  map.setPaintProperty('shade', 'hillshade-shadow-color', sh.shadow);
+  map.setPaintProperty('shade', 'hillshade-highlight-color', sh.highlight);
+  map.setPaintProperty('shade', 'hillshade-accent-color', sh.accent);
+  map.setSky({ 'sky-color': m.sky['sky-color'], 'horizon-color': m.sky['horizon-color'], 'fog-color': m.sky['fog-color'], 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 });
+  document.querySelectorAll('.step[data-seasons]').forEach(st => {
+    const v = JSON.parse(st.dataset.seasons)[name];
+    const img = st.querySelector('img'); if (!img.src.endsWith(v.src)) img.src = v.src;
+    st.querySelector('h2').innerHTML = v.title;
+    st.querySelector('.txt').innerHTML = v.text; fillTokens(st);
+    st.querySelector('.credit').innerHTML = v.credit;
+    const note = st.querySelector('.note'); note.textContent = v.note; note.hidden = !v.note;
+  });
+  document.querySelectorAll('#seasons button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.season === name)));
+  document.getElementById('seasonNote').textContent = SEASONS.note;
+  try { history.replaceState(null, '', '?season=' + name + location.hash); } catch (e) {}
+  map.triggerRepaint();
+}
+function initSeasons() {
+  if (!SEASONS) return;
+  const box = document.getElementById('seasons'); box.hidden = false;
+  for (const name of ['spring', 'summer', 'autumn', 'winter']) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.season = name; b.textContent = SEASONS.labels[name];
+    b.addEventListener('click', () => setSeason(name)); box.appendChild(b);
+  }
+  const q = new URLSearchParams(location.search).get('season');
+  const mo = new Date().getMonth(); // northern hemisphere
+  const auto = mo >= 2 && mo <= 4 ? 'spring' : mo >= 5 && mo <= 7 ? 'summer' : mo >= 8 && mo <= 10 ? 'autumn' : 'winter';
+  setSeason(SEASONS.map[q] ? q : auto);
+}
+map.on('error', e => { console.warn('map error', e && e.error && e.error.message); });
+map.on('load', () => { document.getElementById('status').hidden = true; initSeasons(); tick(); });
+map.once('idle', () => { document.getElementById('status').hidden = true; });
+map.on('styledata', () => { if (map.getSource('hiker')) tick(); });
+
+// Scroll drives distance; the camera eases toward it each frame
+let target = 0, current = 0, lastIdx = -1, raf = 0;
+let bear = headingAt(0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function progress() {
+  const r = track.getBoundingClientRect(); const H = track.offsetHeight - innerHeight;
+  return Math.max(0, Math.min(1, -r.top / (H || 1)));
+}
+function onScroll() { target = progress() * TOTAL; document.getElementById('hint').hidden = target > 40; if (!raf) raf = requestAnimationFrame(tick); }
+addEventListener('scroll', onScroll, { passive: true });
+function tick() {
+  raf = 0;
+  if (!map.getSource('hiker')) return;
+  current += (target - current) * (reduce ? 1 : 0.12);
+  if (Math.abs(target - current) < 0.5) current = target;
+  const p = pointAt(current);
+  // low-pass the camera heading so it never snaps round (instant under reduced motion)
+  const want = headingAt(current), dBear = ((want - bear + 540) % 360) - 180;
+  bear = (bear + dBear * (reduce ? 1 : 0.08) + 360) % 360;
+  map.jumpTo({ center: p, bearing: bear, pitch: PITCH, zoom: ZOOM });
+  document.getElementById('status').hidden = true;
+  map.getSource('hiker').setData({ type: 'Feature', geometry: { type: 'Point', coordinates: p } });
+  const idx = Math.floor(current / 10);
+  if (idx !== lastIdx) {
+    lastIdx = idx;
+    const coords = PROFILE.filter(q => q[2] <= current).map(q => [q[0], q[1]]); coords.push(p);
+    if (coords.length < 2) coords.unshift(pointAt(0));
+    map.getSource('walked').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } });
+  }
+  const e = elevAt(current);
+  document.getElementById('hudDist').textContent = fmt1(current) + ' km';
+  document.getElementById('hudElev').textContent = Math.round(e).toLocaleString('en-US') + ' m';
+  document.getElementById('hudFt').textContent = ft(e) + ' ft';
+  setProfile(current);
+  if (current !== target || Math.abs(dBear) > 0.3) raf = requestAnimationFrame(tick);
+}
+</script>
+
+<script>
+// Wait for the terrain or a time limit, then open the clouds onto the 3D walk.
+(function () {
+  var root = document.getElementById('cloudIntro');
+  if (!root) return;
+  var started = Date.now(), parted = false, MIN = 1600, MAX = 6500;
+  var ids = ['ciSky', 'ciFar', 'ciMid', 'ciNear', 'ciVeil', 'ciTitle'], el = {};
+  ids.forEach(function (i) { el[i] = document.getElementById(i); });
+  function part() {
+    if (parted) return; parted = true;
+    var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
+    root.style.pointerEvents = 'none';
+    setTimeout(function () { root.classList.add('ci-done'); }, 3200);
+  }
+  var imgsOk = 0, terrainOk = false;
+  ['wisps', 'cumulus', 'mass'].forEach(function (n) { var im = new Image(); im.onload = im.onerror = function () { imgsOk++; check(); }; im.src = '../_shared/clouds/' + n + '.webp'; });
+  var st = document.getElementById('status');
+  function statusHidden() { return !st || st.hidden || getComputedStyle(st).display === 'none'; }
+  if (statusHidden()) terrainOk = true;
+  else if (window.MutationObserver) new MutationObserver(function () { if (statusHidden()) { terrainOk = true; check(); } }).observe(st, { attributes: true });
+  function check() { if (parted) return; var wait = Math.max(0, MIN - (Date.now() - started)); if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait); }
+  setTimeout(part, MAX);
+  addEventListener('click', part, { once: true });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
+  check();
+})();
+</script>
+<script>
+(function () {
+  const button = document.getElementById('backToHike');
+  const overlay = document.getElementById('backTransition');
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('back');
+  const siteRoot = new URL('../../', location.href);
+  let backUrl = siteRoot.href;
+  if (requested) {
+    try {
+      backUrl = requested.startsWith('#/') ? siteRoot.href + requested : new URL(requested, location.href).href;
+    } catch (_) {}
+  }
+  button.href = backUrl;
+  let leaving = false;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    overlay.classList.add('active');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      // Back restores the exact hike page state and scroll position when opened from the app.
+      let cameFromApp = false;
+      try {
+        const ref = new URL(document.referrer);
+        cameFromApp = ref.origin === location.origin && ref.pathname === siteRoot.pathname;
+      } catch (_) {}
+      if (cameFromApp && history.length > 1) history.back();
+      else location.assign(backUrl);
+    }, reduced ? 100 : 2200);
+  });
+})();
+</script>

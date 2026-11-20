@@ -1,0 +1,213 @@
+{
+  "id": "fairy_falls_only",
+  "title": "Fairy Falls only Walk",
+  "hike_name": "Fairy Falls (without Grand Prismatic Overlook)",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from the Fairy Falls Trailhead along the forest trail to Fairy Falls. This route ends at the waterfall and does not include the Grand Prismatic overlook.",
+  "park": "Yellowstone National Park, Wyoming",
+  "start": {
+    "name": "Fairy Falls Trailhead",
+    "lat": 44.5249,
+    "lon": -110.8358
+  },
+  "end": {
+    "name": "Fairy Falls",
+    "lat": 44.5250,
+    "lon": -110.8699
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -110.9203,
+    44.50606,
+    -110.7929,
+    44.538940000000004
+  ],
+  "bounds": {
+    "wide": [
+      -110.9764,
+      44.4877,
+      -110.7368,
+      44.557300000000005
+    ],
+    "mid": [
+      -110.94614999999999,
+      44.4976,
+      -110.76705000000001,
+      44.5474
+    ],
+    "core": [
+      -110.9324,
+      44.5021,
+      -110.7808,
+      44.5429
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 48,
+    "zoom": 15.2,
+    "scroll_vh": 2200
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Fairy Falls",
+    "key_stop": {
+      "label": "Fairy Falls",
+      "at_m": 3129
+    }
+  },
+  "profile_checkpoints": [
+    { "name": "Fairy Falls spur", "at": 0.72 }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Fairy Falls Trailhead (39bd2091-69ca-4093-b87b-aca9146d0e9e).jpg",
+      "alt": "The trail leaves the Fairy Falls trailhead beside the thermal area.",
+      "eyebrow": "Start · Fairy Falls Trailhead",
+      "title": "Fairy Falls Trailhead",
+      "text": "The route starts here. Follow the marked trail toward Fairy Falls.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Fairy Falls, Yellowstone National Park - 49206054843.jpg",
+      "alt": "Fairy Falls drops through a forested ravine.",
+      "eyebrow": "End · Fairy Falls",
+      "title": "Fairy Falls",
+      "text": "You have reached Fairy Falls. The route profile follows the trail from the named trailhead to this endpoint.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 2250,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2650,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

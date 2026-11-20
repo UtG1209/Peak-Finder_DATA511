@@ -1,0 +1,29 @@
+{
+  "walk": "grinnell_glacier_overlook",
+  "before_bytes": 20137977,
+  "types": {
+    "dem": {
+      "files": 30,
+      "before": 3874704,
+      "after": 2761216,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 36,
+      "before": 11042624,
+      "after": 8471504,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 310138,
+      "after": 310138,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 36
+  },
+  "page_replacements": 6,
+  "after_bytes": 16453405
+}

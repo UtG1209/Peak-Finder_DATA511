@@ -110,7 +110,9 @@ def main(trail_id):
     b, cam, lab = cfg["bounds"], cfg["camera"], cfg["profile_labels"]
     page = (ROOT / "template" / "template.html").read_text(encoding="utf-8")
     values = {
-        "__TITLE__": esc(cfg["title"]), "__BRAND__": esc(cfg["brand"]), "__MAP_LABEL__": esc(cfg["map_label"]),
+        "__TITLE__": esc(cfg["title"]), "__HIKE_NAME__": esc(cfg.get("hike_name", cfg["title"].removesuffix(" Walk"))),
+        "__PARK__": esc(cfg["park"]),
+        "__BRAND__": esc(cfg["brand"]), "__MAP_LABEL__": esc(cfg["map_label"]),
         "__START_LABEL__": esc(lab["start"]), "__END_LABEL__": esc(lab["end"]),
         "__KEY_LABEL__": esc(lab["key_stop"]["label"]), "__KEY_M__": str(lab["key_stop"]["at_m"]),
         "__CONTRAST__": str(cfg.get("look", {}).get("contrast", 0.18)),

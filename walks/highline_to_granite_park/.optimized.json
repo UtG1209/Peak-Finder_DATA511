@@ -1,0 +1,29 @@
+{
+  "walk": "highline_to_granite_park",
+  "before_bytes": 15237007,
+  "types": {
+    "dem": {
+      "files": 27,
+      "before": 3426641,
+      "after": 2434080,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 24,
+      "before": 6729460,
+      "after": 5177462,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 275787,
+      "after": 275787,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 24
+  },
+  "page_replacements": 6,
+  "after_bytes": 12692484
+}
