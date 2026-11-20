@@ -8,7 +8,7 @@ import { feature } from 'topojson-client'
 import type { FeatureCollection, Geometry } from 'geojson'
 import type { Topology } from 'topojson-specification'
 import { bubbleRadius } from '../lib/bubbles'
-import { DIFFICULTY_COLORS, hexToRgba } from '../lib/difficulty'
+import { DIFFICULTY_COLORS } from '../lib/difficulty'
 import type { Difficulty } from '../lib/difficulty'
 
 export interface MapPoint {
@@ -30,7 +30,8 @@ export interface MapApi {
   zoomOut: () => void
   wholeUs: () => void
   fit: (points: { lat: number; lon: number }[]) => void
-  flyTo: (lat: number, lon: number, done?: () => void) => void
+  /** Centre on a point in the part of the map not covered by the hike tile. */
+  flyTo: (lat: number, lon: number, done?: () => void, zoom?: number) => void
 }
 
 interface Props {
@@ -44,13 +45,27 @@ interface Props {
 maplibregl.setWorkerUrl(workerUrl)
 
 const WHOLE_US: [[number, number], [number, number]] = [[-125.5, 23.5], [-66, 50]]
-const byDifficulty = (fn: (hex: string) => string): maplibregl.ExpressionSpecification => [
-  'match', ['get', 'difficulty'],
-  'easy', fn(DIFFICULTY_COLORS.easy),
-  'moderate', fn(DIFFICULTY_COLORS.moderate),
-  'hard', fn(DIFFICULTY_COLORS.hard),
-  '#b4bcc3',
-]
+/** Draw the peak markers once as small canvas images (flat fills, no glows). */
+function peakImages(): Record<string, ImageData> {
+  const draw = (fill: string | null, stroke: string, lw: number): ImageData => {
+    const c = document.createElement('canvas')
+    c.width = c.height = 48
+    const g = c.getContext('2d')!
+    g.lineJoin = 'round'
+    g.beginPath()
+    g.moveTo(24, 7); g.lineTo(42, 40); g.lineTo(6, 40); g.closePath()
+    if (fill) { g.fillStyle = fill; g.fill() }
+    g.strokeStyle = stroke; g.lineWidth = lw; g.stroke()
+    return g.getImageData(0, 0, 48, 48)
+  }
+  const out: Record<string, ImageData> = { 'peak-hl': draw('#ffffff', '#ffffff', 6), 'peak-grey': draw(null, '#7b8791', 3.5) }
+  for (const d of ['easy', 'moderate', 'hard'] as const) {
+    out[`peak-${d}`] = draw(DIFFICULTY_COLORS[d], '#0e1216', 2.5)
+    out[`peak-${d}-3d`] = draw(DIFFICULTY_COLORS[d], '#f2efe9', 3)
+  }
+  return out
+}
+
 const reduceMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const toGeoJson = (points: MapPoint[]): FeatureCollection => ({
@@ -67,6 +82,8 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
   const el = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const latest = useRef({ points, onSelect, onHover })
+  const shownR = useRef(new Map<string, number>()) // radius currently on screen per hike
+  const raf = useRef(0)
   useEffect(() => {
     latest.current = { points, onSelect, onHover }
   })
@@ -103,14 +120,14 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
           pts.forEach((p) => b.extend([p.lon, p.lat]))
           m.fitBounds(b, { padding: pad, maxZoom: 6, duration: reduceMotion() ? 0 : 500 })
         },
-        flyTo: (lat, lon, done) => {
+        flyTo: (lat, lon, done, zoom = 6) => {
           if (reduceMotion()) {
-            m.jumpTo({ center: [lon, lat], zoom: 6 })
+            m.jumpTo({ center: [lon, lat], zoom, padding: { right: 340, top: 0, bottom: 0, left: 0 } })
             done?.()
             return
           }
           m.once('moveend', () => done?.())
-          m.flyTo({ center: [lon, lat], zoom: 6, duration: 450 })
+          m.flyTo({ center: [lon, lat], zoom, duration: 450, padding: { right: 340, top: 0, bottom: 0, left: 0 } })
         },
       }
     }
@@ -127,21 +144,25 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
       m.addLayer({ id: 'states-line', type: 'line', source: 'states', paint: { 'line-color': '#44525e', 'line-width': 1 } })
 
       m.addSource('hikes', { type: 'geojson', data: toGeoJson(latest.current.points) })
-      const notGrey = ['!', ['get', 'greyed']] as maplibregl.ExpressionSpecification
-      m.addLayer({ id: 'hikes-halo', type: 'circle', source: 'hikes', filter: notGrey, paint: { 'circle-radius': ['+', ['get', 'r'], 5], 'circle-color': byDifficulty((h) => hexToRgba(h, 0.28)), 'circle-radius-transition': { duration: 400, delay: 0 } } })
-      // featured 3D hikes carry a thin outer ring
-      m.addLayer({ id: 'hikes-ring', type: 'circle', source: 'hikes', filter: ['==', ['get', 'featured'], true], paint: { 'circle-radius': ['+', ['get', 'r'], 8], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#f2efe9', 'circle-stroke-width': 1.2, 'circle-radius-transition': { duration: 400, delay: 0 } } })
+      for (const [name, data] of Object.entries(peakImages())) m.addImage(name, data, { pixelRatio: 2 })
+      // One flat peak per hike: colour = difficulty, size = match. Hikes past a limit are small hollow grey peaks. 3D-walk hikes have a white outline.
+      const size = (k: number): maplibregl.ExpressionSpecification => ['*', ['get', 'r'], k]
       m.addLayer({
-        id: 'hikes', type: 'circle', source: 'hikes',
-        paint: {
-          'circle-radius': ['get', 'r'],
-          'circle-color': ['case', ['get', 'greyed'], '#101418', byDifficulty((h) => h)],
-          'circle-stroke-color': ['case', ['get', 'greyed'], '#7b8791', '#101418'],
-          'circle-stroke-width': ['case', ['get', 'greyed'], 1.5, 1],
-          'circle-radius-transition': { duration: 400, delay: 0 }, // bubbles resize over ~400 ms when the quarter changes
+        id: 'hikes-hl', type: 'symbol', source: 'hikes', filter: ['==', ['get', 'id'], ''],
+        layout: { 'icon-image': 'peak-hl', 'icon-size': size(0.2), 'icon-allow-overlap': true, 'icon-ignore-placement': true },
+      })
+      m.addLayer({
+        id: 'hikes', type: 'symbol', source: 'hikes',
+        layout: {
+          'icon-image': ['case', ['get', 'greyed'], 'peak-grey', ['concat', 'peak-', ['get', 'difficulty'], ['case', ['get', 'featured'], '-3d', '']]],
+          'icon-size': size(0.13),
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          // greyed peaks underneath, then big ones before small ones so a small peak is never hidden behind a large one
+          'symbol-sort-key': ['case', ['get', 'greyed'], -100, ['*', ['get', 'r'], -1]],
         },
       })
-      m.addLayer({ id: 'hikes-hl', type: 'circle', source: 'hikes', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': ['+', ['get', 'r'], 11], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2 } })
+      shownR.current = new Map(latest.current.points.map((p) => [p.id, bubbleRadius(p.match, p.greyed)]))
 
       m.on('mousemove', 'hikes', (e) => {
         m.getCanvas().style.cursor = 'pointer'
@@ -165,9 +186,35 @@ export function UsMap({ points, highlightId, onSelect, onHover, apiRef }: Props)
     }
   }, [apiRef])
 
+  // Peaks resize over ~400 ms when the quarter changes (symbol sizes cannot be transitioned by MapLibre, so we step the radius ourselves).
   useEffect(() => {
     const src = map.current?.getSource('hikes') as maplibregl.GeoJSONSource | undefined
-    src?.setData(toGeoJson(points))
+    if (!src) return
+    cancelAnimationFrame(raf.current)
+    const from = new Map(shownR.current)
+    const to = new Map(points.map((p) => [p.id, bubbleRadius(p.match, p.greyed)]))
+    const draw = (k: number) => {
+      const cur = new Map<string, number>()
+      const fc = toGeoJson(points)
+      for (const f of fc.features) {
+        const id = String(f.properties?.id)
+        const t = to.get(id) ?? 0
+        const r = from.has(id) ? from.get(id)! + (t - from.get(id)!) * k : t
+        cur.set(id, r)
+        f.properties = { ...f.properties, r }
+      }
+      shownR.current = cur
+      src.setData(fc)
+    }
+    if (reduceMotion()) return draw(1)
+    const t0 = performance.now()
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / 400)
+      draw(k * (2 - k)) // ease out
+      if (k < 1) raf.current = requestAnimationFrame(step)
+    }
+    raf.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf.current)
   }, [points])
 
   useEffect(() => {
