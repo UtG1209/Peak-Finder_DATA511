@@ -32,6 +32,12 @@ const CROWD_CHIPS: { label: string; value: 0 | 1 | 2 | null }[] = [
   { label: 'Busy', value: 2 },
   { label: 'Any', value: null },
 ]
+/** Legend marker: the same flat peak the map draws. */
+const Peak = ({ color = 'none', hollow = false, outline }: { color?: string; hollow?: boolean; outline?: string }) => (
+  <svg className="peakicon" width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
+    <path d="M8 1.5 L14.5 12.5 H1.5 Z" fill={hollow ? 'none' : color} stroke={hollow ? '#7b8791' : outline ?? '#0e1216'} strokeWidth={hollow ? 1.6 : outline ? 1.8 : 1.4} strokeLinejoin="round" />
+  </svg>
+)
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 
 // Where the map was looking when the user opened a hike, so Back returns to the same view (not the whole US).
@@ -115,7 +121,9 @@ export default function Explore() {
     [rows],
   )
 
-  const shown = rows.find((r) => r.hike.id === hoverId) ?? rows[0]
+  // Clicking a peak or a list row only SELECTS it (the tile stays open); the hike page opens from the tile's button.
+  const picked = filters.pick ? rows.find((r) => r.hike.id === filters.pick) : undefined
+  const shown = rows.find((r) => r.hike.id === hoverId) ?? picked ?? rows[0]
   const costLine = useMemo(() => {
     if (!shown || !filters.from) return null
     const row = costFor(index, shown.hike.id, filters.from, filters.q)
@@ -124,6 +132,19 @@ export default function Explore() {
     const total = Math.round(tripCost(row, { travellers: 2, nights: 3, mode }).total / 10) * 10
     return `Typical cost about $${total.toLocaleString()} for 2 people, 3 nights (${mode === 'fly' ? 'flying' : 'driving'}). Past years, not a quote.`
   }, [shown, filters.from, filters.q, index])
+
+  const pick = (id: string) => {
+    const hike = index.hikeById.get(id)
+    update({ pick: id })
+    if (hike) apiRef.current?.flyTo(hike.trailhead.lat, hike.trailhead.lon, undefined, 5.5)
+  }
+  const closeTile = () => update({ pick: null })
+  useEffect(() => {
+    if (!picked) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') update({ pick: null }) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [picked, update])
 
   const open = (id: string) => {
     const hike = index.hikeById.get(id)
@@ -234,11 +255,11 @@ export default function Explore() {
                 <m.li
                   key={hike.id} layout="position" transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
                   ref={(el: HTMLLIElement | null) => { if (el) rowRefs.current.set(hike.id, el); else rowRefs.current.delete(hike.id) }}
-                  className={hoverId === hike.id ? 'hot' : ''}
+                  className={`${hoverId === hike.id ? 'hot' : ''}${filters.pick === hike.id ? ' sel' : ''}`}
                   onMouseEnter={() => hover(hike.id, 'list')} onMouseLeave={() => hover(null, 'list')}
                   onFocus={() => hover(hike.id, 'list')} onBlur={() => hover(null, 'list')}
                 >
-                  <button type="button" onClick={() => open(hike.id)} aria-label={`${hike.name}, ${hike.park_name}, ${Math.round(result.match)} percent match${out ? ', past a limit' : ''}`}>
+                  <button type="button" aria-pressed={filters.pick === hike.id} onClick={() => pick(hike.id)} aria-label={`${hike.name}, ${hike.park_name}, ${Math.round(result.match)} percent match${out ? ', past a limit' : ''}`}>
                     <span className="name">{hike.name}{hike.featured && <em title="Has a 3D walk">3D</em>}</span>
                     <span className="park"><i className="dd" style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} />{hike.park_name} · {DIFFICULTY_LABEL[hike.difficulty]} · {fmtLength(hike.length_mi, units)}</span>
                     <span className={`pct${out ? ' out' : ''}`}>{Math.round(result.match)}%{out && <small>past a limit</small>}</span>
@@ -254,7 +275,7 @@ export default function Explore() {
 
       <main id="mapPane" tabIndex={-1} className={started ? '' : 'blurred'}>
         <Suspense fallback={<MapSkeleton />}>
-          <UsMap points={points} home={cityByCode(filters.from)} initialView={initialView} highlightId={hoverId} onSelect={open} onHover={(id) => hover(id, 'map')} apiRef={apiRef} />
+          <UsMap points={points} home={cityByCode(filters.from)} initialView={initialView} highlightId={hoverId ?? picked?.hike.id ?? null} onSelect={pick} onHover={(id) => hover(id, 'map')} apiRef={apiRef} />
         </Suspense>
         <GuideOverlay steps={steps} started={started} onStart={() => update({ go: true })} onWheel={wheelHikes.length > 0 ? () => setWheelOpen(true) : undefined} />
         {started && <div id="count" className="pill"><b>{fitting}</b> <span>of {rows.length} hikes fit in {quarter.label}</span></div>}
@@ -263,17 +284,18 @@ export default function Explore() {
           <HikeCard
             hike={shown.hike} quarterLabel={quarter.label} match={shown.result.match} fits={!shown.out}
             rows={reasonRows(shown.result, shown.months, units)} costLine={costLine} onOpen={() => open(shown.hike.id)} units={units}
+            selected={picked?.hike.id === shown.hike.id} onClose={closeTile}
           />
         )}
         {started && (
           <div id="legend" className="pill">
             <div className="lg-title">Difficulty (colour) · match (size)</div>
-            {(['easy', 'moderate', 'hard'] as const).map((d) => <div key={d}><i className="lg-fit" style={{ background: DIFFICULTY_COLORS[d], boxShadow: `0 0 0 4px ${DIFFICULTY_COLORS[d]}40` }} /> {DIFFICULTY_LABEL[d]}</div>)}
-            <div><i className="lg-out" /> Filtered out</div>
-            <div><i className="lg-ring" /> 3D walk ready</div>
+            {(['easy', 'moderate', 'hard'] as const).map((d) => <div key={d}><Peak color={DIFFICULTY_COLORS[d]} /> {DIFFICULTY_LABEL[d]}</div>)}
+            <div><Peak hollow /> Filtered out</div>
+            <div><Peak color="#8b949c" outline="#f2efe9" /> 3D walk ready</div>
+            <div className="lg-hint">Scroll to zoom · drag to pan. Click a peak to preview it.</div>
           </div>
         )}
-        {started && <div id="hint" className="pill">Scroll to zoom · drag to pan · click a bubble</div>}
         <div id="zoomctl" hidden={!started}>
           <button type="button" className="zb txt" onClick={() => apiRef.current?.fit(rows.filter((r) => !r.out).map((r) => r.hike.trailhead).map((t) => ({ lat: t.lat, lon: t.lon })))}>Zoom to results</button>
           <button type="button" className="zb" aria-label="Zoom in" onClick={() => apiRef.current?.zoomIn()}>+</button>

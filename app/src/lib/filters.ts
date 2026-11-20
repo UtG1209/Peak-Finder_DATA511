@@ -25,6 +25,8 @@ export interface FilterState {
   units: Units
   /** The user pressed "Show hikes": until then the map is blurred and the guide asks what to do next. */
   go: boolean
+  /** The hike whose photo tile is open on the map (clicked, not yet opened). Lives in the URL so Back from the hike page returns to the same tile. */
+  pick: string | null
 }
 
 /** Slider ranges shown in the UI (also the "wide open" ends). */
@@ -47,6 +49,7 @@ export const defaultFilters = (today = new Date()): FilterState => ({
   has3d: false,
   units: 'us',
   go: false,
+  pick: null,
 })
 
 const int = (v: string | null): number | null => {
@@ -76,6 +79,7 @@ export function parseFilters(params: URLSearchParams, today = new Date()): Filte
     has3d: params.get('3d') === '1',
     units: params.get('units') === 'metric' ? 'metric' : 'us',
     go: params.get('go') === '1',
+    pick: /^[a-z0-9-]{1,60}$/.test(params.get('pick') ?? '') ? params.get('pick') : null,
   }
 }
 
@@ -93,6 +97,7 @@ export function serializeFilters(f: FilterState): URLSearchParams {
   if (f.has3d) p.set('3d', '1')
   if (f.units === 'metric') p.set('units', 'metric')
   if (f.go) p.set('go', '1')
+  if (f.pick) p.set('pick', f.pick)
   return p
 }
 

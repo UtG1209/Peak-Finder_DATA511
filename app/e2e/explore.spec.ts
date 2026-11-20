@@ -19,6 +19,14 @@ async function firstBubble(page: Page): Promise<Bubble> {
     const m = (window as unknown as { __map: { querySourceFeatures: (s: string) => unknown[] } }).__map
     return m.querySourceFeatures('hikes').length > 0
   })
+  // peaks are symbols, placed a moment after load: wait until one can really be hit at its pixel
+  await page.waitForFunction(() => {
+    const m = (window as unknown as { __map: { querySourceFeatures: (s: string) => { properties: { greyed: boolean }; geometry: { coordinates: [number, number] } }[]; project: (c: [number, number]) => { x: number; y: number }; queryRenderedFeatures: (p: [number, number], o: { layers: string[] }) => unknown[] } }).__map
+    const f = m.querySourceFeatures('hikes').find((x) => !x.properties.greyed)
+    if (!f) return false
+    const p = m.project(f.geometry.coordinates)
+    return m.queryRenderedFeatures([p.x, p.y], { layers: ['hikes'] }).length > 0
+  })
   const box = (await page.locator('#mapPane .us-map').boundingBox())!
   const b = await page.evaluate(() => {
     const m = (window as unknown as { __map: { querySourceFeatures: (s: string) => { properties: { id: string; greyed: boolean }; geometry: { coordinates: [number, number] } }[]; project: (c: [number, number]) => { x: number; y: number } } }).__map
@@ -44,21 +52,24 @@ test('changing the quarter changes the count and the URL', async ({ page }) => {
   expect(await fitCount(page)).not.toBe(q1) // the temperature limit cuts different hikes in winter and summer
 })
 
-test('clicking a bubble opens the hike, and Back returns to the same map view', async ({ page }) => {
+test('clicking a peak opens its tile; the tile opens the hike; Back returns to the same map view with the tile open', async ({ page }) => {
   await page.goto('./#/?q=3&go=1')
-  await firstBubble(page) // wait until the bubbles are drawn
-  // pan away from the whole-US view first, so "same view" is something other than the default
-  await page.locator('#zoomctl').getByRole('button', { name: 'Zoom in' }).click()
-  await page.waitForTimeout(500)
+  await firstBubble(page) // wait until the peaks are drawn
+  const b = await firstBubble(page)
+  await page.mouse.click(b.x, b.y)
+  // two trailheads in one park can overlap, so the click may land on a neighbour: any selected tile proves it works
+  await expect(page).toHaveURL(/pick=/)
+  await expect(page).not.toHaveURL(/#\/hike\//)
+  await expect(page.locator('#detail.selected')).toBeVisible()
+  await page.waitForTimeout(700) // the map flies to the hike
   const before = await mapCentre(page)
-  const b2 = await firstBubble(page)
-  await page.mouse.click(b2.x, b2.y)
-  // two trailheads in one park can overlap, so the click may land on a neighbour: any hike page proves it works
+  await page.locator('#detail').getByRole('button', { name: /Open this hike/ }).click()
   await expect(page).toHaveURL(/#\/hike\//, { timeout: 10_000 })
   await expect(page.getByRole('heading', { name: 'What it costs' })).toBeVisible()
 
   await page.getByRole('link', { name: /Back to map/ }).first().click()
   await expect(page.locator('#mapPane')).not.toHaveClass(/blurred/)
+  await expect(page.locator('#detail.selected')).toBeVisible()
   await page.waitForFunction(() => !!(window as unknown as { __map?: { loaded: () => boolean } }).__map?.loaded())
   const after = await mapCentre(page)
   expect(after.zoom).toBeCloseTo(before.zoom, 1)
@@ -175,14 +186,17 @@ test('bubbles resize gradually when the quarter changes', async ({ page }) => {
   await firstBubble(page)
   const start = await radiusSum(page)
   await page.locator('.qrow').getByRole('button', { name: /Q3/ }).click()
-  await page.waitForTimeout(120)
-  const mid = await radiusSum(page)
-  await page.waitForTimeout(700)
-  const end = await radiusSum(page)
+  // sample the radii every 25 ms for a second: a gradual resize passes through values between the start and the end
+  const samples: number[] = []
+  for (let i = 0; i < 40; i++) {
+    samples.push(await radiusSum(page))
+    await page.waitForTimeout(25)
+  }
+  const end = samples[samples.length - 1]
   expect(end).not.toBeCloseTo(start, 1) // the quarter really changed the sizes
   const lo = Math.min(start, end), hi = Math.max(start, end)
-  expect(mid, 'part-way through the resize').toBeGreaterThan(lo + 0.01)
-  expect(mid, 'part-way through the resize').toBeLessThan(hi - 0.01)
+  const between = new Set(samples.filter((v) => v > lo + 0.01 && v < hi - 0.01).map((v) => v.toFixed(2)))
+  expect(between.size, 'distinct in-between sizes seen during the resize').toBeGreaterThanOrEqual(1)
 })
 
 test('with reduced motion the bubbles jump straight to the new size', async ({ page }) => {

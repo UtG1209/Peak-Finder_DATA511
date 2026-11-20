@@ -7,7 +7,15 @@ const params = (s: string) => new URLSearchParams(s)
 describe('URL filter state', () => {
   it('parses the CLAUDE.md example URL', () => {
     const f = parseFilters(params('from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1'))
-    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, units: 'us', go: false })
+    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, units: 'us', go: false, pick: null })
+  })
+
+  it('pick keeps the open tile through a round trip and ignores junk', () => {
+    const f = parseFilters(params('q=2&go=1&pick=angels-landing'))
+    expect(f.pick).toBe('angels-landing')
+    expect(serializeFilters(f).get('pick')).toBe('angels-landing')
+    expect(parseFilters(params('pick=<script>')).pick).toBeNull()
+    expect(parseFilters(params('q=2')).pick).toBeNull()
   })
 
   it('go=1 marks that the user pressed Show hikes, and survives a round trip', () => {
@@ -65,7 +73,7 @@ describe('units and Share links', () => {
 
   it('a pasted Share link restores every control', () => {
     const f = parseFilters(params('from=ATL&q=4&temp=45-75&crowd=1&smoke=2&rain=8&travel=6&diff=hard&3d=1&units=metric&go=1'))
-    expect(f).toEqual({ from: 'ATL', q: 4, temp: [45, 75], crowd: 1, smoke: 2, rain: 8, travel: 6, diff: ['hard'], has3d: true, units: 'metric', go: true })
+    expect(f).toEqual({ from: 'ATL', q: 4, temp: [45, 75], crowd: 1, smoke: 2, rain: 8, travel: 6, diff: ['hard'], has3d: true, units: 'metric', go: true, pick: null })
     expect(parseFilters(serializeFilters(f))).toEqual(f)
   })
 })

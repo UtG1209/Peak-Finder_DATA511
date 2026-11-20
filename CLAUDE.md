@@ -64,7 +64,7 @@ One static web app that helps a hiker answer three questions in order:
 
 - **Guided start (the "web navigator")**: on arrival the **map is blurred** and a card says what to do next in three steps
   (1 home city or skip, 2 quarter, 3 limits), with a **Show hikes** button. Pressing it (`go=1` in the URL) unblurs the map and shows
-  the bubbles, the filtered-out dots, the legend, the hike card and a short "What next?" tip. Every limit starts wide open, and any step can be skipped.
+  the peaks, the filtered-out markers, the legend, the hike card and a short "What next?" tip. Every limit starts wide open, and any step can be skipped.
 - **Left rail**
   - "Peak Finder" title.
   - Home city: a **dropdown of 10 cities** (not free text; we only have travel/cost data for these):
@@ -83,19 +83,19 @@ One static web app that helps a hiker answer three questions in order:
     the screen-reader version of the map).
   - "Reset filters" link.
 - **Map** ("Click on a peak")
-  - One bubble per hike at its trailhead. Bubble **area** = match %, bubble **colour** = difficulty (Easy light teal,
+  - One flat peak (triangle) marker per hike at its trailhead. Marker **size** (area) = match %, **colour** = difficulty (Easy light teal,
     Moderate gold, Hard violet; always also in words). A hike that fails a limit becomes a small
     hollow grey dot (never disappears). Featured 3D hikes get a thin outer ring. Home city is a marker.
   - Legend: the three difficulty colours, "Filtered out", "3D walk ready".
   - Controls: + / −, "Zoom to results", "Whole US".
-  - Hover a bubble or list row → card: photo, name, park, match %, three reasons in words
+  - Hover a peak or list row → card: photo, name, park, match %, three reasons in words
     ("Typical high 68°F · 1 smoky day · 4.5 h away"), typical cost. Hover one highlights the other.
-  - Click → zoom to the hike, then open the hike page.
-  - Changing quarter: bubbles resize (~400 ms) and the list re-sorts with a slide.
+  - Click a peak (or a list row) → zoom to the hike and keep its photo tile open (`pick=<id>` in the URL, so Back returns to it). The hike page opens only from the tile's **Open this hike** button.
+  - Changing quarter: peaks resize (~400 ms) and the list re-sorts with a slide.
 - **"Not sure? Spin the wheel"** button opens the random picker: a wheel of the top 12 matching hikes,
   weighted by match %; lands, shows the card with Open / Spin again. Reduced motion → picks at once.
 - **Empty state**: never blank. "No hike fits all your limits. Allowing Busy crowds adds 6." with a one-click fix.
-- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1`),
+- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1&pick=angels-landing`),
   plus a Share link button (it copies the link with `go=1`, so it opens unblurred). `units=metric` switches °F/mi/ft to °C/km/m on the card, list and sliders. Back always works.
 
 ### Hike page (one scrolling page)
@@ -150,7 +150,7 @@ park-level crowds, county-level AQI, station-based weather, typical not quoted c
 7. Same words everywhere: Q1 = Jan–Mar = Winter on every screen, including the 3D walk.
 
 Visual: the dark look of the 29 Oct prototype (`docs/reference/oct29-prototype.html`) with ONE accent colour (sand-orange, token `--accent` in
-`app/src/styles.css`; teal was the earlier proposal and is a one-token switch). Bubble colour = difficulty (Easy light teal, Moderate gold, Hard violet;
+`app/src/styles.css`; teal was the earlier proposal and is a one-token switch). Marker colour = difficulty (Easy light teal, Moderate gold, Hard violet;
 `app/src/lib/difficulty.ts`), size = match %. Amber/red only for hazards and always with an icon and words; never red/green pairs. °F, miles, feet by default, with a metric toggle. Fonts: Archivo (headings), Inter (text),
 same as the walks. Accessibility: contrast ≥ 4.5:1, full keyboard use, native inputs with spoken values,
 alt text + Commons credit on photos.
