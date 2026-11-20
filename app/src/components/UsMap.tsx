@@ -166,7 +166,18 @@ export function UsMap({ points, home, initialView, highlightId, onSelect, onHove
             done?.()
             return
           }
-          m.once('moveend', () => done?.())
+          // `done` runs once: when the fly ends, or after 900 ms at the latest. On a slow device (or software WebGL) the animation can take
+          // seconds, and the hike page must not wait for it; the same goes for a fly to where the map already is, which may fire no moveend.
+          let called = false
+          let timer: ReturnType<typeof setTimeout> | undefined
+          const finish = () => {
+            if (called) return
+            called = true
+            clearTimeout(timer)
+            done?.()
+          }
+          if (done) timer = setTimeout(finish, 900)
+          m.once('moveend', finish)
           m.flyTo({ center: [lon, lat], zoom, duration: 450, padding: focusPad() })
         },
       }
