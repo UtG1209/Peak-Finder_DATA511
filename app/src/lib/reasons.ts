@@ -23,7 +23,9 @@ export function reasonRows(result: MatchResult, months: HikeMonth[]): ReasonRow[
     if (x.skippedBecause === 'missing') return { note: 'No data', warn: false }
     if (!x.active) return { note: 'No limit', warn: false }
     if (x.distancePast <= 0) return { note: k === 'temp' ? 'In range' : 'OK', warn: false }
-    return { note: `Over by ${x.distancePast.toFixed(round)}${unit}`, warn: true }
+    const over = x.distancePast.toFixed(round)
+    // a fractional overage that rounds to zero must not read "Over by 0 days"
+    return { note: Number(over) === 0 ? 'Just over' : `Over by ${over}${unit}`, warn: true }
   }
   const rows: ReasonRow[] = []
   const t = f('temp')

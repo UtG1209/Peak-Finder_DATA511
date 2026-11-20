@@ -1,5 +1,7 @@
 // The "what to do next" guide. Until the user presses "Show hikes" the map stays blurred and this
 // card says exactly one thing to do next. After that it becomes a short tip bar.
+import { Icon } from './Icon'
+
 export interface NavStep {
   id: string
   label: string
@@ -10,28 +12,31 @@ interface Props {
   steps: NavStep[]
   started: boolean
   onStart: () => void
+  /** Phone only: the filters live in a sheet, so the guide offers a button that opens it. */
+  onFilters?: () => void
 }
 
-/** Overlay on the blurred map: the steps, a one-line next action, and the Show hikes button. */
-export function GuideOverlay({ steps, started, onStart }: Props) {
+/** Overlay on the blurred map: the three steps, a one-line next action, and the Show hikes button. */
+export function GuideOverlay({ steps, started, onStart, onFilters }: Props) {
   if (started) return null
   const next = steps.find((s) => !s.done)
   return (
     <div className="guide" role="region" aria-label="How to use Peak Finder">
-      <h2>Find a hike that fits your trip</h2>
-      <p className="lede">Answer three quick things on the left. The map unblurs when you press <b>Show hikes</b>.</p>
+      <h2>Which national-park hike fits your trip?</h2>
+      <p className="lede">Say where you start, when you can go and how much heat, crowd, smoke and rain you will put up with. Peaks that fit stay bright on the map; the rest turn into small grey dots.</p>
       <ol className="steps">
         {steps.map((s, i) => (
           <li key={s.id} className={s.done ? 'done' : s === next ? 'now' : ''}>
-            <span className="n" aria-hidden="true">{s.done ? '✓' : i + 1}</span>
+            <span className="n" aria-hidden="true">{s.done ? <Icon name="check" size={14} /> : i + 1}</span>
             <span>{s.label}</span>
             <span className="sr-only">{s.done ? ' (done)' : s === next ? ' (next)' : ''}</span>
           </li>
         ))}
       </ol>
       <p className="next" aria-live="polite">{next ? <>Next: <b>{next.label}</b></> : <>All set. Press <b>Show hikes</b>.</>}</p>
-      <button type="button" className="go" onClick={onStart}>Show hikes <span aria-hidden="true">→</span></button>
-      <p className="fine">You can skip any step. Every limit starts wide open, so nothing is hidden by accident.</p>
+      <button type="button" className="go" onClick={onStart}>Show hikes <Icon name="arrow-right" /></button>
+      {onFilters && <button type="button" className="back m-only" onClick={onFilters}><Icon name="sliders" size={18} /> Set city, quarter and limits</button>}
+      <p className="fine">Every step is optional. Each limit starts wide open, so no hike is hidden by accident.</p>
     </div>
   )
 }
@@ -41,7 +46,7 @@ export function NextTip({ visible }: { visible: boolean }) {
   if (!visible) return null
   return (
     <div className="tip" role="note">
-      <b>What next?</b> Hover a bubble to preview a hike. Click one to see which quarter suits you and what the trip costs.
+      <b>Tip</b> Hover a peak to preview it, click to pin it. Open the hike to compare all four quarters and see the typical cost.
     </div>
   )
 }

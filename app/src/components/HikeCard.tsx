@@ -1,16 +1,7 @@
 import type { Hike } from '../data/schema'
 import type { ReasonRow } from '../lib/reasons'
-import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../lib/difficulty'
-
-const Check = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="var(--accent)" /><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-)
-const Warn = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l9 16H1z" fill="var(--hazard)" /><path d="M10 7.5v5M10 14.2v.6" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" /></svg>
-)
-const Dash = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="var(--off-line)" strokeWidth="1.5" /><path d="M6 10h8" stroke="var(--off-line)" strokeWidth="1.5" strokeLinecap="round" /></svg>
-)
+import { DIFFICULTY_LABEL } from '../lib/difficulty'
+import { Icon, type IconName } from './Icon'
 
 interface Props {
   hike: Hike
@@ -26,27 +17,33 @@ interface Props {
   onClose?: () => void
 }
 
-/** The preview tile (hover to peek, click a peak to keep it open): photo, name, park, three-plus reasons in words, typical cost, one button. */
+const iconFor = (r: ReasonRow): IconName => (r.warn ? 'alert' : r.note === 'No data' || r.note === 'No limit' ? 'dash' : 'check')
+
+/** The preview tile (hover to peek, click a peak to keep it open): photo with name on it, fit line, reasons with icon + words, typical cost, one button. */
 export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen, selected = false, onClose }: Props) {
   return (
     <aside id="detail" className={selected ? 'selected' : ''} aria-live="polite" aria-label={`${hike.name} summary`}>
       <div className="ph">
-        {selected && onClose && <button type="button" className="tile-x" aria-label="Close preview" onClick={onClose}>×</button>}
-        <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name} (placeholder image)`} loading="lazy" />
-      </div>
-      <div className="in">
-        <div>
-          <div className={`eyebrow${fits ? '' : ' out'}`}>
-            {fits ? `Fits ${quarterLabel}` : `Past a limit in ${quarterLabel}`} · {Math.round(match)}% match{hike.featured ? ' · 3D walk ready' : ''}
-          </div>
-          <div className="diff-tag"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]} · {hike.length_mi} mi {hike.length_type}</div>
+        <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={hike.photo.author.includes('placeholder') ? `${hike.name} (placeholder image)` : `${hike.name}. Photo: ${hike.photo.author}, ${hike.photo.license}`} loading="lazy" />
+        {selected && onClose && (
+          <button type="button" className="tile-x" aria-label="Close preview" onClick={onClose}><Icon name="close" size={18} /></button>
+        )}
+        <div className="ph-cap">
+          {hike.featured && <span className="ph-tag"><Icon name="walk3d" size={14} /> 3D walk ready</span>}
           <h3>{hike.name}</h3>
           <div className="sub">{hike.park_name}</div>
         </div>
+      </div>
+      <div className="in">
+        <div className="fit-line">
+          <span className={`fit-pct${fits ? '' : ' out'}`}>{Math.round(match)}%</span>
+          <span className="fit-words">{fits ? `match, fits ${quarterLabel}` : `match, past a limit in ${quarterLabel}`}</span>
+        </div>
+        <div className="diff-tag"><i className={`d-${hike.difficulty}`} /> {DIFFICULTY_LABEL[hike.difficulty]} · {hike.length_mi} mi {hike.length_type}</div>
         <div className="rows">
           {rows.map((r) => (
             <div key={r.key} className={`row${r.warn ? ' warn' : ''}`}>
-              {r.warn ? <Warn /> : r.note === 'No data' || r.note === 'No limit' ? <Dash /> : <Check />}
+              <Icon name={iconFor(r)} size={16} />
               <span className="l">{r.label}</span>
               <span className="v">{r.value}</span>
               <span className="n">{r.note}</span>
@@ -54,8 +51,9 @@ export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOp
           ))}
         </div>
         <div className="cost">{costLine ?? 'Pick a home city to see a typical cost.'}</div>
+        {!hike.photo.author.includes('placeholder') && <p className="photo-credit">Photo: {hike.photo.author} · {hike.photo.license} · Wikimedia Commons</p>}
         <button type="button" className="go" onClick={onOpen}>
-          Open this hike <span aria-hidden="true">→</span>
+          Open this hike <Icon name="arrow-right" />
         </button>
       </div>
     </aside>
