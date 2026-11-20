@@ -2,7 +2,7 @@
 // Lane 3 (docs/work/lane-3-explore.md): motion, hover linking, wheel picker, share link, metric toggle, states, accessibility.
 import { LayoutGroup, LazyMotion, MotionConfig, m } from 'framer-motion'
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
 import { costFor, travelFor } from '../../data/loaders'
 import { CITIES, cityByCode } from '../../lib/cities'
@@ -270,7 +270,7 @@ export default function Explore() {
           </LayoutGroup>
           <button type="button" className="linkbtn" onClick={reset}>Reset filters</button>
         </section>
-        <p className="fine">Sample numbers while the pipeline is built. Match % = how well a hike's typical conditions fit your limits.</p>
+        <p className="fine">Sample numbers while the pipeline is built. Match % = how well a hike's typical conditions fit your limits. <Link to="/about">About the data</Link></p>
       </aside>
 
       <main id="mapPane" tabIndex={-1} className={started ? '' : 'blurred'}>

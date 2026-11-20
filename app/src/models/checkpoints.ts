@@ -214,3 +214,42 @@ export function formatClock(min: number): string {
 
 /** Default start = 1 hour after sunrise (use the chosen quarter's middle month). */
 export const defaultStartMin = (sunrise: string): number => parseClock(sunrise) + 60
+
+const EPS_MIN = 0.5
+
+/** Index of the checkpoint event the hiker is at, or has most recently reached, at clock time `t`. -1 before the start. */
+export function eventIndexAt(tl: Timeline, t: number): number {
+  let idx = -1
+  for (let i = 0; i < tl.length; i++) if (tl[i].time <= t + 1e-9) idx = i
+  return idx
+}
+
+/**
+ * Clock time of the next (`dir` = 1) or previous (`dir` = -1) checkpoint event, for the Forward / Back buttons and arrow keys.
+ * In the hike's own order: for out-and-back, C0, C1 ... summit ... C1, C0. Stays at the first / last event at the ends.
+ * At an arrival Back goes to the event before; while waiting at a stop, Back goes to the stop itself.
+ */
+export function stepTime(tl: Timeline, t: number, dir: 1 | -1): number {
+  if (dir === 1) {
+    for (const e of tl) if (e.time > t + EPS_MIN) return e.time
+    return finishTime(tl)
+  }
+  for (let i = tl.length - 1; i >= 0; i--) if (tl[i].time < t - EPS_MIN) return tl[i].time
+  return tl[0].time
+}
+
+/** Earliest clock time at which the hiker has walked `walkedM` metres (NPS-scaled), for dragging the marker along the profile. */
+export function timeAtWalked(tl: Timeline, walkedM: number): number {
+  const lo0 = tl[0].time
+  const hi0 = finishTime(tl)
+  if (walkedM <= 0) return lo0
+  if (walkedM >= tl[tl.length - 1].walkedM) return hi0
+  let lo = lo0
+  let hi = hi0
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2
+    if (positionAt(tl, mid).walkedM >= walkedM) hi = mid
+    else lo = mid
+  }
+  return hi
+}

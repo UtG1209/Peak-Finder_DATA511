@@ -61,3 +61,16 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
 - [ ] Real DEM profiles are noisy (the Angels Landing walk had a 4:1 slope in one 10 m step, which Tobler turned into 90 hours). The checkpoint model now smooths elevation over about 50 m and caps
       slope at ±0.6 (`MAX_SLOPE`, `SMOOTH_WINDOW_M` in `models/checkpoints.ts`). With real routes it gives Angels Landing 4.6 h, Bright Angel 11.7 h, Cascade Pass 8.7 h round trip. Lane 4 validates against NPS times for 5 hikes.
 - [x] Walks are built by one verified process (`docs/WALKS.md`); `walks/manifest.json` is the single source of truth for `featured` and `walk_path`.
+
+## Hike page and About (lane 4)
+- [ ] **Month strip: day limits per month.** The smoky-day and wet-day limits are for a whole quarter, so a single month's cell is marked "Past limit" when it alone is above **one third** of the limit.
+      Temperature and crowds are compared directly. (`lib/monthStrip.ts`, `SHARE`.) The strip says this under the table.
+- [ ] **Sunrise and sunset for a quarter** come from its **middle month** (the same month that sets the default start time, sunrise + 1 h). Early and late months of the quarter differ by up to about an hour.
+- [ ] **The profile chart's x axis is the distance walked** (NPS-scaled), so an out-and-back hike is two humps: the climb (solid line, filled markers) and the return (dashed line, hollow markers). Loops and one-way routes are one curve.
+- [ ] **Stepping.** Back / Forward and the arrow keys jump between checkpoint events in the hike's own order (C0, C1 ... summit ... C1, C0). While waiting at a stop, Back goes to that stop.
+      The native time slider keeps minute-by-minute control. (`stepTime` in `models/checkpoints.ts`.)
+- [ ] **Stop photos on the hike page come from the 3D walk's files** (`walks/<id>/photos/...`, the paths in `profiles/<id>.json`) and are loaded only when that stop is reached. Their credits are on the walk page; the page says so.
+- [ ] **About worked example is computed live** from the data with the real match model (Angels Landing, Q3, 60 to 85 F; falls back to the first hike), so it cannot drift from the app.
+- [ ] **Hike times are not yet validated against NPS time estimates** (the lane brief asks for 5 hikes). No global correction is applied, and About says so. Still to do once real profiles are in.
+- [ ] **Similar hikes** (a "Should" item, after G3) and **user testing** (needs real people) are not part of this change.
+

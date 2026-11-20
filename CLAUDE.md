@@ -9,8 +9,8 @@ paper-prototype decisions made after the PDF).
 
 **State of the repo.** The app runs end to end on **fake data** (`app/public/data/meta.json` has `"fake": true`; a yellow banner shows it).
 Built: data contract (zod schemas) and loaders, the three models with tests, Explore (guided start with a blurred map until "Show hikes",
-difficulty colours, filters, ranked list, hover card, home city marker, bubble resize and list slide, hover linking, "Spin the wheel", Share link, metric toggle, Back returns to the same map view), Hike page (header, quarter fit, cost graph), the three 3D walks in `walks/`, CI and
-GitHub Pages deploy, setup tooling. Not built yet: real pipeline data, month strip, timed elevation profile, About page,
+difficulty colours, filters, ranked list, hover card, home city marker, bubble resize and list slide, hover linking, "Spin the wheel", Share link, metric toggle, Back returns to the same map view), Hike page (header with gear and photo credit, quarter fit with a per-factor breakdown, month-by-month strip with hazards and the Advice vs data card, timed elevation profile with scrubber and daylight band, cost graph), About page (sources, worked match example, costs, times, honest limits), the three 3D walks in `walks/`, CI and
+GitHub Pages deploy, setup tooling. Not built yet: real pipeline data,
 cloud transition, similar hikes, walks for the other hikes.
 
 **Which lane are you in?** The work is split in four independent lanes, each with a brief. If the user has not said, ask which one they own, then read

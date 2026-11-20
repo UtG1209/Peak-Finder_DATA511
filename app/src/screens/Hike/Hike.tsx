@@ -1,12 +1,11 @@
-// Hike page (When and How much). Built so far: header, quarter fit cards, and the cost graph.
-// Lane 4 (docs/work/lane-4-hike-page-about.md) adds: month-by-month strip, timed elevation profile, similar hikes, About.
+// Hike page (When and How much): header, which quarter fits you, month by month, on the trail (elevation profile with time), what it costs.
+// Lane 4 (docs/work/lane-4-hike-page-about.md). Still to come: similar hikes (after G3).
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
 import type { Quarter } from '../../data/schema'
 import { CITIES } from '../../lib/cities'
-import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../../lib/difficulty'
 import { toLimits } from '../../lib/filters'
 import { usd } from '../../lib/money'
 import { QUARTERS } from '../../lib/quarters'
@@ -15,7 +14,13 @@ import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
 import { CostBars, CostLegend } from '../../components/charts/CostBars'
+import { MonthStrip } from '../../components/charts/MonthStrip'
 import { PART_LABEL, type Part } from '../../lib/costParts'
+import { stripColumns } from '../../lib/monthStrip'
+import { AdviceCard } from './AdviceCard'
+import { FitSection } from './FitSection'
+import { HikeHeader } from './HikeHeader'
+import { TrailSection } from './TrailSection'
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
@@ -48,6 +53,8 @@ export default function Hike() {
     [hike, index, filters.from, travellers, nights, mode],
   )
 
+  const byQuarter = useMemo(() => (hike ? QUARTERS.map(({ q }) => quarterMonths(index, hike.id, q)) : []), [hike, index])
+
   if (!hike) {
     return (
       <main className="page">
@@ -59,7 +66,7 @@ export default function Hike() {
 
   const best = (bestQuarter(matches.map((m) => m.match), costs.map((c) => c?.total ?? null)) + 1) as Quarter
   const sel = QUARTERS[filters.q - 1]
-  const selMatch = matches[filters.q - 1]
+  const advice = data.advice.find((a) => a.hike_id === hike.id)
   const cheapest = costs.reduce<{ q: Quarter; total: number } | null>((b, c, i) => (c && (!b || c.total < b.total) ? { q: (i + 1) as Quarter, total: c.total } : b), null)
   const selCost = costs[filters.q - 1]
   const saving = cheapest && selCost && cheapest.q !== filters.q ? selCost.total - cheapest.total : 0
@@ -70,43 +77,17 @@ export default function Hike() {
     <main className="hikepage">
       <div className="hp-top"><Link to={backTo} className="back">← Back to map</Link></div>
 
-      <header className="hp-head">
-        <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name} (placeholder image)`} />
-        <div>
-          <div className="diff-tag big"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]}{hike.featured ? ' · 3D walk ready' : ''}</div>
-          <h1>{hike.name}</h1>
-          <p className="sub">{hike.park_name}, {hike.state}</p>
-          <p className="desc">{hike.description}</p>
-          <dl className="facts">
-            <div><dt>Length (NPS)</dt><dd>{hike.length_mi} mi <small>{hike.length_type}</small></dd></div>
-            <div><dt>Elevation gain</dt><dd>{hike.gain_ft.toLocaleString()} ft</dd></div>
-            <div><dt>Highest point</dt><dd>{hike.max_elev_ft.toLocaleString()} ft</dd></div>
-          </dl>
-          {hike.permit_note && <p className="note-line">Permit: {hike.permit_note}</p>}
-          {hike.closure_note && <p className="note-line warn">Closure: {hike.closure_note}</p>}
-          <div className="hp-actions">
-            {hike.featured && walkUrl(hike, sel.season) && (
-              // Plain link for now (opens the finished walk on the season of the chosen quarter). Lane 2 wraps it in the cloud transition.
-              <a className="go" href={walkUrl(hike, sel.season)!}>Walk it in 3D <span aria-hidden="true">→</span></a>
-            )}
-          </div>
-        </div>
-      </header>
+      <HikeHeader hike={hike} units={filters.units} walkHref={hike.featured ? walkUrl(hike, sel.season) : null} seasonLabel={sel.season} />
 
-      <section aria-labelledby="fit-h">
-        <h2 id="fit-h">Which quarter fits you?</h2>
-        <div className="qcards" role="group" aria-label="Quarter">
-          {QUARTERS.map(({ q, label, months }, i) => (
-            <button key={q} type="button" className={`qcard${filters.q === q ? ' sel' : ''}`} aria-pressed={filters.q === q} onClick={() => update({ q })}>
-              <b>{label}</b><span>{months}</span>
-              <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}%</strong>
-              {q === best && <em>Best fit</em>}
-              {matches[i].hasClosedMonth && <small>Has a closed month</small>}
-            </button>
-          ))}
-        </div>
-        <p className="fine">Match % = how well {sel.label}'s typical conditions fit your limits (from past years; not a forecast). {selMatch.skipped.length ? `Left out for missing data: ${selMatch.skipped.join(', ')}.` : ''}</p>
+      <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
+
+      <section aria-labelledby="months-h" className="monthsec">
+        <h2 id="months-h">Month by month</h2>
+        <MonthStrip columns={stripColumns(byQuarter.flat(), filters, filters.units)} chosenLabel={sel.label} />
+        {advice && <AdviceCard advice={advice} />}
       </section>
+
+      <TrailSection hike={hike} quarterMonths={byQuarter} q={filters.q} units={filters.units} onQuarter={(q) => update({ q })} />
 
       <section aria-labelledby="cost-h" className="costsec">
         <h2 id="cost-h">What it costs</h2>
@@ -177,10 +158,7 @@ export default function Hike() {
         <p className="fine">Typical, from past data. Not a price quote.</p>
       </section>
 
-      <section className="coming" aria-label="Coming next">
-        <div><h2>Month by month</h2><p className="fine">Coming from lane 4: 12-month strip of typical high, crowds, smoky days, wet days and daylight.</p></div>
-        <div><h2>On the trail</h2><p className="fine">Coming from lane 4: elevation profile with clock times at each checkpoint, a time scrubber and a daylight band.</p></div>
-      </section>
+      <p className="fine hp-foot">Every number on this page is typical, from past years (not a forecast or a price quote). <Link to="/about">How the numbers are made: About the data</Link>.</p>
     </main>
   )
 }

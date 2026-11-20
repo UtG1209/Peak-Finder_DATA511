@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { flatProfile } from '../test/fixtures'
-import { beforeDark, defaultStartMin, finishTime, formatClock, parseClock, positionAt, smoothElevations, STOP_MINUTES, timeline, toblerSpeedKmh } from './checkpoints'
+import { beforeDark, defaultStartMin, eventIndexAt, finishTime, formatClock, parseClock, positionAt, smoothElevations, STOP_MINUTES, stepTime, timeAtWalked, timeline, toblerSpeedKmh } from './checkpoints'
 
 describe('Tobler speed', () => {
   it('peaks at 6 km/h on a slight downhill (S = -0.05)', () => expect(toblerSpeedKmh(-0.05)).toBeCloseTo(6, 6))
@@ -115,3 +115,60 @@ describe('daylight and clocks', () => {
   })
   it('default start is one hour after sunrise', () => expect(defaultStartMin('06:38')).toBe(458))
 })
+
+describe('stepping between checkpoints (Back / Forward buttons and arrow keys)', () => {
+  const tl = timeline(flatProfile(), 7 * 60) // c0:up c1:up c2:up c1:down c0:down
+  const times = tl.map((e) => e.time)
+
+  it('Forward walks the hike in its own order: up to the summit, then back down', () => {
+    let t = times[0]
+    const seen: string[] = [`${tl[eventIndexAt(tl, t)].checkpoint.id}`]
+    for (let i = 0; i < 4; i++) {
+      t = stepTime(tl, t, 1)
+      const e = tl[eventIndexAt(tl, t)]
+      seen.push(`${e.checkpoint.id}:${e.dir}`)
+    }
+    expect(seen).toEqual(['c0', 'c1:up', 'c2:up', 'c1:down', 'c0:down'])
+  })
+
+  it('Back reverses it, and both ends stay put', () => {
+    expect(stepTime(tl, times[4], -1)).toBe(times[3])
+    expect(stepTime(tl, times[1], -1)).toBe(times[0])
+    expect(stepTime(tl, times[0], -1)).toBe(times[0]) // already at the start
+    expect(stepTime(tl, times[4], 1)).toBe(times[4]) // already at the finish
+  })
+
+  it('between two checkpoints Back goes to the one behind you and Forward to the one ahead', () => {
+    const mid = (times[1] + STOP_MINUTES + times[2]) / 2 - 1 // walking from c1 to c2
+    expect(stepTime(tl, mid, -1)).toBe(times[1])
+    expect(stepTime(tl, mid, 1)).toBe(times[2])
+  })
+
+  it('while waiting at a stop, Back goes to that stop and Forward to the next', () => {
+    const waiting = times[1] + 4
+    expect(stepTime(tl, waiting, -1)).toBe(times[1])
+    expect(stepTime(tl, waiting, 1)).toBe(times[2])
+  })
+
+  it('eventIndexAt is -1 before the start', () => {
+    expect(eventIndexAt(tl, times[0] - 5)).toBe(-1)
+  })
+})
+
+describe('timeAtWalked (dragging the marker along the profile)', () => {
+  const tl = timeline(flatProfile(), 0)
+  it('clamps to the start and the finish', () => {
+    expect(timeAtWalked(tl, -50)).toBe(tl[0].time)
+    expect(timeAtWalked(tl, 1e9)).toBe(finishTime(tl))
+  })
+  it('is the inverse of positionAt', () => {
+    for (const w of [100, 500, 800, 1000, 1400, 1900]) {
+      const t = timeAtWalked(tl, w)
+      expect(positionAt(tl, t).walkedM).toBeCloseTo(w, 0)
+    }
+  })
+  it('later distance means later time', () => {
+    expect(timeAtWalked(tl, 300)).toBeLessThan(timeAtWalked(tl, 700))
+  })
+})
+
