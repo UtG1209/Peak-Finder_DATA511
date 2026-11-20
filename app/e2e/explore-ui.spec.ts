@@ -10,8 +10,8 @@ test('changing the quarter keeps 40 rows and can change the order', async ({ pag
   await page.getByRole('button', { name: /^Q3/ }).click()
   await expect(page).toHaveURL(/q=3/)
   await expect(page.locator('.ranked li')).toHaveCount(40)
+  await expect.poll(() => names(page)).not.toEqual(q1) // the list re-sorts a moment after the URL changes
   const q3 = await names(page)
-  expect(q3).not.toEqual(q1)
   expect([...q3].sort()).toEqual([...q1].sort()) // same hikes, new order
 })
 

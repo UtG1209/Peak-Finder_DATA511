@@ -9,8 +9,8 @@ paper-prototype decisions made after the PDF).
 
 **State of the repo.** The app runs end to end on **fake data** (`app/public/data/meta.json` has `"fake": true`; a yellow banner shows it).
 Built: data contract (zod schemas) and loaders, the three models with tests, Explore (guided start with a blurred map until "Show hikes",
-difficulty colours, filters, ranked list, hover card, dark and light themes with design tokens in `app/src/styles/`, opt-in lazy **3D view** with linked dashboard in `app/src/screens/Explore/view3d/`), Explore restyle (ruled rail, photo-first tile, animated list re-sort, designed empty state, home city marker, hover linking between map and list, "Spin the wheel" dialog, Share link and metric toggle in the rail tools, Back returns to the same map view), canvas map and 3D scene that follow the theme live (`MapBoundary` keeps Explore usable without WebGL), Hike page (photo-first header, quarter strip, cost graph with direct labels and keyboard use; "Month by month" and "On the trail" show "Coming soon" frames until lane 4 builds them), the three 3D walks in `walks/`, CI and
-GitHub Pages deploy, setup tooling, the phone and tablet layout (bottom sheet for the ranked list, filters sheet, 3D desktop-only) and the axe, keyboard and layout browser tests. Not built yet: real pipeline data, month strip, timed elevation profile, About page,
+difficulty colours, filters, ranked list, hover card, dark and light themes with design tokens in `app/src/styles/`, opt-in lazy **3D view** with linked dashboard in `app/src/screens/Explore/view3d/`), Explore restyle (ruled rail, photo-first tile, animated list re-sort, designed empty state, home city marker, hover linking between map and list, "Spin the wheel" dialog, Share link and metric toggle in the rail tools, Back returns to the same map view), canvas map and 3D scene that follow the theme live (`MapBoundary` keeps Explore usable without WebGL), Hike page (photo-first header with gear and photo credit, quarter strip with a per-factor fit breakdown, month-by-month strip with hazards and the Advice vs data card, timed elevation profile with scrubber, checkpoint stepping and daylight band, cost graph with direct labels and keyboard use), About page (sources, worked match example, costs, times, honest limits), the three 3D walks in `walks/`, CI and
+GitHub Pages deploy, setup tooling, the phone and tablet layout (bottom sheet for the ranked list, filters sheet, 3D desktop-only) and the axe, keyboard and layout browser tests. Not built yet: real pipeline data,
 cloud transition, similar hikes, walks for the other hikes.
 
 **Which lane are you in?** The work is split in four independent lanes, each with a brief. If the user has not said, ask which one they own, then read
@@ -293,7 +293,7 @@ pipeline/            one script per source (lanes 1 and 2, to be written): hikes
 data/raw/            download cache (gitignored)
 data/processed/      outputs before copy to the app
 app/                 Vite app: src/screens/ (Explore, Hike, About), src/components/, src/models/, src/data/ (schema = the contract),
-                     src/lib/ (URL filters, difficulty colours, theme, themeColors, flip, walks link), src/styles/ (tokens.css, base.css, explore.css, hike.css, map.css, view3d.css, index.css, fonts/),
+                     src/lib/ (URL filters, difficulty colours, theme, themeColors, flip, walks link), src/styles/ (tokens.css, base.css, explore.css, hike.css, about.css, map.css, view3d.css, index.css, fonts/),
                      public/data/*.json, public/data/profiles/
 walks/<id>/          finished trail-walk sites (angels_landing, grand_canyon, north_cascades); served at /walks/<id>/, copied into the build,
                      loaded only when a walk is opened (~35 MB each as built, ~27 MB after lossless optimization; new walks must be <= 30 MB, see docs/DECISIONS.md)

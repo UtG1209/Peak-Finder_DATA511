@@ -1,7 +1,7 @@
 // Explore: filter rail | map. Starter built to the 29 Oct prototype look so lane 3 can extend it.
 // Lane 3 (docs/work/lane-3-explore.md): hover linking, wheel picker, share link, metric toggle, states. Design wave 1: tokens, phone layout, 3D view.
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
@@ -368,7 +368,7 @@ export default function Explore() {
             ))}
           </ol>
           <button type="button" className="linkbtn" onClick={reset}>Reset filters</button>
-          <p className="fine">Match % is how well a hike's typical conditions, from past years, fit your limits.</p>
+          <p className="fine">Match % is how well a hike's typical conditions, from past years, fit your limits. <Link to="/about">About the data</Link></p>
           </div>
         </section>
       </aside>

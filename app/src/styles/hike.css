@@ -1,7 +1,8 @@
-/* hike.css: the hike page (photo-first header, ruled facts, quarter strip, cost controls and bars, detail panel, coming-soon frames).
+/* hike.css: the hike page (photo-first header, ruled facts, gear, quarter strip and fit breakdown, month strip, on the trail, cost controls and bars, detail panel).
    Tokens only; ruled tables and direct labels over boxes and legends. */
 
 .hikepage { max-width: 1120px; margin: 0 auto; padding: var(--space-4) var(--space-6) 64px; overflow-y: auto; flex: 1; width: 100%; display: flex; flex-direction: column; gap: var(--space-12); }
+.hikepage > * { min-width: 0; } /* a wide table inside a section scrolls inside its own box, never the page */
 .hikepage h2 { margin-bottom: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--line-strong); }
 .hp-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: calc(-1 * var(--space-4)); }
 
@@ -116,8 +117,150 @@
 .costdetail li b { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
 .costdetail li small { grid-column: 1 / -1; color: var(--text-muted); font-size: var(--fs-small); line-height: var(--lh-snug); }
 
-/* sections that are not built yet: one calm line, same rhythm as the others */
-.soon p { margin: 0; padding: var(--space-4) 0; color: var(--text-muted); border-bottom: 1px solid var(--line); }
+/* ---------- gear, status icons, links ---------- */
+.hp-photo figcaption a, .fine a, .strip-notes a { color: var(--text-body); }
+.hp-foot { text-align: center; }
+.gear { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.gear li { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 32px; padding: 0 var(--space-3) 0 var(--space-2); border-radius: var(--radius-pill); border: 1px solid var(--line-strong); font-size: var(--fs-body); color: var(--text-body); }
+.gear svg { flex: none; color: var(--text); }
+.st-ok { color: var(--accent-text); }
+.st-warn { color: var(--hazard); }
+.st-none { color: var(--off-text); }
+
+/* ---------- which quarter fits you: the per-factor breakdown under the quarter strip ---------- */
+.fitbox { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.fitbox h3 { margin: 0 0 var(--space-3); }
+.fitbox h3 .fine { font-family: var(--font-body); font-weight: var(--fw-regular); }
+.fitrows { list-style: none; margin: 0 0 var(--space-3); padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-4) var(--space-8); }
+.fitrow { display: flex; flex-direction: column; gap: var(--space-1); }
+.fr-head { display: flex; align-items: center; gap: var(--space-2); }
+.fr-label { font-weight: var(--fw-semibold); }
+.fr-note { margin-left: auto; font-size: var(--fs-body); color: var(--text-muted); text-align: right; }
+.fitrow.past .fr-note { color: var(--hazard); }
+.fr-nums { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--fs-body); color: var(--text-muted); }
+.fr-nums b { color: var(--text); font-weight: var(--fw-semibold); }
+.fr-bar { height: 8px; border-radius: var(--radius-1); background: var(--surface-sunk); overflow: hidden; }
+.fr-bar i { display: block; height: 100%; background: var(--accent); }
+.fitrow.past .fr-bar i { background: var(--hazard); } /* the words "Over by ..." and the triangle carry the meaning too */
+
+/* ---------- month by month ---------- */
+.strip-wrap { display: flex; flex-direction: column; gap: var(--space-3); }
+.strip-scroll { position: relative; min-width: 0; max-width: 100%; overflow-x: auto; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.strip-scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+table.strip { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 760px; font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+table.strip th, table.strip td { padding: var(--space-2) var(--space-1); text-align: center; border-bottom: 1px solid var(--line); vertical-align: middle; }
+table.strip tbody tr:last-child th, table.strip tbody tr:last-child td { border-bottom: 0; }
+table.strip th[scope='row'] { position: sticky; left: 0; z-index: 1; min-width: 96px; text-align: left; padding-left: 0; background: var(--bg); font-weight: var(--fw-semibold); font-size: var(--fs-small); color: var(--text-body); cursor: help; }
+table.strip thead td { background: var(--bg); position: sticky; left: 0; }
+table.strip .mh { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; color: var(--text-muted); }
+table.strip .mh.chosen { color: var(--text); }
+.qtag { display: block; font: var(--fw-semibold) var(--fs-small) var(--font-body); color: var(--accent-text); }
+/* the chosen quarter's three months, framed in words and shape: a tint, an accent rule across the top and bottom, edges on the first and last */
+table.strip .inq { background: var(--selected); }
+table.strip thead .inq { border-top: 2px solid var(--accent); }
+table.strip tbody tr:last-child .inq { border-bottom: 2px solid var(--accent); }
+table.strip .inq.qfirst { border-left: 2px solid var(--accent); }
+table.strip .inq.qlast { border-right: 2px solid var(--accent); }
+table.strip .sc { color: var(--text); }
+table.strip .sc .cv-text { display: block; }
+table.strip .sc.past { color: var(--hazard); font-weight: var(--fw-semibold); }
+table.strip .sc.past .icon { margin-right: var(--space-1); }
+table.strip .cv-note { display: block; font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+table.strip .sc.missing { color: var(--off-text); background: var(--surface-sunk); }
+table.strip .sc.hz { vertical-align: top; text-align: left; }
+table.strip .sc.hz ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+table.strip .sc.hz li { display: flex; align-items: flex-start; gap: var(--space-1); color: var(--hazard); line-height: 1.25; }
+table.strip .sc.hz li .icon { margin-top: 1px; }
+.cv-none { color: var(--off-text); }
+.strip-notes { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-1); }
+
+.advice { margin-top: var(--space-6); padding-top: var(--space-4); border-top: 2px solid var(--accent); display: flex; flex-direction: column; gap: var(--space-3); max-width: 760px; }
+.advice h3 { margin: 0; font: var(--fw-semibold) var(--fs-small) var(--font-body); color: var(--accent-text); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.advice .claim { margin: 0; font: var(--fw-regular) var(--fs-h3) / var(--lh-snug) var(--font-display); color: var(--text); }
+.advice .finding { margin: 0; color: var(--text-body); line-height: var(--lh-body); }
+.advice p { margin: 0; }
+.advice-bars { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.advice-bars li { display: grid; grid-template-columns: 48px 1fr 56px; gap: var(--space-3); align-items: center; font-size: var(--fs-body); color: var(--text-muted); }
+.advice-bars i { display: block; height: 10px; background: var(--accent); }
+.advice-bars b { color: var(--text); text-align: right; font-weight: var(--fw-semibold); }
+
+/* ---------- on the trail: elevation profile with time ---------- */
+.trailsec { display: flex; flex-direction: column; gap: var(--space-4); }
+.trailsec h2 { margin-bottom: 0; }
+.skeleton-block { height: 280px; background: var(--surface-sunk); animation: skeleton-pulse 1.4s ease-in-out infinite; }
+.trail-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-4); }
+.starttime { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--fs-small); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); }
+.starttime input { min-height: var(--hit); padding: 0 var(--space-3); border-radius: var(--radius-3); border: 1px solid var(--line-strong); background: var(--bg); color: var(--text); font: var(--fw-semibold) var(--fs-body-l) var(--font-body); }
+.trail-verdict { display: flex; flex-direction: column; gap: var(--space-1); }
+.trail-verdict .verdict { margin: 0; display: flex; align-items: flex-start; gap: var(--space-2); }
+.trail-verdict .verdict > .icon { margin-top: 5px; }
+.trail-verdict p.verdict:first-child { display: block; }
+.trail-ok b { color: var(--text); }
+.trail-warn { color: var(--hazard); }
+.trail-warn b { color: var(--hazard); }
+.qtable .trail-warn .icon, .qtable .trail-ok .icon { vertical-align: -3px; margin-right: var(--space-1); }
+.trailgrid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(250px, 1fr); gap: var(--space-6); align-items: start; }
+.trailgrid > * { min-width: 0; }
+.chartbox { border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); padding: var(--space-2) 0; touch-action: none; }
+.chartbox:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.elevwrap, .daylightwrap { width: 100%; min-width: 0; }
+.elevchart { width: 100%; height: auto; display: block; cursor: ew-resize; user-select: none; }
+.elevchart .grid { stroke: var(--line); stroke-width: 1; }
+.elevchart .axisline { stroke: var(--line-strong); stroke-width: 1; }
+.elevchart .tick { stroke: var(--line-strong); }
+.elevchart .axis, .daylightband .axis { fill: var(--text-muted); font-size: var(--fs-small); }
+.elevchart .axis.title, .daylightband .axis.title { font-weight: var(--fw-semibold); }
+.elevchart .area { fill: var(--accent-soft); }
+.elevchart .line-up, .chart-legend .lg-up { stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; fill: none; }
+.elevchart .line-down, .chart-legend .lg-down { stroke: var(--text); stroke-width: 2; stroke-dasharray: 6 4; stroke-linejoin: round; fill: none; }
+.elevchart .cp-up, .chart-legend .lgc-up { fill: var(--accent); stroke: var(--bg); stroke-width: 1.5; }
+.elevchart .cp-down, .chart-legend .lgc-down { fill: var(--bg); stroke: var(--text); stroke-width: 2; }
+.elevchart .cp-stem { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 2 3; }
+.elevchart .cp-label { fill: var(--text); font: var(--fw-semibold) var(--fs-small) var(--font-num); }
+.elevchart .cp-time { fill: var(--text-muted); font-size: var(--fs-small); }
+.elevchart .hiker-line, .daylightband .hiker-line { stroke: var(--text); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.elevchart .hiker { fill: var(--accent); stroke: var(--text); stroke-width: 2.5; }
+.elevchart .hiker-dot { fill: var(--bg); }
+.scrub { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; }
+.scrub .fit { flex: none; gap: var(--space-1); padding: 0 var(--space-3); white-space: nowrap; }
+.scrub-range { flex: 1; display: block; min-width: 0; }
+.scrub-range input { width: 100%; accent-color: var(--accent); height: var(--hit); margin: 0; }
+.daylightband { width: 100%; height: auto; display: block; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.daylightband .night { fill: var(--surface-sunk); }
+.daylightband .day { fill: var(--hazard-soft); stroke: var(--hazard); stroke-width: 1; }
+.daylightband .sun-label { fill: var(--text); font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+.daylightband .hikebar { fill: var(--accent); }
+.daylightband .hatch-a { fill: var(--hazard); }
+.daylightband .hatch-b { fill: var(--bg); }
+.daylightband .hike-label { fill: var(--text-body); font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+.daylightband .hike-label.warn { fill: var(--hazard); }
+.daylightband .hiker-dot-flat { fill: var(--text); stroke: var(--bg); stroke-width: 2; }
+.readout { display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4); border-top: 2px solid var(--accent); }
+.ro-time { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+.ro-time b { font: var(--fw-semibold) var(--fs-num-l) / 1 var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.ro-time span { font-size: var(--fs-small); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--accent-text); }
+.ro-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.ro-facts div { padding: var(--space-2) var(--space-3); border-left: 1px solid var(--line); }
+.ro-facts div:first-child { padding-left: 0; border-left: 0; }
+.ro-facts dt { font-size: var(--fs-micro); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); }
+.ro-facts dd { margin: var(--space-1) 0 0; font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.ro-stop h3 { margin: 0 0 var(--space-2); font-size: var(--fs-body-l); }
+.ro-stop p { margin: 0; }
+.ro-stop img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-3); display: block; margin-bottom: var(--space-1); background: var(--surface-sunk); }
+.ro-next { margin: 0; font-size: var(--fs-body); color: var(--text-body); line-height: var(--lh-snug); }
+.ro-next b { color: var(--text); }
+.cp-h { margin: var(--space-2) 0 0; }
+table.cptable { width: 100%; border-collapse: collapse; font-size: var(--fs-body); font-variant-numeric: tabular-nums; }
+.strip-scroll > table.cptable { min-width: 560px; }
+table.cptable th, table.cptable td { padding: var(--space-2) var(--space-3); text-align: left; border-bottom: 1px solid var(--line); }
+table.cptable thead th { font-size: var(--fs-small); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); font-weight: var(--fw-semibold); }
+table.cptable tr.current { background: var(--selected); box-shadow: inset 3px 0 0 var(--accent); }
+table.cptable th[scope='row'] { font-weight: var(--fw-semibold); }
+table.cptable .linkbtn { color: var(--text); text-align: left; }
+table.cptable .linkbtn[aria-pressed='true'] { color: var(--accent-text); }
+table.qtable { min-width: 680px; }
+.chart-legend { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-6); font-size: var(--fs-small); color: var(--text-muted); }
+.chart-legend li { display: inline-flex; align-items: center; gap: var(--space-2); }
 
 @media (max-width: 860px) {
   .hikepage { padding: var(--space-3) var(--space-4) 48px; gap: var(--space-8); }
@@ -134,4 +277,8 @@
   .cost-controls { gap: var(--space-4); }
   .cost-controls label { flex: 1 1 100%; }
   .cost-controls .select { width: 100%; }
+  .trailgrid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .scrub .fit { padding: 0 var(--space-2); }
+  .ro-time b { font-size: var(--fs-num-m); }
 }
+table.strip .hazard-row th { vertical-align: top; padding-top: var(--space-3); }

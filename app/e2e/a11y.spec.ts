@@ -42,7 +42,27 @@ const SCREENS: { name: string; url: string; phoneOnly?: boolean; ready: (p: Page
       await expect(p.locator('.wheel-result h3')).toBeVisible()
     },
   },
-  { name: 'hike page', url: './#/hike/angels-landing?from=SEA&q=3&go=1', ready: async (p) => { await expect(p.locator('.costbars')).toBeVisible() } },
+  {
+    // the whole page: fit breakdown, month strip, timed profile with daylight band and checkpoint tables, cost graph (limits set so past-limit cells and the warning styles are scanned too)
+    name: 'hike page',
+    url: './#/hike/angels-landing?from=SEA&q=3&temp=60-85&smoke=3&go=1',
+    ready: async (p) => {
+      await expect(p.locator('.costbars')).toBeVisible()
+      await expect(p.locator('table.strip')).toBeVisible()
+      await expect(p.locator('.elevchart')).toBeVisible()
+      await expect(p.locator('.daylightband')).toBeVisible()
+    },
+  },
+  {
+    name: 'hike page, late start (after-dark warning)',
+    url: './#/hike/angels-landing?from=SEA&q=3&temp=60-85&smoke=3&go=1',
+    ready: async (p) => {
+      await expect(p.locator('.elevchart')).toBeVisible()
+      await p.locator('.starttime input').fill('17:30')
+      await expect(p.locator('.trail-verdict')).toContainText('After dark')
+    },
+  },
+  { name: 'about', url: './#/about', ready: async (p) => { await expect(p.locator('.worked')).toBeVisible() } },
 ]
 
 for (const size of SIZES) {

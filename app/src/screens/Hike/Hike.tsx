@@ -1,5 +1,6 @@
-// Hike page (When and How much). Built so far: header, quarter fit strip, and the cost graph.
-// Month by month, the timed elevation profile and similar hikes are shown as calm "coming soon" frames until they land (docs/work/lane-4-hike-page-about.md).
+// Hike page (When and How much): header, which quarter fits you, month by month, on the trail (elevation profile with time), what it costs.
+// Lane 4 (docs/work/lane-4-hike-page-about.md) built the fit, month strip, timed profile and About; the design pass gave them the tokens and look.
+// Still to come: similar hikes (after G3).
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
@@ -8,7 +9,6 @@ import { Icon } from '../../components/Icon'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
 import type { Quarter } from '../../data/schema'
 import { CITIES } from '../../lib/cities'
-import { DIFFICULTY_LABEL } from '../../lib/difficulty'
 import { toLimits } from '../../lib/filters'
 import { usd } from '../../lib/money'
 import { QUARTERS } from '../../lib/quarters'
@@ -17,7 +17,13 @@ import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
 import { CostBars } from '../../components/charts/CostBars'
+import { MonthStrip } from '../../components/charts/MonthStrip'
 import { PART_LABEL, type Part } from '../../lib/costParts'
+import { stripColumns } from '../../lib/monthStrip'
+import { AdviceCard } from './AdviceCard'
+import { FitSection } from './FitSection'
+import { HikeHeader } from './HikeHeader'
+import { TrailSection } from './TrailSection'
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
@@ -53,6 +59,8 @@ export default function Hike() {
     [hike, index, filters.from, travellers, nights, mode],
   )
 
+  const byQuarter = useMemo(() => (hike ? QUARTERS.map(({ q }) => quarterMonths(index, hike.id, q)) : []), [hike, index])
+
   if (!hike) {
     return (
       <main className="page">
@@ -64,7 +72,7 @@ export default function Hike() {
 
   const best = (bestQuarter(matches.map((m) => m.match), costs.map((c) => c?.total ?? null)) + 1) as Quarter
   const sel = QUARTERS[filters.q - 1]
-  const selMatch = matches[filters.q - 1]
+  const advice = data.advice.find((a) => a.hike_id === hike.id)
   const cheapest = costs.reduce<{ q: Quarter; total: number } | null>((b, c, i) => (c && (!b || c.total < b.total) ? { q: (i + 1) as Quarter, total: c.total } : b), null)
   const selCost = costs[filters.q - 1]
   const saving = cheapest && selCost && cheapest.q !== filters.q ? selCost.total - cheapest.total : 0
@@ -75,53 +83,17 @@ export default function Hike() {
     <main className="hikepage">
       <div className="hp-top"><Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link><ThemeToggle /></div>
 
-      <header className="hp-head">
-        <figure className="hp-photo">
-          <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name}, ${hike.park_name}`} />
-          <figcaption>
-            Photo: {hike.photo.author}, {hike.photo.license_url ? <a href={hike.photo.license_url} target="_blank" rel="noreferrer">{hike.photo.license}</a> : hike.photo.license}
-            {hike.photo.page && <> · <a href={hike.photo.page} target="_blank" rel="noreferrer">Wikimedia Commons</a></>}
-          </figcaption>
-        </figure>
-        <div className="hp-intro">
-          <p className="eyebrow">{hike.park_name}, {hike.state}</p>
-          <h1 ref={title} tabIndex={-1}>{hike.name}</h1>
-          <p className="desc">{hike.description}</p>
-          <dl className="facts">
-            <div><dt>Length (NPS)</dt><dd>{hike.length_mi} <small>mi, {hike.length_type}</small></dd></div>
-            <div><dt>Gain</dt><dd>{hike.gain_ft.toLocaleString()} <small>ft</small></dd></div>
-            <div><dt>Highest point</dt><dd>{hike.max_elev_ft.toLocaleString()} <small>ft</small></dd></div>
-            <div><dt>Difficulty</dt><dd className="diffval"><Icon name="peak" size={18} className={`peak-${hike.difficulty}`} /> {DIFFICULTY_LABEL[hike.difficulty]}</dd></div>
-          </dl>
-          {hike.permit_note && <p className="note-line"><b>Permit.</b> {hike.permit_note}</p>}
-          {hike.closure_note && <p className="note-line warn"><Icon name="alert" size={16} /><span><b>Closure.</b> {hike.closure_note}</span></p>}
-          {hike.gear.length > 0 && <p className="note-line"><b>Know before you go.</b> {hike.gear.map((g) => g.replace(/-/g, ' ')).join(', ')}.</p>}
-          {hike.featured && walkUrl(hike, sel.season) && (
-            <div className="hp-actions">
-              {/* Plain link for now (opens the finished walk on the season of the chosen quarter); the cloud transition wraps it later. */}
-              <a className="go" href={walkUrl(hike, sel.season)!}><Icon name="walk3d" />Walk it in 3D<Icon name="arrow-right" /></a>
-            </div>
-          )}
-        </div>
-      </header>
+      <HikeHeader hike={hike} units={filters.units} walkHref={hike.featured ? walkUrl(hike, sel.season) : null} seasonLabel={sel.season} titleRef={title} />
 
-      <section aria-labelledby="fit-h">
-        <h2 id="fit-h">Which quarter fits you?</h2>
-        <div className="qcards" role="group" aria-label="Quarter">
-          {QUARTERS.map(({ q, label, months }, i) => (
-            <button key={q} type="button" className={`qcard${filters.q === q ? ' sel' : ''}`} aria-pressed={filters.q === q} onClick={() => update({ q })}>
-              <span className="qhead"><b>{label}</b><span>{months}</span></span>
-              <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}<small>%</small></strong>
-              <span className="qnote">
-                {q === best && <em><Icon name="peak" size={14} />Best fit</em>}
-                {matches[i].greyed && <span className="muted"><Icon name="dash" size={14} />Outside a limit</span>}
-                {matches[i].hasClosedMonth && <small><Icon name="alert" size={14} />Has a closed month</small>}
-              </span>
-            </button>
-          ))}
-        </div>
-        <p className="fine">Match % = how well {sel.label}'s typical conditions fit your limits (from past years; not a forecast). {selMatch.skipped.length ? `Left out for missing data: ${selMatch.skipped.join(', ')}.` : ''}</p>
+      <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
+
+      <section aria-labelledby="months-h" className="monthsec">
+        <h2 id="months-h">Month by month</h2>
+        <MonthStrip columns={stripColumns(byQuarter.flat(), filters, filters.units)} chosenLabel={sel.label} />
+        {advice && <AdviceCard advice={advice} />}
       </section>
+
+      <TrailSection hike={hike} quarterMonths={byQuarter} q={filters.q} units={filters.units} onQuarter={(q) => update({ q })} />
 
       <section aria-labelledby="cost-h" className="costsec">
         <h2 id="cost-h">What it costs</h2>
@@ -204,15 +176,7 @@ export default function Hike() {
         <p className="fine">Typical, from past data. Not a price quote.</p>
       </section>
 
-      <section className="soon" aria-labelledby="month-h">
-        <h2 id="month-h">Month by month</h2>
-        <p>Typical high, crowds, smoky days, wet days and daylight for each month. Coming soon.</p>
-      </section>
-
-      <section className="soon" aria-labelledby="trail-h">
-        <h2 id="trail-h">On the trail</h2>
-        <p>An elevation profile with the clock time you reach each stop, and whether you finish before dark. Coming soon.</p>
-      </section>
+      <p className="fine hp-foot">Every number on this page is typical, from past years (not a forecast or a price quote). <Link to="/about">How the numbers are made: About the data</Link>.</p>
     </main>
   )
 }

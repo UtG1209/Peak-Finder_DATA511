@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fmtLength, fmtTemp, fmtTempDelta, fmtTempRange, spokenTemp } from './units'
+import { distFromM, elevFromM, fmtDist, fmtElev, fmtLength, fmtTemp, fmtTempDelta, fmtTempRange, spokenTemp } from './units'
 
 describe('units', () => {
   it('US units are the data as it is', () => {
@@ -22,3 +22,21 @@ describe('units', () => {
     expect(spokenTemp(68, 'metric')).toBe('20 degrees Celsius')
   })
 })
+
+describe('elevation and distance', () => {
+  it('formats feet and metres', () => {
+    expect(fmtElev(5790, 'us')).toBe('5,790 ft')
+    expect(fmtElev(5790, 'metric')).toBe('1,765 m')
+  })
+  it('formats metres of trail as miles or km', () => {
+    expect(fmtDist(4345, 'metric')).toBe('4.3 km')
+    expect(fmtDist(4345, 'us')).toBe('2.7 mi')
+  })
+  it('axis conversions', () => {
+    expect(elevFromM(1000, 'metric')).toBe(1000)
+    expect(elevFromM(304.8, 'us')).toBeCloseTo(1000)
+    expect(distFromM(1609.344, 'us')).toBeCloseTo(1)
+    expect(distFromM(2500, 'metric')).toBe(2.5)
+  })
+})
+

@@ -41,6 +41,21 @@ describe.each(['light', 'dark'] as const)('%s theme', (name) => {
     expect(contrast(hex(t, '--error'), hex(t, '--surface'))).toBeGreaterThanOrEqual(4.5)
   })
 
+  it('hike page: hazard, muted and accent text on the chosen-month tint, the grey cell and the daylight band >= 4.5:1', () => {
+    for (const bg of ['--selected', '--surface-sunk', '--hazard-soft']) {
+      expect(contrast(hex(t, '--hazard'), hex(t, bg)), `hazard on ${bg}`).toBeGreaterThanOrEqual(4.5)
+      expect(contrast(hex(t, '--text'), hex(t, bg)), `text on ${bg}`).toBeGreaterThanOrEqual(4.5)
+    }
+    expect(contrast(hex(t, '--off-text'), hex(t, '--surface-sunk')), 'off-text on surface-sunk').toBeGreaterThanOrEqual(4.5)
+    expect(contrast(hex(t, '--text-muted'), hex(t, '--selected')), 'muted on selected').toBeGreaterThanOrEqual(4.5)
+    expect(contrast(hex(t, '--accent-text'), hex(t, '--selected')), 'accent-text on selected').toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('chart marks (profile line, hiker, hazard band edge) are >= 3:1 on the page', () => {
+    for (const c of ['--accent', '--text', '--hazard']) expect(contrast(hex(t, c), hex(t, '--bg')), c).toBeGreaterThanOrEqual(3)
+    expect(contrast(hex(t, '--hazard'), hex(t, '--hazard-soft')), 'hazard on hazard-soft').toBeGreaterThanOrEqual(3)
+  })
+
   it('control borders and off-state strokes >= 3:1 on surfaces', () => {
     for (const bg of SURFACES) {
       expect(contrast(hex(t, '--line-strong'), hex(t, bg)), `line-strong on ${bg}`).toBeGreaterThanOrEqual(3)

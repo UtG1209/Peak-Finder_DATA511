@@ -176,26 +176,37 @@ test('keyboard: Tab reaches the rail, then the list, then the map; skip link jum
 })
 
 // Motion (lane 3 step 2): bubbles resize over ~400 ms, and instantly with prefers-reduced-motion.
+// The sizes are read back through MapLibre's querySourceFeatures, which lags a little behind setData (the tiles are rebuilt in a worker),
+// and by more on a slow CI machine. So these tests never rely on a fixed wait: they record the sizes inside the page, every 10 ms for
+// 1.5 s after the click, and look at which distinct values showed up.
 const radiusSum = (page: Page) => page.evaluate(() => {
   const m = (window as unknown as { __map: { querySourceFeatures: (s: string) => { properties: { r: number } }[] } }).__map
   return m.querySourceFeatures('hikes').reduce((s, f) => s + Number(f.properties.r), 0)
 })
+async function recordSizesAfterQuarterChange(page: Page): Promise<number[]> {
+  await page.locator('.qrow').getByRole('button', { name: /Q3/ }).click()
+  return page.evaluate(
+    () => new Promise<number[]>((resolve) => {
+      const m = (window as unknown as { __map: { querySourceFeatures: (s: string) => { properties: { r: number } }[] } }).__map
+      const seen: number[] = []
+      const t0 = performance.now()
+      const id = setInterval(() => {
+        seen.push(m.querySourceFeatures('hikes').reduce((s, f) => s + Number(f.properties.r), 0))
+        if (performance.now() - t0 > 1500) { clearInterval(id); resolve(seen) }
+      }, 10)
+    }),
+  )
+}
 
 test('bubbles resize gradually when the quarter changes', async ({ page }) => {
   await page.goto('./#/?q=1&temp=60-80&go=1')
   await firstBubble(page)
   const start = await radiusSum(page)
-  await page.locator('.qrow').getByRole('button', { name: /Q3/ }).click()
-  // sample the radii every 25 ms for a second: a gradual resize passes through values between the start and the end
-  const samples: number[] = []
-  for (let i = 0; i < 40; i++) {
-    samples.push(await radiusSum(page))
-    await page.waitForTimeout(25)
-  }
-  const end = samples[samples.length - 1]
+  const seen = await recordSizesAfterQuarterChange(page)
+  const end = seen[seen.length - 1]
   expect(end).not.toBeCloseTo(start, 1) // the quarter really changed the sizes
   const lo = Math.min(start, end), hi = Math.max(start, end)
-  const between = new Set(samples.filter((v) => v > lo + 0.01 && v < hi - 0.01).map((v) => v.toFixed(2)))
+  const between = new Set(seen.filter((v) => v > lo + 0.01 && v < hi - 0.01).map((v) => v.toFixed(2)))
   expect(between.size, 'distinct in-between sizes seen during the resize').toBeGreaterThanOrEqual(1)
 })
 
@@ -203,9 +214,11 @@ test('with reduced motion the bubbles jump straight to the new size', async ({ p
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('./#/?q=1&temp=60-80&go=1')
   await firstBubble(page)
-  await page.locator('.qrow').getByRole('button', { name: /Q3/ }).click()
-  await page.waitForTimeout(60)
-  const soon = await radiusSum(page)
-  await page.waitForTimeout(700)
-  expect(await radiusSum(page)).toBeCloseTo(soon, 3)
+  const start = await radiusSum(page)
+  const seen = await recordSizesAfterQuarterChange(page)
+  const end = seen[seen.length - 1]
+  expect(end).not.toBeCloseTo(start, 1) // it did change
+  // the only sizes ever seen are the old one (before the worker caught up) and the final one: nothing in between
+  const other = new Set(seen.filter((v) => Math.abs(v - start) > 0.01 && Math.abs(v - end) > 0.01).map((v) => v.toFixed(2)))
+  expect(other.size, 'in-between sizes seen (there should be none)').toBe(0)
 })
