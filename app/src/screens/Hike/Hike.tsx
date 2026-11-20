@@ -1,8 +1,11 @@
 // Hike page (When and How much): header, which quarter fits you, month by month, on the trail (elevation profile with time), what it costs.
-// Lane 4 (docs/work/lane-4-hike-page-about.md). Still to come: similar hikes (after G3).
-import { useMemo, useState } from 'react'
+// Lane 4 (docs/work/lane-4-hike-page-about.md) built the fit, month strip, timed profile and About; the design pass gave them the tokens and look.
+// Still to come: similar hikes (after G3).
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
+import { ThemeToggle } from '../../components/ThemeToggle'
+import { Icon } from '../../components/Icon'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
 import type { Quarter } from '../../data/schema'
 import { CITIES } from '../../lib/cities'
@@ -13,7 +16,7 @@ import { useFilters } from '../../lib/useFilters'
 import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
-import { CostBars, CostLegend } from '../../components/charts/CostBars'
+import { CostBars } from '../../components/charts/CostBars'
 import { MonthStrip } from '../../components/charts/MonthStrip'
 import { PART_LABEL, type Part } from '../../lib/costParts'
 import { stripColumns } from '../../lib/monthStrip'
@@ -34,6 +37,9 @@ export default function Hike() {
   const [nights, setNights] = useState(3)
   const [modePick, setModePick] = useState<TravelMode | null>(null)
   const [active, setActive] = useState<{ q: Quarter; part: Part } | null>(null)
+  // a new page: put keyboard and screen-reader focus on its title, so Tab starts at the top of this page and the change is announced
+  const title = useRef<HTMLHeadingElement>(null)
+  useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
 
   const backTo = { pathname: '/', search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '').toString()}` }
   const limits = toLimits(filters)
@@ -58,7 +64,7 @@ export default function Hike() {
   if (!hike) {
     return (
       <main className="page">
-        <Link to={backTo}>← Back to map</Link>
+        <Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link>
         <h1>We could not find that hike</h1>
       </main>
     )
@@ -75,9 +81,9 @@ export default function Hike() {
 
   return (
     <main className="hikepage">
-      <div className="hp-top"><Link to={backTo} className="back">← Back to map</Link></div>
+      <div className="hp-top"><Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link><ThemeToggle /></div>
 
-      <HikeHeader hike={hike} units={filters.units} walkHref={hike.featured ? walkUrl(hike, sel.season) : null} seasonLabel={sel.season} />
+      <HikeHeader hike={hike} units={filters.units} walkHref={hike.featured ? walkUrl(hike, sel.season) : null} seasonLabel={sel.season} titleRef={title} />
 
       <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
 
@@ -98,17 +104,30 @@ export default function Hike() {
               {CITIES.map((c) => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
             </select>
           </label>
-          <label>Travellers
-            <span className="stepper"><button type="button" aria-label="Fewer travellers" onClick={() => setTravellers((t) => clamp(t - 1, 1, 12))}>−</button><output>{travellers}</output><button type="button" aria-label="More travellers" onClick={() => setTravellers((t) => clamp(t + 1, 1, 12))}>+</button></span>
-          </label>
-          <label>Nights
-            <span className="stepper"><button type="button" aria-label="Fewer nights" onClick={() => setNights((n) => clamp(n - 1, 0, 21))}>−</button><output>{nights}</output><button type="button" aria-label="More nights" onClick={() => setNights((n) => clamp(n + 1, 0, 21))}>+</button></span>
-          </label>
-          <fieldset className="modes"><legend>Getting there</legend>
-            {(['fly', 'drive'] as const).map((m) => (
-              <button key={m} type="button" className="fit" aria-pressed={mode === m} onClick={() => setModePick(m)}>{m === 'fly' ? 'Fly' : 'Drive'}{travel && travel.default_mode === m ? ' (shorter)' : ''}</button>
-            ))}
-          </fieldset>
+          <div className="field">
+            <span id="trav-l">Travellers</span>
+            <span className="stepper" role="group" aria-labelledby="trav-l">
+              <button type="button" aria-label="Fewer travellers" disabled={travellers <= 1} onClick={() => setTravellers((t) => clamp(t - 1, 1, 12))}><Icon name="minus" /></button>
+              <output aria-label={`${travellers} ${travellers === 1 ? 'traveller' : 'travellers'}`}>{travellers}</output>
+              <button type="button" aria-label="More travellers" disabled={travellers >= 12} onClick={() => setTravellers((t) => clamp(t + 1, 1, 12))}><Icon name="plus" /></button>
+            </span>
+          </div>
+          <div className="field">
+            <span id="nights-l">Nights</span>
+            <span className="stepper" role="group" aria-labelledby="nights-l">
+              <button type="button" aria-label="Fewer nights" disabled={nights <= 0} onClick={() => setNights((n) => clamp(n - 1, 0, 21))}><Icon name="minus" /></button>
+              <output aria-label={`${nights} ${nights === 1 ? 'night' : 'nights'}`}>{nights}</output>
+              <button type="button" aria-label="More nights" disabled={nights >= 21} onClick={() => setNights((n) => clamp(n + 1, 0, 21))}><Icon name="plus" /></button>
+            </span>
+          </div>
+          <div className="field">
+            <span id="mode-l">Getting there</span>
+            <span className="seg2" role="group" aria-labelledby="mode-l">
+              {(['fly', 'drive'] as const).map((m) => (
+                <button key={m} type="button" aria-pressed={mode === m} onClick={() => setModePick(m)}>{m === 'fly' ? 'Fly' : 'Drive'}{travel && travel.default_mode === m ? ' (shorter)' : ''}</button>
+              ))}
+            </span>
+          </div>
         </div>
 
         {!filters.from ? (
@@ -121,13 +140,12 @@ export default function Hike() {
             </p>
             <div className="costgrid">
               <div>
-                <CostBars costs={costs} selectedQuarter={filters.q} bestQuarter={best} onSelectQuarter={(q) => update({ q })} onSelectPart={(q, part) => setActive({ q, part })} active={active} />
-                <CostLegend />
+                <CostBars costs={costs} selectedQuarter={filters.q} bestQuarter={best} onSelectQuarter={(q) => update({ q })} onSelectPart={(q, part) => setActive({ q, part })} onClear={() => setActive(null)} active={active} />
               </div>
-              <aside className="costdetail" aria-live="polite">
+              <aside className="costdetail" aria-live="polite" onKeyDown={(e) => { if (e.key === 'Escape') setActive(null) }}>
                 {active && costs[active.q - 1] ? (
                   <>
-                    <h3>{PART_LABEL[active.part]} · Q{active.q}</h3>
+                    <div className="cd-head"><h3>{PART_LABEL[active.part]}, Q{active.q}</h3><button type="button" className="icon-btn" aria-label="Close details" onClick={() => setActive(null)}><Icon name="close" /></button></div>
                     {active.part === 'buffer' ? (
                       <p>A fixed 15% on top of everything else, for the unexpected. {usd(costs[active.q - 1]!.buffer)} here.</p>
                     ) : (
@@ -146,8 +164,8 @@ export default function Hike() {
                   </>
                 ) : (
                   <>
-                    <h3>Click a bar segment</h3>
-                    <p>See its line items and where each number comes from.</p>
+                    <h3>Pick a part of a bar</h3>
+                    <p>Click or press Enter on a segment to see its line items and where each number comes from.</p>
                     {row && <p className="fine">{mode === 'fly' ? `Flight fare used: ${usd(row.fare_one_way)} one way.` : `Drive: ${row.drive_mi.toLocaleString()} mi each way.`}</p>}
                   </>
                 )}

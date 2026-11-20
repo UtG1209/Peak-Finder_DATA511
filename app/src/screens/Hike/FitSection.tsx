@@ -1,6 +1,7 @@
 // "Which quarter fits you?": Q1 to Q4 chips with match %, the best quarter marked, and under them one bar per factor
 // for the chosen quarter: the hike's typical value against the user's limit, in words.
 import type { HikeMonth, Quarter } from '../../data/schema'
+import { Icon } from '../../components/Icon'
 import { StatusIcon } from '../../components/StatusIcon'
 import { fitRows, type FitRow } from '../../lib/fit'
 import type { FilterState } from '../../lib/filters'
@@ -29,11 +30,13 @@ export function FitSection({ matches, best, months, filters, onQuarter }: Props)
       <div className="qcards" role="group" aria-label="Quarter">
         {QUARTERS.map(({ q, label, months: m }, i) => (
           <button key={q} type="button" className={`qcard${filters.q === q ? ' sel' : ''}`} aria-pressed={filters.q === q} onClick={() => onQuarter(q)}>
-            <b>{label}</b><span>{m}</span>
-            <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}%<span className="sr-only"> match</span></strong>
-            {matches[i].greyed && <small className="past">Past a limit</small>}
-            {q === best && <em>Best fit</em>}
-            {matches[i].hasClosedMonth && <small>Has a closed month</small>}
+            <span className="qhead"><b>{label}</b><span>{m}</span></span>
+            <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}<small>%</small><span className="sr-only"> match</span></strong>
+            <span className="qnote">
+              {q === best && <em><Icon name="peak" size={14} />Best fit</em>}
+              {matches[i].greyed && <span className="muted"><Icon name="dash" size={14} />Past a limit</span>}
+              {matches[i].hasClosedMonth && <small><Icon name="alert" size={14} />Has a closed month</small>}
+            </span>
           </button>
         ))}
       </div>

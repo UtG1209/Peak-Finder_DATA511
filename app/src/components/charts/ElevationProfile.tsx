@@ -3,7 +3,7 @@
 // Checkpoints C0..Cn carry the clock time you reach them. A hiker marker shows where you are at the scrubbed time;
 // drag anywhere on the chart to move it. D3 scales and shapes, React SVG.
 import { area, line, scaleLinear, ticks } from 'd3'
-import { useId, useMemo, type PointerEvent } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { checkpointLabel, type TrailPoint } from '../../lib/trail'
 import { distFromM, distUnit, elevFromM, elevUnit, type Units } from '../../lib/units'
 import { formatClock, type Position, type TimelineEvent } from '../../models/checkpoints'
@@ -18,20 +18,39 @@ interface Props {
   hikeName: string
 }
 
-const W = 780
-const H = 350
-const M = { top: 78, right: 18, bottom: 46, left: 64 }
+// The chart is drawn at the width it is shown at (1 SVG unit = 1 CSS pixel), so its text is the real size on a phone too.
+// Narrow (a phone): fewer ticks and checkpoint labels only at the start, the turnaround and the finish; the table under the chart has every time.
+const NARROW_BELOW = 560
+const DEFAULT_W = 780
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
+function useWidth() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [w, setW] = useState(DEFAULT_W)
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const read = () => setW(Math.max(280, Math.round(el.getBoundingClientRect().width)))
+    read()
+    const ro = new ResizeObserver(read)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return [ref, w] as const
+}
+
 export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName }: Props) {
-  const uid = useId()
+  const [wrap, W] = useWidth()
+  const narrow = W < NARROW_BELOW
+  const H = narrow ? 300 : 350
+  const M = narrow ? { top: 64, right: 12, bottom: 52, left: 56 } : { top: 78, right: 18, bottom: 52, left: 64 }
   const totalM = curve[curve.length - 1].walkedM
   const { x, y, xTicks, yTicks, up, down, fill } = useMemo(() => {
     const elevs = curve.map((p) => elevFromM(p.elevM, units))
     const yScale = scaleLinear().domain([Math.min(...elevs), Math.max(...elevs)]).nice().range([H - M.bottom, M.top])
     const xScale = scaleLinear().domain([0, totalM]).range([M.left, W - M.right])
     const dispMax = distFromM(totalM, units)
-    const xt = ticks(0, dispMax, 7).map((d) => ({ d, m: (d / dispMax) * totalM }))
+    const xt = ticks(0, dispMax, narrow ? 4 : 7).map((d) => ({ d, m: (d / dispMax) * totalM }))
     const px = (p: TrailPoint): [number, number] => [xScale(p.walkedM), yScale(elevFromM(p.elevM, units))]
     const ln = line<TrailPoint>().x((p) => px(p)[0]).y((p) => px(p)[1])
     const ar = area<TrailPoint>().x((p) => px(p)[0]).y0(H - M.bottom).y1((p) => px(p)[1])
@@ -42,30 +61,26 @@ export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName 
       up: ln(upPts) ?? '', down: downPts.length ? ln([upPts[upPts.length - 1], ...downPts]) ?? '' : '',
       fill: ar(curve) ?? '',
     }
-  }, [curve, totalM, units])
+  }, [curve, totalM, units, W, H, narrow]) // eslint-disable-line react-hooks/exhaustive-deps -- M follows narrow
 
   const scrubFrom = (e: PointerEvent<SVGSVGElement>) => {
     const r = e.currentTarget.getBoundingClientRect()
     const vx = ((e.clientX - r.left) / r.width) * W
     onScrub(clamp(x.invert(clamp(vx, M.left, W - M.right)), 0, totalM))
   }
+  const turn = events.reduce((b, e) => (e.dir === 'up' && e.walkedM >= b.walkedM ? e : b), events[0]) // the farthest point going up
   const hasReturn = curve.some((p) => p.dir === 'down')
   const hx = x(pos.walkedM)
   const hy = y(elevFromM(pos.elev, units))
 
   return (
+    <div ref={wrap} className="elevwrap">
     <svg
-      className="elevchart" viewBox={`0 0 ${W} ${H}`} role="img"
-      aria-label={`Elevation profile of ${hikeName}: distance walked in ${distUnit(units)} against elevation in ${elevUnit(units)}${hasReturn ? ', the climb and then the return' : ''}. Checkpoint times are listed in the table below.`}
+      className="elevchart" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
+      aria-label={`Elevation profile of ${hikeName}: distance walked in ${distUnit(units)} against elevation in ${elevUnit(units)}${hasReturn ? ', the climb and then the return' : ''}. Checkpoint times are in the table below.`}
       onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); scrubFrom(e) }}
       onPointerMove={(e) => { if (e.buttons === 1) scrubFrom(e) }}
     >
-      <defs>
-        <linearGradient id={`${uid}-fill`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--accent)" stopOpacity="0.28" />
-          <stop offset="1" stopColor="var(--accent)" stopOpacity="0.02" />
-        </linearGradient>
-      </defs>
 
       {/* grid and axes */}
       {yTicks.map((t) => (
@@ -86,7 +101,7 @@ export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName 
       <text className="axis title" transform={`translate(14 ${(M.top + H - M.bottom) / 2}) rotate(-90)`} textAnchor="middle">Elevation ({elevUnit(units)})</text>
 
       {/* the trail */}
-      <path d={fill} fill={`url(#${uid}-fill)`} />
+      <path d={fill} className="area" />
       <path d={up} className="line-up" fill="none" />
       {hasReturn && <path d={down} className="line-down" fill="none" />}
 
@@ -96,14 +111,17 @@ export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName 
         const cy = y(elevFromM(e.elevM, units))
         const up = e.dir === 'up'
         // neighbouring checkpoints can be a few pixels apart near the summit: alternate two label rows so they never overlap
-        const timeY = M.top - 14 - (i % 2) * 26
+        const timeY = M.top - 14 - (i % 2) * 28
+        const labelled = !narrow || i === 0 || i === events.length - 1 || e === turn
+        const anchor = cx < M.left + 24 ? 'start' : cx > W - M.right - 40 ? 'end' : 'middle'
+        const tx = anchor === 'start' ? cx - 4 : anchor === 'end' ? cx + 4 : cx
         return (
           <g key={`${e.checkpoint.id}-${e.dir}-${i}`} className="cp">
             <title>{`${checkpointLabel(e.checkpoint.id)} ${e.checkpoint.name}, ${up ? 'going up' : 'coming back'}, ${formatClock(e.time)}`}</title>
-            <line className="cp-stem" x1={cx} x2={cx} y1={cy - 6} y2={timeY + 3} />
+            {labelled && <line className="cp-stem" x1={cx} x2={cx} y1={cy - 6} y2={timeY + 3} />}
             <circle cx={cx} cy={cy} r={5} className={up ? 'cp-up' : 'cp-down'} />
-            <text className="cp-label" x={cx} y={timeY - 11} textAnchor="middle">{checkpointLabel(e.checkpoint.id)}</text>
-            <text className="cp-time" x={cx} y={timeY} textAnchor="middle">{formatClock(e.time).replace(' ', '')}</text>
+            {labelled && <text className="cp-label" x={tx} y={timeY - 13} textAnchor={anchor}>{checkpointLabel(e.checkpoint.id)}</text>}
+            {labelled && <text className="cp-time" x={tx} y={timeY} textAnchor={anchor}>{formatClock(e.time).replace(' ', '')}</text>}
           </g>
         )
       })}
@@ -114,5 +132,6 @@ export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName 
       <circle className="hiker-dot" cx={hx} cy={hy} r={3} />
 
     </svg>
+    </div>
   )
 }

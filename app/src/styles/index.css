@@ -1,0 +1,10 @@
+/* index.css: the single stylesheet entry (imported once, from src/main.tsx).
+   FIXED ORDER, because later files win ties: tokens (variables) -> base (fonts, reset, type, buttons, forms) -> explore -> hike -> about -> map -> view3d.
+   map.css stays after the screens on purpose; MapLibre's own CSS loads after all of these (see the #mapPane note in map.css). */
+@import './tokens.css';
+@import './base.css';
+@import './explore.css';
+@import './hike.css';
+@import './about.css';
+@import './map.css';
+@import './view3d.css';

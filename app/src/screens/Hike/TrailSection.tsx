@@ -6,6 +6,7 @@ import { loadProfile } from '../../data/loaders'
 import type { Hike, HikeMonth, Profile, Quarter } from '../../data/schema'
 import { DaylightBand } from '../../components/charts/DaylightBand'
 import { ElevationProfile } from '../../components/charts/ElevationProfile'
+import { Icon } from '../../components/Icon'
 import { StatusIcon } from '../../components/StatusIcon'
 import { QUARTERS } from '../../lib/quarters'
 import { checkpointLabel, daylightVerdict, durationLabel, trailCurve, turnaroundEvent } from '../../lib/trail'
@@ -127,7 +128,7 @@ function Trail({ hike, profile, quarterMonths, q, units, onQuarter }: Props & { 
           </ul>
 
           <div className="scrub">
-            <button type="button" className="fit" onClick={() => step(-1)} disabled={el <= 0}><span aria-hidden="true">◀</span> Back</button>
+            <button type="button" className="fit" onClick={() => step(-1)} disabled={el <= 0}><Icon name="arrow-left" size={16} />Back</button>
             <label className="scrub-range">
               <span className="sr-only">Time on the trail</span>
               <input
@@ -136,7 +137,7 @@ function Trail({ hike, profile, quarterMonths, q, units, onQuarter }: Props & { 
                 aria-valuetext={`${formatClock(t)}, ${where.toLowerCase()}, ${fmtDist(pos.walkedM, units)} walked, elevation ${fmtElev(pos.elev / 0.3048, units)}`}
               />
             </label>
-            <button type="button" className="fit" onClick={() => step(1)} disabled={el >= duration}>Forward <span aria-hidden="true">▶</span></button>
+            <button type="button" className="fit" onClick={() => step(1)} disabled={el >= duration}>Forward<Icon name="arrow-right" size={16} /></button>
           </div>
 
           <DaylightBand verdict={verdict} nowMin={t} />

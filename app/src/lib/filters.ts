@@ -1,5 +1,5 @@
 // All Explore state lives in the URL (CLAUDE.md section 2):
-//   ?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1
+//   ?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1&pick=<id>&view=3d
 // A missing parameter means "Any" / wide open, so the map is never empty on arrival.
 import type { Quarter } from '../data/schema'
 import type { Difficulty } from './difficulty'
@@ -27,6 +27,8 @@ export interface FilterState {
   go: boolean
   /** The hike whose photo tile is open on the map (clicked, not yet opened). Lives in the URL so Back from the hike page returns to the same tile. */
   pick: string | null
+  /** '3d' shows the opt-in Three.js view instead of the 2D map. Written to the URL only when 3D (`view=3d`). */
+  view: '2d' | '3d'
 }
 
 /** Slider ranges shown in the UI (also the "wide open" ends). */
@@ -50,6 +52,7 @@ export const defaultFilters = (today = new Date()): FilterState => ({
   units: 'us',
   go: false,
   pick: null,
+  view: '2d',
 })
 
 const int = (v: string | null): number | null => {
@@ -80,6 +83,7 @@ export function parseFilters(params: URLSearchParams, today = new Date()): Filte
     units: params.get('units') === 'metric' ? 'metric' : 'us',
     go: params.get('go') === '1',
     pick: /^[a-z0-9-]{1,60}$/.test(params.get('pick') ?? '') ? params.get('pick') : null,
+    view: params.get('view') === '3d' ? '3d' : '2d',
   }
 }
 
@@ -98,6 +102,7 @@ export function serializeFilters(f: FilterState): URLSearchParams {
   if (f.units === 'metric') p.set('units', 'metric')
   if (f.go) p.set('go', '1')
   if (f.pick) p.set('pick', f.pick)
+  if (f.view === '3d') p.set('view', '3d')
   return p
 }
 

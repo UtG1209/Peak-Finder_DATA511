@@ -4,6 +4,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
+import { Icon } from '../../components/Icon'
 import { quarterMonths } from '../../data/loaders'
 import { StatusIcon } from '../../components/StatusIcon'
 import { STOP_MINUTES, MAX_SLOPE, SMOOTH_WINDOW_M } from '../../models/checkpoints'
@@ -36,7 +37,7 @@ export default function About() {
 
   return (
     <main className="page about">
-      <Link to="/" className="back">← Back to map</Link>
+      <Link to="/" className="back"><Icon name="arrow-left" />Back to map</Link>
       <h1>About the data</h1>
       <p className="lede">
         Peak Finder answers three questions in order: <b>where</b> to hike, <b>when</b> (which quarter) and <b>how much</b> it will cost.
@@ -64,7 +65,7 @@ export default function About() {
             <thead><tr><th scope="col">Number</th><th scope="col">Source</th><th scope="col">How it is made</th></tr></thead>
             <tbody>
               <tr><th scope="row">Crowds</th><td>NPS Visitor Use Statistics (IRMA), monthly recreation visits</td><td>A month's visits ÷ the park's busiest month (median over years). A <b>park</b> number, not a trail number.</td></tr>
-              <tr><th scope="row">Typical high, wet days</th><td>NOAA GHCN-Daily, the nearest weather station within 50 km</td><td>Median daily high per month. A wet day is at least 0.1 in. The summit is estimated at −3.5°F per 1,000 ft and labelled "estimate". No station within 50 km: left out.</td></tr>
+              <tr><th scope="row">Typical high, wet days</th><td>NOAA GHCN-Daily, the nearest weather station within 50 km</td><td>Median daily high per month. A wet day is at least 0.1 in. The summit is estimated at 3.5°F cooler per 1,000 ft and labelled "estimate". No station within 50 km: left out.</td></tr>
               <tr><th scope="row">Smoky days</th><td>EPA AirData, daily AQI for the trailhead's county</td><td>A smoky day has AQI above 100 with fine particles (PM2.5) as the cause. Ozone days are counted separately, because AQI above 100 is not always smoke.</td></tr>
               <tr><th scope="row">Travel time</th><td>OpenRouteService driving times and DOT airfare Table 6 airports</td><td>Door to trailhead from each of the 10 home cities, by the shorter of driving or flying.</td></tr>
               <tr><th scope="row">Daylight</th><td>Computed</td><td>Sunrise and sunset from the trailhead's latitude, longitude and the date.</td></tr>
@@ -125,8 +126,8 @@ export default function About() {
         <h2 id="cost-h">How costs are made</h2>
         <p>A trip's cost is added up from past, typical prices for the hike, your home city and the quarter. It is <b>typical, from past data, not a price quote</b>.</p>
         <ul className="about-list">
-          <li><b>Flying:</b> one-way fare × 2 × travellers, plus a rental car for the days of the trip. <b>Driving:</b> round-trip miles ÷ miles per gallon × gas price, for one vehicle per four people.</li>
-          <li><b>Lodging:</b> nightly rate × nights × rooms (one room per two people) × 1.12 for tax. <b>Food:</b> daily meals × (nights + ½) × travellers.</li>
+          <li><b>Flying:</b> two one-way fares for each traveller, plus a rental car for the days of the trip. <b>Driving:</b> the round-trip miles divided by miles per gallon, times the gas price, for one vehicle per four people.</li>
+          <li><b>Lodging:</b> nightly rate times nights times rooms (one room per two people), plus 12% tax. <b>Food:</b> daily meals for each traveller, for the nights plus half a day.</li>
           <li><b>Park fees:</b> entrance fee per vehicle (capped at the $80 annual pass) plus permits. <b>Buffer:</b> 15% of the total, shown hatched.</li>
         </ul>
         <ul className="about-sources">

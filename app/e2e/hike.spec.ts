@@ -16,7 +16,7 @@ test('header: NPS numbers, gear with words, photo credit, 3D walk link, back lin
   await expect(page.locator('.facts')).toContainText('Summit elevation')
   await expect(page.locator('.gear li')).toHaveCount(3)
   await expect(page.locator('.gear')).toContainText('Chains')
-  await expect(page.locator('.hp-photo figcaption')).toContainText('CC0')
+  await expect(page.locator('.hp-photo figcaption')).toContainText(/CC0|CC BY/)
   await expect(page.locator('.hp-photo figcaption a', { hasText: 'Wikimedia Commons' })).toHaveAttribute('href', /.+/)
   await expect(page.getByRole('link', { name: /Walk it in 3D/ })).toHaveAttribute('href', /walks\/angels_landing\/index\.html\?season=summer/) // Q3 = summer
   await page.getByRole('link', { name: /Back to map/ }).first().click()

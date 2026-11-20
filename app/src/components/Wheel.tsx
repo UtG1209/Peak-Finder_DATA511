@@ -2,7 +2,8 @@
 // It spins once on open, lands, and shows the pick with Open and Spin again. With prefers-reduced-motion it picks at once.
 import { animate, useMotionValue, motion, type AnimationPlaybackControls } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { DIFFICULTY_COLORS, DIFFICULTY_LABEL, type Difficulty } from '../lib/difficulty'
+import { DIFFICULTY_LABEL, type Difficulty } from '../lib/difficulty'
+import { Icon } from './Icon'
 import { landingRotation, pickWeighted, sliceAngles } from '../lib/wheel'
 
 export interface WheelHike {
@@ -105,7 +106,10 @@ export function Wheel({ hikes, quarterLabel, onOpen, onClose, rng = Math.random 
           }
         }}
       >
-        <h2 id="wheel-title">Not sure? Spin the wheel</h2>
+        <div className="wheel-head">
+          <h2 id="wheel-title">Not sure? Spin the wheel</h2>
+          <button type="button" className="icon-btn" aria-label="Close the wheel" onClick={onClose}><Icon name="close" /></button>
+        </div>
         <p className="hintline">The top {hikes.length} hikes that fit in {quarterLabel}. A better match gets a wider slice.</p>
         <div className="wheel-stage" aria-hidden="true">
           <div className="wheel-pointer" />
@@ -115,17 +119,16 @@ export function Wheel({ hikes, quarterLabel, onOpen, onClose, rng = Math.random 
                 const { start, end } = slices[i]
                 const mid = (start + end) / 2
                 const [tx, ty] = polar(mid, 62)
-                const light = h.difficulty !== 'hard'
                 return (
                   <g key={h.id}>
-                    <path d={slicePath(start, end)} fill={DIFFICULTY_COLORS[h.difficulty]} stroke="#101418" strokeWidth="1.5" opacity={winner === null || winner === i ? 1 : 0.55} />
+                    <path className={`wheel-slice d-${h.difficulty}${winner === i ? ' won' : ''}`} d={slicePath(start, end)} />
                     {end - start >= 14 && (
-                      <text x={tx} y={ty} fontSize="6" fontWeight="700" fill={light ? '#101418' : '#ffffff'} textAnchor="middle" dominantBaseline="middle" transform={`rotate(${mid - 90} ${tx} ${ty})`}>{short(h.name)}</text>
+                      <text className="wheel-label" x={tx} y={ty} textAnchor="middle" dominantBaseline="middle" transform={`rotate(${mid - 90} ${tx} ${ty})`}>{short(h.name)}</text>
                     )}
                   </g>
                 )
               })}
-              <circle cx="100" cy="100" r="9" fill="#101418" stroke="#f2efe9" strokeWidth="2" />
+              <circle className="wheel-hub" cx="100" cy="100" r="9" />
             </svg>
           </motion.div>
         </div>
@@ -136,13 +139,13 @@ export function Wheel({ hikes, quarterLabel, onOpen, onClose, rng = Math.random 
             <>
               <p className="eyebrow">Your pick · {Math.round(won.match)}% match</p>
               <h3>{won.name}</h3>
-              <p className="sub"><i className="dd" style={{ background: DIFFICULTY_COLORS[won.difficulty] }} />{won.park} · {DIFFICULTY_LABEL[won.difficulty]}</p>
+              <p className="sub"><i className={`dd d-${won.difficulty}`} />{won.park} · {DIFFICULTY_LABEL[won.difficulty]}</p>
             </>
           )}
         </div>
         <div className="wheel-actions">
-          <button type="button" className="go" ref={openBtn} disabled={!won} onClick={() => won && onOpen(won.id)}>Open <span aria-hidden="true">→</span></button>
-          <button type="button" className="fit" disabled={spinning} onClick={spin}>Spin again</button>
+          <button type="button" className="go" ref={openBtn} disabled={!won} onClick={() => won && onOpen(won.id)}>Open this hike <Icon name="arrow-right" /></button>
+          <button type="button" className="fit" disabled={spinning} onClick={spin}><Icon name="shuffle" size={18} /> Spin again</button>
           <button type="button" className="fit" onClick={onClose}>Close</button>
         </div>
       </div>

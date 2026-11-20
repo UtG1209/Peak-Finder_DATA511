@@ -1,0 +1,28 @@
+/* about.css: the About page (sources, how match % works with a worked example, costs, times, honest limits, Advice vs data).
+   Tokens only. The tables reuse the hike page's ruled table styles (.strip-scroll, table.cptable in hike.css). */
+
+.page.about { width: 100%; max-width: 860px; gap: var(--space-5); padding-bottom: 80px; }
+.about .lede { font-size: var(--fs-body-l); line-height: var(--lh-body); color: var(--text-body); }
+.about h2 { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--line-strong); }
+.about h3 { margin-bottom: var(--space-2); }
+.about section { display: flex; flex-direction: column; gap: var(--space-3); scroll-margin-top: var(--space-4); }
+.about section > * { min-width: 0; }
+.about p, .about li { line-height: var(--lh-body); color: var(--text-body); }
+.about p.fine, .about li .fine, .about .fine { color: var(--text-muted); }
+.about b { color: var(--text); font-weight: var(--fw-semibold); }
+.about a { color: var(--text); }
+.about-notice { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-3) var(--space-4); border-radius: var(--radius-4); border: 1px solid var(--hazard); background: var(--surface); }
+.about-notice .icon { margin-top: 2px; }
+.about-nav { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.about-nav .fit { flex: 0 1 auto; padding: 0 var(--space-4); }
+.about-sources { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.about-sources span { color: var(--text-muted); }
+.about-list { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); }
+.about-table th, .about-table td { vertical-align: top; line-height: var(--lh-snug); }
+.about-table.narrow { max-width: 620px; border-top: 1px solid var(--line-strong); }
+.formula { padding: var(--space-3) var(--space-4); border-radius: var(--radius-3); border: 1px dashed var(--off-line); font: var(--fw-semibold) var(--fs-body-l) var(--font-body); color: var(--text); background: var(--surface); }
+.worked { padding: var(--space-4) var(--space-5); border-radius: var(--radius-4); border: 1px solid var(--accent); background: var(--surface); }
+.worked ol { margin: 0; padding-left: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+.about-advice { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.about-advice li { padding-top: var(--space-3); border-top: 1px solid var(--line); }
+.about-advice .claim { font: var(--fw-regular) var(--fs-h3) / var(--lh-snug) var(--font-display); color: var(--text); }

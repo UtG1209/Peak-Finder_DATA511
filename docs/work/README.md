@@ -42,7 +42,7 @@ python3 scripts/make_fake_data.py   # regenerate the fake data (lane 1/2 replace
 2. **Small PRs into `main`, one feature each.** Branch names: `lane-1/ghcn`, `lane-3/wheel`. CI must pass (lint, tests, build).
    Merge to `main` at least weekly so the live link always shows the latest.
 3. **Stay in your lane's files.** If you need a change in someone else's file, ask in the group chat or open a PR and tag them.
-   Shared files (`schema.ts`, `styles.css` tokens, `CLAUDE.md`) change only through a PR everybody sees.
+   Shared files (`schema.ts`, `app/src/styles/tokens.css`, `CLAUDE.md`) change only through a PR everybody sees.
 4. **Fake data keeps you unblocked.** Real data lands by replacing files in `app/public/data/` with pipeline output that
    passes `npm run validate:data`. Do not commit half-real files: replace a whole file or none.
 5. **Never commit secrets.** Keys live in `.env` (git-ignored). See [../CREDENTIALS.md](../CREDENTIALS.md).
@@ -53,7 +53,7 @@ python3 scripts/make_fake_data.py   # regenerate the fake data (lane 1/2 replace
 ## What is already built (the base)
 
 - `app/`: React + Vite + TypeScript, MapLibre, D3, Framer Motion, Vitest. Dark, sand-orange look from the 29 Oct prototype
-  (`docs/reference/oct29-prototype.html`); one accent token (`--accent`) in `app/src/styles.css`.
+  (`docs/reference/oct29-prototype.html`); one accent token (`--accent`) in `app/src/styles/tokens.css`.
 - `app/src/data/`: zod schemas (the contract), loaders, `useData()` hook, loading and error states.
 - `app/src/models/`: `match.ts`, `checkpoints.ts`, `cost.ts` with 60 tests, including the Angels Landing Q3 case.
 - `app/src/lib/`: URL filter state (`filters.ts`, `useFilters`), `explore.ts` (score every hike, empty-state fix), cities, quarters.

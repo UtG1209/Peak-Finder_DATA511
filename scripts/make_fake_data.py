@@ -228,6 +228,26 @@ def r1(x):
 
 
 # --------------------------------------------------------------------------- build
+# Real photos for the three featured hikes: one of each walk's own checkpoint photos (Wikimedia Commons, open licence, credited as in the walk page).
+# The files live in app/public/photos/<id>.jpg (copied from walks/<walk>/photos/, already 900 px). Every other hike keeps a generated placeholder.
+REAL_PHOTOS = {
+    "angels-landing": {"author": "Diliff", "license": "CC BY-SA", "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+                       "page": "https://commons.wikimedia.org/wiki/File:Zion_angels_landing_view.jpg"},
+    "bright-angel-trail": {"author": "Bernard Spragg. NZ from Christchurch, New Zealand", "license": "Public domain", "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+                           "page": "https://commons.wikimedia.org/wiki/File:Last_light_in_the_Canyon._(51429129959).jpg"},
+    "cascade-pass-sahale": {"author": "Jeff Hollett from Vancouver, WA, USA", "license": "Public domain", "license_url": "https://creativecommons.org/publicdomain/mark/1.0/",
+                            "page": "https://commons.wikimedia.org/wiki/File:The_Triplets_from_Sahale_Arm_(42126630090).jpg"},
+}
+
+
+def photo_for(hid: str, name: str) -> dict:
+    if hid in REAL_PHOTOS:
+        return {"file": f"photos/{hid}.jpg", **REAL_PHOTOS[hid]}
+    return {"file": f"photos/{hid}.svg", "author": "Peak Finder team (placeholder)", "license": "CC0",
+            "license_url": "https://creativecommons.org/publicdomain/zero/1.0/", "page": "https://github.com/UtG1209/Peak-Finder_DATA511"}
+
+
+
 def build_hikes():
     hikes, meta_rows = [], []
     for idx, row in enumerate(H):
@@ -263,9 +283,7 @@ def build_hikes():
             "nps_url": f"https://www.nps.gov/{code.lower()}/index.htm", "description": blurb,
             "permit_note": permit, "closure_note": ("Closed by snow outside summer (fake)" if closed else None),
             "gear": gear,
-            "photo": {"file": f"photos/{hid}.svg", "author": "Peak Finder team (placeholder)", "license": "CC0",
-                      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-                      "page": "https://github.com/UtG1209/Peak-Finder_DATA511"},
+            "photo": photo_for(hid, name),
             "featured": hid in FEATURED, "walk_path": FEATURED.get(hid),
             "station": station, "aqi_county": {"fips": fips, "name": county},
         })
@@ -398,7 +416,7 @@ def build_profile(hk, m):
     else:
         fr = [("Trailhead", 0), ("Quarter way", 0.25), ("Halfway", 0.5), ("Three-quarters", 0.75)]
     cps = [{"id": f"c{i}", "name": n, "dist_m": round(f * length / 10) * 10 if f < 1 else length,
-            "photo": f"photos/{m['hid']}.svg"} for i, (n, f) in enumerate(fr)]
+            "photo": photo_for(m["hid"], m["name"])["file"]} for i, (n, f) in enumerate(fr)]
     return {"hike_id": m["hid"], "step_m": 10, "points": pts, "osm_length_m": length,
             "nps_length_m": m["nps_len"], "scale": round(m["nps_len"] / length, 3), "checkpoints": cps}
 
@@ -506,7 +524,8 @@ def main():
     for hk, m in zip(hikes, mrows):
         prof += dump(out / "profiles" / f"{m['hid']}.json", build_profile(hk, m))
         photos.mkdir(parents=True, exist_ok=True)
-        (photos / f"{m['hid']}.svg").write_text(placeholder_svg(hk["name"], hk["park_name"]), encoding="utf-8")
+        if m["hid"] not in REAL_PHOTOS:
+            (photos / f"{m['hid']}.svg").write_text(placeholder_svg(hk["name"], hk["park_name"]), encoding="utf-8")
 
     total = sum(sizes.values())
     print(f"{len(hikes)} hikes, {len(months)} hike_month, {len(travel)} travel, {len(cost)} cost rows")

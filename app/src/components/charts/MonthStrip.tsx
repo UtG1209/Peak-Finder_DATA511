@@ -2,7 +2,7 @@
 // A real table (row and column headers) so screen readers get it for free. Cells past the user's limits carry an icon and words;
 // the chosen quarter's three months are framed; missing data is a grey cell that says why.
 import { StatusIcon } from '../StatusIcon'
-import type { Cell, Column, Hazard } from '../../lib/monthStrip'
+import type { Cell, Column } from '../../lib/monthStrip'
 
 interface RowDef {
   key: 'temp' | 'crowd' | 'smoky' | 'wet' | 'daylight'
@@ -18,8 +18,6 @@ const ROWS: RowDef[] = [
   { key: 'wet', label: 'Wet days', hint: 'Days with at least 0.1 inch (2.5 mm) of rain or melted snow' },
   { key: 'daylight', label: 'Daylight', hint: 'Hours between sunrise and sunset, computed from the trailhead position and the date' },
 ]
-
-const HAZARD_ICON: Record<Hazard['key'], string> = { heat: '☀', smoke: '≋', snow: '❄', closed: '⛔' }
 
 function CellView({ cell }: { cell: Cell }) {
   return (
@@ -72,7 +70,7 @@ export function MonthStrip({ columns, chosenLabel }: { columns: Column[]; chosen
                   {c.hazards.length === 0 ? <span className="cv-none">None</span> : (
                     <ul>
                       {c.hazards.map((h) => (
-                        <li key={h.key}><StatusIcon status="warn" size={13} /><span><span aria-hidden="true">{HAZARD_ICON[h.key]} </span>{h.text}</span></li>
+                        <li key={h.key}><StatusIcon status="warn" size={13} /><span>{h.text}</span></li>
                       ))}
                     </ul>
                   )}

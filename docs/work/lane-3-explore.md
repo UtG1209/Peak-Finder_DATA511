@@ -7,7 +7,7 @@ look of the 29 Oct prototype (`docs/reference/oct29-prototype.html`, open it in 
 
 ## Files you own
 `app/src/screens/Explore/`, `app/src/components/{UsMap,RangeSlider,HikeCard,FakeBanner}.tsx`, `app/src/lib/{explore,filters,useFilters,reasons,bubbles}.ts`,
-and `app/src/models/match.ts`. You may add components. Changes to `styles.css` tokens need a PR everyone sees.
+and `app/src/models/match.ts`. You may add components. Changes to `app/src/styles/tokens.css` need a PR everyone sees.
 
 ## What is built
 **Guided start**: the map is blurred with a card that walks through the three steps and a "Show hikes" button (`components/Navigator.tsx`, `go=1` in the URL); after it, a "What next?" tip. **Difficulty colours**: bubbles, legend, list dots, chips and the hike card use one colour per difficulty from `lib/difficulty.ts`. Home city dropdown, quarter chips, five filters (dual temperature range, crowd chips, smoky and wet day sliders, max travel time) with tiny histograms,
@@ -48,3 +48,5 @@ User-test it: can a new person tell what to do next without help? Make the step 
 
 ## Do not
 Call a live API, add a login, show red/green pairs, or change a data shape.
+
+Note: the list re-sort animation lives in `app/src/lib/flip.ts` and Explore's browser tests in `app/e2e/explore-ui.spec.ts`; map controls and the no-WebGL fallback are `components/MapControls.tsx` and `components/MapBoundary.tsx` (restyled by the design track).

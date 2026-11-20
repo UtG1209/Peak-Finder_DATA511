@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Units } from '../lib/units'
+import { Icon } from './Icon'
 
 /** Metric toggle: °F · mi · ft or °C · km · m. Stored in the URL as units=metric by the caller. */
 export function UnitsToggle({ units, onChange }: { units: Units; onChange: (u: Units) => void }) {
@@ -20,8 +21,7 @@ async function copy(text: string): Promise<boolean> {
     const t = document.createElement('textarea')
     t.value = text
     t.setAttribute('readonly', '')
-    t.style.position = 'fixed'
-    t.style.opacity = '0'
+    t.className = 'sr-only' // off screen, but still selectable for execCommand
     document.body.appendChild(t)
     t.select()
     const ok = document.execCommand?.('copy') ?? false
@@ -45,7 +45,7 @@ export function ShareButton({ url }: { url: string }) {
           timer.current = window.setTimeout(() => setState('idle'), 3000)
         }}
       >
-        {state === 'copied' ? 'Link copied ✓' : 'Share link'}
+        <Icon name={state === 'copied' ? 'check' : 'share'} size={18} /> {state === 'copied' ? 'Link copied' : 'Share link'}
       </button>
       <span className="sr-only" role="status">{state === 'copied' ? 'Link copied to the clipboard' : state === 'failed' ? 'Could not copy the link' : ''}</span>
       {state === 'failed' && <span className="hintline">Copy it from the address bar.</span>}

@@ -33,7 +33,9 @@ export function reasonRows(result: MatchResult, months: HikeMonth[], units: Unit
     if (x.skippedBecause === 'missing' || x.value === null) return { note: MISSING_NOTE[k] ?? 'No data', warn: false, missing: true }
     if (!x.active) return { note: 'No limit', warn: false }
     if (x.distancePast <= 0) return { note: k === 'temp' ? 'In range' : 'OK', warn: false }
-    return { note: `Over by ${over(x.distancePast)}`, warn: true }
+    const text = over(x.distancePast)
+    // a fractional overage that rounds to zero must not read "Over by 0 days"
+    return { note: parseFloat(text) === 0 ? 'Just over' : `Over by ${text}`, warn: true }
   }
   const days = (d: number) => `${d.toFixed(0)} days`
   const rows: ReasonRow[] = []
