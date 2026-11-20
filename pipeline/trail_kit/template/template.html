@@ -34,7 +34,10 @@ body { margin: 0; }
 .chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
 .chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: max(16px, env(safe-area-inset-left, 0px)); font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backBtn { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 16px); left: max(16px, env(safe-area-inset-left, 0px)); display: inline-flex; align-items: center; box-sizing: border-box; min-height: 44px; max-width: min(70vw, 360px); padding: 0 16px; font: 600 14px var(--body); color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#backBtn:hover { border-color: var(--muted); }
+#backBtn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
 #profile {
   position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
@@ -81,7 +84,8 @@ body { margin: 0; }
 <div id="stage">
   <div id="map" role="img" aria-label="__MAP_LABEL__"></div>
   <div id="status">Loading terrain…</div>
-  <div id="brand">__BRAND__</div>
+  <a id="backBtn" href="../../">← Back to the hike</a>
+  <div id="brand">Peak Finder</div>
   <div id="hud" aria-live="polite">
     <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
     <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
@@ -105,6 +109,24 @@ body { margin: 0; }
 __STEPS__
 </div>
 
+<script>
+/* Back control: goes to the in-app hike address passed as ?back=#/hike/<id>?..., else history.back(), else the site root. */
+(function () {
+  var b = document.getElementById('backBtn'); if (!b) return;
+  var p = new URLSearchParams(location.search), back = p.get('back'), name = p.get('backname');
+  var root = new URL('../../', location.href);
+  var target = null;
+  if (back && back.indexOf('#/') === 0) { var u = new URL(back, root); if (u.origin === location.origin) target = u.href; }
+  if (name) b.textContent = '\u2190 Back to ' + name.slice(0, 80);
+  b.href = target || root.href;
+  b.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (target) location.assign(target);
+    else if (history.length > 1) history.back();
+    else location.assign(root.href);
+  });
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script>
 const PROFILE = __PROFILE__; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
