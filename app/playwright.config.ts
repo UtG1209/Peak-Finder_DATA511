@@ -8,7 +8,10 @@ const PORT = Number(process.env.PW_PORT ?? 4173)
 const OUT = PORT === 4173 ? 'dist' : `dist-pw-${PORT}`
 export default defineConfig({
   testDir: 'e2e',
-  timeout: 60_000,
+  timeout: 90_000,
+  // The app is fast on a real machine, but CI and loaded laptops render WebGL in software: a step that takes 80 ms here can take several seconds there.
+  // A generous wait costs nothing when the page is quick (the check returns as soon as it passes) and stops timing flakes.
+  expect: { timeout: 15_000 },
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {

@@ -22,7 +22,7 @@ for (const size of [{ tag: 'desktop', width: 1400, height: 850 }, { tag: 'phone'
     // 1. the guide's Show hikes button is reachable and works with Enter
     await tabTo(page, named('.guide', 'Show hikes'), 'Show hikes in the guide')
     await page.keyboard.press('Enter')
-    await expect(page.locator('.guide')).toHaveCount(0, { timeout: 20_000 }) // the map chunk starting up can block the page for seconds on software WebGL
+    await expect(page.locator('.guide')).toHaveCount(0, { timeout: 30_000 }) // the map chunk starting up can block the page for seconds on software WebGL
     await expect(page).toHaveURL(/go=1/)
     // 2. focus order: the rail (and list) come before the map controls
     // 3. a list row selects the hike and opens the tile
