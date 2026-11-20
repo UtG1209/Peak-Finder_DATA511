@@ -80,10 +80,10 @@ def h(*a, el=None):
 h("angels-landing", "Angels Landing", "ZION", "Zion National Park", "UT", "The Grotto", 37.25897, -112.95097, "Summit", 37.26931, -112.94792, 5.4, 1500, 5790, "out-and-back", "hard", "canyon", 0, "zion", "49053", "Washington County, UT", ["chains", "exposure", "no-shade"], "Permit lottery", ())
 h("bright-angel-trail", "Bright Angel Trail to Phantom Ranch", "GRCA", "Grand Canyon National Park", "AZ", "Bright Angel Trailhead", 36.0577, -112.1438, "Phantom Ranch", 36.1066, -112.0963, 19.0, 4380, 6860, "out-and-back", "hard", "montane", 0, "grca", "04005", "Coconino County, AZ", ["steep", "no-shade", "extra-water"], None, (), el=(6860, 2480))
 h("cascade-pass-sahale", "Cascade Pass to Sahale Glacier", "NOCA", "North Cascades National Park", "WA", "Cascade Pass Trailhead", 48.4767, -121.0753, "Sahale Glacier Camp", 48.4806, -121.0450, 12.0, 4000, 7600, "out-and-back", "hard", "pnw-high", 0, "summer", "53057", "Skagit County, WA", ["steep", "snow-gear", "exposure"], None, (11, 12, 1, 2, 3, 4))
-h("mount-washburn", "Mount Washburn via Chittenden Road", "YELL", "Yellowstone National Park", "WY", "Dunraven Pass Trailhead", 44.7915, -110.4415, "Summit", 44.7978, -110.4339, 6.4, 1400, 10243, "out-and-back", "moderate", "alpine", 0, "summer", "56029", "Park County, WY", ["exposure", "snow-gear"], None, (11, 12, 1, 2, 3, 4, 5))
-h("fairy-falls-grand-prismatic", "Fairy Falls and Grand Prismatic Overlook", "YELL", "Yellowstone National Park", "WY", "Fairy Falls Trailhead", 44.5249, -110.8358, "Fairy Falls", 44.5201, -110.8774, 5.4, 200, 7350, "out-and-back", "easy", "alpine", 3, "summer", "56039", "Teton County, WY", ["bear-spray"], None, ())
+h("mount-washburn", "Mount Washburn via Dunraven Pass", "YELL", "Yellowstone National Park", "WY", "Dunraven Pass Trailhead", 44.7915, -110.4415, "Summit", 44.7978, -110.4339, 6.4, 1400, 10243, "out-and-back", "moderate", "alpine", 0, "summer", "56029", "Park County, WY", ["exposure", "snow-gear"], None, (11, 12, 1, 2, 3, 4, 5))
+h("fairy-falls-grand-prismatic", "Fairy Falls (without Grand Prismatic Overlook)", "YELL", "Yellowstone National Park", "WY", "Fairy Falls Trailhead", 44.5249, -110.8358, "Fairy Falls", 44.5250, -110.8699, 4.5, 200, 7414, "out-and-back", "easy", "alpine", 3, "summer", "56039", "Teton County, WY", ["bear-spray"], None, ())
 h("grinnell-glacier", "Grinnell Glacier", "GLAC", "Glacier National Park", "MT", "Many Glacier Trailhead", 48.7967, -113.6565, "Grinnell Glacier Overlook", 48.7578, -113.7273, 10.6, 1840, 6740, "out-and-back", "hard", "alpine", 5, "summer", "30035", "Glacier County, MT", ["bear-spray", "steep", "snow-gear"], None, (11, 12, 1, 2, 3, 4, 5, 6))
-h("glacier-highline", "Highline Trail to Granite Park Chalet", "GLAC", "Glacier National Park", "MT", "Logan Pass", 48.6967, -113.7183, "Granite Park Chalet", 48.7603, -113.7547, 7.6, 800, 6700, "point-to-point", "moderate", "alpine", 2, "summer", "30029", "Flathead County, MT", ["exposure", "bear-spray", "snow-gear"], None, (11, 12, 1, 2, 3, 4, 5, 6), el=(6646, 6700))
+h("glacier-highline", "Highline Trail to Granite Park Chalet", "GLAC", "Glacier National Park", "MT", "Logan Pass", 48.6967, -113.7183, "Granite Park Chalet", 48.763311, -113.75301, 7.6, 800, 7305, "point-to-point", "moderate", "alpine", 2, "summer", "30029", "Flathead County, MT", ["exposure", "bear-spray", "snow-gear"], None, (11, 12, 1, 2, 3, 4, 5, 6), el=(6646, 6700))
 h("half-dome", "Half Dome", "YOSE", "Yosemite National Park", "CA", "Happy Isles Trailhead", 37.7326, -119.5577, "Summit", 37.7459, -119.5332, 16.0, 4800, 8842, "out-and-back", "hard", "sierra", 0, "summer", "06043", "Mariposa County, CA", ["chains", "exposure", "extra-water", "headlamp"], "Permit lottery", (11, 12, 1, 2, 3, 4, 5))
 h("upper-yosemite-falls", "Upper Yosemite Fall Trail", "YOSE", "Yosemite National Park", "CA", "Camp 4 Trailhead", 37.7926, -119.6010, "Top of Upper Yosemite Fall", 37.7990, -119.5981, 7.2, 3200, 6526, "out-and-back", "hard", "sierra", 0, "summer", "06043", "Mariposa County, CA", ["steep", "extra-water"], None, ())
 h("moro-rock", "Moro Rock", "SEKI", "Sequoia and Kings Canyon National Parks", "CA", "Moro Rock Trailhead", 36.5469, -118.7653, "Summit", 36.5472, -118.7652, 0.5, 250, 6725, "out-and-back", "easy", "sierra", -8, "summer", "06107", "Tulare County, CA", ["steep", "exposure"], None, (12, 1, 2, 3))
@@ -142,6 +142,10 @@ FEATURED_STOPS = {
     "angels-landing": [("The Grotto", 0), ("Refrigerator Canyon", 0.22), ("Walter's Wiggles", 0.45), ("Scout Lookout", 0.62), ("Angels Landing summit", 1)],
     "bright-angel-trail": [("Bright Angel Trailhead", 0), ("1.5-Mile Resthouse", 0.16), ("3-Mile Resthouse", 0.31), ("Indian Garden", 0.50), ("Colorado River", 0.88), ("Phantom Ranch", 1)],
     "cascade-pass-sahale": [("Cascade Pass Trailhead", 0), ("Cascade Pass", 0.45), ("Sahale Arm", 0.75), ("Sahale Glacier Camp", 1)],
+    "mount-washburn": [("Dunraven Pass Trailhead", 0), ("Forest switchbacks", 0.25), ("Alpine ridge", 0.70), ("Mount Washburn summit", 1)],
+    "fairy-falls-grand-prismatic": [("Fairy Falls Trailhead", 0), ("Madison Plateau junction", 0.45), ("Fairy Falls", 1)],
+    "grinnell-glacier": [("Many Glacier Trailhead", 0), ("Grinnell Lake overlook", 0.42), ("Upper Grinnell Lake", 0.78), ("Grinnell Glacier Overlook", 1)],
+    "glacier-highline": [("Logan Pass", 0), ("Haystack Pass", 0.46), ("Granite Park Chalet", 1)],
 }
 
 # --------------------------------------------------------------------------- cities and airports
@@ -272,7 +276,11 @@ def build_hikes():
         if hid in FEATURED:
             blurb = {"angels-landing": "A chain-assisted climb along a narrow fin to a view over Zion Canyon.",
                      "bright-angel-trail": "The classic corridor trail from the South Rim to the Colorado River and Phantom Ranch.",
-                     "cascade-pass-sahale": "Switchbacks to Cascade Pass, then a high ridge walk to the foot of Sahale Glacier."}[hid]
+                     "cascade-pass-sahale": "Switchbacks to Cascade Pass, then a high ridge walk to the foot of Sahale Glacier.",
+                     "mount-washburn": "Climb from Dunraven Pass through subalpine forest to the Mount Washburn summit.",
+                     "fairy-falls-grand-prismatic": "A Yellowstone out-and-back to Fairy Falls, ending at the waterfall and skipping the Grand Prismatic overlook.",
+                     "grinnell-glacier": "A strenuous Many Glacier climb past alpine lakes to the Grinnell Glacier overlook.",
+                     "glacier-highline": "Follow Glacier National Park’s Highline Trail from Logan Pass to Granite Park Chalet."}.get(hid, f"A {diff} {route} hike in {park}.")
         else:
             blurb = f"A {diff} {route} hike in {park}. Placeholder text from fake data."
         hikes.append({

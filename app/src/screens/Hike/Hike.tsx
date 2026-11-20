@@ -24,6 +24,7 @@ import { AdviceCard } from './AdviceCard'
 import { FitSection } from './FitSection'
 import { HikeHeader } from './HikeHeader'
 import { TrailSection } from './TrailSection'
+import CloudTransition from '../../components/CloudTransition'
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
@@ -40,6 +41,7 @@ export default function Hike() {
   // a new page: put keyboard and screen-reader focus on its title, so Tab starts at the top of this page and the change is announced
   const title = useRef<HTMLHeadingElement>(null)
   useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
+  const [openingWalk, setOpeningWalk] = useState(false)
 
   const backTo = { pathname: '/', search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '').toString()}` }
   const limits = toLimits(filters)
@@ -73,6 +75,7 @@ export default function Hike() {
   const best = (bestQuarter(matches.map((m) => m.match), costs.map((c) => c?.total ?? null)) + 1) as Quarter
   const sel = QUARTERS[filters.q - 1]
   const advice = data.advice.find((a) => a.hike_id === hike.id)
+  const walkHref = walkUrl(hike, sel.season, { back: window.location.hash, backname: hike.name })
   const cheapest = costs.reduce<{ q: Quarter; total: number } | null>((b, c, i) => (c && (!b || c.total < b.total) ? { q: (i + 1) as Quarter, total: c.total } : b), null)
   const selCost = costs[filters.q - 1]
   const saving = cheapest && selCost && cheapest.q !== filters.q ? selCost.total - cheapest.total : 0
@@ -83,7 +86,14 @@ export default function Hike() {
     <main className="hikepage">
       <div className="hp-top"><Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link><ThemeToggle /></div>
 
-      <HikeHeader hike={hike} units={filters.units} walkHref={hike.featured ? walkUrl(hike, sel.season) : null} seasonLabel={sel.season} titleRef={title} />
+      <HikeHeader
+        hike={hike}
+        units={filters.units}
+        walkHref={walkHref}
+        seasonLabel={sel.season}
+        titleRef={title}
+        onWalkStart={() => setOpeningWalk(true)}
+      />
 
       <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
 
@@ -177,6 +187,7 @@ export default function Hike() {
       </section>
 
       <p className="fine hp-foot">Every number on this page is typical, from past years (not a forecast or a price quote). <Link to="/about">How the numbers are made: About the data</Link>.</p>
+      {openingWalk && walkHref && <CloudTransition hikeId={hike.id} season={sel.season} onDone={() => window.location.assign(walkHref)} />}
     </main>
   )
 }

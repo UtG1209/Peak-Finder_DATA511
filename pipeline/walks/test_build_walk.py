@@ -7,7 +7,9 @@ from pathlib import Path
 import build_walk as bw
 
 HTML = """<html><body>Spring Summer Autumn Winter
+<a id="backToHike" href="/">Back to Test</a><div id="backTransition"></div><svg><g id="timeMarkers"></g></svg>
 <script>const params = new URLSearchParams(location.search); const season = params.get('season');
+const back = params.get('back'); const times = params.get('times');
 const PROFILE = %s;
 </script>
 Imagery: USGS The National Map. Elevation: Terrain Tiles (Mapzen). (c) OpenStreetMap. Wikimedia Commons. Season view is illustrative.

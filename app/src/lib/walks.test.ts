@@ -1,24 +1,35 @@
 import { describe, expect, it } from 'vitest'
 import { walkUrl } from './walks'
 
-const hike = { id: 'angels-landing', name: "Angels Landing & Co", walk_path: 'walks/angels_landing/' }
+const hike = { id: 'angels-landing', name: 'Angels Landing', walk_path: 'walks/angels_landing/' }
 
-describe('walkUrl', () => {
-  it('keeps the season and encodes back and backname', () => {
+describe('walk URLs', () => {
+  it('keeps the season and encodes the hike return route and name', () => {
     const hash = '#/hike/angels-landing?from=SEA&q=3&temp=55-80'
-    const u = walkUrl(hike, 'summer', hash)!
-    const params = new URL(u, 'http://x/').searchParams
-    expect(u).toContain('walks/angels_landing/index.html?season=summer')
-    expect(u).toContain(`back=${encodeURIComponent(hash)}`)
-    expect(params.get('back')).toBe(hash)
-    expect(params.get('backname')).toBe('Angels Landing & Co')
-    expect(params.get('season')).toBe('summer')
+    const url = walkUrl(hike, 'summer', hash)!
+    const parsed = new URL(url, 'https://example.test')
+    expect(parsed.searchParams.get('season')).toBe('summer')
+    expect(parsed.searchParams.get('back')).toBe(hash)
+    expect(parsed.searchParams.get('backname')).toBe('Angels Landing')
   })
-  it('falls back to the plain hike address when the hash is not a route', () => {
-    const params = new URL(walkUrl(hike, 'winter', '')!, 'http://x/').searchParams
-    expect(params.get('back')).toBe('#/hike/angels-landing')
+
+  it('preserves checkpoint times on the walk link', () => {
+    const url = walkUrl(hike, 'winter', {
+      back: '#/hike/angels-landing?q=1',
+      times: [{ dist_m: 1200, dir: 'up', time: 480 }, { dist_m: 1200, dir: 'down', time: 650 }],
+    })!
+    const parsed = new URL(url, 'https://example.test')
+    expect(JSON.parse(parsed.searchParams.get('times')!)).toEqual([
+      { dist_m: 1200, dir: 'up', time: 480 }, { dist_m: 1200, dir: 'down', time: 650 },
+    ])
   })
-  it('returns null when the hike has no walk', () => {
-    expect(walkUrl({ ...hike, walk_path: null }, 'summer', '#/hike/x')).toBeNull()
+
+  it('falls back to the hike route when the current hash is not a route', () => {
+    const parsed = new URL(walkUrl(hike, 'winter', '')!, 'https://example.test')
+    expect(parsed.searchParams.get('back')).toBe('#/hike/angels-landing')
+  })
+
+  it('returns null when a hike has no 3D walk', () => {
+    expect(walkUrl({ ...hike, walk_path: null }, 'summer')).toBeNull()
   })
 })

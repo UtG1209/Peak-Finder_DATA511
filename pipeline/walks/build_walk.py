@@ -50,7 +50,7 @@ PLAN = [
     ("B5", "Season overlays", "Kit s6_season_tiles: snow and vegetation overlay tiles for each season.", "overlay tiles written", False),
     ("B6", "Walk page", "Kit s5_build_page: writes output/<trail>/index.html and copies the files the page needs.", "index.html written", False),
     ("C1", "Structure", "Every file the page names exists (photos, clouds); tile folders are not empty; the route profile parses.", "no missing files", False),
-    ("C2", "Credits and seasons", "The page credits USGS, Terrain Tiles, OpenStreetMap and Wikimedia Commons, says the season view is illustrative, offers all four seasons and reads ?season=.", "all strings and buttons present", False),
+    ("C2", "Credits, seasons and navigation", "The page credits USGS, Terrain Tiles, OpenStreetMap and Wikimedia Commons, reads ?season= and optional ?back=/?times=, and has a keyboard-visible return link.", "all strings, query handlers and controls present", False),
     ("C3", "Route vs the hike", "Compares the walk's own route with the hike in app data: start near the trailhead, end near the end point, length vs the NPS length, highest point vs the NPS elevation.", "within tolerance (strict when data is real, loose while data is fake)", False),
     ("C4", "Size budget", "Total size must be within the manifest budget (30 MB after lossless optimization) for new walks; the 3 original walks are exempt; no single file over 5 MB. Pages publishes at most 1 GB for the whole site.", "size within budget", False),
     ("C5", "Season photos", "Counts real photos per season; seasons without one borrow another season (the page says so). Reported, never hidden.", "counts reported", False),
@@ -150,6 +150,17 @@ def missing_seasons(html: str) -> list[str]:
     return miss
 
 
+def missing_walk_navigation(html: str) -> list[str]:
+    required = {
+        "back link": 'id="backToHike"',
+        "return animation": 'id="backTransition"',
+        "time marker layer": 'id="timeMarkers"',
+        "back query handling": "get('back')",
+        "times query handling": "get('times')",
+    }
+    return [name for name, needle in required.items() if needle not in html]
+
+
 def dir_stats(d: Path) -> dict:
     files = [p for p in d.rglob("*") if p.is_file()]
     sizes = [p.stat().st_size for p in files]
@@ -187,11 +198,21 @@ def profile_json(walk_id: str, cfg: dict, summary: dict, profile: list[list[floa
     total = int(round(summary["length_m"]))
     nps = int(round(hike["length_mi"] * 1609.344 / (2 if hike["route_type"] == "out-and-back" else 1)))
     cps = [{"id": "c0", "name": cfg["start"]["name"], "dist_m": 0, "photo": None}]
+    interior = []
     for s in cfg["stops"]:
         d = int(round(s["at"] * total / 10) * 10)
         if d < 100 or total - d < 100:  # a stop right at the start or end would duplicate c0 / the last checkpoint
             continue
-        cps.append({"id": f"c{len(cps)}", "name": s["title"], "dist_m": d, "photo": f"walks/{walk_id}/photos/{s['photo']}.jpg"})
+        interior.append({"name": s["title"], "dist_m": d, "photo": f"walks/{walk_id}/photos/{s['photo']}.jpg"})
+    for s in cfg.get("profile_checkpoints", []):
+        d = int(round(s["at"] * total / 10) * 10)
+        if d < 100 or total - d < 100:
+            continue
+        interior.append({"name": s["name"], "dist_m": d, "photo": None})
+    for cp in sorted(interior, key=lambda x: x["dist_m"]):
+        if cps[-1]["dist_m"] == cp["dist_m"]:
+            continue
+        cps.append({"id": f"c{len(cps)}", **cp})
     cps.append({"id": f"c{len(cps)}", "name": cfg["end"]["name"], "dist_m": total, "photo": None})
     return {"hike_id": hike["id"], "step_m": 10, "points": [[round(p[2]), round(p[3], 1)] for p in profile],
             "osm_length_m": total, "nps_length_m": nps, "scale": round(nps / total, 3), "checkpoints": cps}
@@ -278,8 +299,8 @@ def phase_verify(run: Run, walk_dir: Path, hike: dict | None, legacy: bool, budg
         profile, summary = [], {}
     run.add("C1", "FAIL" if problems else "PASS", ", ".join(problems[:6]) if problems else f"{len(referenced_files(html))} referenced files exist, route has {summary['points']} points")
     # C2 credits and seasons
-    miss = missing_credits(html) + missing_seasons(html)
-    run.add("C2", "FAIL" if miss else "PASS", "missing: " + ", ".join(miss) if miss else "credits, illustrative note, 4 seasons and ?season= present")
+    miss = missing_credits(html) + missing_seasons(html) + missing_walk_navigation(html)
+    run.add("C2", "FAIL" if miss else "PASS", "missing: " + ", ".join(miss) if miss else "credits, four seasons, back link and optional back/times parameters present")
     # C3 route vs hike
     if summary and hike:
         fake = data_is_fake()

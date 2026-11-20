@@ -7,11 +7,11 @@ Everything below is free. Each person signs up for their own key (do not share k
 
 | Variable | Service | Lane | Needed for | Cost | Sign up |
 |---|---|---|---|---|---|
-| `ORS_API_KEY` | OpenRouteService | 2 | Drive time and distance, 10 cities x every hike (matrix API) | Free plan, daily request limits (check the dashboard; cache results) | https://openrouteservice.org/dev/#/signup |
+| `ORS_API_KEY` | HeiGIT openrouteservice | 2 | Drive time and distance, 10 cities x every hike (matrix API) | Free plan, daily request limits (check the dashboard; cache results) | https://account.heigit.org/ |
 | `EIA_API_KEY` | US Energy Information Administration | 2 | Regional gasoline price for the drive cost | Free | https://www.eia.gov/opendata/register.php |
 | `GSA_API_KEY` | api.data.gov (GSA per diem) | 2 | Lodging and meals rates. If you prefer, download the FY2026 rates file instead and skip the key | Free | https://api.data.gov/signup/ |
 | `NPS_API_KEY` | NPS Developer API | 1 and 2 | Optional: park fees, hours, alerts, to check NPS pages | Free | https://www.nps.gov/subjects/developer/get-started.htm |
-| `SOCRATA_APP_TOKEN` | data.transportation.gov (DOT Table 6 fares) | 2 | Optional: higher rate limit. The API works without it | Free | https://data.transportation.gov/ (Developer settings) |
+| `SOCRATA_APP_TOKEN` | data.transportation.gov (DOT Table 6 fares) | 2 | Optional: higher rate limit. The API works without it | Free | https://data.transportation.gov/d/yj5y-b2ir |
 | `COMMONS_USER_AGENT` | Wikimedia Commons | 1 and 2 | Not a key: Wikimedia asks scripts to identify themselves. Use `PeakFinderDATA511/0.1 (your contact)` | Free | none |
 
 ## No key needed
@@ -33,4 +33,4 @@ There are **no repository secrets** to add: the deploy workflow uses GitHub's bu
 - Never commit `.env`, a key, or a screenshot showing one. If a key leaks, revoke it at the provider and make a new one.
 - Keys are used only by `pipeline/` scripts on your laptop. Processed JSON is what gets committed.
 - Cache raw downloads in `data/raw/` (git-ignored) so you never hit a rate limit twice for the same request.
-- Provider limits and sign-up pages change: if one of the links above is out of date, search for the provider's current "API key" page.
+- Provider limits and sign-up pages change: verify the provider's current key page before registering. Openrouteservice migrated its hosted API to HeiGIT's `api.heigit.org` service in November 2026.

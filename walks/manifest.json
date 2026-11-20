@@ -20,6 +20,26 @@
       "kit_trail": "north_cascades",
       "legacy": true,
       "built": "2026-11-18"
+    },
+    "mount_washburn": {
+      "hike_id": "mount-washburn",
+      "kit_trail": "mount_washburn",
+      "built": "2026-11-19"
+    },
+    "fairy_falls_only": {
+      "hike_id": "fairy-falls-grand-prismatic",
+      "kit_trail": "fairy_falls_only",
+      "built": "2026-11-19"
+    },
+    "grinnell_glacier_overlook": {
+      "hike_id": "grinnell-glacier",
+      "kit_trail": "grinnell_glacier_overlook",
+      "built": "2026-11-19"
+    },
+    "highline_to_granite_park": {
+      "hike_id": "glacier-highline",
+      "kit_trail": "highline_to_granite_park",
+      "built": "2026-11-19"
     }
   }
 }

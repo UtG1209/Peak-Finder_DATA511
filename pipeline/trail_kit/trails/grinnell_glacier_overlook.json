@@ -1,0 +1,243 @@
+{
+  "id": "grinnell_glacier_overlook",
+  "title": "Grinnell Glacier to Overlook Walk",
+  "hike_name": "Grinnell Glacier",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from the Many Glacier trailhead to the Grinnell Glacier viewpoint, following the official route endpoint in the catalog.",
+  "park": "Glacier National Park, Montana",
+  "start": {
+    "name": "Many Glacier Trailhead",
+    "lat": 48.7967,
+    "lon": -113.6565
+  },
+  "end": {
+    "name": "Grinnell Glacier Overlook",
+    "lat": 48.7578,
+    "lon": -113.7273
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -113.7313,
+    48.753800000000005,
+    -113.65249999999999,
+    48.8007
+  ],
+  "bounds": {
+    "core": [
+      -113.7313,
+      48.753800000000005,
+      -113.65249999999999,
+      48.8007
+    ],
+    "mid": [
+      -113.7373,
+      48.747800000000005,
+      -113.64649999999999,
+      48.8067
+    ],
+    "wide": [
+      -113.7473,
+      48.7378,
+      -113.6365,
+      48.816700000000004
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 48,
+    "zoom": 14.9,
+    "scroll_vh": 4300
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Grinnell Glacier Overlook",
+    "key_stop": {
+      "label": "Grinnell Glacier Overlook",
+      "at_m": 6141
+    }
+  },
+  "profile_checkpoints": [
+    { "name": "Swiftcurrent Lake shore", "at": 0.14 },
+    { "name": "Lake Josephine shore", "at": 0.25 },
+    { "name": "Upper Grinnell Lake", "at": 0.78 }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Grinnell Glacier Trail (85746255).jpeg",
+      "alt": "The trail climbs above the Many Glacier lakes toward the high basin.",
+      "eyebrow": "Start · Many Glacier Trailhead",
+      "title": "Many Glacier Trailhead",
+      "text": "The route starts here. Follow the marked trail toward Grinnell Glacier Overlook.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Grinnell Glacier with Lake and Salamander Glacier.jpg",
+      "alt": "Grinnell Glacier, Grinnell Lake, and Salamander Glacier from the overlook.",
+      "eyebrow": "End · Grinnell Glacier Overlook",
+      "title": "Grinnell Glacier Overlook",
+      "text": "You have reached Grinnell Glacier Overlook. The route profile follows the trail from the named trailhead to this endpoint.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1550,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 1900,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "band_m": [
+          800,
+          2250
+        ],
+        "colour_a": [
+          70,
+          105,
+          45
+        ],
+        "colour_b": [
+          115,
+          140,
+          60
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "band_m": [
+          1400,
+          2150
+        ],
+        "colour_a": [
+          205,
+          100,
+          35
+        ],
+        "colour_b": [
+          238,
+          178,
+          55
+        ],
+        "alpha": 0.3,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

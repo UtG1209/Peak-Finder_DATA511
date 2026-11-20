@@ -14,11 +14,12 @@ interface Props {
   /** The 3D walk link for the chosen quarter's season, or null when the hike has no walk. Lane 2 wraps it in the cloud transition. */
   walkHref: string | null
   seasonLabel: string
+  onWalkStart?: () => void
   /** The h1: Hike.tsx moves focus here when the page opens. */
   titleRef?: Ref<HTMLHeadingElement>
 }
 
-export function HikeHeader({ hike, units, walkHref, seasonLabel, titleRef }: Props) {
+export function HikeHeader({ hike, units, walkHref, seasonLabel, titleRef, onWalkStart }: Props) {
   const p = hike.photo
   return (
     <header className="hp-head">
@@ -48,7 +49,13 @@ export function HikeHeader({ hike, units, walkHref, seasonLabel, titleRef }: Pro
         <p className="fine"><a href={hike.nps_url} target="_blank" rel="noreferrer">National Park Service page for this hike</a></p>
         {walkHref && (
           <div className="hp-actions">
-            <a className="go" href={walkHref}><Icon name="walk3d" />Walk it in 3D<Icon name="arrow-right" /><span className="sr-only"> ({seasonLabel} view)</span></a>
+            <a className="go" href={walkHref} onClick={onWalkStart ? (event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+              event.preventDefault()
+              onWalkStart()
+            } : undefined}>
+              <Icon name="walk3d" />Walk it in 3D<Icon name="arrow-right" /><span className="sr-only"> ({seasonLabel} view)</span>
+            </a>
           </div>
         )}
       </div>

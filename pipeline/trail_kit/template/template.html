@@ -20,8 +20,8 @@
 }
 html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
 body { margin: 0; }
-.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
 .maplibregl-canvas { outline: none; }
 #stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
 #map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
@@ -34,10 +34,10 @@ body { margin: 0; }
 .chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
 .chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-#backBtn { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 16px); left: max(16px, env(safe-area-inset-left, 0px)); display: inline-flex; align-items: center; box-sizing: border-box; min-height: 44px; max-width: min(70vw, 360px); padding: 0 16px; font: 600 14px var(--body); color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#backBtn:hover { border-color: var(--muted); }
-#backBtn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 #brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backToHike { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 64px); left: max(16px, env(safe-area-inset-left, 0px)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: 600 14px var(--body); text-decoration: none; backdrop-filter: blur(6px); }
+#backToHike:hover { border-color: var(--sand); }
+#backToHike:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 #profile {
   position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
@@ -45,6 +45,23 @@ body { margin: 0; }
 }
 #profile svg { display: block; width: 100%; height: 70px; }
 #profile .lab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#timeMarkers line { stroke: rgba(242,239,233,.86); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers circle { fill: var(--sand); stroke: var(--text); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers text { fill: var(--text); stroke: rgba(16,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 700 10px var(--body); text-anchor: middle; }
+#backTransition { position: fixed; z-index: 20; inset: 0; display: none; overflow: hidden; pointer-events: none; background: linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%); }
+#backTransition.active { display: block; }
+#backTransition > div { position: absolute; inset: -10%; opacity: 0; background-repeat: repeat-x; background-position: center; will-change: transform,opacity; }
+#backFar { background-image: url(clouds/wisps.webp); background-size: auto 110%; }
+#backMid { background-image: url(clouds/cumulus.webp); background-size: auto 125%; }
+#backNear { background-image: url(clouds/mass.webp); background-size: auto 150%; }
+#backVeil { inset: 0 !important; background: #edf4fb; }
+#backTitle { inset: 0 !important; display: flex; justify-content: center; align-items: center; color: #15222d; font: 800 clamp(24px,4vw,48px) var(--display); text-align: center; }
+#backTransition.active #backFar { opacity: .68; transform: scale(1.5); transition: transform 1.7s ease, opacity 1.7s ease; }
+#backTransition.active #backMid { opacity: .86; transform: scale(2); transition: transform 1.5s ease .12s, opacity 1.5s ease .12s; }
+#backTransition.active #backNear { opacity: 1; transform: scale(3.2); transition: transform 1.3s ease .24s, opacity 1.3s ease .24s; }
+#backTransition.active #backVeil { opacity: .9; transition: opacity .5s ease .8s; }
+#backTransition.active #backTitle { opacity: 1; transition: opacity .4s ease .8s; }
+@media (prefers-reduced-motion: reduce) { #backTransition *, #backTransition.active * { transition-duration: .01ms !important; } }
 #credits { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 126px); font-size: 10.5px; color: var(--text); background: rgba(16,20,24,0.6); padding: 4px 8px; border-radius: 6px; max-width: 70%; text-align: right; }
 #credits a { color: var(--text); }
 #status { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); pointer-events: none; }
@@ -63,7 +80,7 @@ body { margin: 0; }
 .step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
 .step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
 .step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
-#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
 #seasons[hidden] { display: none; }
 #seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
 #seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
@@ -75,17 +92,47 @@ body { margin: 0; }
   #hud .chip { min-width: 0; padding: 8px 10px; }
   #hud .chip .v { font-size: 18px; }
   #brand { display: none; }
+  #backToHike { top: calc(env(safe-area-inset-top, 0px) + 12px); }
   #seasons { top: calc(env(safe-area-inset-top, 0px) + 78px); }
   #seasons button { padding: 7px 10px; }
   #credits { bottom: calc(env(safe-area-inset-bottom, 0px) + 118px); max-width: 90%; }
 }
 </style>
 
+<style id="ciCss">
+/* Match the clouds-parting arrival used by the original trail walks. */
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro.ci-done{display:none}
+@keyframes ciGone{to{visibility:hidden;pointer-events:none}}
+#cloudIntro>*{position:absolute}
+#ciSky{inset:0;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%);opacity:1}
+.ciL{inset:-10%;opacity:1;will-change:transform,opacity}
+.ciL>div{position:absolute;inset:0;background-repeat:repeat}
+#ciFar{transform:scale(1.5)}#ciMid{transform:scale(2)}#ciNear{transform:scale(3.2)}
+#ciFar>div{background-image:url(clouds/wisps.webp);background-size:1800px 900px;animation:ciDriftFar 140s linear infinite}
+#ciMid>div{background-image:url(clouds/cumulus.webp);background-size:1500px 750px;animation:ciDriftMid 90s linear infinite}
+#ciNear>div{background-image:url(clouds/mass.webp);background-size:2200px 1100px;animation:ciDriftNear 55s linear infinite}
+@keyframes ciDriftFar{from{background-position:0 0}to{background-position:-1800px 0}}
+@keyframes ciDriftMid{from{background-position:0 0}to{background-position:-1500px 0}}
+@keyframes ciDriftNear{from{background-position:0 0}to{background-position:-2200px 0}}
+#ciVeil{inset:0;background:#edf4fb;opacity:1}
+#ciTitle{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 24px;text-align:center;color:#1e3a5c;opacity:1}
+#ciTitle b{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.05;text-wrap:balance}
+#ciTitle span{font:600 14px "Inter",system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){#cloudIntro{display:none}}
+</style>
+
+<div id="cloudIntro" aria-hidden="true">
+  <div id="ciSky"></div><div id="ciFar" class="ciL"><div></div></div>
+  <div id="ciMid" class="ciL"><div></div></div><div id="ciNear" class="ciL"><div></div></div>
+  <div id="ciVeil"></div><div id="ciTitle"><b>__HIKE_NAME__</b><span>__PARK__</span></div>
+</div>
+
 <div id="stage">
   <div id="map" role="img" aria-label="__MAP_LABEL__"></div>
   <div id="status">Loading terrain…</div>
-  <a id="backBtn" href="../../">← Back to the hike</a>
-  <div id="brand">Peak Finder</div>
+  <div id="brand">__BRAND__</div>
+  <a id="backToHike" href="../../">← Back to <span>__HIKE_NAME__</span></a>
   <div id="hud" aria-live="polite">
     <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
     <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
@@ -100,37 +147,28 @@ body { margin: 0; }
       <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
       <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
       <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+      <g id="timeMarkers" aria-hidden="true"></g>
     </svg>
     <div class="lab" style="position:relative"><span>__START_LABEL__ · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">__KEY_LABEL__</span><span>__END_LABEL__ · <span id="profEnd"></span> km</span></div>
   </div>
 </div>
 
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
+
 <div id="track">
 __STEPS__
 </div>
 
-<script>
-/* Back control: goes to the in-app hike address passed as ?back=#/hike/<id>?..., else history.back(), else the site root. */
-(function () {
-  var b = document.getElementById('backBtn'); if (!b) return;
-  var p = new URLSearchParams(location.search), back = p.get('back'), name = p.get('backname');
-  var root = new URL('../../', location.href);
-  var target = null;
-  if (back && back.indexOf('#/') === 0) { var u = new URL(back, root); if (u.origin === location.origin) target = u.href; }
-  if (name) b.textContent = '\u2190 Back to ' + name.slice(0, 80);
-  b.href = target || root.href;
-  b.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (target) location.assign(target);
-    else if (history.length > 1) history.back();
-    else location.assign(root.href);
-  });
-})();
-</script>
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script>
 const PROFILE = __PROFILE__; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
 const TOTAL = PROFILE[PROFILE.length - 1][2];
+const WALK_TIMES = (() => {
+  try {
+    const rows = JSON.parse(new URLSearchParams(location.search).get('times') || '[]');
+    return Array.isArray(rows) ? rows.filter(x => Number.isFinite(+x.dist_m) && Number.isFinite(+x.time) && (x.dir === 'up' || x.dir === 'down')) : [];
+  } catch (_) { return []; }
+})();
 const base = new URL('.', location.href).href;
 const WIDE = __WIDE__;
 const CORE = __CORE__;
@@ -163,6 +201,15 @@ fillTokens(document);
   document.getElementById('profLine').setAttribute('d', line);
   document.getElementById('profArea').setAttribute('d', line + ' L1000 70 L0 70 Z');
   window.__prof = { X, Y };
+  const marks = document.getElementById('timeMarkers');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const clock = minutes => { const n = ((Math.round(minutes) % 1440) + 1440) % 1440; return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
+  WALK_TIMES.forEach(mark => {
+    const x = X(Math.max(0, Math.min(TOTAL, +mark.dist_m))), y = mark.dir === 'up' ? 18 : 53;
+    const line = document.createElementNS(svgNS, 'line'); line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', y + 4); line.setAttribute('y2', mark.dir === 'up' ? 37 : 49); marks.appendChild(line);
+    const dot = document.createElementNS(svgNS, 'circle'); dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', 3); marks.appendChild(dot);
+    const text = document.createElementNS(svgNS, 'text'); text.setAttribute('x', x); text.setAttribute('y', mark.dir === 'up' ? 11 : 68); text.textContent = `${clock(+mark.time)} ${mark.dir === 'up' ? '↑' : '↓'}`; marks.appendChild(text);
+  });
   const sx = X(KEY_M); document.getElementById('profScout').setAttribute('x1', sx); document.getElementById('profScout').setAttribute('x2', sx);
   document.getElementById('scoutLab').style.left = (KEY_M / TOTAL * 100) + '%';
 })();
@@ -228,7 +275,9 @@ const map = new maplibregl.Map({
       demHs: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.png'] },
       imgLow: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
       imgMid: { type: 'raster', tileSize: 256, minzoom: 13, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
-      imgHigh: { type: 'raster', tileSize: 256, minzoom: 15, maxzoom: 16, bounds: CORE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      // Overzoom the complete z14 imagery instead of requesting sparse z15–16
+      // tiles beyond the fetched corridor, which leave black gaps in the view.
+      imgHigh: { type: 'raster', tileSize: 256, minzoom: 14, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
       ahead: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: PROFILE.map(p => [p[0], p[1]]) } } },
       walked: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [pointAt(0), pointAt(1)] } } },
       hiker: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: pointAt(0) } } },
@@ -332,4 +381,72 @@ function tick() {
   setProfile(current);
   if (current !== target || Math.abs(dBear) > 0.3) raf = requestAnimationFrame(tick);
 }
+</script>
+
+<script>
+// Wait for the terrain or a time limit, then open the clouds onto the 3D walk.
+(function () {
+  var root = document.getElementById('cloudIntro');
+  if (!root) return;
+  var started = Date.now(), parted = false, MIN = 1600, MAX = 6500;
+  var ids = ['ciSky', 'ciFar', 'ciMid', 'ciNear', 'ciVeil', 'ciTitle'], el = {};
+  ids.forEach(function (i) { el[i] = document.getElementById(i); });
+  function part() {
+    if (parted) return; parted = true;
+    var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
+    root.style.pointerEvents = 'none';
+    setTimeout(function () { root.classList.add('ci-done'); }, 3200);
+  }
+  var imgsOk = 0, terrainOk = false;
+  ['wisps', 'cumulus', 'mass'].forEach(function (n) { var im = new Image(); im.onload = im.onerror = function () { imgsOk++; check(); }; im.src = '../_shared/clouds/' + n + '.webp'; });
+  var st = document.getElementById('status');
+  function statusHidden() { return !st || st.hidden || getComputedStyle(st).display === 'none'; }
+  if (statusHidden()) terrainOk = true;
+  else if (window.MutationObserver) new MutationObserver(function () { if (statusHidden()) { terrainOk = true; check(); } }).observe(st, { attributes: true });
+  function check() { if (parted) return; var wait = Math.max(0, MIN - (Date.now() - started)); if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait); }
+  setTimeout(part, MAX);
+  addEventListener('click', part, { once: true });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
+  check();
+})();
+</script>
+
+<script>
+(function () {
+  const button = document.getElementById('backToHike');
+  const overlay = document.getElementById('backTransition');
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('back');
+  const siteRoot = new URL('../../', location.href);
+  let backUrl = siteRoot.href;
+  if (requested) {
+    try {
+      backUrl = requested.startsWith('#/') ? siteRoot.href + requested : new URL(requested, location.href).href;
+    } catch (_) {}
+  }
+  button.href = backUrl;
+  let leaving = false;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    overlay.classList.add('active');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      // Back restores the exact hike page state and scroll position when opened from the app.
+      let cameFromApp = false;
+      try {
+        const ref = new URL(document.referrer);
+        cameFromApp = ref.origin === location.origin && ref.pathname === siteRoot.pathname;
+      } catch (_) {}
+      if (cameFromApp && history.length > 1) history.back();
+      else location.assign(backUrl);
+    }, reduced ? 100 : 2200);
+  });
+})();
 </script>

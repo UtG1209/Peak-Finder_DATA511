@@ -1,0 +1,213 @@
+{
+  "id": "mount_washburn",
+  "title": "Mount Washburn via Dunraven Pass Walk",
+  "hike_name": "Mount Washburn via Dunraven Pass",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from Dunraven Pass up the Mount Washburn Trail to the summit lookout.",
+  "park": "Yellowstone National Park, Wyoming",
+  "start": {
+    "name": "Dunraven Pass Trailhead",
+    "lat": 44.7915,
+    "lon": -110.4415
+  },
+  "end": {
+    "name": "Summit",
+    "lat": 44.7978,
+    "lon": -110.4339
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -110.461,
+    44.77746,
+    -110.4144,
+    44.811840000000004
+  ],
+  "bounds": {
+    "wide": [
+      -110.4865,
+      44.7591,
+      -110.38889999999999,
+      44.830200000000005
+    ],
+    "mid": [
+      -110.47275,
+      44.769,
+      -110.40265,
+      44.8203
+    ],
+    "core": [
+      -110.46650000000001,
+      44.7735,
+      -110.40889999999999,
+      44.8158
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 2350
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Summit",
+    "key_stop": {
+      "label": "Summit",
+      "at_m": 3000
+    }
+  },
+  "profile_checkpoints": [
+    { "name": "Above treeline", "at": 0.68 }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Mt. Washburn Dunraven Pass Trailhead (9321bafd-7544-4e97-9e05-b5059b6df524).jpg",
+      "alt": "A small group begins the climb from the Dunraven Pass trailhead.",
+      "eyebrow": "Start · Dunraven Pass Trailhead",
+      "title": "Dunraven Pass Trailhead",
+      "text": "The route starts here. Follow the marked trail toward Summit.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "The sign at the summit of Mount Washburn (54266636009).jpg",
+      "alt": "The summit lookout stands above Yellowstone’s high country.",
+      "eyebrow": "End · Summit",
+      "title": "Summit",
+      "text": "You have reached Summit. The route profile follows the trail from the named trailhead to this endpoint.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 2450,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 3000,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}
