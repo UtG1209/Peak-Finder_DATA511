@@ -21,13 +21,17 @@ interface Props {
   /** e.g. "About $2,077 for 2 people, 3 nights". null when no home city is chosen. */
   costLine: string | null
   onOpen: () => void
+  /** True when the user clicked this hike (tile stays open until closed); false while it is only a hover or the default preview. */
+  selected?: boolean
+  onClose?: () => void
 }
 
-/** The hover card: photo, name, park, three-plus reasons in words, typical cost, one button. */
-export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen }: Props) {
+/** The preview tile (hover to peek, click a peak to keep it open): photo, name, park, three-plus reasons in words, typical cost, one button. */
+export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen, selected = false, onClose }: Props) {
   return (
-    <aside id="detail" aria-live="polite" aria-label={`${hike.name} summary`}>
+    <aside id="detail" className={selected ? 'selected' : ''} aria-live="polite" aria-label={`${hike.name} summary`}>
       <div className="ph">
+        {selected && onClose && <button type="button" className="tile-x" aria-label="Close preview" onClick={onClose}>×</button>}
         <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name} (placeholder image)`} loading="lazy" />
       </div>
       <div className="in">
@@ -51,7 +55,7 @@ export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOp
         </div>
         <div className="cost">{costLine ?? 'Pick a home city to see a typical cost.'}</div>
         <button type="button" className="go" onClick={onOpen}>
-          View hike <span aria-hidden="true">→</span>
+          Open this hike <span aria-hidden="true">→</span>
         </button>
       </div>
     </aside>
