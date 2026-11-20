@@ -1,6 +1,7 @@
 import type { Hike } from '../data/schema'
 import type { ReasonRow } from '../lib/reasons'
 import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../lib/difficulty'
+import { fmtLength, type Units } from '../lib/units'
 
 const Check = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="var(--accent)" /><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -21,10 +22,11 @@ interface Props {
   /** e.g. "About $2,077 for 2 people, 3 nights". null when no home city is chosen. */
   costLine: string | null
   onOpen: () => void
+  units?: Units
 }
 
 /** The hover card: photo, name, park, three-plus reasons in words, typical cost, one button. */
-export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen }: Props) {
+export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOpen, units = 'us' }: Props) {
   return (
     <aside id="detail" aria-live="polite" aria-label={`${hike.name} summary`}>
       <div className="ph">
@@ -35,7 +37,7 @@ export function HikeCard({ hike, quarterLabel, match, fits, rows, costLine, onOp
           <div className={`eyebrow${fits ? '' : ' out'}`}>
             {fits ? `Fits ${quarterLabel}` : `Past a limit in ${quarterLabel}`} · {Math.round(match)}% match{hike.featured ? ' · 3D walk ready' : ''}
           </div>
-          <div className="diff-tag"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]} · {hike.length_mi} mi {hike.length_type}</div>
+          <div className="diff-tag"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]} · {fmtLength(hike.length_mi, units)} {hike.length_type}</div>
           <h3>{hike.name}</h3>
           <div className="sub">{hike.park_name}</div>
         </div>

@@ -24,3 +24,12 @@ describe('reasonRows with missing data', () => {
     expect(reasonRows(computeMatch(full, null, NO_LIMITS), full).some((r) => r.missing)).toBe(false)
   })
 })
+
+describe('reasonRows units', () => {
+  const hot = [7, 8, 9].map((m) => month({ month: m, tmax_p50: 95 }))
+  const result = computeMatch(hot, null, { ...NO_LIMITS, temp: [60, 85] })
+  it('shows °F by default and °C when metric', () => {
+    expect(reasonRows(result, hot).find((r) => r.key === 'temp')).toMatchObject({ value: '95°F', note: 'Over by 10°F', warn: true })
+    expect(reasonRows(result, hot, 'metric').find((r) => r.key === 'temp')).toMatchObject({ value: '35°C', note: 'Over by 6°C', warn: true })
+  })
+})

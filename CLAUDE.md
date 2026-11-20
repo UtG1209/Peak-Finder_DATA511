@@ -9,8 +9,8 @@ paper-prototype decisions made after the PDF).
 
 **State of the repo.** The app runs end to end on **fake data** (`app/public/data/meta.json` has `"fake": true`; a yellow banner shows it).
 Built: data contract (zod schemas) and loaders, the three models with tests, Explore (guided start with a blurred map until "Show hikes",
-difficulty colours, filters, ranked list, hover card), Hike page (header, quarter fit, cost graph), the three 3D walks in `walks/`, CI and
-GitHub Pages deploy, setup tooling. Not built yet: real pipeline data, month strip, timed elevation profile, About page, wheel picker,
+difficulty colours, filters, ranked list, hover card, home city marker, bubble resize and list slide, hover linking, "Spin the wheel", Share link, metric toggle, Back returns to the same map view), Hike page (header, quarter fit, cost graph), the three 3D walks in `walks/`, CI and
+GitHub Pages deploy, setup tooling. Not built yet: real pipeline data, month strip, timed elevation profile, About page,
 cloud transition, similar hikes, walks for the other hikes.
 
 **Which lane are you in?** The work is split in four independent lanes, each with a brief. If the user has not said, ask which one they own, then read
@@ -95,8 +95,8 @@ One static web app that helps a hiker answer three questions in order:
 - **"Not sure? Spin the wheel"** button opens the random picker: a wheel of the top 12 matching hikes,
   weighted by match %; lands, shows the card with Open / Spin again. Reduced motion → picks at once.
 - **Empty state**: never blank. "No hike fits all your limits. Allowing Busy crowds adds 6." with a one-click fix.
-- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&go=1`),
-  plus a Share link button. Back always works.
+- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1`),
+  plus a Share link button (it copies the link with `go=1`, so it opens unblurred). `units=metric` switches °F/mi/ft to °C/km/m on the card, list and sliders. Back always works.
 
 ### Hike page (one scrolling page)
 

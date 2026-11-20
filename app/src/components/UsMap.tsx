@@ -31,12 +31,21 @@ export interface MapApi {
   wholeUs: () => void
   fit: (points: { lat: number; lon: number }[]) => void
   flyTo: (lat: number, lon: number, done?: () => void) => void
+  /** Where the map is looking now, so Back from a hike page can return to the same view. */
+  getView: () => MapView
+}
+
+export interface MapView {
+  center: [number, number]
+  zoom: number
 }
 
 interface Props {
   points: MapPoint[]
   /** The chosen home city, drawn as a marker. null = "Skip". */
   home?: { name: string; lat: number; lon: number } | null
+  /** Open at this view instead of the whole US (used when coming Back from a hike page). */
+  initialView?: MapView | null
   highlightId?: string | null
   onSelect: (id: string) => void
   onHover?: (id: string | null) => void
@@ -55,20 +64,26 @@ const byDifficulty = (fn: (hex: string) => string): maplibregl.ExpressionSpecifi
 ]
 const reduceMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches
 
-const toGeoJson = (points: MapPoint[]): FeatureCollection => ({
+const RESIZE_MS = 400 // bubbles grow and shrink over about 400 ms when the quarter or a limit changes
+
+/** `radii` overrides each bubble's radius while a resize is in flight (id -> px). */
+const toGeoJson = (points: MapPoint[], radii?: Map<string, number>): FeatureCollection => ({
   type: 'FeatureCollection',
   features: points.map((p) => ({
     type: 'Feature',
-    properties: { id: p.id, name: p.name, match: Math.round(p.match), r: bubbleRadius(p.match, p.greyed), greyed: p.greyed, featured: p.featured, difficulty: p.difficulty },
+    properties: { id: p.id, name: p.name, match: Math.round(p.match), r: radii?.get(p.id) ?? bubbleRadius(p.match, p.greyed), greyed: p.greyed, featured: p.featured, difficulty: p.difficulty },
     geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
   })),
 })
 
 /** MapLibre map of the lower 48: states outline as a vector layer, one bubble per hike. No tiles, no API keys. */
-export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: Props) {
+export function UsMap({ points, home, initialView, highlightId, onSelect, onHover, apiRef }: Props) {
   const el = useRef<HTMLDivElement>(null)
   const map = useRef<maplibregl.Map | null>(null)
   const latest = useRef({ points, onSelect, onHover })
+  const startView = useRef(initialView) // only read when the map is created
+  const drawn = useRef(new Map<string, number>()) // radius each bubble is drawn at right now
+  const frame = useRef(0)
   useEffect(() => {
     latest.current = { points, onSelect, onHover }
   })
@@ -79,8 +94,9 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
       container: el.current,
       // no background layer: the pane's CSS gradient shows through, like the prototype
       style: { version: 8, sources: {}, layers: [] },
-      bounds: WHOLE_US,
-      fitBoundsOptions: { padding: { top: 70, bottom: 70, left: 40, right: 360 } },
+      ...(startView.current
+        ? { center: startView.current.center, zoom: startView.current.zoom }
+        : { bounds: WHOLE_US, fitBoundsOptions: { padding: { top: 70, bottom: 70, left: 40, right: 360 } } }),
       attributionControl: { compact: true, customAttribution: 'US Census via us-atlas' },
       dragRotate: false,
       pitchWithRotate: false,
@@ -91,7 +107,8 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
     // If the container had no size when the map was created (e.g. right after a route change), redraw once it has one.
     const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(() => { if (!disposed) m.resize() }) : null
     ro?.observe(el.current)
-    if (import.meta.env.DEV) (window as unknown as { __map?: maplibregl.Map }).__map = m // handy for debugging and e2e tests
+    // Handy for debugging, and the browser test uses it to click a bubble (it runs against the production build).
+    ;(window as unknown as { __map?: maplibregl.Map }).__map = m
 
     if (apiRef) {
       const pad = { top: 70, bottom: 70, left: 40, right: 360 }
@@ -105,6 +122,7 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
           pts.forEach((p) => b.extend([p.lon, p.lat]))
           m.fitBounds(b, { padding: pad, maxZoom: 6, duration: reduceMotion() ? 0 : 500 })
         },
+        getView: () => ({ center: [m.getCenter().lng, m.getCenter().lat], zoom: m.getZoom() }),
         flyTo: (lat, lon, done) => {
           if (reduceMotion()) {
             m.jumpTo({ center: [lon, lat], zoom: 6 })
@@ -129,10 +147,11 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
       m.addLayer({ id: 'states-line', type: 'line', source: 'states', paint: { 'line-color': '#44525e', 'line-width': 1 } })
 
       m.addSource('hikes', { type: 'geojson', data: toGeoJson(latest.current.points) })
+      drawn.current = new Map(latest.current.points.map((p) => [p.id, bubbleRadius(p.match, p.greyed)]))
       const notGrey = ['!', ['get', 'greyed']] as maplibregl.ExpressionSpecification
-      m.addLayer({ id: 'hikes-halo', type: 'circle', source: 'hikes', filter: notGrey, paint: { 'circle-radius': ['+', ['get', 'r'], 5], 'circle-color': byDifficulty((h) => hexToRgba(h, 0.28)), 'circle-radius-transition': { duration: 400, delay: 0 } } })
+      m.addLayer({ id: 'hikes-halo', type: 'circle', source: 'hikes', filter: notGrey, paint: { 'circle-radius': ['+', ['get', 'r'], 5], 'circle-color': byDifficulty((h) => hexToRgba(h, 0.28)) } })
       // featured 3D hikes carry a thin outer ring
-      m.addLayer({ id: 'hikes-ring', type: 'circle', source: 'hikes', filter: ['==', ['get', 'featured'], true], paint: { 'circle-radius': ['+', ['get', 'r'], 8], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#f2efe9', 'circle-stroke-width': 1.2, 'circle-radius-transition': { duration: 400, delay: 0 } } })
+      m.addLayer({ id: 'hikes-ring', type: 'circle', source: 'hikes', filter: ['==', ['get', 'featured'], true], paint: { 'circle-radius': ['+', ['get', 'r'], 8], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#f2efe9', 'circle-stroke-width': 1.2 } })
       m.addLayer({
         id: 'hikes', type: 'circle', source: 'hikes',
         paint: {
@@ -140,7 +159,6 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
           'circle-color': ['case', ['get', 'greyed'], '#101418', byDifficulty((h) => h)],
           'circle-stroke-color': ['case', ['get', 'greyed'], '#7b8791', '#101418'],
           'circle-stroke-width': ['case', ['get', 'greyed'], 1.5, 1],
-          'circle-radius-transition': { duration: 400, delay: 0 }, // bubbles resize over ~400 ms when the quarter changes
         },
       })
       m.addLayer({ id: 'hikes-hl', type: 'circle', source: 'hikes', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': ['+', ['get', 'r'], 11], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2 } })
@@ -167,9 +185,37 @@ export function UsMap({ points, home, highlightId, onSelect, onHover, apiRef }: 
     }
   }, [apiRef])
 
+  // Resize the bubbles over ~400 ms. MapLibre does not animate a data-driven radius when the source data changes
+  // (its circle-radius-transition only covers constant values), so each frame writes in-between radii to the source.
+  // With prefers-reduced-motion the bubbles jump straight to their new size.
   useEffect(() => {
     const src = map.current?.getSource('hikes') as maplibregl.GeoJSONSource | undefined
-    src?.setData(toGeoJson(points))
+    if (!src) return // the map is still loading: its first data comes from `latest` at load time
+    cancelAnimationFrame(frame.current)
+    const target = new Map(points.map((p) => [p.id, bubbleRadius(p.match, p.greyed)]))
+    const from = new Map(drawn.current)
+    const apply = (radii: Map<string, number>) => {
+      drawn.current = radii
+      src.setData(toGeoJson(points, radii))
+    }
+    if (reduceMotion() || from.size === 0) {
+      apply(target)
+      return
+    }
+    const t0 = performance.now()
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / RESIZE_MS)
+      const e = 1 - Math.pow(1 - t, 3) // ease out
+      const radii = new Map<string, number>()
+      for (const [id, to] of target) {
+        const f = from.get(id) ?? to
+        radii.set(id, f + (to - f) * e)
+      }
+      apply(radii)
+      if (t < 1) frame.current = requestAnimationFrame(step)
+    }
+    frame.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame.current)
   }, [points])
 
   // home city marker: a labelled diamond, kept as a DOM marker so it needs no font files

@@ -7,7 +7,7 @@ const params = (s: string) => new URLSearchParams(s)
 describe('URL filter state', () => {
   it('parses the CLAUDE.md example URL', () => {
     const f = parseFilters(params('from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1'))
-    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, go: false })
+    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, units: 'us', go: false })
   })
 
   it('go=1 marks that the user pressed Show hikes, and survives a round trip', () => {
@@ -50,5 +50,22 @@ describe('defaultQuarter', () => {
     expect(defaultQuarter(new Date(2026, 1, 1))).toBe(2)
     expect(defaultQuarter(new Date(2026, 5, 30))).toBe(3)
     expect(defaultQuarter(new Date(2026, 11, 31))).toBe(1)
+  })
+})
+
+describe('units and Share links', () => {
+  it('units=metric round-trips, and anything else means US units', () => {
+    const f = parseFilters(params('q=2&units=metric'))
+    expect(f.units).toBe('metric')
+    expect(serializeFilters(f).get('units')).toBe('metric')
+    expect(parseFilters(serializeFilters(f)).units).toBe('metric')
+    expect(parseFilters(params('q=2&units=furlongs')).units).toBe('us')
+    expect(serializeFilters(parseFilters(params('q=2'))).has('units')).toBe(false) // US is the default, so it stays out of the URL
+  })
+
+  it('a pasted Share link restores every control', () => {
+    const f = parseFilters(params('from=ATL&q=4&temp=45-75&crowd=1&smoke=2&rain=8&travel=6&diff=hard&3d=1&units=metric&go=1'))
+    expect(f).toEqual({ from: 'ATL', q: 4, temp: [45, 75], crowd: 1, smoke: 2, rain: 8, travel: 6, diff: ['hard'], has3d: true, units: 'metric', go: true })
+    expect(parseFilters(serializeFilters(f))).toEqual(f)
   })
 })
