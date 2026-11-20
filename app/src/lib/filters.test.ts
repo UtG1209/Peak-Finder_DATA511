@@ -7,7 +7,7 @@ const params = (s: string) => new URLSearchParams(s)
 describe('URL filter state', () => {
   it('parses the CLAUDE.md example URL', () => {
     const f = parseFilters(params('from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1'))
-    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, go: false, pick: null })
+    expect(f).toEqual({ from: 'SEA', q: 3, temp: [55, 80], crowd: 2, smoke: 3, rain: 10, travel: 8, diff: ['easy', 'moderate'], has3d: true, go: false, pick: null, view: '2d' })
   })
 
   it('pick keeps the open tile through a round trip and ignores junk', () => {
@@ -16,6 +16,17 @@ describe('URL filter state', () => {
     expect(serializeFilters(f).get('pick')).toBe('angels-landing')
     expect(parseFilters(params('pick=<script>')).pick).toBeNull()
     expect(parseFilters(params('q=2')).pick).toBeNull()
+  })
+
+  it('view=3d survives a round trip, is written only when 3D, and junk means 2D', () => {
+    const f = parseFilters(params('from=SEA&q=2&go=1&pick=angels-landing&view=3d'))
+    expect(f.view).toBe('3d')
+    expect(serializeFilters(f).get('view')).toBe('3d')
+    expect(parseFilters(serializeFilters(f))).toEqual(f)
+    expect(serializeFilters({ ...f, view: '2d' }).has('view')).toBe(false)
+    expect(parseFilters(params('view=4d')).view).toBe('2d')
+    expect(parseFilters(params('view=')).view).toBe('2d')
+    expect(parseFilters(params('q=2')).view).toBe('2d')
   })
 
   it('go=1 marks that the user pressed Show hikes, and survives a round trip', () => {
