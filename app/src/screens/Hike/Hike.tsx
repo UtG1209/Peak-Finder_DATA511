@@ -1,12 +1,14 @@
-// Hike page (When and How much). Built so far: header, quarter fit cards, and the cost graph.
-// Lane 4 (docs/work/lane-4-hike-page-about.md) adds: month-by-month strip, timed elevation profile, similar hikes, About.
-import { useMemo, useState } from 'react'
+// Hike page (When and How much). Built so far: header, quarter fit strip, and the cost graph.
+// Month by month, the timed elevation profile and similar hikes are shown as calm "coming soon" frames until they land (docs/work/lane-4-hike-page-about.md).
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
+import { ThemeToggle } from '../../components/ThemeToggle'
+import { Icon } from '../../components/Icon'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
 import type { Quarter } from '../../data/schema'
 import { CITIES } from '../../lib/cities'
-import { DIFFICULTY_COLORS, DIFFICULTY_LABEL } from '../../lib/difficulty'
+import { DIFFICULTY_LABEL } from '../../lib/difficulty'
 import { toLimits } from '../../lib/filters'
 import { usd } from '../../lib/money'
 import { QUARTERS } from '../../lib/quarters'
@@ -14,7 +16,7 @@ import { useFilters } from '../../lib/useFilters'
 import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
-import { CostBars, CostLegend } from '../../components/charts/CostBars'
+import { CostBars } from '../../components/charts/CostBars'
 import { PART_LABEL, type Part } from '../../lib/costParts'
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
@@ -29,6 +31,9 @@ export default function Hike() {
   const [nights, setNights] = useState(3)
   const [modePick, setModePick] = useState<TravelMode | null>(null)
   const [active, setActive] = useState<{ q: Quarter; part: Part } | null>(null)
+  // a new page: put keyboard and screen-reader focus on its title, so Tab starts at the top of this page and the change is announced
+  const title = useRef<HTMLHeadingElement>(null)
+  useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
 
   const backTo = { pathname: '/', search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '').toString()}` }
   const limits = toLimits(filters)
@@ -51,7 +56,7 @@ export default function Hike() {
   if (!hike) {
     return (
       <main className="page">
-        <Link to={backTo}>← Back to map</Link>
+        <Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link>
         <h1>We could not find that hike</h1>
       </main>
     )
@@ -68,28 +73,35 @@ export default function Hike() {
 
   return (
     <main className="hikepage">
-      <div className="hp-top"><Link to={backTo} className="back">← Back to map</Link></div>
+      <div className="hp-top"><Link to={backTo} className="back"><Icon name="arrow-left" />Back to map</Link><ThemeToggle /></div>
 
       <header className="hp-head">
-        <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name} (placeholder image)`} />
-        <div>
-          <div className="diff-tag big"><i style={{ background: DIFFICULTY_COLORS[hike.difficulty] }} /> {DIFFICULTY_LABEL[hike.difficulty]}{hike.featured ? ' · 3D walk ready' : ''}</div>
-          <h1>{hike.name}</h1>
-          <p className="sub">{hike.park_name}, {hike.state}</p>
+        <figure className="hp-photo">
+          <img src={`${import.meta.env.BASE_URL}${hike.photo.file}`} alt={`${hike.name}, ${hike.park_name}`} />
+          <figcaption>
+            Photo: {hike.photo.author}, {hike.photo.license_url ? <a href={hike.photo.license_url} target="_blank" rel="noreferrer">{hike.photo.license}</a> : hike.photo.license}
+            {hike.photo.page && <> · <a href={hike.photo.page} target="_blank" rel="noreferrer">Wikimedia Commons</a></>}
+          </figcaption>
+        </figure>
+        <div className="hp-intro">
+          <p className="eyebrow">{hike.park_name}, {hike.state}</p>
+          <h1 ref={title} tabIndex={-1}>{hike.name}</h1>
           <p className="desc">{hike.description}</p>
           <dl className="facts">
-            <div><dt>Length (NPS)</dt><dd>{hike.length_mi} mi <small>{hike.length_type}</small></dd></div>
-            <div><dt>Elevation gain</dt><dd>{hike.gain_ft.toLocaleString()} ft</dd></div>
-            <div><dt>Highest point</dt><dd>{hike.max_elev_ft.toLocaleString()} ft</dd></div>
+            <div><dt>Length (NPS)</dt><dd>{hike.length_mi} <small>mi, {hike.length_type}</small></dd></div>
+            <div><dt>Gain</dt><dd>{hike.gain_ft.toLocaleString()} <small>ft</small></dd></div>
+            <div><dt>Highest point</dt><dd>{hike.max_elev_ft.toLocaleString()} <small>ft</small></dd></div>
+            <div><dt>Difficulty</dt><dd className="diffval"><Icon name="peak" size={18} className={`peak-${hike.difficulty}`} /> {DIFFICULTY_LABEL[hike.difficulty]}</dd></div>
           </dl>
-          {hike.permit_note && <p className="note-line">Permit: {hike.permit_note}</p>}
-          {hike.closure_note && <p className="note-line warn">Closure: {hike.closure_note}</p>}
-          <div className="hp-actions">
-            {hike.featured && walkUrl(hike, sel.season) && (
-              // Plain link for now (opens the finished walk on the season of the chosen quarter). Lane 2 wraps it in the cloud transition.
-              <a className="go" href={walkUrl(hike, sel.season)!}>Walk it in 3D <span aria-hidden="true">→</span></a>
-            )}
-          </div>
+          {hike.permit_note && <p className="note-line"><b>Permit.</b> {hike.permit_note}</p>}
+          {hike.closure_note && <p className="note-line warn"><Icon name="alert" size={16} /><span><b>Closure.</b> {hike.closure_note}</span></p>}
+          {hike.gear.length > 0 && <p className="note-line"><b>Know before you go.</b> {hike.gear.map((g) => g.replace(/-/g, ' ')).join(', ')}.</p>}
+          {hike.featured && walkUrl(hike, sel.season) && (
+            <div className="hp-actions">
+              {/* Plain link for now (opens the finished walk on the season of the chosen quarter); the cloud transition wraps it later. */}
+              <a className="go" href={walkUrl(hike, sel.season)!}><Icon name="walk3d" />Walk it in 3D<Icon name="arrow-right" /></a>
+            </div>
+          )}
         </div>
       </header>
 
@@ -98,10 +110,13 @@ export default function Hike() {
         <div className="qcards" role="group" aria-label="Quarter">
           {QUARTERS.map(({ q, label, months }, i) => (
             <button key={q} type="button" className={`qcard${filters.q === q ? ' sel' : ''}`} aria-pressed={filters.q === q} onClick={() => update({ q })}>
-              <b>{label}</b><span>{months}</span>
-              <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}%</strong>
-              {q === best && <em>Best fit</em>}
-              {matches[i].hasClosedMonth && <small>Has a closed month</small>}
+              <span className="qhead"><b>{label}</b><span>{months}</span></span>
+              <strong className={matches[i].greyed ? 'out' : ''}>{Math.round(matches[i].match)}<small>%</small></strong>
+              <span className="qnote">
+                {q === best && <em><Icon name="peak" size={14} />Best fit</em>}
+                {matches[i].greyed && <span className="muted"><Icon name="dash" size={14} />Outside a limit</span>}
+                {matches[i].hasClosedMonth && <small><Icon name="alert" size={14} />Has a closed month</small>}
+              </span>
             </button>
           ))}
         </div>
@@ -117,17 +132,30 @@ export default function Hike() {
               {CITIES.map((c) => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
             </select>
           </label>
-          <label>Travellers
-            <span className="stepper"><button type="button" aria-label="Fewer travellers" onClick={() => setTravellers((t) => clamp(t - 1, 1, 12))}>−</button><output>{travellers}</output><button type="button" aria-label="More travellers" onClick={() => setTravellers((t) => clamp(t + 1, 1, 12))}>+</button></span>
-          </label>
-          <label>Nights
-            <span className="stepper"><button type="button" aria-label="Fewer nights" onClick={() => setNights((n) => clamp(n - 1, 0, 21))}>−</button><output>{nights}</output><button type="button" aria-label="More nights" onClick={() => setNights((n) => clamp(n + 1, 0, 21))}>+</button></span>
-          </label>
-          <fieldset className="modes"><legend>Getting there</legend>
-            {(['fly', 'drive'] as const).map((m) => (
-              <button key={m} type="button" className="fit" aria-pressed={mode === m} onClick={() => setModePick(m)}>{m === 'fly' ? 'Fly' : 'Drive'}{travel && travel.default_mode === m ? ' (shorter)' : ''}</button>
-            ))}
-          </fieldset>
+          <div className="field">
+            <span id="trav-l">Travellers</span>
+            <span className="stepper" role="group" aria-labelledby="trav-l">
+              <button type="button" aria-label="Fewer travellers" disabled={travellers <= 1} onClick={() => setTravellers((t) => clamp(t - 1, 1, 12))}><Icon name="minus" /></button>
+              <output aria-label={`${travellers} ${travellers === 1 ? 'traveller' : 'travellers'}`}>{travellers}</output>
+              <button type="button" aria-label="More travellers" disabled={travellers >= 12} onClick={() => setTravellers((t) => clamp(t + 1, 1, 12))}><Icon name="plus" /></button>
+            </span>
+          </div>
+          <div className="field">
+            <span id="nights-l">Nights</span>
+            <span className="stepper" role="group" aria-labelledby="nights-l">
+              <button type="button" aria-label="Fewer nights" disabled={nights <= 0} onClick={() => setNights((n) => clamp(n - 1, 0, 21))}><Icon name="minus" /></button>
+              <output aria-label={`${nights} ${nights === 1 ? 'night' : 'nights'}`}>{nights}</output>
+              <button type="button" aria-label="More nights" disabled={nights >= 21} onClick={() => setNights((n) => clamp(n + 1, 0, 21))}><Icon name="plus" /></button>
+            </span>
+          </div>
+          <div className="field">
+            <span id="mode-l">Getting there</span>
+            <span className="seg2" role="group" aria-labelledby="mode-l">
+              {(['fly', 'drive'] as const).map((m) => (
+                <button key={m} type="button" aria-pressed={mode === m} onClick={() => setModePick(m)}>{m === 'fly' ? 'Fly' : 'Drive'}{travel && travel.default_mode === m ? ' (shorter)' : ''}</button>
+              ))}
+            </span>
+          </div>
         </div>
 
         {!filters.from ? (
@@ -140,13 +168,12 @@ export default function Hike() {
             </p>
             <div className="costgrid">
               <div>
-                <CostBars costs={costs} selectedQuarter={filters.q} bestQuarter={best} onSelectQuarter={(q) => update({ q })} onSelectPart={(q, part) => setActive({ q, part })} active={active} />
-                <CostLegend />
+                <CostBars costs={costs} selectedQuarter={filters.q} bestQuarter={best} onSelectQuarter={(q) => update({ q })} onSelectPart={(q, part) => setActive({ q, part })} onClear={() => setActive(null)} active={active} />
               </div>
-              <aside className="costdetail" aria-live="polite">
+              <aside className="costdetail" aria-live="polite" onKeyDown={(e) => { if (e.key === 'Escape') setActive(null) }}>
                 {active && costs[active.q - 1] ? (
                   <>
-                    <h3>{PART_LABEL[active.part]} · Q{active.q}</h3>
+                    <div className="cd-head"><h3>{PART_LABEL[active.part]}, Q{active.q}</h3><button type="button" className="icon-btn" aria-label="Close details" onClick={() => setActive(null)}><Icon name="close" /></button></div>
                     {active.part === 'buffer' ? (
                       <p>A fixed 15% on top of everything else, for the unexpected. {usd(costs[active.q - 1]!.buffer)} here.</p>
                     ) : (
@@ -165,8 +192,8 @@ export default function Hike() {
                   </>
                 ) : (
                   <>
-                    <h3>Click a bar segment</h3>
-                    <p>See its line items and where each number comes from.</p>
+                    <h3>Pick a part of a bar</h3>
+                    <p>Click or press Enter on a segment to see its line items and where each number comes from.</p>
                     {row && <p className="fine">{mode === 'fly' ? `Flight fare used: ${usd(row.fare_one_way)} one way.` : `Drive: ${row.drive_mi.toLocaleString()} mi each way.`}</p>}
                   </>
                 )}
@@ -177,9 +204,14 @@ export default function Hike() {
         <p className="fine">Typical, from past data. Not a price quote.</p>
       </section>
 
-      <section className="coming" aria-label="Coming next">
-        <div><h2>Month by month</h2><p className="fine">Coming from lane 4: 12-month strip of typical high, crowds, smoky days, wet days and daylight.</p></div>
-        <div><h2>On the trail</h2><p className="fine">Coming from lane 4: elevation profile with clock times at each checkpoint, a time scrubber and a daylight band.</p></div>
+      <section className="soon" aria-labelledby="month-h">
+        <h2 id="month-h">Month by month</h2>
+        <p>Typical high, crowds, smoky days, wet days and daylight for each month. Coming soon.</p>
+      </section>
+
+      <section className="soon" aria-labelledby="trail-h">
+        <h2 id="trail-h">On the trail</h2>
+        <p>An elevation profile with the clock time you reach each stop, and whether you finish before dark. Coming soon.</p>
       </section>
     </main>
   )
