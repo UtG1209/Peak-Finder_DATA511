@@ -156,7 +156,7 @@ function Trail({ hike, profile, quarterMonths, q, units, onQuarter }: Props & { 
             ) : (
               <p className="fine">No photo for this stop.</p>
             )}
-            {here.checkpoint.photo && <p className="fine">Photo from this hike's 3D walk; its credits are on the walk page.</p>}
+            {here.checkpoint.photo && photoFailed !== here.checkpoint.photo && <p className="fine">Photo from this hike's 3D walk; its credits are on the walk page.</p>}
           </div>
           <p className="ro-next">{pos.nextCheckpoint ? <>Next: <b>{checkpointLabel(pos.nextCheckpoint.checkpoint.id)} {pos.nextCheckpoint.checkpoint.name}</b> at {formatClock(pos.nextCheckpoint.time)}</> : 'You have finished the route.'}</p>
         </aside>
