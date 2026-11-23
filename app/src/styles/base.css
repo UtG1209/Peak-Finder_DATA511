@@ -1,0 +1,87 @@
+/* base.css: fonts, reset, document, type roles, links, buttons, form controls, focus, skeleton, banner, utilities, reduced motion.
+   Colours, sizes and spacing come from tokens.css only. Screen-specific rules live in explore.css, hike.css, map.css, view3d.css. */
+
+/* ---------- fonts: self-hosted variable WOFF2, latin subset, no third-party request ----------
+   Only the weight ranges the app uses are declared: Inter 400-600, Fraunces 400-600, Archivo 500-700 (condensed width via font-stretch).
+   Licences (SIL OFL 1.1) sit next to the files in ./fonts/. */
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 600; font-display: swap; src: url('./fonts/inter-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 400 600; font-display: swap; src: url('./fonts/fraunces-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 500 700; font-stretch: 62% 125%; font-display: swap; src: url('./fonts/archivo-latin-wdth-normal.woff2') format('woff2'); }
+
+/* Metric-matched fallbacks: a local system font scaled so text takes the same room before and after the web font arrives (no layout shift).
+   Inter/Arial values are the published ones; Fraunces/Georgia and Archivo/Arial Narrow are close estimates, re-measure if a shift shows up. */
+@font-face { font-family: 'Inter Fallback'; src: local('Arial'); size-adjust: 107.6%; ascent-override: 90.2%; descent-override: 22.5%; line-gap-override: 0%; }
+@font-face { font-family: 'Fraunces Fallback'; src: local('Georgia'); size-adjust: 104%; ascent-override: 93%; descent-override: 24%; line-gap-override: 0%; }
+@font-face { font-family: 'Archivo Fallback'; src: local('Arial Narrow'), local('Arial'); size-adjust: 96%; ascent-override: 92%; descent-override: 22%; line-gap-override: 0%; }
+
+/* ---------- reset and document ---------- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { margin: 0; font: var(--fw-regular) var(--fs-body) / var(--lh-body) var(--font-body); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p { margin: 0; }
+[hidden] { display: none !important; }
+
+/* ---------- type roles ----------
+   Serif display for h1/h2 and verdict/headline text; Inter for everything else; the condensed face for big numbers. */
+h1 { font: var(--fw-regular) var(--fs-h1) / var(--lh-tight) var(--font-display); letter-spacing: -0.01em; }
+h2 { font: var(--fw-medium) var(--fs-h2) / var(--lh-snug) var(--font-display); letter-spacing: -0.005em; }
+h3 { font: var(--fw-semibold) var(--fs-h3) / var(--lh-snug) var(--font-body); }
+.display { font-family: var(--font-display); font-weight: var(--fw-regular); }
+.t-micro { font-size: var(--fs-micro); }
+.t-small { font-size: var(--fs-small); }
+.t-body { font-size: var(--fs-body); }
+.t-body-l { font-size: var(--fs-body-l); }
+.t-h3 { font-size: var(--fs-h3); }
+.t-h2 { font-size: var(--fs-h2); }
+.t-h1 { font-size: var(--fs-h1); }
+.num-s, .num-m, .num-l { font-family: var(--font-num); font-stretch: 75%; font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums lining-nums; line-height: var(--lh-tight); }
+.num-s { font-size: var(--fs-num-s); }
+.num-m { font-size: var(--fs-num-m); }
+.num-l { font-size: var(--fs-num-l); }
+.caps { font-size: var(--fs-micro); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-caps); text-transform: uppercase; }
+.fine { font-size: var(--fs-small); line-height: 1.45; color: var(--text-muted); }
+
+/* ---------- links ---------- */
+a { color: var(--accent-text); }
+a:hover { color: var(--accent-hover); }
+
+/* ---------- buttons ---------- */
+button { font-family: var(--font-body); font-size: var(--fs-body); cursor: pointer; color: inherit; }
+button:disabled { cursor: not-allowed; }
+.linkbtn { align-self: flex-start; min-height: var(--hit); padding: 0; border: 0; background: none; color: var(--text-muted); font-size: var(--fs-body); text-decoration: underline; text-underline-offset: 3px; }
+/* primary button */
+.go { min-height: 48px; border-radius: var(--radius-3); border: 0; background: var(--accent); color: var(--on-accent); font-weight: var(--fw-semibold); font-size: var(--fs-body-l); display: flex; align-items: center; justify-content: center; gap: var(--space-2); }
+.go:hover:not(:disabled) { background: var(--accent-hover); }
+.go:disabled { background: var(--surface-sunk); color: var(--text-muted); }
+a.go { text-decoration: none; padding: 0 var(--space-6); color: var(--on-accent); }
+a.go:hover { color: var(--on-accent); }
+/* secondary button (a link that looks like a button) */
+.back { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--hit); padding: 0 var(--space-4); border-radius: var(--radius-3); border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); text-decoration: none; font-weight: var(--fw-medium); }
+.back:hover { background: var(--hover); color: var(--text); }
+/* icon-only button: 44 px target, 20 px icon (components/ThemeToggle.tsx) */
+.icon-btn { display: inline-flex; align-items: center; justify-content: center; width: var(--hit); height: var(--hit); padding: 0; border-radius: var(--radius-3); border: 1px solid transparent; background: none; color: var(--text); }
+.icon-btn:hover { background: var(--hover); }
+.icon { display: inline-block; flex: none; vertical-align: middle; }
+
+/* ---------- form controls ---------- */
+.select { width: 100%; min-height: var(--hit); border-radius: var(--radius-3); border: 1px solid var(--line-strong); background: var(--bg); color: var(--text); padding: 0 var(--space-3); font: var(--fw-medium) var(--fs-body) var(--font-body); }
+.check { display: flex; align-items: center; gap: var(--space-3); min-height: var(--hit); font-size: var(--fs-body); font-weight: var(--fw-medium); cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
+
+/* ---------- focus: one ring everywhere ---------- */
+h1[tabindex='-1']:focus { outline: none; } /* page titles take focus on navigation; they are not controls */
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- app shell, loading, banner ---------- */
+.shell { display: flex; flex-direction: column; height: 100%; }
+@supports (height: 100dvh) { #root, .shell { height: 100dvh; } } /* phones: the browser bar must not hide the bottom of the screen */
+.fake-banner { flex: none; padding: var(--space-1) var(--space-3); background: var(--banner-bg); color: var(--banner-text); border-bottom: 1px solid var(--banner-line); font-size: var(--fs-small); text-align: center; }
+.boot { padding: var(--space-12); font-size: var(--fs-body-l); color: var(--text-body); }
+.skeleton { width: 240px; height: 14px; border-radius: var(--radius-2); background: var(--surface-sunk); margin-bottom: var(--space-3); animation: skeleton-pulse 1.4s ease-in-out infinite; }
+@keyframes skeleton-pulse { 50% { opacity: 0.55; } }
+.page { max-width: 760px; margin: 0 auto; padding: var(--space-8) var(--space-4); display: flex; flex-direction: column; gap: var(--space-4); overflow-y: auto; }
+
+/* ---------- utilities ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

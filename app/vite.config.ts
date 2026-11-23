@@ -50,6 +50,7 @@ function walks(): Plugin {
 export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   plugins: [react(), walks()],
+  build: { manifest: true }, // scripts/check-budget.mjs reads it to size the lazy 3D chunk
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts'],

@@ -23,7 +23,11 @@ COMMONS_API = "https://commons.wikimedia.org/w/api.php"
 
 
 def load_config(trail_id):
-    with open(ROOT / "trails" / f"{trail_id}.json", encoding="utf-8") as f:
+    generated = ROOT.parent.parent / "data" / "raw" / "lane2" / "profile-configs" / f"{trail_id}.json"
+    path = ROOT / "trails" / f"{trail_id}.json"
+    if generated.exists():
+        path = generated
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 

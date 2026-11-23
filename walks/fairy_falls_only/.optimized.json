@@ -1,0 +1,29 @@
+{
+  "walk": "fairy_falls_only",
+  "before_bytes": 11232298,
+  "types": {
+    "dem": {
+      "files": 34,
+      "before": 3577187,
+      "after": 2585646,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 16,
+      "before": 4446782,
+      "after": 3395400,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 388190,
+      "after": 388190,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 16
+  },
+  "page_replacements": 6,
+  "after_bytes": 9189411
+}

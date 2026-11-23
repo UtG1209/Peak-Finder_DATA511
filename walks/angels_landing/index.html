@@ -1,4 +1,11 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+#backToHike{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 64px);left:max(16px,env(safe-area-inset-left,0px));min-height:44px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:600 14px var(--body);text-decoration:none;backdrop-filter:blur(6px)}
+#backToHike:hover{border-color:var(--sand)}#backToHike:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+#timeMarkers line{stroke:rgba(242,239,233,.86);stroke-width:1;vector-effect:non-scaling-stroke}#timeMarkers circle{fill:var(--sand);stroke:var(--text);stroke-width:1;vector-effect:non-scaling-stroke}#timeMarkers text{fill:var(--text);stroke:rgba(16,20,24,.8);stroke-width:2px;paint-order:stroke;font:700 10px var(--body);text-anchor:middle}
+#backTransition{position:fixed;z-index:20;inset:0;display:none;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%)}#backTransition.active{display:block}#backTransition>div{position:absolute;inset:-10%;opacity:0;background-repeat:repeat-x;background-position:center;will-change:transform,opacity}#backFar{background-image:url(clouds/wisps.webp);background-size:auto 110%}#backMid{background-image:url(clouds/cumulus.webp);background-size:auto 125%}#backNear{background-image:url(clouds/mass.webp);background-size:auto 150%}#backVeil{inset:0!important;background:#edf4fb}#backTitle{inset:0!important;display:flex;justify-content:center;align-items:center;color:#15222d;font:800 clamp(24px,4vw,48px) var(--display);text-align:center}
+#backTransition.active #backFar{opacity:.68;transform:scale(1.5);transition:transform 1.7s ease,opacity 1.7s ease}#backTransition.active #backMid{opacity:.86;transform:scale(2);transition:transform 1.5s ease .12s,opacity 1.5s ease .12s}#backTransition.active #backNear{opacity:1;transform:scale(3.2);transition:transform 1.3s ease .24s,opacity 1.3s ease .24s}#backTransition.active #backVeil{opacity:.9;transition:opacity .5s ease .8s}#backTransition.active #backTitle{opacity:1;transition:opacity .4s ease .8s}
+@media(max-width:640px){#backToHike{top:calc(env(safe-area-inset-top,0px) + 12px)}}@media(prefers-reduced-motion:reduce){#backTransition *,#backTransition.active *{transition-duration:.01ms!important}}
+</style></head><body>
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,8 +28,8 @@
 }
 html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
 body { margin: 0; }
-.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
 .maplibregl-canvas { outline: none; }
 #stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
 #map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
@@ -61,7 +68,7 @@ body { margin: 0; }
 .step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
 .step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
 .step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
-#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
 #seasons[hidden] { display: none; }
 #seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
 #seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
@@ -80,7 +87,7 @@ body { margin: 0; }
 </style>
 <style id="ciCss">
 /* Clouds-parting intro (added for the When to Go demo hand-off). Starts opaque so the arrival from the demo's whiteout is seamless. */
-#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
 #cloudIntro.ci-done{display:none}
 @keyframes ciGone{to{visibility:hidden;pointer-events:none}}
 #cloudIntro>*{position:absolute}
@@ -113,7 +120,8 @@ body { margin: 0; }
 <div id="stage">
   <div id="map" role="img" aria-label="3D view of Zion Canyon following the hiker along the Angels Landing trail"></div>
   <div id="status">Loading terrain…</div>
-  <div id="brand">When to Go · Trail test</div>
+  <div id="brand">Peak Finder · Trail walk</div>
+  <a id="backToHike" href="../../">← Back to <span>Angels Landing</span></a>
   <div id="hud" aria-live="polite">
     <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
     <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
@@ -128,11 +136,12 @@ body { margin: 0; }
       <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
       <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
       <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
-    </svg>
+    <g id="timeMarkers" aria-hidden="true"></g></svg>
     <div class="lab" style="position:relative"><span>The Grotto · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">Scout Lookout</span><span>Summit · <span id="profEnd"></span> km</span></div>
   </div>
 </div>
 
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
 <div id="track">
   <section class="step" data-at="0.02" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/start.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Angel%27s_Landing,_Lower_Trail_5-1-14e_(13927327979).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;inkknife_2000&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0/\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Grotto shuttle stop&quot;,&quot;text&quot;:&quot;You start beside the Virgin River at &lt;span data-elev=\&quot;0\&quot;&gt;&lt;/span&gt;. The fin you can see ahead is Angels Landing.&quot;,&quot;note&quot;:&quot;&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/start_summer.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Grotto_Shuttle_Stop,_Zion_Canyon,_Zion_National_Park,_Utah_(1026359358).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ken Lund from Reno, Nevada, USA&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Grotto shuttle stop&quot;,&quot;text&quot;:&quot;You start beside the Virgin River at &lt;span data-elev=\&quot;0\&quot;&gt;&lt;/span&gt;. The fin you can see ahead is Angels Landing.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/start_summer.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Grotto_Shuttle_Stop,_Zion_Canyon,_Zion_National_Park,_Utah_(1026359358).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ken Lund from Reno, Nevada, USA&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Grotto shuttle stop&quot;,&quot;text&quot;:&quot;You start beside the Virgin River at &lt;span data-elev=\&quot;0\&quot;&gt;&lt;/span&gt;. The fin you can see ahead is Angels Landing.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/start_winter.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_of_Angels_Landing_from_canyon_floor,_snow_along_banks_of_the_Virgin_River._;_ZION_Museum_and_Archives_Image_901_02_01002_(cbc0f5561ab6401299881323b5d12313).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;William Herr&lt;/a&gt; \u00b7 Public domain \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Grotto shuttle stop&quot;,&quot;text&quot;:&quot;You start beside the Virgin River at &lt;span data-elev=\&quot;0\&quot;&gt;&lt;/span&gt;. The fin you can see ahead is Angels Landing.&quot;,&quot;note&quot;:&quot;&quot;}}"><img src="photos/start_summer.jpg" alt="Angels Landing rising above the Virgin River from the lower trail" loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">Start · canyon floor</div><h2>The Grotto shuttle stop</h2><p class="txt">You start beside the Virgin River at <span data-elev="0"></span>. The fin you can see ahead is Angels Landing.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Grotto_Shuttle_Stop,_Zion_Canyon,_Zion_National_Park,_Utah_(1026359358).jpg" target="_blank" rel="noopener">Ken Lund from Reno, Nevada, USA</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0" target="_blank" rel="noopener">CC BY-SA 2.0</a> · Wikimedia Commons</p></div></section>
   <section class="step" data-at="0.3" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/climb_spring.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Zion_NP,_Angel%27s_Landing_Trail_5-1-14u_(14206596667).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Don Graham from Redlands, CA, USA - God bless it!&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Up the canyon wall&quot;,&quot;text&quot;:&quot;Paved switchbacks climb the cliff face, with Angels Landing towering beside you.&quot;,&quot;note&quot;:&quot;&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/climb.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Angels_Landing,_Zion_National_Park,_Utah_(8096062363).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ken Lund&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0/\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Up the canyon wall&quot;,&quot;text&quot;:&quot;Paved switchbacks climb the cliff face, with Angels Landing towering beside you.&quot;,&quot;note&quot;:&quot;No real summer photo of this spot, so this is the nearest season: autumn.&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/climb.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Angels_Landing,_Zion_National_Park,_Utah_(8096062363).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ken Lund&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0/\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Up the canyon wall&quot;,&quot;text&quot;:&quot;Paved switchbacks climb the cliff face, with Angels Landing towering beside you.&quot;,&quot;note&quot;:&quot;&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/climb_winter.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_from_West_Rim_Trail_Zion_January_2011.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Fredlyfish4&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Up the canyon wall&quot;,&quot;text&quot;:&quot;Paved switchbacks climb the cliff face. Snow and ice can make the trail slippery in winter. The photo, from the West Rim Trail, shows the same canyon under snow.&quot;,&quot;note&quot;:&quot;&quot;}}"><img src="photos/climb.jpg" alt="Angels Landing seen from the switchbacks below" loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">West Rim Trail</div><h2>Up the canyon wall</h2><p class="txt">Paved switchbacks climb the cliff face, with Angels Landing towering beside you.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Angels_Landing,_Zion_National_Park,_Utah_(8096062363).jpg" target="_blank" rel="noopener">Ken Lund</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/" target="_blank" rel="noopener">CC BY-SA 2.0</a> · Wikimedia Commons</p></div></section>
@@ -360,11 +369,11 @@ function tick() {
   function part() {
     if (parted) return; parted = true;
     var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
-    function layer(e, s, d) { e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
     layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
-    el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0';
-    el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0';
-    el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0';
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
     root.style.pointerEvents = 'none';
     setTimeout(function () { root.classList.add('ci-done'); }, 3200);
   }
@@ -382,10 +391,23 @@ function tick() {
     if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait);
   }
   setTimeout(part, MAX);
-  root.addEventListener('click', part);
+  addEventListener('click', part, { once: true });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
   check();
 })();
 </script>
 
 </body></html>
+<!-- lane2 walk navigation -->
+<script>
+
+(function(){
+ const qs=new URLSearchParams(location.search), requested=qs.get('back'), root=new URL('../../',location.href);
+ let backUrl=root.href; if(requested){try{backUrl=requested.startsWith('#/')?root.href+requested:new URL(requested,location.href).href}catch(_){}}
+ const button=document.getElementById('backToHike'), overlay=document.getElementById('backTransition'); button.href=backUrl;
+ const markers=document.getElementById('timeMarkers');
+ try{const rows=JSON.parse(qs.get('times')||'[]'); if(Array.isArray(rows)&&window.__prof){const {X}=window.__prof, ns='http://www.w3.org/2000/svg'; rows.filter(x=>Number.isFinite(+x.dist_m)&&Number.isFinite(+x.time)&&(x.dir==='up'||x.dir==='down')).forEach(m=>{const x=X(Math.max(0,Math.min(TOTAL,+m.dist_m))), y=m.dir==='up'?18:53, line=document.createElementNS(ns,'line'), dot=document.createElementNS(ns,'circle'), label=document.createElementNS(ns,'text'), n=((Math.round(+m.time)%1440)+1440)%1440; line.setAttribute('x1',x);line.setAttribute('x2',x);line.setAttribute('y1',y+4);line.setAttribute('y2',m.dir==='up'?37:49);dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',3);label.setAttribute('x',x);label.setAttribute('y',m.dir==='up'?11:68);label.textContent=Math.floor(n/60)+':'+String(n%60).padStart(2,'0')+(m.dir==='up'?' ↑':' ↓');markers.append(line,dot,label)})}}catch(_){/* malformed optional times are ignored */}
+ let leaving=false; button.addEventListener('click',e=>{e.preventDefault();if(leaving)return;leaving=true;overlay.classList.add('active');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;setTimeout(()=>{let appRef=false;try{const ref=new URL(document.referrer);appRef=ref.origin===location.origin&&ref.pathname===root.pathname}catch(_){}if(appRef&&history.length>1)history.back();else location.assign(backUrl)},reduced?100:2200)})
+})();
+
+</script>

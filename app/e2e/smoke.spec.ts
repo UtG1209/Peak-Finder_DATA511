@@ -40,6 +40,11 @@ test('a hike opens with its cost graph and Back returns to a visible map', async
   await page.goto('./#/?from=SEA&q=3&go=1')
   await expect(page.locator('.ranked li').first()).toBeVisible()
   await page.locator('.ranked li button').first().click()
+  // clicking only selects: the photo tile stays open and the page does NOT change until its button is pressed
+  await expect(page).toHaveURL(/pick=/)
+  await expect(page).not.toHaveURL(/#\/hike\//)
+  await expect(page.locator('#detail.selected')).toBeVisible()
+  await page.locator('#detail').getByRole('button', { name: /Open this hike/ }).click()
   await expect(page).toHaveURL(/#\/hike\//)
   await expect(page.getByRole('heading', { name: 'What it costs' })).toBeVisible()
   await expect(page.locator('svg.costbars')).toBeVisible()
@@ -47,5 +52,6 @@ test('a hike opens with its cost graph and Back returns to a visible map', async
 
   await page.getByRole('link', { name: /Back to map/ }).click()
   await expect(page.locator('#mapPane')).not.toHaveClass(/blurred/) // go=1 survives the round trip
+  await expect(page.locator('#detail.selected')).toBeVisible() // and so does the open tile
   await expect.poll(async () => (await page.locator('#mapPane .us-map').boundingBox())?.height ?? 0).toBeGreaterThan(300)
 })

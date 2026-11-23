@@ -1,0 +1,29 @@
+{
+  "walk": "mount_washburn",
+  "before_bytes": 6977281,
+  "types": {
+    "dem": {
+      "files": 22,
+      "before": 2570072,
+      "after": 1810654,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 12,
+      "before": 2086483,
+      "after": 1643490,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 271207,
+      "after": 271207,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 12
+  },
+  "page_replacements": 6,
+  "after_bytes": 5774906
+}

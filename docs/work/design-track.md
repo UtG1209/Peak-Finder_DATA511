@@ -1,30 +1,44 @@
 # Design track: UI polish (done with Claude Design)
 
 **Owner:** ______________  **Not a lane:** it cuts across lanes 3 and 4 and the 3D walk template. Functional work stays in the lanes; this track is how it looks and feels.
-The visual target is `docs/reference/oct29-prototype.html`. All colours, fonts and sizes live as tokens in `app/src/styles.css` (`:root`) and `app/src/lib/difficulty.ts`:
+The visual target is `docs/reference/oct29-prototype.html`. All colours, fonts and sizes live as tokens in `app/src/styles/tokens.css` (rules and file map: `app/src/styles/README.md`) and `app/src/lib/difficulty.ts`:
 **change tokens first, components second**, so the whole app moves together. Put design files and exports in `docs/design/` (create it).
 
 ## How to work with Claude Design
 1. Give it the target (`docs/reference/oct29-prototype.html`), screenshots of today's screens (run `npm run dev`, Explore, a hike page, the guide overlay) and the tokens file.
-2. Ask for a revised token set and per-screen changes; apply tokens in `styles.css`, then adjust components. Keep behaviour untouched (tests must stay green: `npm run check`).
+2. Ask for a revised token set and per-screen changes; apply tokens in `styles/tokens.css`, then adjust components. Keep behaviour untouched (tests must stay green: `npm run check`).
 3. Check against the rules in CLAUDE.md section 3: contrast 4.5:1, never colour alone, reduced motion, mobile width, units, "typical" wording.
 4. Screenshot before and after in the PR.
 
 ## To do (in priority order)
-1. **Back button on the 3D walk** (requested). The walk page has no way back to the app. Add a clear **"← Back to <hike name>"** button, top left, in the Peak Finder style, on every walk.
+1. **Back button on the 3D walk** (requested). **DONE:** template and the three walks patched (button reads `back`/`backname`, else `history.back()`, else site root); `walkUrl` passes both; brand pill now "Peak Finder"; cloud-reverse transition still lane 2. The walk page has no way back to the app. Add a clear **"← Back to <hike name>"** button, top left, in the Peak Finder style, on every walk.
    - Implement it once in the kit template (`pipeline/trail_kit/template/template.html`) so every future walk has it, and patch the three existing `walks/*/index.html` (a text edit; never re-run tile steps).
    - Target: the hike page the user came from. The hike page link should pass the return address (`...index.html?season=winter&back=<encoded #/hike/<id>?...>`); the walk reads `back`, falls back to `history.back()`, then to the site root. Keep the user's filters in that address.
    - Lane 2 plays the cloud transition in reverse on this button (CLAUDE.md "3D trail walk"); with reduced motion, a fade. Keyboard reachable, 44 px target, visible focus.
    - Acceptance: from the hike page open the walk, press Back, land on the same hike page with the same quarter and filters, map unblurred.
-2. **Typography and sizes.** Fonts and sizes feel off today: set a type scale (display, heading, body, small, number), line heights and weights; check Archivo and Inter load and fall back well; fix cramped rail labels, card text and chart labels.
-3. **Walk page look.** Rename the brand pill ("When to Go · Trail test" to "Peak Finder"), match fonts and the dark theme, keep credits legible, make sure nothing overlaps the profile strip.
-4. **Explore polish.** Guide overlay, rail spacing and hierarchy, bubble overlap in dense areas (clustering or smaller bubbles), hover card, legend, empty state, loading skeleton, "What next?" tip placement.
-5. **Hike page polish.** Header layout, quarter cards, the cost graph (segment colours, labels, popover), responsive layout, and the sections lane 4 is still building (month strip, profile) so they land in a finished frame.
-6. **Mobile and tablet.** Explore stacks the map above the rail below 860 px: design it properly (bottom sheet for the list and card). Hike page at phone width.
-7. **Accessibility pass.** Contrast, focus rings, keyboard order (rail, list, map), screen-reader labels, reduced motion everywhere.
-8. **Replace placeholders.** Real Commons photos (lane 1) with credits in the card and the hike header; remove the "(placeholder image)" alt text.
-9. **Accent decision.** Sand-orange (prototype) or teal (CLAUDE.md's first proposal): one token, `--accent`. Decide once, record it in `docs/DECISIONS.md`.
-10. **Known issue to re-test after changes.** An intermittent blank map after browser Back was reported once; the map now resizes itself and guards unmount races (`UsMap.tsx`). If it shows again, capture the console and the URL and add it here.
+2. **3D interactive dashboard with Three.js** (requested). **APPROVED by the owner, vanilla `three` (not React Three Fiber). BUILT (first version):** an opt-in "2D map | 3D view" toggle in the Explore map pane (hidden below 860 px, disabled with "3D view needs WebGL" when WebGL is missing), `view=3d` in the URL, the 2D map stays the default and the fallback.
+   - Where: `app/src/screens/Explore/view3d/` (`View3D.tsx` mounts the renderer imperatively like `UsMap.tsx`; `scene.ts` builds the scene; `projection.ts` is d3 Albers to scene x/z, unit-tested; `webgl.ts` probes WebGL) and `app/src/components/charts/dash/` (QuarterMatch, MonthCrowdSmoke, Dashboard, pure `layout.ts` with tests). CSS is in `app/src/styles/view3d.css`.
+   - What it does: lower 48 as thin extruded shapes, one InstancedMesh of cones (colour = difficulty, height = match %, short dark grey = filtered out, thin ring = 3D walk ready), orbit / zoom / pan, render on demand only, no auto-rotate, damping off with reduced motion. Same `rows` as the map (no forked `evaluate()`), same hover tile and `pick` flow. A dashboard strip under the scene shows the shown hike's match by quarter and crowds + smoky days by month.
+   - Budget: three.js is a lazy chunk (<= 250 KB gzip) checked by `scripts/check-budget.mjs`; the initial JS budget is unchanged and no initial chunk may contain `WebGLRenderer`. `app/e2e/view3d.spec.ts` covers lazy loading, canvas size, URL round trip and the no-WebGL fallback.
+   - Left for the design pass: restyle the toggle, legend text, hint and dashboard; a cost panel; phones (the toggle is hidden below 860 px, so phones stay on 2D); tile placement over the scene; keyboard access to peaks (the ranked list is the accessible path today).
+
+3. **Typography and sizes. DONE (tokens, 2026-11-19):** scale 11/12/14/16/18/22/h1, numbers 15/20/32, Fraunces + Inter + Archivo condensed, self-hosted with metric-matched fallbacks (`styles/base.css`, `tokens.css`). Per-screen application is part of the restyle below. Original note: Fonts and sizes feel off today: set a type scale (display, heading, body, small, number), line heights and weights; check Archivo and Inter load and fall back well; fix cramped rail labels, card text and chart labels.
+4. **Walk page look.** Rename the brand pill ("When to Go · Trail test" to "Peak Finder"), match fonts and the dark theme, keep credits legible, make sure nothing overlaps the profile strip.
+5. **Explore polish.** Guide overlay, rail spacing and hierarchy, peak-marker overlap in dense areas (clustering or smaller peaks; the markers are flat triangles drawn in `UsMap.tsx`, colour = difficulty, size = match), hover card, legend, empty state, loading skeleton, "What next?" tip placement.
+6. **Hike page polish.** Header layout, quarter cards, the cost graph (segment colours, labels, popover), responsive layout, and the sections lane 4 is still building (month strip, profile) so they land in a finished frame.
+7. **Mobile and tablet. DONE (wave 2).** At 860 px and below Explore is a full-screen map under a 56 px top bar (title, Filters button with a count badge, theme toggle). The ranked list is a bottom sheet with three heights (collapsed bar, a few rows, nearly full; a visible chevron button with `aria-expanded`, swipe on the handle optional); tapping a hike tucks the list away and shows the tile (small photo, name, match, three reasons, cost, Open) above the bar. The filters open as a full-height dialog sheet (Done button, "Show N hikes" footer; the page behind is `inert`; Escape closes and focus returns to the button). The legend is a compact row of peaks with words under the count. Zoom buttons sit top right and the sheet never covers them. 3D stays desktop-only, so the 2D|3D control is hidden on phones (no extra copy). Hike page at 390 px: one column, 16 px gutter, 44 px controls, chart text at least 12 px. Tests: `e2e/layout.spec.ts`.
+8. **Accessibility pass. DONE (wave 2).** `e2e/a11y.spec.ts` runs axe (wcag2a/aa, 2.1, best-practice) on Explore before start, Explore with a tile, the Hike page, plus the phone filters and list sheets, in both themes at 1400x850 and 390x844: no violations of any impact, no rules disabled. Fixed on the way: list rows and cost-chart controls now have accessible names that contain their visible text. The hike page title takes focus on navigation so Tab starts at the top. `e2e/keyboard.spec.ts` walks guide, Show hikes, list row, tile, Open, quarter, cost segment, Back with the keyboard only (desktop and phone), and checks that nothing animates under `prefers-reduced-motion`. The map pane is a `main` landmark labelled "Map of hikes"; the wordmark is the page's `h1`.
+9. **Replace placeholders.** Real Commons photos (lane 1) with credits in the card and the hike header; remove the "(placeholder image)" alt text.
+10. **Accent decision. DONE 2026-11-19: terracotta** (`docs/DECISIONS.md`); dark and light themes both ship, toggle in the Explore brand row and the hike page top bar. Was: Sand-orange (prototype) or teal (CLAUDE.md's first proposal): one token, `--accent`. Decide once, record it in `docs/DECISIONS.md`.
+11. **Known issue to re-test after changes.** An intermittent blank map after browser Back was reported once; the map now resizes itself and guards unmount races (`UsMap.tsx`). If it shows again, capture the console and the URL and add it here.
+
+## Foundation done, what is next (2026-11-19)
+Done: tokens, dark + light themes with toggle, the CSS split into `app/src/styles/` (tokens, base, explore, hike, map, view3d), self-hosted fonts, the `Icon` set, retuned per-theme difficulty colours, contrast and colour-blind tests.
+Next, on top of this foundation: (1) restyle Explore (rail, list rows, hover card as a photo-first tile); (2) restyle the Hike page (Wired-style dense data, header, quarter cards); (3) the map: migrate canvas colours (map land/border, markers, 3D scene, cost bars) from fixed hex to per-theme values (`DIFFICULTY_BY_THEME`, `readToken('--map-land')`) and re-read them on theme change; replace the Unicode glyphs (arrows, plus/minus, close) with `Icon`; drop the legacy aliases once unused.
 
 ## Definition of done for a design change
 Tokens updated, screenshots before/after in the PR, `npm run check` green (including the performance budget), CLAUDE.md updated if a rule or the look description changed.
+
+Guard: `npm run design:check` (`scripts/check-design-rules.mjs`) fails on raw hex colours and glyph icons in TypeScript.
+
+Note (hike page): `CostBars` sizes its viewBox from the container width, so chart text never scales down on a phone.

@@ -9,8 +9,8 @@ paper-prototype decisions made after the PDF).
 
 **State of the repo.** The app runs end to end on **fake data** (`app/public/data/meta.json` has `"fake": true`; a yellow banner shows it).
 Built: data contract (zod schemas) and loaders, the three models with tests, Explore (guided start with a blurred map until "Show hikes",
-difficulty colours, filters, ranked list, hover card), Hike page (header, quarter fit, cost graph), the three 3D walks in `walks/`, CI and
-GitHub Pages deploy, setup tooling. Not built yet: real pipeline data, month strip, timed elevation profile, About page, wheel picker,
+difficulty colours, filters, ranked list, hover card, dark and light themes with design tokens in `app/src/styles/`, opt-in lazy **3D view** with linked dashboard in `app/src/screens/Explore/view3d/`), Explore restyle (ruled rail, photo-first tile, animated list re-sort, designed empty state, home city marker, hover linking between map and list, "Spin the wheel" dialog, Share link and metric toggle in the rail tools, Back returns to the same map view), canvas map and 3D scene that follow the theme live (`MapBoundary` keeps Explore usable without WebGL), Hike page (photo-first header with gear and photo credit, quarter strip with a per-factor fit breakdown, month-by-month strip with hazards and the Advice vs data card, timed elevation profile with scrubber, checkpoint stepping and daylight band, cost graph with direct labels and keyboard use), About page (sources, worked match example, costs, times, honest limits), the three 3D walks in `walks/`, CI and
+GitHub Pages deploy, setup tooling, the phone and tablet layout (bottom sheet for the ranked list, filters sheet, 3D desktop-only) and the axe, keyboard and layout browser tests. Not built yet: real pipeline data,
 cloud transition, similar hikes, walks for the other hikes.
 
 **Which lane are you in?** The work is split in four independent lanes, each with a brief. If the user has not said, ask which one they own, then read
@@ -27,8 +27,8 @@ only that brief and stay in its files.
 Overview and working rules: `docs/work/README.md`. Setup and commands: `docs/SETUP.md`. Open decisions and defaults we chose: `docs/DECISIONS.md`.
 API keys (pipeline only, none needed to run the app): `docs/CREDENTIALS.md`.
 
-**Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (lint, tests, build, performance budget: run it
-before every PR), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run e2e` (real-browser smoke test of the production build under the Pages base path: run it after touching the map, CSS or routing).
+**Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (CLAUDE.md check, design-rule guard, lint, tests, build, performance budget: run it
+before every PR), `npm run design:check` (only the guard: `scripts/check-design-rules.mjs` fails on a raw hex colour or a glyph icon such as an arrow, cross, check or minus in `app/src` TypeScript; use tokens and `Icon`), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run e2e` (real-browser smoke test of the production build under the Pages base path, plus axe accessibility, keyboard-only, reduced-motion and phone-layout specs: run it after touching the map, CSS or routing).
 
 **Hard rules for any agent.**
 1. Do not change the data shapes (section 4), the screen list (section 2) or the UX rules (section 3) without the user's explicit approval. Shapes live in `app/src/data/schema.ts`.
@@ -64,9 +64,9 @@ One static web app that helps a hiker answer three questions in order:
 
 - **Guided start (the "web navigator")**: on arrival the **map is blurred** and a card says what to do next in three steps
   (1 home city or skip, 2 quarter, 3 limits), with a **Show hikes** button. Pressing it (`go=1` in the URL) unblurs the map and shows
-  the bubbles, the filtered-out dots, the legend, the hike card and a short "What next?" tip. Every limit starts wide open, and any step can be skipped.
-- **Left rail**
-  - "Peak Finder" title.
+  the peaks, the filtered-out markers, the legend, the hike card and a short "What next?" tip. Every limit starts wide open, and any step can be skipped.
+- **Left rail** (a ruled form; the steps are numbered only in the guide, there is no Beta badge)
+  - "Peak Finder" wordmark and the theme toggle.
   - Home city: a **dropdown of 10 cities** (not free text; we only have travel/cost data for these):
     Seattle (SEA), San Francisco (SFO), Los Angeles (LAX), Phoenix (PHX), Denver (DEN), Dallas/Fort Worth (DFW),
     Chicago (ORD), Atlanta (ATL), New York (NYC), Washington DC (DCA). Plus "Skip".
@@ -83,20 +83,25 @@ One static web app that helps a hiker answer three questions in order:
     the screen-reader version of the map).
   - "Reset filters" link.
 - **Map** ("Click on a peak")
-  - One bubble per hike at its trailhead. Bubble **area** = match %, bubble **colour** = difficulty (Easy light teal,
+  - One flat peak (triangle) marker per hike at its trailhead (trailheads that sit within a few pixels are nudged apart at each zoom for display only; data coordinates never change; the hover/selected highlight is an outline ring). Marker **size** (area) = match %, **colour** = difficulty (Easy light teal,
     Moderate gold, Hard violet; always also in words). A hike that fails a limit becomes a small
     hollow grey dot (never disappears). Featured 3D hikes get a thin outer ring. Home city is a marker.
   - Legend: the three difficulty colours, "Filtered out", "3D walk ready".
   - Controls: + / −, "Zoom to results", "Whole US".
-  - Hover a bubble or list row → card: photo, name, park, match %, three reasons in words
+  - Hover a peak or list row → card: photo, name, park, match %, three reasons in words
     ("Typical high 68°F · 1 smoky day · 4.5 h away"), typical cost. Hover one highlights the other.
-  - Click → zoom to the hike, then open the hike page.
-  - Changing quarter: bubbles resize (~400 ms) and the list re-sorts with a slide.
+  - Click a peak (or a list row) → zoom to the hike and keep its photo tile open (`pick=<id>` in the URL, so Back returns to it). The hike page opens only from the tile's **Open this hike** button.
+  - Changing quarter: peaks resize (~400 ms) and the list re-sorts with a slide.
+- **3D view (opt-in, approved, vanilla three.js)**: a small "2D map | 3D view" toggle in the map pane (hidden below 860 px; disabled with the words
+  "3D view needs WebGL" when WebGL is missing). `view=3d` in the URL; the 2D map is the default and the fallback. The lower 48 are thin extruded shapes, one cone per hike
+  (colour = difficulty, height = match %, short dark grey = filtered out, thin ring = 3D walk ready), orbit / zoom / pan, rendered on demand only (no auto-rotate; damping off with reduced motion).
+  It gets the same `rows` as the map (no forked `evaluate()`), hover and click use the same tile and `pick` flow, and switching keeps filters, `go` and `pick`.
+  Under the scene a dashboard shows the shown hike's match by quarter and crowds + smoky days by month. three.js is its own lazy chunk (<= 250 KB gzip, CI-enforced) fetched only after the user switches to 3D.
 - **"Not sure? Spin the wheel"** button opens the random picker: a wheel of the top 12 matching hikes,
   weighted by match %; lands, shows the card with Open / Spin again. Reduced motion → picks at once.
 - **Empty state**: never blank. "No hike fits all your limits. Allowing Busy crowds adds 6." with a one-click fix.
-- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&go=1`),
-  plus a Share link button. Back always works.
+- All state lives in the URL (`?from=SEA&q=3&temp=55-80&crowd=2&smoke=3&rain=10&travel=8&diff=easy,moderate&3d=1&units=metric&go=1&pick=angels-landing&view=3d`; `view=3d` only when the 3D view is on),
+  plus a Share link button (it copies the link with `go=1`, so it opens unblurred). `units=metric` switches °F/mi/ft to °C/km/m on the card, list and sliders. Back always works.
 
 ### Hike page (one scrolling page)
 
@@ -122,7 +127,7 @@ One static web app that helps a hiker answer three questions in order:
   - Four bars Q1–Q4, each stacked: lodging, food, transport, activity (entry/permit), and a hatched 15% buffer on top.
   - Total on each bar; cheapest and best quarter labelled.
   - Controls: party size, nights, drive or fly (default = shorter door to trailhead).
-  - Click a segment → popover with its line items and source.
+  - Click a segment → popover with its line items and source. The selected bar is labelled directly (no detached legend), quarter labels and segments are keyboard buttons, and Esc closes the popover.
   - Label: "Typical, from past data. Not a price quote."
 - **Similar hikes** (later): three twin cards with one line each on why they are similar.
 
@@ -149,11 +154,14 @@ park-level crowds, county-level AQI, station-based weather, typical not quoted c
 6. Motion explains change; with `prefers-reduced-motion`, everything is instant or a fade.
 7. Same words everywhere: Q1 = Jan–Mar = Winter on every screen, including the 3D walk.
 
-Visual: the dark look of the 29 Oct prototype (`docs/reference/oct29-prototype.html`) with ONE accent colour (sand-orange, token `--accent` in
-`app/src/styles.css`; teal was the earlier proposal and is a one-token switch). Bubble colour = difficulty (Easy light teal, Moderate gold, Hard violet;
-`app/src/lib/difficulty.ts`), size = match %. Amber/red only for hazards and always with an icon and words; never red/green pairs. °F, miles, feet by default, with a metric toggle. Fonts: Archivo (headings), Inter (text),
-same as the walks. Accessibility: contrast ≥ 4.5:1, full keyboard use, native inputs with spoken values,
-alt text + Commons credit on photos.
+Visual (decided 2026-11-19, `docs/DECISIONS.md`): Claude's design language as the base (warm cream canvas, warm dark surfaces, editorial serif display), the photo-first tile idea from Airbnb,
+and the dense editorial data rules from Wired. **Two themes, dark and light**: the system setting by default, a manual toggle (`app/src/components/ThemeToggle.tsx`) stored in localStorage; `data-theme` on `<html>`
+(`app/src/lib/theme.ts`, set by an inline script in `app/index.html` before first paint). **All colours, type sizes, spacing, radii and motion are tokens in `app/src/styles/tokens.css`**
+(structure and rules: `app/src/styles/README.md`); no raw hex outside it and `app/src/lib/difficulty.ts`. ONE accent, terracotta (`--accent`, about `#cc785c` on dark, a darker variant on light so text and buttons keep 4.5:1).
+Marker colour = difficulty (Easy light teal, Moderate gold, Hard violet, desaturated and retuned per theme in `DIFFICULTY_BY_THEME`, equal to the `--diff-*` tokens; a test enforces it), size = match %.
+Amber/red only for hazards and always with an icon and words; never red/green pairs. °F, miles, feet by default, with a metric toggle. Fonts, self-hosted (`app/src/styles/fonts/`, latin, no Google request):
+Fraunces (display headings), Inter (text), Archivo condensed with tabular figures (big numbers); metric-matched fallbacks avoid layout shift. Icons: `app/src/components/Icon.tsx` (inline SVG, no glyph characters).
+Accessibility: contrast >= 4.5:1 (tested for both themes in `app/src/lib/contrast.test.ts`), full keyboard use, native inputs with spoken values, alt text + Commons credit on photos.
 
 States to handle on every screen: loading (skeletons), no home city, no match, missing data for a factor
 (grey cell "No station within 50 km"; factor left out of match and the card says so), hike without 3D walk
@@ -285,7 +293,8 @@ pipeline/            one script per source (lanes 1 and 2, to be written): hikes
 data/raw/            download cache (gitignored)
 data/processed/      outputs before copy to the app
 app/                 Vite app: src/screens/ (Explore, Hike, About), src/components/, src/models/, src/data/ (schema = the contract),
-                     src/lib/ (URL filters, difficulty colours, walks link), public/data/*.json, public/data/profiles/
+                     src/lib/ (URL filters, difficulty colours, theme, themeColors, flip, walks link), src/styles/ (tokens.css, base.css, explore.css, hike.css, about.css, map.css, view3d.css, index.css, fonts/),
+                     public/data/*.json, public/data/profiles/
 walks/<id>/          finished trail-walk sites (angels_landing, grand_canyon, north_cascades); served at /walks/<id>/, copied into the build,
                      loaded only when a walk is opened (~35 MB each as built, ~27 MB after lossless optimization; new walks must be <= 30 MB, see docs/DECISIONS.md)
 scripts/             make_fake_data.py, check-budget.mjs, check-claude-md.mjs, doctor.sh

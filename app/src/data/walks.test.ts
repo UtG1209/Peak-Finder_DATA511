@@ -57,6 +57,13 @@ describe('each walk is complete, credited and within budget', () => {
       for (const s of ['Spring', 'Summer', 'Autumn', 'Winter']) expect(html, s).toContain(s)
     })
 
+    it(`${id}: returns to the originating hike and accepts checkpoint times`, () => {
+      for (const needle of ['id="backToHike"', 'id="backTransition"', 'id="timeMarkers"', "get('back')", "get('times')"]) {
+        expect(html, needle).toContain(needle)
+      }
+      expect(html).toContain('prefers-reduced-motion: reduce')
+    })
+
     it(`${id}: the embedded route matches the hike page profile`, () => {
       const m = html.match(/const PROFILE\s*=\s*(\[\[[\s\S]*?\]\]);/)
       expect(m, 'const PROFILE').toBeTruthy()

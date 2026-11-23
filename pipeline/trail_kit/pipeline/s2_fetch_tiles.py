@@ -10,6 +10,7 @@ Saves to cache/<trail>/dem/{z}/{x}/{y}.png and cache/<trail>/img/{z}/{x}/{y}.jpg
 Usage: python pipeline/s2_fetch_tiles.py angels_landing
 """
 import sys
+import argparse
 from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
@@ -19,7 +20,10 @@ from common import (DEM_URL, IMG_URL, cache_dir, decode_terrarium, encode_terrar
                     exists, http_get, load_config, save_bytes, tiles_in_bbox)
 
 
-def plan(cfg):
+def plan(cfg, profile_only=False):
+    if profile_only:
+        # Hike-page profiles need accurate z14 elevation along the route, not imagery or terrain tiles.
+        return tiles_in_bbox(cfg["bounds"]["core"], 14), []
     b = cfg["bounds"]
     dem = [t for z in (10, 11, 12) for t in tiles_in_bbox(b["wide"], z)]
     dem += tiles_in_bbox(b["mid"], 13) + tiles_in_bbox(b["core"], 14)
@@ -62,17 +66,22 @@ def fill_dem_z13(cfg, root):
     return made
 
 
-def main(trail_id):
+def main(trail_id, profile_only=False):
     cfg = load_config(trail_id)
     root = cache_dir(trail_id)
-    dem, img = plan(cfg)
+    dem, img = plan(cfg, profile_only)
     for kind, tiles in (("dem", dem), ("img", img)):
         with ThreadPoolExecutor(max_workers=8) as ex:
             res = list(ex.map(lambda t: fetch(kind, t, root), tiles))
         print(f"[tiles] {kind}: {len(tiles)} planned, "
               f"{res.count('ok')} downloaded, {res.count('cached')} cached, {res.count('missing')} missing")
-    print(f"[tiles] generated {fill_dem_z13(cfg, root)} filler z13 elevation tiles")
+    if not profile_only:
+        print(f"[tiles] generated {fill_dem_z13(cfg, root)} filler z13 elevation tiles")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "angels_landing")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("trail_id", nargs="?", default="angels_landing")
+    parser.add_argument("--profile-only", action="store_true", help="fetch only z14 DEM tiles needed by a hike-page profile")
+    args = parser.parse_args()
+    main(args.trail_id, args.profile_only)
