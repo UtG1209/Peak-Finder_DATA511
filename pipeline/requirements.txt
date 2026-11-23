@@ -4,3 +4,4 @@ pandas>=2.2
 requests>=2.32
 python-dotenv>=1.0
 pytest>=8.0
+tzdata>=2024.1  # time zones on Windows, which has no system tz database
