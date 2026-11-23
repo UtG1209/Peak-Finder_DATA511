@@ -1,0 +1,5123 @@
+{
+ "source": "NOAA GHCN-Daily via the NCEI access API",
+ "typical_years": "2015-2024, excluding [2020]",
+ "hikes": {
+  "angels-landing": {
+   "station": {
+    "id": "USC00429717",
+    "name": "Zion Np",
+    "dist_km": 6.2,
+    "elev_ft": 4038
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 47.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 45.9,
+     "wet_days": 6.4,
+     "snow_days": 1.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 50.5,
+     "tmax_p50": 59.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 52.9,
+     "wet_days": 4.5,
+     "snow_days": 1.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 57.8,
+     "tmax_p50": 65.0,
+     "tmax_p75": 71.2,
+     "tmax_summit_est": 58.9,
+     "wet_days": 5.8,
+     "snow_days": 0.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 68.0,
+     "tmax_p50": 74.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 67.9,
+     "wet_days": 2.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 75.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 88.0,
+     "tmax_summit_est": 75.9,
+     "wet_days": 2.8,
+     "snow_days": 0.0,
+     "heat_days": 0.1
+    },
+    {
+     "month": 6,
+     "tmax_p25": 92.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 90.9,
+     "wet_days": 0.7,
+     "snow_days": 0.0,
+     "heat_days": 12.8
+    },
+    {
+     "month": 7,
+     "tmax_p25": 98.0,
+     "tmax_p50": 101.0,
+     "tmax_p75": 105.0,
+     "tmax_summit_est": 94.9,
+     "wet_days": 2.5,
+     "snow_days": 0.0,
+     "heat_days": 20.2
+    },
+    {
+     "month": 8,
+     "tmax_p25": 94.0,
+     "tmax_p50": 98.0,
+     "tmax_p75": 101.0,
+     "tmax_summit_est": 91.9,
+     "wet_days": 3.9,
+     "snow_days": 0.0,
+     "heat_days": 11.2
+    },
+    {
+     "month": 9,
+     "tmax_p25": 86.0,
+     "tmax_p50": 91.0,
+     "tmax_p75": 96.0,
+     "tmax_summit_est": 84.9,
+     "wet_days": 2.8,
+     "snow_days": 0.0,
+     "heat_days": 3.5
+    },
+    {
+     "month": 10,
+     "tmax_p25": 71.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 84.2,
+     "tmax_summit_est": 72.9,
+     "wet_days": 2.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 58.0,
+     "tmax_p50": 65.5,
+     "tmax_p75": 72.0,
+     "tmax_summit_est": 59.4,
+     "wet_days": 2.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 47.2,
+     "tmax_p50": 56.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 49.9,
+     "wet_days": 5.3,
+     "snow_days": 0.6,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "bright-angel-trail": {
+   "station": {
+    "id": "USC00023582",
+    "name": "Grand Canyon Visitor Ctr",
+    "dist_km": 3.1,
+    "elev_ft": 7083
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 34.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.2,
+     "tmax_summit_est": 40.8,
+     "wet_days": 5.5,
+     "snow_days": 6.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 36.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 45.8,
+     "wet_days": 3.7,
+     "snow_days": 5.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 44.0,
+     "tmax_p50": 51.5,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 52.3,
+     "wet_days": 3.7,
+     "snow_days": 4.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 55.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 67.0,
+     "tmax_summit_est": 62.8,
+     "wet_days": 1.8,
+     "snow_days": 1.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 60.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 68.8,
+     "wet_days": 4.0,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 78.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 87.0,
+     "tmax_summit_est": 82.8,
+     "wet_days": 1.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 82.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 85.8,
+     "wet_days": 5.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 77.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 81.8,
+     "wet_days": 5.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 72.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 75.8,
+     "wet_days": 3.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 57.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 69.0,
+     "tmax_summit_est": 64.8,
+     "wet_days": 3.0,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 43.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 53.8,
+     "wet_days": 2.3,
+     "snow_days": 2.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 36.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 49.2,
+     "tmax_summit_est": 44.8,
+     "wet_days": 3.4,
+     "snow_days": 4.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "cascade-pass-sahale": {
+   "station": {
+    "id": "USS0020A07S",
+    "name": "Thunder Basin",
+    "dist_km": 8.6,
+    "elev_ft": 4320
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 30.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 22.5,
+     "wet_days": 17.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 29.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 39.0,
+     "tmax_summit_est": 22.5,
+     "wet_days": 16.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 35.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 45.0,
+     "tmax_summit_est": 28.5,
+     "wet_days": 15.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 40.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 33.5,
+     "wet_days": 14.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 48.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 63.8,
+     "tmax_summit_est": 44.5,
+     "wet_days": 9.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 52.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 50.5,
+     "wet_days": 8.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 65.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 59.5,
+     "wet_days": 3.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 64.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 59.5,
+     "wet_days": 3.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 52.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 47.5,
+     "wet_days": 10.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 41.0,
+     "tmax_p50": 47.0,
+     "tmax_p75": 53.0,
+     "tmax_summit_est": 35.5,
+     "wet_days": 16.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 33.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 40.0,
+     "tmax_summit_est": 23.5,
+     "wet_days": 19.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 26.0,
+     "tmax_p50": 31.0,
+     "tmax_p75": 34.0,
+     "tmax_summit_est": 19.5,
+     "wet_days": 18.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "mount-washburn": {
+   "station": {
+    "id": "USS0010E03S",
+    "name": "Canyon",
+    "dist_km": 9.6,
+    "elev_ft": 7870
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 23.0,
+     "tmax_p50": 28.0,
+     "tmax_p75": 32.0,
+     "tmax_summit_est": 19.7,
+     "wet_days": 11.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 23.0,
+     "tmax_p50": 30.0,
+     "tmax_p75": 35.0,
+     "tmax_summit_est": 21.7,
+     "wet_days": 13.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 33.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 45.0,
+     "tmax_summit_est": 29.7,
+     "wet_days": 12.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 39.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 36.7,
+     "wet_days": 11.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 47.0,
+     "tmax_p50": 55.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 46.7,
+     "wet_days": 13.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 60.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 72.0,
+     "tmax_summit_est": 58.7,
+     "wet_days": 10.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 71.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 66.7,
+     "wet_days": 3.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 67.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 62.7,
+     "wet_days": 5.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 56.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 69.2,
+     "tmax_summit_est": 54.7,
+     "wet_days": 6.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 38.0,
+     "tmax_p50": 46.0,
+     "tmax_p75": 55.0,
+     "tmax_summit_est": 37.7,
+     "wet_days": 11.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 28.0,
+     "tmax_p50": 33.5,
+     "tmax_p75": 40.0,
+     "tmax_summit_est": 25.2,
+     "wet_days": 11.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 20.0,
+     "tmax_p50": 26.0,
+     "tmax_p75": 31.0,
+     "tmax_summit_est": 17.7,
+     "wet_days": 13.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "fairy-falls-grand-prismatic": {
+   "station": {
+    "id": "USC00486845",
+    "name": "Old Faithful",
+    "dist_km": 7.6,
+    "elev_ft": 7351
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 24.0,
+     "tmax_p50": 29.0,
+     "tmax_p75": 34.0,
+     "tmax_summit_est": 28.8,
+     "wet_days": 4.9,
+     "snow_days": 10.8,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 22.0,
+     "tmax_p50": 30.0,
+     "tmax_p75": 36.0,
+     "tmax_summit_est": 29.8,
+     "wet_days": 5.8,
+     "snow_days": 13.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 33.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 38.8,
+     "wet_days": 4.4,
+     "snow_days": 7.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 39.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 51.8,
+     "tmax_summit_est": 44.8,
+     "wet_days": 7.2,
+     "snow_days": 5.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 48.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 63.0,
+     "tmax_summit_est": 55.8,
+     "wet_days": 7.3,
+     "snow_days": 3.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 63.5,
+     "tmax_p50": 70.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 69.8,
+     "wet_days": 4.3,
+     "snow_days": 0.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 75.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 83.0,
+     "tmax_summit_est": 78.8,
+     "wet_days": 3.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 72.0,
+     "tmax_p50": 76.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 75.8,
+     "wet_days": 4.5,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 60.0,
+     "tmax_p50": 69.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 68.8,
+     "wet_days": 5.1,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 42.5,
+     "tmax_p50": 51.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 50.8,
+     "wet_days": 7.3,
+     "snow_days": 5.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 29.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 33.8,
+     "wet_days": 7.0,
+     "snow_days": 9.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 22.0,
+     "tmax_p50": 27.0,
+     "tmax_p75": 32.0,
+     "tmax_summit_est": 26.8,
+     "wet_days": 7.6,
+     "snow_days": 14.7,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "grinnell-glacier": {
+   "station": {
+    "id": "USS0013A27S",
+    "name": "Many Glacier",
+    "dist_km": 1.1,
+    "elev_ft": 4900
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 28.5,
+     "tmax_p50": 34.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 27.6,
+     "wet_days": 12.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 22.2,
+     "tmax_p50": 32.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 25.6,
+     "wet_days": 16.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 34.5,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 33.6,
+     "wet_days": 14.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 42.0,
+     "tmax_p50": 48.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 41.6,
+     "wet_days": 12.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 49.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 52.6,
+     "wet_days": 13.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 61.0,
+     "tmax_p50": 69.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 62.6,
+     "wet_days": 9.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 74.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 84.0,
+     "tmax_summit_est": 72.6,
+     "wet_days": 4.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 69.0,
+     "tmax_p50": 77.0,
+     "tmax_p75": 83.5,
+     "tmax_summit_est": 70.6,
+     "wet_days": 5.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 55.8,
+     "tmax_p50": 63.0,
+     "tmax_p75": 71.2,
+     "tmax_summit_est": 56.6,
+     "wet_days": 9.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 40.5,
+     "tmax_p50": 49.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 42.6,
+     "wet_days": 11.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 31.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 29.6,
+     "wet_days": 15.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 24.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 36.0,
+     "tmax_summit_est": 25.6,
+     "wet_days": 18.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "glacier-highline": {
+   "station": {
+    "id": "USS0013A27S",
+    "name": "Many Glacier",
+    "dist_km": 12.0,
+    "elev_ft": 4900
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 28.5,
+     "tmax_p50": 34.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 25.6,
+     "wet_days": 12.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 22.2,
+     "tmax_p50": 32.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 23.6,
+     "wet_days": 16.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 34.5,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 31.6,
+     "wet_days": 14.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 42.0,
+     "tmax_p50": 48.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 39.6,
+     "wet_days": 12.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 49.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 50.6,
+     "wet_days": 13.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 61.0,
+     "tmax_p50": 69.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 60.6,
+     "wet_days": 9.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 74.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 84.0,
+     "tmax_summit_est": 70.6,
+     "wet_days": 4.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 69.0,
+     "tmax_p50": 77.0,
+     "tmax_p75": 83.5,
+     "tmax_summit_est": 68.6,
+     "wet_days": 5.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 55.8,
+     "tmax_p50": 63.0,
+     "tmax_p75": 71.2,
+     "tmax_summit_est": 54.6,
+     "wet_days": 9.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 40.5,
+     "tmax_p50": 49.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 40.6,
+     "wet_days": 11.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 31.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 27.6,
+     "wet_days": 15.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 24.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 36.0,
+     "tmax_summit_est": 23.6,
+     "wet_days": 18.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "half-dome": {
+   "station": {
+    "id": "USW00053150",
+    "name": "Yosemite Village 12 W",
+    "dist_km": 23.3,
+    "elev_ft": 6620
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 37.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 36.2,
+     "wet_days": 8.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 34.0,
+     "tmax_p50": 42.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 34.2,
+     "wet_days": 7.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 36.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 35.2,
+     "wet_days": 8.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 45.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 45.2,
+     "wet_days": 5.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 53.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 51.2,
+     "wet_days": 3.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 64.2,
+     "tmax_p50": 72.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 64.2,
+     "wet_days": 1.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 73.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 70.2,
+     "wet_days": 0.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 74.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 70.2,
+     "wet_days": 0.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 65.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 64.2,
+     "wet_days": 1.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 55.0,
+     "tmax_p50": 61.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 53.2,
+     "wet_days": 2.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 42.8,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 44.2,
+     "wet_days": 5.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 37.5,
+     "tmax_p50": 45.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 37.2,
+     "wet_days": 7.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "upper-yosemite-falls": {
+   "station": {
+    "id": "USW00053150",
+    "name": "Yosemite Village 12 W",
+    "dist_km": 19.7,
+    "elev_ft": 6620
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 37.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 44.3,
+     "wet_days": 8.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 34.0,
+     "tmax_p50": 42.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 42.3,
+     "wet_days": 7.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 36.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 43.3,
+     "wet_days": 8.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 45.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 53.3,
+     "wet_days": 5.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 53.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 59.3,
+     "wet_days": 3.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 64.2,
+     "tmax_p50": 72.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 72.3,
+     "wet_days": 1.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 73.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 78.3,
+     "wet_days": 0.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 74.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 78.3,
+     "wet_days": 0.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 65.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 72.3,
+     "wet_days": 1.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 55.0,
+     "tmax_p50": 61.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 61.3,
+     "wet_days": 2.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 42.8,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 52.3,
+     "wet_days": 5.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 37.5,
+     "tmax_p50": 45.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 45.3,
+     "wet_days": 7.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "moro-rock": {
+   "station": {
+    "id": "USC00044890",
+    "name": "Lemon Cove",
+    "dist_km": 29.7,
+    "elev_ft": 513
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 57.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 40.3,
+     "wet_days": 6.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 60.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 44.3,
+     "wet_days": 5.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 64.5,
+     "tmax_p50": 70.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 48.3,
+     "wet_days": 6.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 73.0,
+     "tmax_p50": 79.5,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 57.8,
+     "wet_days": 2.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 80.0,
+     "tmax_p50": 86.0,
+     "tmax_p75": 92.0,
+     "tmax_summit_est": 64.3,
+     "wet_days": 1.2,
+     "snow_days": 0.0,
+     "heat_days": 1.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 91.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 75.3,
+     "wet_days": 0.3,
+     "snow_days": 0.0,
+     "heat_days": 11.3
+    },
+    {
+     "month": 7,
+     "tmax_p25": 99.0,
+     "tmax_p50": 102.0,
+     "tmax_p75": 105.0,
+     "tmax_summit_est": 80.3,
+     "wet_days": 0.0,
+     "snow_days": 0.0,
+     "heat_days": 22.7
+    },
+    {
+     "month": 8,
+     "tmax_p25": 97.0,
+     "tmax_p50": 100.0,
+     "tmax_p75": 104.0,
+     "tmax_summit_est": 78.3,
+     "wet_days": 0.1,
+     "snow_days": 0.0,
+     "heat_days": 18.3
+    },
+    {
+     "month": 9,
+     "tmax_p25": 89.0,
+     "tmax_p50": 95.0,
+     "tmax_p75": 100.0,
+     "tmax_summit_est": 73.3,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 7.7
+    },
+    {
+     "month": 10,
+     "tmax_p25": 78.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 63.3,
+     "wet_days": 1.4,
+     "snow_days": 0.0,
+     "heat_days": 1.1
+    },
+    {
+     "month": 11,
+     "tmax_p25": 65.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 49.3,
+     "wet_days": 3.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 56.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 38.3,
+     "wet_days": 4.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "delicate-arch": {
+   "station": {
+    "id": "USC00420336",
+    "name": "Arches Np Hqs",
+    "dist_km": 15.8,
+    "elev_ft": 4093
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 39.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 47.0,
+     "tmax_summit_est": 40.5,
+     "wet_days": 2.6,
+     "snow_days": 1.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 43.2,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 49.5,
+     "wet_days": 2.0,
+     "snow_days": 1.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 56.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 59.5,
+     "wet_days": 2.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 65.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 70.5,
+     "wet_days": 1.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 73.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 86.5,
+     "tmax_summit_est": 78.5,
+     "wet_days": 2.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 91.0,
+     "tmax_p50": 95.5,
+     "tmax_p75": 100.0,
+     "tmax_summit_est": 93.0,
+     "wet_days": 1.1,
+     "snow_days": 0.0,
+     "heat_days": 8.4
+    },
+    {
+     "month": 7,
+     "tmax_p25": 97.2,
+     "tmax_p50": 101.0,
+     "tmax_p75": 103.0,
+     "tmax_summit_est": 98.5,
+     "wet_days": 2.7,
+     "snow_days": 0.0,
+     "heat_days": 19.7
+    },
+    {
+     "month": 8,
+     "tmax_p25": 94.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 100.0,
+     "tmax_summit_est": 94.5,
+     "wet_days": 2.2,
+     "snow_days": 0.0,
+     "heat_days": 9.4
+    },
+    {
+     "month": 9,
+     "tmax_p25": 85.0,
+     "tmax_p50": 90.0,
+     "tmax_p75": 95.0,
+     "tmax_summit_est": 87.5,
+     "wet_days": 1.7,
+     "snow_days": 0.0,
+     "heat_days": 2.4
+    },
+    {
+     "month": 10,
+     "tmax_p25": 66.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 70.5,
+     "wet_days": 3.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 49.0,
+     "tmax_p50": 57.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 54.5,
+     "wet_days": 1.8,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 39.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 47.5,
+     "tmax_summit_est": 40.5,
+     "wet_days": 2.3,
+     "snow_days": 1.2,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "mesa-arch": {
+   "station": {
+    "id": "USC00421163",
+    "name": "Canyonlands-The Neck",
+    "dist_km": 8.9,
+    "elev_ft": 5871
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 35.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 43.0,
+     "tmax_summit_est": 38.2,
+     "wet_days": 2.5,
+     "snow_days": 4.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 37.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 44.2,
+     "wet_days": 2.1,
+     "snow_days": 2.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 48.0,
+     "tmax_p50": 54.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 53.2,
+     "wet_days": 2.9,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 57.0,
+     "tmax_p50": 65.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 64.2,
+     "wet_days": 2.6,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 66.0,
+     "tmax_p50": 73.5,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 72.7,
+     "wet_days": 2.4,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 83.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 87.2,
+     "wet_days": 1.8,
+     "snow_days": 0.0,
+     "heat_days": 0.4
+    },
+    {
+     "month": 7,
+     "tmax_p25": 89.0,
+     "tmax_p50": 93.0,
+     "tmax_p75": 96.0,
+     "tmax_summit_est": 92.2,
+     "wet_days": 2.7,
+     "snow_days": 0.0,
+     "heat_days": 0.9
+    },
+    {
+     "month": 8,
+     "tmax_p25": 86.0,
+     "tmax_p50": 89.0,
+     "tmax_p75": 92.0,
+     "tmax_summit_est": 88.2,
+     "wet_days": 3.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 77.0,
+     "tmax_p50": 83.0,
+     "tmax_p75": 87.0,
+     "tmax_summit_est": 82.2,
+     "wet_days": 2.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 58.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 66.2,
+     "wet_days": 4.1,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 43.0,
+     "tmax_p50": 50.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 49.2,
+     "wet_days": 1.8,
+     "snow_days": 1.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 35.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 38.2,
+     "wet_days": 2.4,
+     "snow_days": 2.9,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "navajo-loop-queens-garden": {
+   "station": {
+    "id": "USC00421008",
+    "name": "Bryce Canyon Np Hqrs",
+    "dist_km": 2.0,
+    "elev_ft": 7890
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 31.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 35.6,
+     "wet_days": 4.6,
+     "snow_days": 7.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 31.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 38.6,
+     "wet_days": 4.3,
+     "snow_days": 7.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 38.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 43.6,
+     "wet_days": 3.4,
+     "snow_days": 5.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 49.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 62.0,
+     "tmax_summit_est": 55.6,
+     "wet_days": 1.7,
+     "snow_days": 2.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 56.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 61.6,
+     "wet_days": 3.0,
+     "snow_days": 1.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 72.0,
+     "tmax_p50": 76.5,
+     "tmax_p75": 82.2,
+     "tmax_summit_est": 76.1,
+     "wet_days": 0.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 78.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 83.0,
+     "tmax_summit_est": 80.6,
+     "wet_days": 5.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 74.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 77.6,
+     "wet_days": 5.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 66.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 70.6,
+     "wet_days": 3.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 51.5,
+     "tmax_p50": 58.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 57.6,
+     "wet_days": 3.6,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 39.2,
+     "tmax_p50": 46.5,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 46.1,
+     "wet_days": 2.2,
+     "snow_days": 3.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 32.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 37.6,
+     "wet_days": 2.9,
+     "snow_days": 5.6,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "cassidy-arch": {
+   "station": {
+    "id": "USC00421171",
+    "name": "Capitol Reef Np",
+    "dist_km": 1.3,
+    "elev_ft": 5500
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 37.0,
+     "tmax_p50": 41.0,
+     "tmax_p75": 45.0,
+     "tmax_summit_est": 40.0,
+     "wet_days": 1.7,
+     "snow_days": 2.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 40.0,
+     "tmax_p50": 47.0,
+     "tmax_p75": 55.0,
+     "tmax_summit_est": 46.0,
+     "wet_days": 1.4,
+     "snow_days": 2.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 50.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 62.0,
+     "tmax_summit_est": 55.0,
+     "wet_days": 1.6,
+     "snow_days": 1.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 59.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 72.0,
+     "tmax_summit_est": 66.0,
+     "wet_days": 1.1,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 67.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 72.0,
+     "wet_days": 2.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 83.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 94.0,
+     "tmax_summit_est": 87.0,
+     "wet_days": 1.0,
+     "snow_days": 0.0,
+     "heat_days": 0.9
+    },
+    {
+     "month": 7,
+     "tmax_p25": 89.0,
+     "tmax_p50": 93.0,
+     "tmax_p75": 96.0,
+     "tmax_summit_est": 92.0,
+     "wet_days": 4.0,
+     "snow_days": 0.0,
+     "heat_days": 1.4
+    },
+    {
+     "month": 8,
+     "tmax_p25": 85.0,
+     "tmax_p50": 89.0,
+     "tmax_p75": 92.5,
+     "tmax_summit_est": 88.0,
+     "wet_days": 2.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 77.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 81.0,
+     "wet_days": 2.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 59.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 65.0,
+     "wet_days": 2.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 45.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 59.2,
+     "tmax_summit_est": 51.0,
+     "wet_days": 0.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 36.0,
+     "tmax_p50": 42.0,
+     "tmax_p75": 47.0,
+     "tmax_summit_est": 41.0,
+     "wet_days": 1.1,
+     "snow_days": 1.6,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "skyline-trail": {
+   "station": {
+    "id": "USS0021C35S",
+    "name": "Paradise",
+    "dist_km": 1.3,
+    "elev_ft": 5130
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 31.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 29.2,
+     "wet_days": 19.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 28.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 26.2,
+     "wet_days": 20.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 33.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 43.0,
+     "tmax_summit_est": 30.2,
+     "wet_days": 20.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 36.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 49.0,
+     "tmax_summit_est": 34.2,
+     "wet_days": 18.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 43.0,
+     "tmax_p50": 51.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 45.2,
+     "wet_days": 11.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 49.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.8,
+     "tmax_summit_est": 53.2,
+     "wet_days": 8.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 60.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 74.0,
+     "tmax_summit_est": 60.2,
+     "wet_days": 2.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 61.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 74.0,
+     "tmax_summit_est": 62.2,
+     "wet_days": 4.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 49.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 50.2,
+     "wet_days": 9.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 40.0,
+     "tmax_p50": 46.0,
+     "tmax_p75": 55.0,
+     "tmax_summit_est": 40.2,
+     "wet_days": 16.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 33.0,
+     "tmax_p50": 37.0,
+     "tmax_p75": 45.0,
+     "tmax_summit_est": 31.2,
+     "wet_days": 20.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 28.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 26.2,
+     "wet_days": 22.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "hurricane-hill": {
+   "station": {
+    "id": "USS0023B17S",
+    "name": "Waterhole",
+    "dist_km": 6.1,
+    "elev_ft": 5010
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 32.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 40.0,
+     "tmax_summit_est": 32.4,
+     "wet_days": 17.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 29.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 31.4,
+     "wet_days": 17.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 34.0,
+     "tmax_p50": 36.5,
+     "tmax_p75": 42.0,
+     "tmax_summit_est": 33.9,
+     "wet_days": 17.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 36.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 37.4,
+     "wet_days": 16.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 44.0,
+     "tmax_p50": 50.0,
+     "tmax_p75": 56.0,
+     "tmax_summit_est": 47.4,
+     "wet_days": 9.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 48.0,
+     "tmax_p50": 54.0,
+     "tmax_p75": 61.8,
+     "tmax_summit_est": 51.4,
+     "wet_days": 7.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 56.0,
+     "tmax_p50": 61.0,
+     "tmax_p75": 67.0,
+     "tmax_summit_est": 58.4,
+     "wet_days": 2.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 57.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 69.0,
+     "tmax_summit_est": 60.4,
+     "wet_days": 3.5,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 48.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 50.4,
+     "wet_days": 7.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 40.5,
+     "tmax_p50": 45.0,
+     "tmax_p75": 51.5,
+     "tmax_summit_est": 42.4,
+     "wet_days": 14.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 33.0,
+     "tmax_p50": 37.0,
+     "tmax_p75": 43.0,
+     "tmax_summit_est": 34.4,
+     "wet_days": 20.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 29.0,
+     "tmax_p50": 33.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 30.4,
+     "wet_days": 18.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "garfield-peak": {
+   "station": {
+    "id": "USC00351946",
+    "name": "Crater Lake Nps Hq",
+    "dist_km": 0.2,
+    "elev_ft": 6485
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 29.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 26.5,
+     "wet_days": 14.4,
+     "snow_days": 15.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 26.0,
+     "tmax_p50": 33.0,
+     "tmax_p75": 40.0,
+     "tmax_summit_est": 27.5,
+     "wet_days": 13.8,
+     "snow_days": 14.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 29.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 42.0,
+     "tmax_summit_est": 29.5,
+     "wet_days": 16.0,
+     "snow_days": 16.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 33.0,
+     "tmax_p50": 41.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 35.5,
+     "wet_days": 12.5,
+     "snow_days": 11.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 44.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 46.5,
+     "wet_days": 7.8,
+     "snow_days": 4.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 54.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 56.5,
+     "wet_days": 4.2,
+     "snow_days": 1.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 67.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 66.5,
+     "wet_days": 0.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 67.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 66.5,
+     "wet_days": 1.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 53.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 58.5,
+     "wet_days": 3.9,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 41.0,
+     "tmax_p50": 49.0,
+     "tmax_p75": 61.0,
+     "tmax_summit_est": 43.5,
+     "wet_days": 9.5,
+     "snow_days": 5.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 31.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 47.0,
+     "tmax_summit_est": 32.5,
+     "wet_days": 13.2,
+     "snow_days": 11.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 27.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 26.5,
+     "wet_days": 15.6,
+     "snow_days": 16.2,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "lassen-peak": {
+   "station": {
+    "id": "USC00041700",
+    "name": "Chester",
+    "dist_km": 29.5,
+    "elev_ft": 4551
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 37.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 49.5,
+     "tmax_summit_est": 22.3,
+     "wet_days": 9.7,
+     "snow_days": 5.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 39.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 56.0,
+     "tmax_summit_est": 24.3,
+     "wet_days": 6.3,
+     "snow_days": 4.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 43.0,
+     "tmax_p50": 50.5,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 29.8,
+     "wet_days": 8.9,
+     "snow_days": 4.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 52.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 67.0,
+     "tmax_summit_est": 38.3,
+     "wet_days": 6.2,
+     "snow_days": 1.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 62.0,
+     "tmax_p50": 70.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 49.3,
+     "wet_days": 3.5,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 76.0,
+     "tmax_p50": 83.0,
+     "tmax_p75": 88.0,
+     "tmax_summit_est": 62.3,
+     "wet_days": 1.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 84.0,
+     "tmax_p50": 89.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 68.3,
+     "wet_days": 0.6,
+     "snow_days": 0.0,
+     "heat_days": 0.5
+    },
+    {
+     "month": 8,
+     "tmax_p25": 85.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 91.2,
+     "tmax_summit_est": 67.3,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 0.3
+    },
+    {
+     "month": 9,
+     "tmax_p25": 73.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 87.0,
+     "tmax_summit_est": 61.3,
+     "wet_days": 1.5,
+     "snow_days": 0.0,
+     "heat_days": 0.5
+    },
+    {
+     "month": 10,
+     "tmax_p25": 60.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 46.3,
+     "wet_days": 4.4,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 46.0,
+     "tmax_p50": 51.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 30.3,
+     "wet_days": 5.5,
+     "snow_days": 2.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 37.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 47.0,
+     "tmax_summit_est": 19.3,
+     "wet_days": 10.3,
+     "snow_days": 4.4,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "lady-bird-johnson-grove": {
+   "station": {
+    "id": "USW00024283",
+    "name": "Arcata Eureka Ap",
+    "dist_km": 35.4,
+    "elev_ft": 211
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 53.5,
+     "tmax_p50": 56.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 52.2,
+     "wet_days": 12.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 52.0,
+     "tmax_p50": 54.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 50.2,
+     "wet_days": 11.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 53.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 52.2,
+     "wet_days": 12.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 55.0,
+     "tmax_p50": 57.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 53.2,
+     "wet_days": 8.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 56.0,
+     "tmax_p50": 58.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 54.2,
+     "wet_days": 3.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 60.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 58.2,
+     "wet_days": 1.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 62.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 60.2,
+     "wet_days": 0.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 62.0,
+     "tmax_p50": 65.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 61.2,
+     "wet_days": 0.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 62.0,
+     "tmax_p50": 65.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 61.2,
+     "wet_days": 1.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 60.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 58.2,
+     "wet_days": 5.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 55.0,
+     "tmax_p50": 58.5,
+     "tmax_p75": 62.0,
+     "tmax_summit_est": 54.7,
+     "wet_days": 10.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 52.0,
+     "tmax_p50": 55.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 51.2,
+     "wet_days": 13.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "pinnacles-high-peaks": {
+   "station": {
+    "id": "USC00046926",
+    "name": "Pinnacles Np",
+    "dist_km": 0.8,
+    "elev_ft": 1307
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 55.8,
+     "tmax_p50": 62.5,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 57.8,
+     "wet_days": 6.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 57.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 58.3,
+     "wet_days": 5.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 59.0,
+     "tmax_p50": 65.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 60.3,
+     "wet_days": 6.5,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 68.0,
+     "tmax_p50": 74.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 69.3,
+     "wet_days": 1.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 72.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 74.3,
+     "wet_days": 1.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 84.0,
+     "tmax_p50": 92.0,
+     "tmax_p75": 98.0,
+     "tmax_summit_est": 87.3,
+     "wet_days": 0.3,
+     "snow_days": null,
+     "heat_days": 5.6
+    },
+    {
+     "month": 7,
+     "tmax_p25": 93.0,
+     "tmax_p50": 98.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 93.3,
+     "wet_days": 0.0,
+     "snow_days": null,
+     "heat_days": 13.1
+    },
+    {
+     "month": 8,
+     "tmax_p25": 92.0,
+     "tmax_p50": 96.0,
+     "tmax_p75": 101.0,
+     "tmax_summit_est": 91.3,
+     "wet_days": 0.0,
+     "snow_days": null,
+     "heat_days": 10.5
+    },
+    {
+     "month": 9,
+     "tmax_p25": 83.0,
+     "tmax_p50": 92.0,
+     "tmax_p75": 99.0,
+     "tmax_summit_est": 87.3,
+     "wet_days": 0.3,
+     "snow_days": null,
+     "heat_days": 6.4
+    },
+    {
+     "month": 10,
+     "tmax_p25": 78.0,
+     "tmax_p50": 84.0,
+     "tmax_p75": 90.0,
+     "tmax_summit_est": 79.3,
+     "wet_days": 0.3,
+     "snow_days": null,
+     "heat_days": 1.4
+    },
+    {
+     "month": 11,
+     "tmax_p25": 62.5,
+     "tmax_p50": 70.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 65.3,
+     "wet_days": 4.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 57.0,
+     "tmax_p50": 61.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 56.3,
+     "wet_days": 6.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "ryan-mountain": {
+   "station": {
+    "id": "USC00049099",
+    "name": "Twentynine Palms",
+    "dist_km": 17.2,
+    "elev_ft": 1975
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 59.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 51.8,
+     "wet_days": 1.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 61.2,
+     "tmax_p50": 68.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 55.8,
+     "wet_days": 0.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 68.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 62.8,
+     "wet_days": 0.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 79.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 90.0,
+     "tmax_summit_est": 72.8,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 84.0,
+     "tmax_p50": 90.0,
+     "tmax_p75": 95.0,
+     "tmax_summit_est": 77.8,
+     "wet_days": 0.1,
+     "snow_days": 0.0,
+     "heat_days": 2.5
+    },
+    {
+     "month": 6,
+     "tmax_p25": 97.0,
+     "tmax_p50": 102.0,
+     "tmax_p75": 107.0,
+     "tmax_summit_est": 89.8,
+     "wet_days": 0.0,
+     "snow_days": 0.0,
+     "heat_days": 19.8
+    },
+    {
+     "month": 7,
+     "tmax_p25": 103.0,
+     "tmax_p50": 105.0,
+     "tmax_p75": 109.0,
+     "tmax_summit_est": 92.8,
+     "wet_days": 1.3,
+     "snow_days": 0.0,
+     "heat_days": 28.4
+    },
+    {
+     "month": 8,
+     "tmax_p25": 102.0,
+     "tmax_p50": 104.0,
+     "tmax_p75": 106.5,
+     "tmax_summit_est": 91.8,
+     "wet_days": 0.9,
+     "snow_days": 0.0,
+     "heat_days": 27.2
+    },
+    {
+     "month": 9,
+     "tmax_p25": 93.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 84.8,
+     "wet_days": 1.0,
+     "snow_days": 0.0,
+     "heat_days": 11.8
+    },
+    {
+     "month": 10,
+     "tmax_p25": 80.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 91.0,
+     "tmax_summit_est": 72.8,
+     "wet_days": 0.4,
+     "snow_days": 0.0,
+     "heat_days": 1.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 67.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 59.8,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 59.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 69.5,
+     "tmax_summit_est": 51.8,
+     "wet_days": 1.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "golden-canyon": {
+   "station": {
+    "id": "USC00042319",
+    "name": "Death Valley Np",
+    "dist_km": 5.9,
+    "elev_ft": -194
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 63.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 72.0,
+     "tmax_summit_est": 65.9,
+     "wet_days": 1.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 69.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 72.9,
+     "wet_days": 1.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 76.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 79.9,
+     "wet_days": 0.7,
+     "snow_days": 0.0,
+     "heat_days": 0.6
+    },
+    {
+     "month": 4,
+     "tmax_p25": 88.0,
+     "tmax_p50": 94.0,
+     "tmax_p75": 99.0,
+     "tmax_summit_est": 91.9,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 6.4
+    },
+    {
+     "month": 5,
+     "tmax_p25": 94.0,
+     "tmax_p50": 101.0,
+     "tmax_p75": 106.0,
+     "tmax_summit_est": 98.9,
+     "wet_days": 0.1,
+     "snow_days": 0.0,
+     "heat_days": 17.6
+    },
+    {
+     "month": 6,
+     "tmax_p25": 108.0,
+     "tmax_p50": 114.0,
+     "tmax_p75": 119.0,
+     "tmax_summit_est": 111.9,
+     "wet_days": 0.0,
+     "snow_days": 0.0,
+     "heat_days": 29.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 115.0,
+     "tmax_p50": 119.0,
+     "tmax_p75": 122.0,
+     "tmax_summit_est": 116.9,
+     "wet_days": 0.6,
+     "snow_days": 0.0,
+     "heat_days": 30.9
+    },
+    {
+     "month": 8,
+     "tmax_p25": 114.0,
+     "tmax_p50": 116.0,
+     "tmax_p75": 119.0,
+     "tmax_summit_est": 113.9,
+     "wet_days": 0.6,
+     "snow_days": 0.0,
+     "heat_days": 30.7
+    },
+    {
+     "month": 9,
+     "tmax_p25": 103.0,
+     "tmax_p50": 108.0,
+     "tmax_p75": 112.0,
+     "tmax_summit_est": 105.9,
+     "wet_days": 0.4,
+     "snow_days": 0.0,
+     "heat_days": 26.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 89.0,
+     "tmax_p50": 93.0,
+     "tmax_p75": 99.5,
+     "tmax_summit_est": 90.9,
+     "wet_days": 0.6,
+     "snow_days": 0.0,
+     "heat_days": 7.8
+    },
+    {
+     "month": 11,
+     "tmax_p25": 72.2,
+     "tmax_p50": 76.0,
+     "tmax_p75": 82.0,
+     "tmax_summit_est": 73.9,
+     "wet_days": 0.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 62.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 63.9,
+     "wet_days": 0.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "lost-mine-trail": {
+   "station": {
+    "id": "USC00411715",
+    "name": "Chisos Basin",
+    "dist_km": 0.6,
+    "elev_ft": 5300
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 53.0,
+     "tmax_p50": 58.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 52.6,
+     "wet_days": 1.2,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 59.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 60.6,
+     "wet_days": 1.5,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 64.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 65.6,
+     "wet_days": 1.4,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 73.0,
+     "tmax_p50": 78.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 72.6,
+     "wet_days": 0.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 80.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 79.6,
+     "wet_days": 2.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 84.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 82.6,
+     "wet_days": 4.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 83.0,
+     "tmax_p50": 87.0,
+     "tmax_p75": 90.0,
+     "tmax_summit_est": 81.6,
+     "wet_days": 4.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 82.0,
+     "tmax_p50": 86.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 80.6,
+     "wet_days": 6.8,
+     "snow_days": 0.0,
+     "heat_days": 0.1
+    },
+    {
+     "month": 9,
+     "tmax_p25": 77.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 84.0,
+     "tmax_summit_est": 75.6,
+     "wet_days": 5.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 71.0,
+     "tmax_p50": 76.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 70.6,
+     "wet_days": 2.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 59.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 61.6,
+     "wet_days": 1.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 56.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 57.6,
+     "wet_days": 1.9,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "guadalupe-peak": {
+   "station": null,
+   "missing": [
+    "temp",
+    "wet"
+   ],
+   "months": []
+  },
+  "alkali-flat": {
+   "station": {
+    "id": "USC00299686",
+    "name": "White Sands Natl Mon",
+    "dist_km": 0.4,
+    "elev_ft": 4006
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 51.8,
+     "tmax_p50": 57.0,
+     "tmax_p75": 63.0,
+     "tmax_summit_est": 57.0,
+     "wet_days": 1.5,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 59.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 66.0,
+     "wet_days": 0.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 67.0,
+     "tmax_p50": 72.5,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 72.5,
+     "wet_days": 0.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 76.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 82.0,
+     "wet_days": 0.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 85.0,
+     "tmax_p50": 89.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 89.0,
+     "wet_days": 0.9,
+     "snow_days": 0.0,
+     "heat_days": 1.2
+    },
+    {
+     "month": 6,
+     "tmax_p25": 95.0,
+     "tmax_p50": 99.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 99.0,
+     "wet_days": 2.2,
+     "snow_days": 0.0,
+     "heat_days": 14.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 96.0,
+     "tmax_p50": 99.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 99.0,
+     "wet_days": 3.1,
+     "snow_days": 0.0,
+     "heat_days": 15.2
+    },
+    {
+     "month": 8,
+     "tmax_p25": 92.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 101.0,
+     "tmax_summit_est": 97.0,
+     "wet_days": 3.2,
+     "snow_days": 0.0,
+     "heat_days": 10.7
+    },
+    {
+     "month": 9,
+     "tmax_p25": 88.0,
+     "tmax_p50": 92.0,
+     "tmax_p75": 95.0,
+     "tmax_summit_est": 92.0,
+     "wet_days": 2.6,
+     "snow_days": 0.0,
+     "heat_days": 1.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 75.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 87.0,
+     "tmax_summit_est": 81.0,
+     "wet_days": 2.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 62.0,
+     "tmax_p50": 67.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 67.0,
+     "wet_days": 1.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 54.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 60.0,
+     "wet_days": 1.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "emerald-lake": {
+   "station": {
+    "id": "USS0005J39S",
+    "name": "Bear Lake",
+    "dist_km": 0.5,
+    "elev_ft": 9500
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 23.0,
+     "tmax_p50": 28.0,
+     "tmax_p75": 34.0,
+     "tmax_summit_est": 25.9,
+     "wet_days": 14.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 22.0,
+     "tmax_p50": 29.0,
+     "tmax_p75": 36.0,
+     "tmax_summit_est": 26.9,
+     "wet_days": 15.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 29.0,
+     "tmax_p50": 37.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 34.9,
+     "wet_days": 12.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 37.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 42.9,
+     "wet_days": 14.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 46.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 50.9,
+     "wet_days": 13.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 62.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 65.9,
+     "wet_days": 7.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 69.5,
+     "tmax_p50": 73.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 70.9,
+     "wet_days": 8.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 66.0,
+     "tmax_p50": 70.5,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 68.4,
+     "wet_days": 9.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 60.0,
+     "tmax_p50": 65.0,
+     "tmax_p75": 69.0,
+     "tmax_summit_est": 62.9,
+     "wet_days": 6.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 42.0,
+     "tmax_p50": 50.5,
+     "tmax_p75": 56.0,
+     "tmax_summit_est": 48.4,
+     "wet_days": 9.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 29.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 43.0,
+     "tmax_summit_est": 35.9,
+     "wet_days": 11.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 23.5,
+     "tmax_p50": 30.0,
+     "tmax_p75": 35.5,
+     "tmax_summit_est": 27.9,
+     "wet_days": 13.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "high-dune": {
+   "station": {
+    "id": "USC00053541",
+    "name": "Great Sand Dunes Np & Preserve",
+    "dist_km": 1.9,
+    "elev_ft": 8183
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 28.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 39.0,
+     "tmax_summit_est": 32.2,
+     "wet_days": 2.1,
+     "snow_days": 5.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 33.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 38.2,
+     "wet_days": 2.6,
+     "snow_days": 5.8,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 42.5,
+     "tmax_p50": 49.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 47.2,
+     "wet_days": 2.9,
+     "snow_days": 4.8,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 50.2,
+     "tmax_p50": 58.0,
+     "tmax_p75": 63.0,
+     "tmax_summit_est": 56.2,
+     "wet_days": 2.3,
+     "snow_days": 3.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 59.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 64.2,
+     "wet_days": 4.0,
+     "snow_days": 1.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 74.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 83.0,
+     "tmax_summit_est": 77.2,
+     "wet_days": 3.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 79.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 80.2,
+     "wet_days": 5.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 76.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 82.0,
+     "tmax_summit_est": 77.2,
+     "wet_days": 5.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 71.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 73.2,
+     "wet_days": 3.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 55.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 67.0,
+     "tmax_summit_est": 60.2,
+     "wet_days": 2.2,
+     "snow_days": 1.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 41.0,
+     "tmax_p50": 47.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 45.2,
+     "wet_days": 1.5,
+     "snow_days": 3.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 32.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 36.2,
+     "wet_days": 2.0,
+     "snow_days": 4.2,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "inspiration-point": {
+   "station": {
+    "id": "USW00004131",
+    "name": "Moose 1 Nne",
+    "dist_km": 10.7,
+    "elev_ft": 6466
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 17.0,
+     "tmax_p50": 25.0,
+     "tmax_p75": 30.0,
+     "tmax_summit_est": 22.4,
+     "wet_days": 7.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 23.0,
+     "tmax_p50": 29.0,
+     "tmax_p75": 36.0,
+     "tmax_summit_est": 26.4,
+     "wet_days": 8.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 31.0,
+     "tmax_p50": 38.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 35.4,
+     "wet_days": 6.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 40.2,
+     "tmax_p50": 47.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 44.4,
+     "wet_days": 6.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 53.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 57.4,
+     "wet_days": 6.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 66.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 70.4,
+     "wet_days": 3.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 78.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 79.4,
+     "wet_days": 2.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 74.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 83.0,
+     "tmax_summit_est": 76.4,
+     "wet_days": 4.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 63.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 68.4,
+     "wet_days": 5.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 46.0,
+     "tmax_p50": 54.5,
+     "tmax_p75": 63.0,
+     "tmax_summit_est": 51.9,
+     "wet_days": 5.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 31.0,
+     "tmax_p50": 37.0,
+     "tmax_p75": 45.0,
+     "tmax_summit_est": 34.4,
+     "wet_days": 6.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 21.5,
+     "tmax_p50": 28.0,
+     "tmax_p75": 33.0,
+     "tmax_summit_est": 25.4,
+     "wet_days": 9.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "cadillac-north-ridge": {
+   "station": {
+    "id": "USC00172443",
+    "name": "E Surry",
+    "dist_km": 24.0,
+    "elev_ft": 105
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 26.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 37.5,
+     "tmax_summit_est": 27.0,
+     "wet_days": 7.6,
+     "snow_days": 10.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 27.0,
+     "tmax_p50": 34.0,
+     "tmax_p75": 40.0,
+     "tmax_summit_est": 29.0,
+     "wet_days": 7.3,
+     "snow_days": 9.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 35.0,
+     "tmax_p50": 41.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 36.0,
+     "wet_days": 8.2,
+     "snow_days": 6.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 46.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 47.0,
+     "wet_days": 8.6,
+     "snow_days": 2.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 58.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 58.0,
+     "wet_days": 7.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 65.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 67.0,
+     "wet_days": 8.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 74.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 82.0,
+     "tmax_summit_est": 74.0,
+     "wet_days": 5.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 74.0,
+     "tmax_p50": 77.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 72.0,
+     "wet_days": 6.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 66.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 66.0,
+     "wet_days": 4.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 54.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 55.0,
+     "wet_days": 7.0,
+     "snow_days": 0.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 40.0,
+     "tmax_p50": 46.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 41.0,
+     "wet_days": 7.4,
+     "snow_days": 2.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 29.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 31.0,
+     "wet_days": 9.2,
+     "snow_days": 7.2,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "alum-cave-leconte": {
+   "station": {
+    "id": "USC00406500",
+    "name": "Newfound Gap",
+    "dist_km": 2.5,
+    "elev_ft": 5040
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 31.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 33.6,
+     "wet_days": 9.3,
+     "snow_days": 5.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 38.2,
+     "tmax_p50": 47.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 41.6,
+     "wet_days": 9.9,
+     "snow_days": 3.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 45.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 46.6,
+     "wet_days": 9.8,
+     "snow_days": 1.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 51.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 53.6,
+     "wet_days": 8.6,
+     "snow_days": 1.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 62.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 72.5,
+     "tmax_summit_est": 62.6,
+     "wet_days": 10.2,
+     "snow_days": 0.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 69.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 67.6,
+     "wet_days": 10.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 73.0,
+     "tmax_p50": 76.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 70.6,
+     "wet_days": 13.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 71.5,
+     "tmax_p50": 74.0,
+     "tmax_p75": 77.5,
+     "tmax_summit_est": 68.6,
+     "wet_days": 9.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 66.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 65.6,
+     "wet_days": 6.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 57.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 57.6,
+     "wet_days": 7.2,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 47.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 57.0,
+     "tmax_summit_est": 46.6,
+     "wet_days": 5.7,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 38.0,
+     "tmax_p50": 46.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 40.6,
+     "wet_days": 10.0,
+     "snow_days": 1.7,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "clingmans-dome": {
+   "station": {
+    "id": "USC00406500",
+    "name": "Newfound Gap",
+    "dist_km": 8.2,
+    "elev_ft": 5040
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 31.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 33.4,
+     "wet_days": 9.3,
+     "snow_days": 5.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 38.2,
+     "tmax_p50": 47.0,
+     "tmax_p75": 52.0,
+     "tmax_summit_est": 41.4,
+     "wet_days": 9.9,
+     "snow_days": 3.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 45.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 46.4,
+     "wet_days": 9.8,
+     "snow_days": 1.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 51.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 66.0,
+     "tmax_summit_est": 53.4,
+     "wet_days": 8.6,
+     "snow_days": 1.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 62.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 72.5,
+     "tmax_summit_est": 62.4,
+     "wet_days": 10.2,
+     "snow_days": 0.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 69.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 67.4,
+     "wet_days": 10.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 73.0,
+     "tmax_p50": 76.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 70.4,
+     "wet_days": 13.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 71.5,
+     "tmax_p50": 74.0,
+     "tmax_p75": 77.5,
+     "tmax_summit_est": 68.4,
+     "wet_days": 9.2,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 66.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 65.4,
+     "wet_days": 6.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 57.0,
+     "tmax_p50": 63.0,
+     "tmax_p75": 68.0,
+     "tmax_summit_est": 57.4,
+     "wet_days": 7.2,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 47.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 57.0,
+     "tmax_summit_est": 46.4,
+     "wet_days": 5.7,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 38.0,
+     "tmax_p50": 46.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 40.4,
+     "wet_days": 10.0,
+     "snow_days": 1.7,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "old-rag": {
+   "station": {
+    "id": "USC00447985",
+    "name": "Sperryville",
+    "dist_km": 12.9,
+    "elev_ft": 750
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 35.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 35.1,
+     "wet_days": 7.0,
+     "snow_days": 2.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 40.0,
+     "tmax_p50": 48.5,
+     "tmax_p75": 57.0,
+     "tmax_summit_est": 39.6,
+     "wet_days": 6.9,
+     "snow_days": 3.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 48.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 47.1,
+     "wet_days": 6.2,
+     "snow_days": 1.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 60.0,
+     "tmax_p50": 67.5,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 58.6,
+     "wet_days": 5.9,
+     "snow_days": 0.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 68.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 82.0,
+     "tmax_summit_est": 66.1,
+     "wet_days": 10.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 77.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 86.8,
+     "tmax_summit_est": 73.1,
+     "wet_days": 9.5,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 84.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 91.0,
+     "tmax_summit_est": 79.1,
+     "wet_days": 8.8,
+     "snow_days": 0.0,
+     "heat_days": 0.2
+    },
+    {
+     "month": 8,
+     "tmax_p25": 82.0,
+     "tmax_p50": 87.0,
+     "tmax_p75": 91.0,
+     "tmax_summit_est": 78.1,
+     "wet_days": 7.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 74.0,
+     "tmax_p50": 80.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 71.1,
+     "wet_days": 7.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 63.2,
+     "tmax_p50": 70.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 61.1,
+     "wet_days": 6.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 49.0,
+     "tmax_p50": 57.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 48.1,
+     "wet_days": 5.4,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 43.0,
+     "tmax_p50": 48.5,
+     "tmax_p75": 55.8,
+     "tmax_summit_est": 39.6,
+     "wet_days": 5.8,
+     "snow_days": 1.3,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "anhinga-trail": {
+   "station": {
+    "id": "USC00087760",
+    "name": "Royal Palm Rs",
+    "dist_km": 1.2,
+    "elev_ft": 7
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 73.2,
+     "tmax_p50": 78.0,
+     "tmax_p75": 82.0,
+     "tmax_summit_est": 78.0,
+     "wet_days": 3.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 78.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 82.0,
+     "wet_days": 3.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 81.0,
+     "tmax_p50": 84.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 84.0,
+     "wet_days": 2.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 84.0,
+     "tmax_p50": 87.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 87.0,
+     "wet_days": 3.8,
+     "snow_days": null,
+     "heat_days": 0.1
+    },
+    {
+     "month": 5,
+     "tmax_p25": 87.0,
+     "tmax_p50": 89.0,
+     "tmax_p75": 92.0,
+     "tmax_summit_est": 89.0,
+     "wet_days": 6.8,
+     "snow_days": null,
+     "heat_days": 0.1
+    },
+    {
+     "month": 6,
+     "tmax_p25": 88.0,
+     "tmax_p50": 91.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 91.0,
+     "wet_days": 11.7,
+     "snow_days": null,
+     "heat_days": 0.2
+    },
+    {
+     "month": 7,
+     "tmax_p25": 91.0,
+     "tmax_p50": 92.0,
+     "tmax_p75": 95.0,
+     "tmax_summit_est": 92.0,
+     "wet_days": 8.6,
+     "snow_days": null,
+     "heat_days": 0.1
+    },
+    {
+     "month": 8,
+     "tmax_p25": 90.0,
+     "tmax_p50": 92.0,
+     "tmax_p75": 94.0,
+     "tmax_summit_est": 92.0,
+     "wet_days": 11.8,
+     "snow_days": null,
+     "heat_days": 0.9
+    },
+    {
+     "month": 9,
+     "tmax_p25": 89.0,
+     "tmax_p50": 91.0,
+     "tmax_p75": 93.0,
+     "tmax_summit_est": 91.0,
+     "wet_days": 10.6,
+     "snow_days": null,
+     "heat_days": 0.6
+    },
+    {
+     "month": 10,
+     "tmax_p25": 85.0,
+     "tmax_p50": 88.0,
+     "tmax_p75": 90.0,
+     "tmax_summit_est": 88.0,
+     "wet_days": 7.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 81.0,
+     "tmax_p50": 83.0,
+     "tmax_p75": 86.0,
+     "tmax_summit_est": 83.0,
+     "wet_days": 2.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 77.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 84.0,
+     "tmax_summit_est": 82.0,
+     "wet_days": 4.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "wheeler-peak": {
+   "station": {
+    "id": "USS0014L04S",
+    "name": "Wheeler Peak",
+    "dist_km": 2.7,
+    "elev_ft": 10120
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 24.0,
+     "tmax_p50": 30.0,
+     "tmax_p75": 37.0,
+     "tmax_summit_est": 19.7,
+     "wet_days": 11.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 23.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 38.0,
+     "tmax_summit_est": 21.7,
+     "wet_days": 8.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 28.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 42.0,
+     "tmax_summit_est": 24.7,
+     "wet_days": 12.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 37.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 49.0,
+     "tmax_summit_est": 32.7,
+     "wet_days": 8.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 42.0,
+     "tmax_p50": 49.0,
+     "tmax_p75": 55.0,
+     "tmax_summit_est": 38.7,
+     "wet_days": 8.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 58.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 70.0,
+     "tmax_summit_est": 53.7,
+     "wet_days": 2.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 68.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 74.0,
+     "tmax_summit_est": 60.7,
+     "wet_days": 5.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 65.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 57.7,
+     "wet_days": 4.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 54.2,
+     "tmax_p50": 60.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 49.7,
+     "wet_days": 4.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 40.0,
+     "tmax_p50": 47.0,
+     "tmax_p75": 55.0,
+     "tmax_summit_est": 36.7,
+     "wet_days": 7.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 31.0,
+     "tmax_p50": 39.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 28.7,
+     "wet_days": 8.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 25.0,
+     "tmax_p50": 32.0,
+     "tmax_p75": 39.0,
+     "tmax_summit_est": 21.7,
+     "wet_days": 9.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "south-kaibab-skeleton-point": {
+   "station": {
+    "id": "USC00023582",
+    "name": "Grand Canyon Visitor Ctr",
+    "dist_km": 2.4,
+    "elev_ft": 7083
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 34.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 46.2,
+     "tmax_summit_est": 39.4,
+     "wet_days": 5.5,
+     "snow_days": 6.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 36.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 44.4,
+     "wet_days": 3.7,
+     "snow_days": 5.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 44.0,
+     "tmax_p50": 51.5,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 50.9,
+     "wet_days": 3.7,
+     "snow_days": 4.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 55.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 67.0,
+     "tmax_summit_est": 61.4,
+     "wet_days": 1.8,
+     "snow_days": 1.2,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 60.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 73.0,
+     "tmax_summit_est": 67.4,
+     "wet_days": 4.0,
+     "snow_days": 0.9,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 78.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 87.0,
+     "tmax_summit_est": 81.4,
+     "wet_days": 1.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 82.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 84.4,
+     "wet_days": 5.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 77.0,
+     "tmax_p50": 81.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 80.4,
+     "wet_days": 5.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 72.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 74.4,
+     "wet_days": 3.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 57.0,
+     "tmax_p50": 64.0,
+     "tmax_p75": 69.0,
+     "tmax_summit_est": 63.4,
+     "wet_days": 3.0,
+     "snow_days": 0.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 43.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 58.0,
+     "tmax_summit_est": 52.4,
+     "wet_days": 2.3,
+     "snow_days": 2.1,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 36.0,
+     "tmax_p50": 44.0,
+     "tmax_p75": 49.2,
+     "tmax_summit_est": 43.4,
+     "wet_days": 3.4,
+     "snow_days": 4.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "zion-narrows": {
+   "station": {
+    "id": "USC00429717",
+    "name": "Zion Np",
+    "dist_km": 9.0,
+    "elev_ft": 4038
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 47.0,
+     "tmax_p50": 52.0,
+     "tmax_p75": 59.0,
+     "tmax_summit_est": 49.0,
+     "wet_days": 6.4,
+     "snow_days": 1.3,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 50.5,
+     "tmax_p50": 59.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 56.0,
+     "wet_days": 4.5,
+     "snow_days": 1.4,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 57.8,
+     "tmax_p50": 65.0,
+     "tmax_p75": 71.2,
+     "tmax_summit_est": 62.0,
+     "wet_days": 5.8,
+     "snow_days": 0.7,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 68.0,
+     "tmax_p50": 74.0,
+     "tmax_p75": 80.0,
+     "tmax_summit_est": 71.0,
+     "wet_days": 2.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 75.0,
+     "tmax_p50": 82.0,
+     "tmax_p75": 88.0,
+     "tmax_summit_est": 79.0,
+     "wet_days": 2.8,
+     "snow_days": 0.0,
+     "heat_days": 0.1
+    },
+    {
+     "month": 6,
+     "tmax_p25": 92.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 94.0,
+     "wet_days": 0.7,
+     "snow_days": 0.0,
+     "heat_days": 12.8
+    },
+    {
+     "month": 7,
+     "tmax_p25": 98.0,
+     "tmax_p50": 101.0,
+     "tmax_p75": 105.0,
+     "tmax_summit_est": 98.0,
+     "wet_days": 2.5,
+     "snow_days": 0.0,
+     "heat_days": 20.2
+    },
+    {
+     "month": 8,
+     "tmax_p25": 94.0,
+     "tmax_p50": 98.0,
+     "tmax_p75": 101.0,
+     "tmax_summit_est": 95.0,
+     "wet_days": 3.9,
+     "snow_days": 0.0,
+     "heat_days": 11.2
+    },
+    {
+     "month": 9,
+     "tmax_p25": 86.0,
+     "tmax_p50": 91.0,
+     "tmax_p75": 96.0,
+     "tmax_summit_est": 88.0,
+     "wet_days": 2.8,
+     "snow_days": 0.0,
+     "heat_days": 3.5
+    },
+    {
+     "month": 10,
+     "tmax_p25": 71.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 84.2,
+     "tmax_summit_est": 76.0,
+     "wet_days": 2.4,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 58.0,
+     "tmax_p50": 65.5,
+     "tmax_p75": 72.0,
+     "tmax_summit_est": 62.5,
+     "wet_days": 2.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 47.2,
+     "tmax_p50": 56.0,
+     "tmax_p75": 60.0,
+     "tmax_summit_est": 53.0,
+     "wet_days": 5.3,
+     "snow_days": 0.6,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "longs-peak": {
+   "station": {
+    "id": "USS0005J18S",
+    "name": "Copeland Lake",
+    "dist_km": 7.1,
+    "elev_ft": 8600
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 29.0,
+     "tmax_p50": 35.0,
+     "tmax_p75": 41.0,
+     "tmax_summit_est": 15.2,
+     "wet_days": 9.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 29.0,
+     "tmax_p50": 37.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 17.2,
+     "wet_days": 12.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 35.0,
+     "tmax_p50": 43.0,
+     "tmax_p75": 50.0,
+     "tmax_summit_est": 23.2,
+     "wet_days": 11.8,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 41.0,
+     "tmax_p50": 50.0,
+     "tmax_p75": 57.0,
+     "tmax_summit_est": 30.2,
+     "wet_days": 11.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 49.0,
+     "tmax_p50": 58.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 38.2,
+     "wet_days": 12.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 66.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 52.2,
+     "wet_days": 7.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 7,
+     "tmax_p25": 73.0,
+     "tmax_p50": 77.0,
+     "tmax_p75": 81.0,
+     "tmax_summit_est": 57.2,
+     "wet_days": 7.3,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 71.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 79.0,
+     "tmax_summit_est": 55.2,
+     "wet_days": 7.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 9,
+     "tmax_p25": 67.0,
+     "tmax_p50": 72.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 52.2,
+     "wet_days": 4.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 49.0,
+     "tmax_p50": 58.0,
+     "tmax_p75": 64.0,
+     "tmax_summit_est": 38.2,
+     "wet_days": 7.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 35.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 25.2,
+     "wet_days": 9.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 28.0,
+     "tmax_p50": 36.0,
+     "tmax_p75": 42.0,
+     "tmax_summit_est": 16.2,
+     "wet_days": 10.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "general-sherman-tree": {
+   "station": {
+    "id": "USC00044890",
+    "name": "Lemon Cove",
+    "dist_km": 33.1,
+    "elev_ft": 513
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 57.0,
+     "tmax_p50": 62.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 39.1,
+     "wet_days": 6.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 60.0,
+     "tmax_p50": 66.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 43.1,
+     "wet_days": 5.7,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 64.5,
+     "tmax_p50": 70.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 47.1,
+     "wet_days": 6.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 73.0,
+     "tmax_p50": 79.5,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 56.6,
+     "wet_days": 2.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 80.0,
+     "tmax_p50": 86.0,
+     "tmax_p75": 92.0,
+     "tmax_summit_est": 63.1,
+     "wet_days": 1.2,
+     "snow_days": 0.0,
+     "heat_days": 1.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 91.0,
+     "tmax_p50": 97.0,
+     "tmax_p75": 102.0,
+     "tmax_summit_est": 74.1,
+     "wet_days": 0.3,
+     "snow_days": 0.0,
+     "heat_days": 11.3
+    },
+    {
+     "month": 7,
+     "tmax_p25": 99.0,
+     "tmax_p50": 102.0,
+     "tmax_p75": 105.0,
+     "tmax_summit_est": 79.1,
+     "wet_days": 0.0,
+     "snow_days": 0.0,
+     "heat_days": 22.7
+    },
+    {
+     "month": 8,
+     "tmax_p25": 97.0,
+     "tmax_p50": 100.0,
+     "tmax_p75": 104.0,
+     "tmax_summit_est": 77.1,
+     "wet_days": 0.1,
+     "snow_days": 0.0,
+     "heat_days": 18.3
+    },
+    {
+     "month": 9,
+     "tmax_p25": 89.0,
+     "tmax_p50": 95.0,
+     "tmax_p75": 100.0,
+     "tmax_summit_est": 72.1,
+     "wet_days": 0.2,
+     "snow_days": 0.0,
+     "heat_days": 7.7
+    },
+    {
+     "month": 10,
+     "tmax_p25": 78.0,
+     "tmax_p50": 85.0,
+     "tmax_p75": 89.0,
+     "tmax_summit_est": 62.1,
+     "wet_days": 1.4,
+     "snow_days": 0.0,
+     "heat_days": 1.1
+    },
+    {
+     "month": 11,
+     "tmax_p25": 65.0,
+     "tmax_p50": 71.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 48.1,
+     "wet_days": 3.0,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 56.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 37.1,
+     "wet_days": 4.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "hall-of-mosses": {
+   "station": {
+    "id": "USC00452914",
+    "name": "Forks 1 E",
+    "dist_km": 33.0,
+    "elev_ft": 372
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 44.0,
+     "tmax_p50": 48.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 46.9,
+     "wet_days": 17.1,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 44.0,
+     "tmax_p50": 48.0,
+     "tmax_p75": 51.0,
+     "tmax_summit_est": 46.9,
+     "wet_days": 16.7,
+     "snow_days": 1.6,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 49.0,
+     "tmax_p50": 53.0,
+     "tmax_p75": 57.0,
+     "tmax_summit_est": 51.9,
+     "wet_days": 17.6,
+     "snow_days": 0.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 52.0,
+     "tmax_p50": 56.0,
+     "tmax_p75": 62.0,
+     "tmax_summit_est": 54.9,
+     "wet_days": 16.3,
+     "snow_days": 0.5,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 58.5,
+     "tmax_p50": 64.0,
+     "tmax_p75": 71.0,
+     "tmax_summit_est": 62.9,
+     "wet_days": 6.9,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 63.0,
+     "tmax_p50": 69.0,
+     "tmax_p75": 74.0,
+     "tmax_summit_est": 67.9,
+     "wet_days": 6.9,
+     "snow_days": 0.0,
+     "heat_days": 0.3
+    },
+    {
+     "month": 7,
+     "tmax_p25": 69.0,
+     "tmax_p50": 73.0,
+     "tmax_p75": 78.0,
+     "tmax_summit_est": 71.9,
+     "wet_days": 3.8,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 8,
+     "tmax_p25": 70.0,
+     "tmax_p50": 75.0,
+     "tmax_p75": 81.5,
+     "tmax_summit_est": 73.9,
+     "wet_days": 3.6,
+     "snow_days": 0.0,
+     "heat_days": 0.2
+    },
+    {
+     "month": 9,
+     "tmax_p25": 64.0,
+     "tmax_p50": 68.0,
+     "tmax_p75": 75.0,
+     "tmax_summit_est": 66.9,
+     "wet_days": 9.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 10,
+     "tmax_p25": 56.0,
+     "tmax_p50": 60.0,
+     "tmax_p75": 63.0,
+     "tmax_summit_est": 58.9,
+     "wet_days": 14.3,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 47.0,
+     "tmax_p50": 50.0,
+     "tmax_p75": 54.0,
+     "tmax_summit_est": 48.9,
+     "wet_days": 18.6,
+     "snow_days": 0.0,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 41.0,
+     "tmax_p50": 45.0,
+     "tmax_p75": 49.0,
+     "tmax_summit_est": 43.9,
+     "wet_days": 19.4,
+     "snow_days": 0.8,
+     "heat_days": 0.0
+    }
+   ]
+  },
+  "devils-garden": {
+   "station": {
+    "id": "USW00093075",
+    "name": "Moab Canyonland Ap",
+    "dist_km": 15.0,
+    "elev_ft": 4551
+   },
+   "missing": [],
+   "months": [
+    {
+     "month": 1,
+     "tmax_p25": 35.0,
+     "tmax_p50": 40.0,
+     "tmax_p75": 44.0,
+     "tmax_summit_est": 37.7,
+     "wet_days": 1.1,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 2,
+     "tmax_p25": 40.2,
+     "tmax_p50": 49.0,
+     "tmax_p75": 56.0,
+     "tmax_summit_est": 46.7,
+     "wet_days": 1.2,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 3,
+     "tmax_p25": 53.0,
+     "tmax_p50": 59.0,
+     "tmax_p75": 65.0,
+     "tmax_summit_est": 56.7,
+     "wet_days": 1.9,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 4,
+     "tmax_p25": 62.2,
+     "tmax_p50": 70.0,
+     "tmax_p75": 76.0,
+     "tmax_summit_est": 67.7,
+     "wet_days": 1.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 5,
+     "tmax_p25": 71.0,
+     "tmax_p50": 79.0,
+     "tmax_p75": 85.0,
+     "tmax_summit_est": 76.7,
+     "wet_days": 1.7,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 6,
+     "tmax_p25": 89.0,
+     "tmax_p50": 94.0,
+     "tmax_p75": 98.0,
+     "tmax_summit_est": 91.7,
+     "wet_days": 1.1,
+     "snow_days": null,
+     "heat_days": 5.8
+    },
+    {
+     "month": 7,
+     "tmax_p25": 95.0,
+     "tmax_p50": 99.0,
+     "tmax_p75": 101.0,
+     "tmax_summit_est": 96.7,
+     "wet_days": 1.8,
+     "snow_days": null,
+     "heat_days": 12.7
+    },
+    {
+     "month": 8,
+     "tmax_p25": 92.0,
+     "tmax_p50": 95.0,
+     "tmax_p75": 98.0,
+     "tmax_summit_est": 92.7,
+     "wet_days": 2.8,
+     "snow_days": null,
+     "heat_days": 3.9
+    },
+    {
+     "month": 9,
+     "tmax_p25": 82.0,
+     "tmax_p50": 87.0,
+     "tmax_p75": 91.0,
+     "tmax_summit_est": 84.7,
+     "wet_days": 1.7,
+     "snow_days": null,
+     "heat_days": 1.1
+    },
+    {
+     "month": 10,
+     "tmax_p25": 62.5,
+     "tmax_p50": 70.0,
+     "tmax_p75": 77.0,
+     "tmax_summit_est": 67.7,
+     "wet_days": 3.0,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 11,
+     "tmax_p25": 47.0,
+     "tmax_p50": 54.0,
+     "tmax_p75": 62.0,
+     "tmax_summit_est": 51.7,
+     "wet_days": 1.6,
+     "snow_days": null,
+     "heat_days": 0.0
+    },
+    {
+     "month": 12,
+     "tmax_p25": 36.0,
+     "tmax_p50": 41.0,
+     "tmax_p75": 46.0,
+     "tmax_summit_est": 38.7,
+     "wet_days": 1.4,
+     "snow_days": null,
+     "heat_days": 0.0
+    }
+   ]
+  }
+ }
+}

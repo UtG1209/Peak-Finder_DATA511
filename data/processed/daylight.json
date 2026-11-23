@@ -1,0 +1,2965 @@
+{
+ "source": "Computed from trailhead latitude and longitude (NOAA solar formulas), 15th of each month",
+ "hikes": {
+  "angels-landing": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "07:45",
+    "sunset": "17:36"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "07:22",
+    "sunset": "18:10"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:45",
+    "sunset": "19:38"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:59",
+    "sunset": "20:06"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "06:24",
+    "sunset": "20:32"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.7,
+    "sunrise": "06:11",
+    "sunset": "20:53"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.5,
+    "sunrise": "06:22",
+    "sunset": "20:53"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:48",
+    "sunset": "20:26"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:13",
+    "sunset": "19:42"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:38",
+    "sunset": "18:56"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "07:10",
+    "sunset": "17:23"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:38",
+    "sunset": "17:15"
+   }
+  ],
+  "bright-angel-trail": [
+   {
+    "month": 1,
+    "daylight_hr": 10.0,
+    "sunrise": "07:38",
+    "sunset": "17:36"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.9,
+    "sunrise": "07:17",
+    "sunset": "18:09"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "06:41",
+    "sunset": "18:35"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "05:57",
+    "sunset": "19:01"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.0,
+    "sunrise": "05:23",
+    "sunset": "19:26"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:11",
+    "sunset": "19:46"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:22",
+    "sunset": "19:46"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "05:46",
+    "sunset": "19:21"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:10",
+    "sunset": "18:38"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "06:34",
+    "sunset": "17:54"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "07:05",
+    "sunset": "17:22"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "07:32",
+    "sunset": "17:16"
+   }
+  ],
+  "cascade-pass-sahale": [
+   {
+    "month": 1,
+    "daylight_hr": 8.7,
+    "sunrise": "07:51",
+    "sunset": "16:35"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.2,
+    "sunrise": "07:13",
+    "sunset": "17:24"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:20",
+    "sunset": "19:08"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.6,
+    "sunrise": "06:16",
+    "sunset": "19:53"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.2,
+    "sunrise": "05:25",
+    "sunset": "20:36"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 16.1,
+    "sunrise": "05:02",
+    "sunset": "21:07"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.8,
+    "sunrise": "05:17",
+    "sunset": "21:03"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.4,
+    "sunrise": "05:57",
+    "sunset": "20:22"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.7,
+    "sunrise": "06:39",
+    "sunset": "19:20"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 10.9,
+    "sunrise": "07:22",
+    "sunset": "18:17"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.3,
+    "sunrise": "07:11",
+    "sunset": "16:27"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.3,
+    "sunrise": "07:49",
+    "sunset": "16:10"
+   }
+  ],
+  "mount-washburn": [
+   {
+    "month": 1,
+    "daylight_hr": 9.1,
+    "sunrise": "07:56",
+    "sunset": "17:05"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.4,
+    "sunrise": "07:24",
+    "sunset": "17:48"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:36",
+    "sunset": "19:26"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.4,
+    "sunrise": "06:39",
+    "sunset": "20:05"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.8,
+    "sunrise": "05:54",
+    "sunset": "20:42"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.6,
+    "sunrise": "05:35",
+    "sunset": "21:09"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.3,
+    "sunrise": "05:49",
+    "sunset": "21:06"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.1,
+    "sunrise": "06:23",
+    "sunset": "20:30"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "06:59",
+    "sunset": "19:35"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.1,
+    "sunrise": "07:36",
+    "sunset": "18:39"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.6,
+    "sunrise": "07:18",
+    "sunset": "16:55"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.8,
+    "sunrise": "07:52",
+    "sunset": "16:42"
+   }
+  ],
+  "fairy-falls-grand-prismatic": [
+   {
+    "month": 1,
+    "daylight_hr": 9.2,
+    "sunrise": "07:57",
+    "sunset": "17:07"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.4,
+    "sunrise": "07:25",
+    "sunset": "17:50"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:38",
+    "sunset": "19:28"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.4,
+    "sunrise": "06:41",
+    "sunset": "20:06"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.8,
+    "sunrise": "05:57",
+    "sunset": "20:42"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.5,
+    "sunrise": "05:38",
+    "sunset": "21:09"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.2,
+    "sunrise": "05:52",
+    "sunset": "21:07"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.1,
+    "sunrise": "06:25",
+    "sunset": "20:31"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "07:01",
+    "sunset": "19:37"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.1,
+    "sunrise": "07:37",
+    "sunset": "18:41"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.6,
+    "sunrise": "07:19",
+    "sunset": "16:57"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.9,
+    "sunrise": "07:53",
+    "sunset": "16:44"
+   }
+  ],
+  "grinnell-glacier": [
+   {
+    "month": 1,
+    "daylight_hr": 8.7,
+    "sunrise": "08:23",
+    "sunset": "17:04"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.1,
+    "sunrise": "07:44",
+    "sunset": "17:53"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:50",
+    "sunset": "19:38"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.6,
+    "sunrise": "06:46",
+    "sunset": "20:24"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.2,
+    "sunrise": "05:54",
+    "sunset": "21:07"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 16.1,
+    "sunrise": "05:31",
+    "sunset": "21:39"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.8,
+    "sunrise": "05:46",
+    "sunset": "21:34"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.4,
+    "sunrise": "06:26",
+    "sunset": "20:53"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.7,
+    "sunrise": "07:10",
+    "sunset": "19:50"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 10.9,
+    "sunrise": "07:53",
+    "sunset": "18:47"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.2,
+    "sunrise": "07:43",
+    "sunset": "16:56"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.3,
+    "sunrise": "08:21",
+    "sunset": "16:39"
+   }
+  ],
+  "glacier-highline": [
+   {
+    "month": 1,
+    "daylight_hr": 8.7,
+    "sunrise": "08:23",
+    "sunset": "17:04"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.2,
+    "sunrise": "07:44",
+    "sunset": "17:54"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:51",
+    "sunset": "19:38"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.6,
+    "sunrise": "06:46",
+    "sunset": "20:24"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.2,
+    "sunrise": "05:55",
+    "sunset": "21:07"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 16.1,
+    "sunrise": "05:31",
+    "sunset": "21:39"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.8,
+    "sunrise": "05:47",
+    "sunset": "21:34"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.4,
+    "sunrise": "06:27",
+    "sunset": "20:53"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.7,
+    "sunrise": "07:10",
+    "sunset": "19:51"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 10.9,
+    "sunrise": "07:53",
+    "sunset": "18:48"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.2,
+    "sunrise": "07:42",
+    "sunset": "16:57"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.3,
+    "sunrise": "08:21",
+    "sunset": "16:39"
+   }
+  ],
+  "half-dome": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:12",
+    "sunset": "17:01"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:49",
+    "sunset": "17:36"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:11",
+    "sunset": "19:05"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:24",
+    "sunset": "19:32"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "05:49",
+    "sunset": "20:00"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "05:36",
+    "sunset": "20:21"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.5,
+    "sunrise": "05:48",
+    "sunset": "20:20"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:13",
+    "sunset": "19:53"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:39",
+    "sunset": "19:08"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:05",
+    "sunset": "18:22"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "06:38",
+    "sunset": "16:48"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:06",
+    "sunset": "16:41"
+   }
+  ],
+  "upper-yosemite-falls": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:13",
+    "sunset": "17:01"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:49",
+    "sunset": "17:36"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:11",
+    "sunset": "19:05"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:25",
+    "sunset": "19:33"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "05:49",
+    "sunset": "20:00"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "05:36",
+    "sunset": "20:21"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "05:48",
+    "sunset": "20:21"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:13",
+    "sunset": "19:53"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:39",
+    "sunset": "19:08"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:05",
+    "sunset": "18:23"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "06:38",
+    "sunset": "16:48"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:06",
+    "sunset": "16:41"
+   }
+  ],
+  "moro-rock": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "07:06",
+    "sunset": "17:01"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:44",
+    "sunset": "17:34"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:08",
+    "sunset": "19:02"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:23",
+    "sunset": "19:28"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "05:49",
+    "sunset": "19:54"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:36",
+    "sunset": "20:14"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:48",
+    "sunset": "20:14"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:12",
+    "sunset": "19:48"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:36",
+    "sunset": "19:05"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:01",
+    "sunset": "18:20"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "06:32",
+    "sunset": "16:48"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "07:00",
+    "sunset": "16:41"
+   }
+  ],
+  "delicate-arch": [
+   {
+    "month": 1,
+    "daylight_hr": 9.7,
+    "sunrise": "07:35",
+    "sunset": "17:19"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "07:10",
+    "sunset": "17:54"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:31",
+    "sunset": "19:24"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:43",
+    "sunset": "19:53"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.3,
+    "sunrise": "06:07",
+    "sunset": "20:22"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.9,
+    "sunrise": "05:52",
+    "sunset": "20:44"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "06:05",
+    "sunset": "20:43"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:31",
+    "sunset": "20:15"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:58",
+    "sunset": "19:28"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:26",
+    "sunset": "18:41"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "07:00",
+    "sunset": "17:06"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "07:29",
+    "sunset": "16:58"
+   }
+  ],
+  "mesa-arch": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:35",
+    "sunset": "17:21"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "07:11",
+    "sunset": "17:56"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:33",
+    "sunset": "19:26"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:45",
+    "sunset": "19:54"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "06:09",
+    "sunset": "20:22"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "05:55",
+    "sunset": "20:44"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "06:07",
+    "sunset": "20:43"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:33",
+    "sunset": "20:15"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:00",
+    "sunset": "19:30"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:27",
+    "sunset": "18:43"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "07:00",
+    "sunset": "17:08"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "07:29",
+    "sunset": "17:00"
+   }
+  ],
+  "navajo-loop-queens-garden": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:42",
+    "sunset": "17:32"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "07:19",
+    "sunset": "18:06"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:42",
+    "sunset": "19:35"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:55",
+    "sunset": "20:03"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "06:20",
+    "sunset": "20:30"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.7,
+    "sunrise": "06:06",
+    "sunset": "20:51"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.5,
+    "sunrise": "06:18",
+    "sunset": "20:51"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:44",
+    "sunset": "20:23"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:09",
+    "sunset": "19:39"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:36",
+    "sunset": "18:53"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "07:08",
+    "sunset": "17:19"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:36",
+    "sunset": "17:11"
+   }
+  ],
+  "cassidy-arch": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:40",
+    "sunset": "17:27"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "07:17",
+    "sunset": "18:02"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:38",
+    "sunset": "19:31"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:51",
+    "sunset": "20:00"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "06:15",
+    "sunset": "20:28"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "06:01",
+    "sunset": "20:49"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "06:13",
+    "sunset": "20:49"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:39",
+    "sunset": "20:21"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:06",
+    "sunset": "19:35"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:32",
+    "sunset": "18:49"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "07:06",
+    "sunset": "17:14"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "07:34",
+    "sunset": "17:06"
+   }
+  ],
+  "skyline-trail": [
+   {
+    "month": 1,
+    "daylight_hr": 8.9,
+    "sunrise": "07:48",
+    "sunset": "16:43"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.3,
+    "sunrise": "07:13",
+    "sunset": "17:30"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:22",
+    "sunset": "19:11"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.5,
+    "sunrise": "06:21",
+    "sunset": "19:53"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.0,
+    "sunrise": "05:33",
+    "sunset": "20:33"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.8,
+    "sunrise": "05:12",
+    "sunset": "21:02"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.5,
+    "sunrise": "05:27",
+    "sunset": "20:59"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.3,
+    "sunrise": "06:04",
+    "sunset": "20:20"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "06:43",
+    "sunset": "19:21"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.0,
+    "sunrise": "07:23",
+    "sunset": "18:22"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.4,
+    "sunrise": "07:09",
+    "sunset": "16:35"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.6,
+    "sunrise": "07:45",
+    "sunset": "16:19"
+   }
+  ],
+  "hurricane-hill": [
+   {
+    "month": 1,
+    "daylight_hr": 8.8,
+    "sunrise": "07:59",
+    "sunset": "16:46"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.2,
+    "sunrise": "07:22",
+    "sunset": "17:34"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:29",
+    "sunset": "19:18"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.6,
+    "sunrise": "06:26",
+    "sunset": "20:02"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.1,
+    "sunrise": "05:36",
+    "sunset": "20:44"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 16.0,
+    "sunrise": "05:14",
+    "sunset": "21:14"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.7,
+    "sunrise": "05:29",
+    "sunset": "21:10"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.4,
+    "sunrise": "06:08",
+    "sunset": "20:30"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.7,
+    "sunrise": "06:49",
+    "sunset": "19:29"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 10.9,
+    "sunrise": "07:31",
+    "sunset": "18:28"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.3,
+    "sunrise": "07:19",
+    "sunset": "16:38"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.4,
+    "sunrise": "07:57",
+    "sunset": "16:21"
+   }
+  ],
+  "garfield-peak": [
+   {
+    "month": 1,
+    "daylight_hr": 9.3,
+    "sunrise": "07:37",
+    "sunset": "16:58"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.5,
+    "sunrise": "07:07",
+    "sunset": "17:38"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:23",
+    "sunset": "19:14"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.3,
+    "sunrise": "06:28",
+    "sunset": "19:49"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.6,
+    "sunrise": "05:46",
+    "sunset": "20:23"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.3,
+    "sunrise": "05:29",
+    "sunset": "20:48"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.1,
+    "sunrise": "05:42",
+    "sunset": "20:46"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.0,
+    "sunrise": "06:14",
+    "sunset": "20:13"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "06:47",
+    "sunset": "19:21"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.1,
+    "sunrise": "07:20",
+    "sunset": "18:28"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.8,
+    "sunrise": "07:00",
+    "sunset": "16:47"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.0,
+    "sunrise": "07:32",
+    "sunset": "16:35"
+   }
+  ],
+  "lassen-peak": [
+   {
+    "month": 1,
+    "daylight_hr": 9.6,
+    "sunrise": "07:27",
+    "sunset": "17:02"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.6,
+    "sunrise": "07:01",
+    "sunset": "17:40"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:20",
+    "sunset": "19:12"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:29",
+    "sunset": "19:44"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.4,
+    "sunrise": "05:50",
+    "sunset": "20:14"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.0,
+    "sunrise": "05:35",
+    "sunset": "20:37"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.8,
+    "sunrise": "05:48",
+    "sunset": "20:36"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.8,
+    "sunrise": "06:16",
+    "sunset": "20:06"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:46",
+    "sunset": "19:17"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.2,
+    "sunrise": "07:15",
+    "sunset": "18:28"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.0,
+    "sunrise": "06:52",
+    "sunset": "16:50"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.3,
+    "sunrise": "07:22",
+    "sunset": "16:40"
+   }
+  ],
+  "lady-bird-johnson-grove": [
+   {
+    "month": 1,
+    "daylight_hr": 9.5,
+    "sunrise": "07:40",
+    "sunset": "17:10"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.6,
+    "sunrise": "07:12",
+    "sunset": "17:48"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:30",
+    "sunset": "19:22"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.3,
+    "sunrise": "06:38",
+    "sunset": "19:55"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.5,
+    "sunrise": "05:58",
+    "sunset": "20:26"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.1,
+    "sunrise": "05:42",
+    "sunset": "20:50"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.9,
+    "sunrise": "05:55",
+    "sunset": "20:49"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.9,
+    "sunrise": "06:24",
+    "sunset": "20:17"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:55",
+    "sunset": "19:28"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.2,
+    "sunrise": "07:26",
+    "sunset": "18:37"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.9,
+    "sunrise": "07:04",
+    "sunset": "16:58"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.2,
+    "sunrise": "07:34",
+    "sunset": "16:48"
+   }
+  ],
+  "pinnacles-high-peaks": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "07:16",
+    "sunset": "17:11"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:54",
+    "sunset": "17:44"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:17",
+    "sunset": "19:11"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:32",
+    "sunset": "19:38"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "05:58",
+    "sunset": "20:03"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:46",
+    "sunset": "20:24"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:58",
+    "sunset": "20:24"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:22",
+    "sunset": "19:57"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:46",
+    "sunset": "19:14"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:11",
+    "sunset": "18:30"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "06:42",
+    "sunset": "16:57"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "07:09",
+    "sunset": "16:51"
+   }
+  ],
+  "ryan-mountain": [
+   {
+    "month": 1,
+    "daylight_hr": 10.1,
+    "sunrise": "06:50",
+    "sunset": "16:57"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.9,
+    "sunrise": "06:30",
+    "sunset": "17:27"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "06:57",
+    "sunset": "18:52"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.0,
+    "sunrise": "06:15",
+    "sunset": "19:15"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 13.9,
+    "sunrise": "05:44",
+    "sunset": "19:38"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.4,
+    "sunrise": "05:33",
+    "sunset": "19:57"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.2,
+    "sunrise": "05:44",
+    "sunset": "19:57"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.5,
+    "sunrise": "06:06",
+    "sunset": "19:33"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.4,
+    "sunrise": "06:27",
+    "sunset": "18:53"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.4,
+    "sunrise": "06:49",
+    "sunset": "18:12"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.4,
+    "sunrise": "06:17",
+    "sunset": "16:42"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.9,
+    "sunrise": "06:42",
+    "sunset": "16:37"
+   }
+  ],
+  "golden-canyon": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "06:58",
+    "sunset": "16:54"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:36",
+    "sunset": "17:27"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:00",
+    "sunset": "18:54"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:15",
+    "sunset": "19:20"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "05:41",
+    "sunset": "19:46"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:29",
+    "sunset": "20:06"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:40",
+    "sunset": "20:06"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:04",
+    "sunset": "19:40"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:29",
+    "sunset": "18:57"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "06:53",
+    "sunset": "18:13"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "06:24",
+    "sunset": "16:40"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "06:51",
+    "sunset": "16:33"
+   }
+  ],
+  "lost-mine-trail": [
+   {
+    "month": 1,
+    "daylight_hr": 10.5,
+    "sunrise": "07:48",
+    "sunset": "18:16"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 11.1,
+    "sunrise": "07:33",
+    "sunset": "18:42"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "08:04",
+    "sunset": "20:01"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 12.8,
+    "sunrise": "07:28",
+    "sunset": "20:19"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 13.6,
+    "sunrise": "07:01",
+    "sunset": "20:37"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.0,
+    "sunrise": "06:53",
+    "sunset": "20:53"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 13.9,
+    "sunrise": "07:03",
+    "sunset": "20:55"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.2,
+    "sunrise": "07:21",
+    "sunset": "20:35"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.4,
+    "sunrise": "07:37",
+    "sunset": "20:00"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.5,
+    "sunrise": "07:53",
+    "sunset": "19:24"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.7,
+    "sunrise": "07:17",
+    "sunset": "17:59"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 10.3,
+    "sunrise": "07:40",
+    "sunset": "17:57"
+   }
+  ],
+  "guadalupe-peak": [
+   {
+    "month": 1,
+    "daylight_hr": 10.3,
+    "sunrise": "07:00",
+    "sunset": "17:16"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 11.0,
+    "sunrise": "06:42",
+    "sunset": "17:45"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:11",
+    "sunset": "19:07"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 12.9,
+    "sunrise": "06:32",
+    "sunset": "19:27"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 13.8,
+    "sunrise": "06:03",
+    "sunset": "19:48"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.2,
+    "sunrise": "05:53",
+    "sunset": "20:06"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.1,
+    "sunrise": "06:03",
+    "sunset": "20:07"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.4,
+    "sunrise": "06:24",
+    "sunset": "19:45"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.4,
+    "sunrise": "06:42",
+    "sunset": "19:07"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.4,
+    "sunrise": "07:02",
+    "sunset": "18:28"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.6,
+    "sunrise": "06:27",
+    "sunset": "17:01"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 10.1,
+    "sunrise": "06:52",
+    "sunset": "16:57"
+   }
+  ],
+  "alkali-flat": [
+   {
+    "month": 1,
+    "daylight_hr": 10.2,
+    "sunrise": "07:07",
+    "sunset": "17:20"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 11.0,
+    "sunrise": "06:49",
+    "sunset": "17:49"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:17",
+    "sunset": "19:12"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.0,
+    "sunrise": "06:36",
+    "sunset": "19:34"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 13.8,
+    "sunrise": "06:06",
+    "sunset": "19:55"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.3,
+    "sunrise": "05:56",
+    "sunset": "20:14"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.1,
+    "sunrise": "06:07",
+    "sunset": "20:14"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.4,
+    "sunrise": "06:28",
+    "sunset": "19:52"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.4,
+    "sunrise": "06:47",
+    "sunset": "19:13"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.4,
+    "sunrise": "07:08",
+    "sunset": "18:33"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.5,
+    "sunrise": "06:34",
+    "sunset": "17:05"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 10.0,
+    "sunrise": "06:59",
+    "sunset": "17:00"
+   }
+  ],
+  "emerald-lake": [
+   {
+    "month": 1,
+    "daylight_hr": 9.6,
+    "sunrise": "07:23",
+    "sunset": "16:59"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "06:57",
+    "sunset": "17:36"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:16",
+    "sunset": "19:08"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:26",
+    "sunset": "19:40"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.4,
+    "sunrise": "05:47",
+    "sunset": "20:10"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.0,
+    "sunrise": "05:32",
+    "sunset": "20:33"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.8,
+    "sunrise": "05:45",
+    "sunset": "20:32"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.8,
+    "sunrise": "06:13",
+    "sunset": "20:02"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:42",
+    "sunset": "19:14"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.2,
+    "sunrise": "07:12",
+    "sunset": "18:24"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.0,
+    "sunrise": "06:48",
+    "sunset": "16:47"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.3,
+    "sunrise": "07:18",
+    "sunset": "16:37"
+   }
+  ],
+  "high-dune": [
+   {
+    "month": 1,
+    "daylight_hr": 9.8,
+    "sunrise": "07:16",
+    "sunset": "17:05"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:53",
+    "sunset": "17:40"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:15",
+    "sunset": "19:08"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:28",
+    "sunset": "19:36"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "05:53",
+    "sunset": "20:03"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "05:39",
+    "sunset": "20:25"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.5,
+    "sunrise": "05:51",
+    "sunset": "20:24"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:17",
+    "sunset": "19:57"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:43",
+    "sunset": "19:12"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:09",
+    "sunset": "18:26"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "06:42",
+    "sunset": "16:52"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:10",
+    "sunset": "16:44"
+   }
+  ],
+  "inspiration-point": [
+   {
+    "month": 1,
+    "daylight_hr": 9.3,
+    "sunrise": "07:54",
+    "sunset": "17:09"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.5,
+    "sunrise": "07:23",
+    "sunset": "17:51"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:37",
+    "sunset": "19:28"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.4,
+    "sunrise": "06:42",
+    "sunset": "20:05"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.7,
+    "sunrise": "05:58",
+    "sunset": "20:40"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.4,
+    "sunrise": "05:40",
+    "sunset": "21:06"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.2,
+    "sunrise": "05:54",
+    "sunset": "21:04"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.0,
+    "sunrise": "06:26",
+    "sunset": "20:29"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "07:01",
+    "sunset": "19:36"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.1,
+    "sunrise": "07:36",
+    "sunset": "18:41"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.7,
+    "sunrise": "07:17",
+    "sunset": "16:59"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.9,
+    "sunrise": "07:50",
+    "sunset": "16:46"
+   }
+  ],
+  "cadillac-north-ridge": [
+   {
+    "month": 1,
+    "daylight_hr": 9.2,
+    "sunrise": "07:06",
+    "sunset": "16:17"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.4,
+    "sunrise": "06:34",
+    "sunset": "17:00"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "06:47",
+    "sunset": "18:38"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.4,
+    "sunrise": "05:51",
+    "sunset": "19:16"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.7,
+    "sunrise": "05:06",
+    "sunset": "19:51"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.5,
+    "sunrise": "04:48",
+    "sunset": "20:18"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.2,
+    "sunrise": "05:02",
+    "sunset": "20:16"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.1,
+    "sunrise": "05:35",
+    "sunset": "19:40"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.6,
+    "sunrise": "06:10",
+    "sunset": "18:46"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.1,
+    "sunrise": "06:46",
+    "sunset": "17:51"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.7,
+    "sunrise": "06:28",
+    "sunset": "16:07"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.9,
+    "sunrise": "07:02",
+    "sunset": "15:54"
+   }
+  ],
+  "alum-cave-leconte": [
+   {
+    "month": 1,
+    "daylight_hr": 10.0,
+    "sunrise": "07:43",
+    "sunset": "17:42"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.9,
+    "sunrise": "07:22",
+    "sunset": "18:14"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:46",
+    "sunset": "19:41"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "07:02",
+    "sunset": "20:06"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.0,
+    "sunrise": "06:29",
+    "sunset": "20:30"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "06:17",
+    "sunset": "20:50"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "06:29",
+    "sunset": "20:50"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.5,
+    "sunrise": "06:52",
+    "sunset": "20:25"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:15",
+    "sunset": "19:43"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:39",
+    "sunset": "19:00"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "07:09",
+    "sunset": "17:28"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.8,
+    "sunrise": "07:36",
+    "sunset": "17:22"
+   }
+  ],
+  "clingmans-dome": [
+   {
+    "month": 1,
+    "daylight_hr": 10.0,
+    "sunrise": "07:43",
+    "sunset": "17:43"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.9,
+    "sunrise": "07:22",
+    "sunset": "18:15"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:47",
+    "sunset": "19:41"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "07:03",
+    "sunset": "20:06"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.0,
+    "sunrise": "06:30",
+    "sunset": "20:30"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.5,
+    "sunrise": "06:18",
+    "sunset": "20:50"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "06:29",
+    "sunset": "20:50"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.5,
+    "sunrise": "06:53",
+    "sunset": "20:25"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:16",
+    "sunset": "19:43"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:39",
+    "sunset": "19:00"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "07:09",
+    "sunset": "17:29"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.8,
+    "sunrise": "07:36",
+    "sunset": "17:22"
+   }
+  ],
+  "old-rag": [
+   {
+    "month": 1,
+    "daylight_hr": 9.7,
+    "sunrise": "07:29",
+    "sunset": "17:14"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "07:05",
+    "sunset": "17:50"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:26",
+    "sunset": "19:19"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:38",
+    "sunset": "19:48"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.2,
+    "sunrise": "06:02",
+    "sunset": "20:16"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.8,
+    "sunrise": "05:48",
+    "sunset": "20:38"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "06:00",
+    "sunset": "20:38"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:27",
+    "sunset": "20:09"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:54",
+    "sunset": "19:23"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:21",
+    "sunset": "18:37"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "06:55",
+    "sunset": "17:02"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "07:23",
+    "sunset": "16:53"
+   }
+  ],
+  "anhinga-trail": [
+   {
+    "month": 1,
+    "daylight_hr": 10.7,
+    "sunrise": "07:10",
+    "sunset": "17:52"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 11.3,
+    "sunrise": "06:58",
+    "sunset": "18:15"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 12.0,
+    "sunrise": "07:33",
+    "sunset": "19:31"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 12.7,
+    "sunrise": "07:01",
+    "sunset": "19:45"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 13.4,
+    "sunrise": "06:38",
+    "sunset": "19:59"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 13.7,
+    "sunrise": "06:31",
+    "sunset": "20:14"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 13.6,
+    "sunrise": "06:41",
+    "sunset": "20:16"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.1,
+    "sunrise": "06:56",
+    "sunset": "19:59"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.3,
+    "sunrise": "07:08",
+    "sunset": "19:28"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.6,
+    "sunrise": "07:20",
+    "sunset": "18:56"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.9,
+    "sunrise": "06:39",
+    "sunset": "17:35"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 10.6,
+    "sunrise": "07:00",
+    "sunset": "17:35"
+   }
+  ],
+  "wheeler-peak": [
+   {
+    "month": 1,
+    "daylight_hr": 9.7,
+    "sunrise": "06:55",
+    "sunset": "16:37"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "06:30",
+    "sunset": "17:13"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "06:50",
+    "sunset": "18:43"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:02",
+    "sunset": "19:13"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.3,
+    "sunrise": "05:25",
+    "sunset": "19:42"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.9,
+    "sunrise": "05:11",
+    "sunset": "20:04"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.7,
+    "sunrise": "05:23",
+    "sunset": "20:03"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "05:50",
+    "sunset": "19:34"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:17",
+    "sunset": "18:48"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "06:45",
+    "sunset": "18:00"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "06:20",
+    "sunset": "16:25"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "06:49",
+    "sunset": "16:16"
+   }
+  ],
+  "south-kaibab-skeleton-point": [
+   {
+    "month": 1,
+    "daylight_hr": 10.0,
+    "sunrise": "07:38",
+    "sunset": "17:36"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.9,
+    "sunrise": "07:17",
+    "sunset": "18:08"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "06:41",
+    "sunset": "18:35"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "05:56",
+    "sunset": "19:01"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.0,
+    "sunrise": "05:23",
+    "sunset": "19:26"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:11",
+    "sunset": "19:46"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:22",
+    "sunset": "19:46"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "05:46",
+    "sunset": "19:20"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:10",
+    "sunset": "18:38"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "06:34",
+    "sunset": "17:54"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "07:04",
+    "sunset": "17:22"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "07:31",
+    "sunset": "17:15"
+   }
+  ],
+  "zion-narrows": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "07:45",
+    "sunset": "17:36"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "07:22",
+    "sunset": "18:10"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:45",
+    "sunset": "19:38"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:59",
+    "sunset": "20:06"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "06:24",
+    "sunset": "20:32"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.7,
+    "sunrise": "06:10",
+    "sunset": "20:53"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.5,
+    "sunrise": "06:22",
+    "sunset": "20:53"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:47",
+    "sunset": "20:26"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "07:13",
+    "sunset": "19:42"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:38",
+    "sunset": "18:56"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.2,
+    "sunrise": "07:10",
+    "sunset": "17:23"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.6,
+    "sunrise": "07:38",
+    "sunset": "17:15"
+   }
+  ],
+  "longs-peak": [
+   {
+    "month": 1,
+    "daylight_hr": 9.6,
+    "sunrise": "07:23",
+    "sunset": "16:59"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "06:57",
+    "sunset": "17:36"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:16",
+    "sunset": "19:08"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:25",
+    "sunset": "19:39"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.4,
+    "sunrise": "05:47",
+    "sunset": "20:10"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 15.0,
+    "sunrise": "05:32",
+    "sunset": "20:33"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.8,
+    "sunrise": "05:44",
+    "sunset": "20:32"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.8,
+    "sunrise": "06:13",
+    "sunset": "20:02"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:42",
+    "sunset": "19:13"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.2,
+    "sunrise": "07:11",
+    "sunset": "18:24"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.0,
+    "sunrise": "06:47",
+    "sunset": "16:47"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.3,
+    "sunrise": "07:17",
+    "sunset": "16:37"
+   }
+  ],
+  "general-sherman-tree": [
+   {
+    "month": 1,
+    "daylight_hr": 9.9,
+    "sunrise": "07:06",
+    "sunset": "17:01"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.8,
+    "sunrise": "06:44",
+    "sunset": "17:34"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:08",
+    "sunset": "19:02"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.1,
+    "sunrise": "06:23",
+    "sunset": "19:28"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.1,
+    "sunrise": "05:48",
+    "sunset": "19:54"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.6,
+    "sunrise": "05:36",
+    "sunset": "20:14"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.4,
+    "sunrise": "05:48",
+    "sunset": "20:14"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.6,
+    "sunrise": "06:12",
+    "sunset": "19:48"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:36",
+    "sunset": "19:04"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:01",
+    "sunset": "18:20"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.3,
+    "sunrise": "06:32",
+    "sunset": "16:48"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.7,
+    "sunrise": "07:00",
+    "sunset": "16:41"
+   }
+  ],
+  "hall-of-mosses": [
+   {
+    "month": 1,
+    "daylight_hr": 8.8,
+    "sunrise": "08:00",
+    "sunset": "16:48"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.2,
+    "sunrise": "07:24",
+    "sunset": "17:36"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.8,
+    "sunrise": "07:31",
+    "sunset": "19:20"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.6,
+    "sunrise": "06:28",
+    "sunset": "20:04"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 15.1,
+    "sunrise": "05:38",
+    "sunset": "20:45"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 16.0,
+    "sunrise": "05:16",
+    "sunset": "21:16"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 15.7,
+    "sunrise": "05:31",
+    "sunset": "21:12"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 14.4,
+    "sunrise": "06:10",
+    "sunset": "20:31"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.7,
+    "sunrise": "06:51",
+    "sunset": "19:31"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 10.9,
+    "sunrise": "07:33",
+    "sunset": "18:30"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 9.3,
+    "sunrise": "07:21",
+    "sunset": "16:40"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 8.4,
+    "sunrise": "07:58",
+    "sunset": "16:24"
+   }
+  ],
+  "devils-garden": [
+   {
+    "month": 1,
+    "daylight_hr": 9.7,
+    "sunrise": "07:35",
+    "sunset": "17:19"
+   },
+   {
+    "month": 2,
+    "daylight_hr": 10.7,
+    "sunrise": "07:11",
+    "sunset": "17:54"
+   },
+   {
+    "month": 3,
+    "daylight_hr": 11.9,
+    "sunrise": "07:32",
+    "sunset": "19:24"
+   },
+   {
+    "month": 4,
+    "daylight_hr": 13.2,
+    "sunrise": "06:43",
+    "sunset": "19:54"
+   },
+   {
+    "month": 5,
+    "daylight_hr": 14.3,
+    "sunrise": "06:07",
+    "sunset": "20:22"
+   },
+   {
+    "month": 6,
+    "daylight_hr": 14.9,
+    "sunrise": "05:53",
+    "sunset": "20:44"
+   },
+   {
+    "month": 7,
+    "daylight_hr": 14.6,
+    "sunrise": "06:05",
+    "sunset": "20:43"
+   },
+   {
+    "month": 8,
+    "daylight_hr": 13.7,
+    "sunrise": "06:31",
+    "sunset": "20:15"
+   },
+   {
+    "month": 9,
+    "daylight_hr": 12.5,
+    "sunrise": "06:59",
+    "sunset": "19:29"
+   },
+   {
+    "month": 10,
+    "daylight_hr": 11.3,
+    "sunrise": "07:26",
+    "sunset": "18:42"
+   },
+   {
+    "month": 11,
+    "daylight_hr": 10.1,
+    "sunrise": "07:00",
+    "sunset": "17:06"
+   },
+   {
+    "month": 12,
+    "daylight_hr": 9.5,
+    "sunrise": "07:29",
+    "sunset": "16:58"
+   }
+  ]
+ }
+}
