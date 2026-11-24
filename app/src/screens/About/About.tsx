@@ -45,7 +45,7 @@ export default function About() {
         Our pitch: <i>is the travel advice still true?</i> We check common advice against official numbers.
       </p>
       {meta.fake && (
-        <p className="about-notice" role="note"><StatusIcon status="warn" size={18} /> <span><b>Sample data.</b> The numbers in the app are placeholders while the data pipeline is built, so the figures below describe how the real data will be made. The "as of" dates and the worked example use the placeholders too.</span></p>
+        <p className="about-notice" role="note"><StatusIcon status="warn" size={18} /> <span><b>Work in progress.</b> Crowds, weather, air quality and daylight come from the real sources listed below. Some hikes still use sample data for trailheads, travel, cost or trail profiles, so treat those figures as placeholders until the notice on this page is gone.</span></p>
       )}
       <nav aria-label="On this page" className="about-nav">
         {SECTIONS.map(([id, label]) => <button key={id} type="button" className="fit" onClick={() => go(id)}>{label}</button>)}
