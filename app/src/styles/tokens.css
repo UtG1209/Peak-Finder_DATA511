@@ -190,6 +190,15 @@
 
 /* ---------- 4. theme-independent tokens ---------- */
 :root {
+  /* cloud transition (the walk is a daylight scene in both themes) */
+  --cloud-sky-top: #397fc4;
+  --cloud-sky-mid: #a9c7dc;
+  --cloud-sky-low: #edf4fb;
+  --cloud-sky-bright: #78b0ea;
+  --cloud-veil: #edf4fb;
+  --cloud-text: #15222d;
+  --cloud-text-muted: #536677;
+
   /* fonts: self-hosted (styles/fonts/), latin subset; the "Fallback" faces are metric-matched system fonts (base.css) so swapping does not shift layout */
   --font-display: 'Fraunces', 'Fraunces Fallback', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;

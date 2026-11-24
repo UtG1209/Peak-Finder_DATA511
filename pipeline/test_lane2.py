@@ -1,6 +1,8 @@
 """Offline unit tests for lane 2 source parsing and data-contract conversions."""
 import unittest
 
+from lane2_common import ROOT
+
 from cost import gsa_rates_for_hike
 from profiles import convert_route, profile_config
 from travel import DOT_TABLE6, fare_lookup, haversine_m
@@ -16,6 +18,11 @@ class TravelTests(unittest.TestCase):
             {"year": "2024", "quarter": "3", "city1": "Seattle, WA", "city2": "Las Vegas, NV", "fare": "150.00"},
         ]
         self.assertEqual(fare_lookup(rows, "SEA", "LAS", 3), (169.78, 2025))
+
+    @unittest.skipUnless((ROOT / "data" / "raw" / "lane2" / "dot-table6.json").exists(), "needs the cached DOT file")
+    def test_real_dot_file_has_the_known_sea_las_fare(self):
+        from travel import dot_rows
+        self.assertEqual(fare_lookup(dot_rows(), "SEA", "LAS", 3)[0], 169.78)
 
     def test_haversine_uses_lon_lat(self):
         self.assertAlmostEqual(haversine_m((-122.0, 47.0), (-122.0, 48.0)), 111_195, delta=100)

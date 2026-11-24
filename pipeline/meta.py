@@ -31,23 +31,35 @@ LANE_1_SOURCES = [
 ]
 
 
-def as_of(folder):
+def as_of(folder, fallback=None):
     files = [path for path in (RAW / folder).glob("*") if path.is_file()]
+    if not files and fallback:  # raw cache not on this machine: keep the date already published
+        return fallback
     newest = max(path.stat().st_mtime for path in files)
     return date.fromtimestamp(newest).isoformat()
 
 
+LANE_2_SOURCES = ("DOT Consumer Airfare Report, Table 6", "GSA per diem", "EIA gasoline prices", "OpenRouteService")
+
+
+def cost_sources(previous):
+    """Lane 2's cost_sources.json (written by cost.py) when it exists, else what the app already has."""
+    path = ROOT / "data" / "processed" / "lane2" / "cost_sources.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else previous["cost_sources"]
+
+
 def build(previous, hike_count):
     own = {name for name, _, _ in LANE_1_SOURCES}
-    sources = [{"name": name, "url": url, "as_of": as_of(folder)} for name, url, folder in LANE_1_SOURCES]
-    sources += [source for source in previous["sources"] if source["name"] not in own]
+    old_dates = {s["name"]: s["as_of"] for s in previous["sources"]}
+    sources = [{"name": name, "url": url, "as_of": as_of(folder, old_dates.get(name))} for name, url, folder in LANE_1_SOURCES]
+    sources += [dict(source, as_of=date.today().isoformat()) if source["name"] in LANE_2_SOURCES and "fake" in source["as_of"] and (ROOT / "data" / "processed" / "lane2" / "cost_sources.json").exists() else source for source in previous["sources"] if source["name"] not in own]
     return {
-        "fake": False,
+        "fake": True,  # stays True until every data file is real (travel, cost, profiles, advice are still placeholders)
         "pipeline_version": PIPELINE_VERSION,
         "generated": date.today().isoformat(),
         "typical_years": previous["typical_years"],
         "hike_count": hike_count,
-        "cost_sources": previous["cost_sources"],
+        "cost_sources": cost_sources(previous),
         "sources": sources,
     }
 

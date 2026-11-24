@@ -116,9 +116,12 @@ describe('known answers', () => {
     expect(aug.heat_days).toBe(11.2)
   })
 
-  it('SEA to Angels Landing Q3 uses the real $169.78 fare', () => {
+  // The SEA-LAS $169.78 known answer is checked in pipeline/test_lane2.py against the real DOT file. Angels Landing now flies into St George (the
+  // nearest airport with a DOT fare), so its Q3 fare is the SEA-SGU one: real and not the old placeholder.
+  it('SEA to Angels Landing Q3 flies into St George with the real DOT fare', () => {
     const row = cost.find((c) => c.hike_id === 'angels-landing' && c.city === 'SEA' && c.quarter === 3)!
-    expect(row.fare_one_way).toBe(169.78)
+    expect(travel.find((r) => r.hike_id === 'angels-landing' && r.city === 'SEA')!.airport).toBe('SGU')
+    expect(row.fare_one_way).toBe(327.86)
   })
 
   it('Glacier advice card keeps the real September numbers', () => {

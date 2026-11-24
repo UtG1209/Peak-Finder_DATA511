@@ -1,0 +1,36 @@
+{
+  "_note": "Entrance fees from each park's nps.gov fees page, fetched 2026-11-24. Standard private vehicle, 7 days. permit_fee is one fixed fee per party (the per-party label in the app); per-person permit fees are not modelled. Only the 15 priority hikes are filled; a hike missing here keeps its existing cost row.",
+  "parks": {
+    "ZION": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/zion/planyourvisit/fees.htm"},
+    "GRCA": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/grca/planyourvisit/fees.htm"},
+    "NOCA": {"entry_fee_vehicle": 0, "url": "https://www.nps.gov/noca/planyourvisit/fees.htm", "note": "There is no fee to enter North Cascades National Park Service Complex."},
+    "GLAC": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/glac/planyourvisit/fees.htm"},
+    "YOSE": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/yose/planyourvisit/fees.htm"},
+    "ARCH": {"entry_fee_vehicle": 30, "url": "https://www.nps.gov/arch/planyourvisit/fees.htm"},
+    "YELL": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/yell/planyourvisit/fees.htm"},
+    "BRCA": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/brca/planyourvisit/fees.htm"},
+    "MORA": {"entry_fee_vehicle": 30, "url": "https://www.nps.gov/mora/planyourvisit/fees.htm"},
+    "ACAD": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/acad/planyourvisit/fees.htm"},
+    "GRSM": {"entry_fee_vehicle": 0, "url": "https://www.nps.gov/grsm/planyourvisit/fees.htm", "note": "UNVERIFIED: the NPS API lists no entrance fee and the fees page describes a parking tag instead; the tag price was not read from NPS text, so it is not in this 0."},
+    "GRTE": {"entry_fee_vehicle": 35, "url": "https://www.nps.gov/grte/planyourvisit/fees.htm", "note": "NPS API /parks entranceFees: Entrance - Private Vehicle 35.00."},
+    "JOTR": {"entry_fee_vehicle": 30, "url": "https://www.nps.gov/jotr/planyourvisit/fees.htm", "note": "NPS API /parks entranceFees: Entrance - Private Vehicle 30.00."},
+    "CANY": {"entry_fee_vehicle": 30, "url": "https://www.nps.gov/cany/planyourvisit/fees.htm", "note": "NPS API /parks entranceFees: Entrance - Private Vehicle 30.00."}
+  },
+  "permits": {
+    "angels-landing": {"permit_fee": 6, "url": "https://www.nps.gov/zion/planyourvisit/angels-landing-hiking-permits.htm", "note": "$6 lottery application fee per application; a further $3 per person only if awarded (not modelled)."},
+    "half-dome": {"permit_fee": 10, "url": "https://www.nps.gov/yose/planyourvisit/hdpermits.htm", "note": "$10 application fee; a further $10 per person only if awarded (not modelled)."},
+    "bright-angel-trail": {"permit_fee": 0, "url": "https://www.nps.gov/grca/planyourvisit/fees.htm", "note": "No day-hike permit."},
+    "cascade-pass-sahale": {"permit_fee": 0, "url": "https://www.nps.gov/noca/planyourvisit/fees.htm", "note": "No fee or day-hike permit on NPS land."},
+    "fairy-falls-grand-prismatic": {"permit_fee": 0, "url": "https://www.nps.gov/yell/planyourvisit/fees.htm"},
+    "navajo-loop-queens-garden": {"permit_fee": 0, "url": "https://www.nps.gov/brca/planyourvisit/fees.htm"},
+    "skyline-trail": {"permit_fee": 0, "url": "https://www.nps.gov/mora/planyourvisit/fees.htm"},
+    "cadillac-north-ridge": {"permit_fee": 0, "url": "https://www.nps.gov/acad/planyourvisit/fees.htm"},
+    "delicate-arch": {"permit_fee": 0, "url": "https://www.nps.gov/arch/planyourvisit/fees.htm", "note": "UNVERIFIED: Arches timed-entry reservation fee (recreation.gov booking fee, seasonal) not confirmed from NPS; left 0."},
+    "glacier-highline": {"permit_fee": 0, "url": "https://www.nps.gov/glac/planyourvisit/fees.htm", "note": "UNVERIFIED: Going-to-the-Sun Road vehicle reservation fee (peak season) not confirmed; left 0."},
+    "grinnell-glacier": {"permit_fee": 0, "url": "https://www.nps.gov/glac/planyourvisit/fees.htm", "note": "UNVERIFIED: no day-hike permit is named on the NPS pages read; the optional Many Glacier boat fare is not modelled."},
+    "mesa-arch": {"permit_fee": 0, "url": "https://www.nps.gov/cany/planyourvisit/fees.htm", "note": "UNVERIFIED: no day-hike permit is named on the NPS pages read."},
+    "alum-cave-leconte": {"permit_fee": 0, "url": "https://www.nps.gov/grsm/planyourvisit/fees.htm", "note": "UNVERIFIED: no day-hike permit is named on the NPS pages read; the parking tag price is not included."},
+    "inspiration-point": {"permit_fee": 0, "url": "https://www.nps.gov/grte/planyourvisit/fees.htm", "note": "UNVERIFIED: no day-hike permit is named on the NPS pages read; the optional Jenny Lake shuttle boat fare is not modelled."},
+    "ryan-mountain": {"permit_fee": 0, "url": "https://www.nps.gov/jotr/planyourvisit/fees.htm", "note": "UNVERIFIED: no day-hike permit is named on the NPS pages read."}
+  }
+}

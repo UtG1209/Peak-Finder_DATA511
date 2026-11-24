@@ -282,3 +282,14 @@ table.qtable { min-width: 680px; }
   .ro-time b { font-size: var(--fs-num-m); }
 }
 table.strip .hazard-row th { vertical-align: top; padding-top: var(--space-3); }
+
+/* ---------- similar hikes ---------- */
+.similarsec { margin-top: var(--space-12); }
+.twins { list-style: none; margin: var(--space-4) 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4); }
+.twin { display: flex; flex-direction: column; height: 100%; color: var(--text); text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-4); overflow: hidden; }
+.twin:hover { border-color: var(--line-strong); }
+.twin img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-sunk); }
+.twin-body { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4) var(--space-4); }
+.twin-name { font: var(--fw-regular) var(--fs-h3) / var(--lh-snug) var(--font-display); }
+.twin-sub { font-size: var(--fs-small); color: var(--text-muted); }
+.twin-why { font-size: var(--fs-body); color: var(--text-body); line-height: var(--lh-body); }

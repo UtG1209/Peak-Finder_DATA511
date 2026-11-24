@@ -1,6 +1,5 @@
 // Hike page (When and How much): header, which quarter fits you, month by month, on the trail (elevation profile with time), what it costs.
 // Lane 4 (docs/work/lane-4-hike-page-about.md) built the fit, month strip, timed profile and About; the design pass gave them the tokens and look.
-// Still to come: similar hikes (after G3).
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useData } from '../../data/DataContext'
@@ -25,6 +24,8 @@ import { FitSection } from './FitSection'
 import { HikeHeader } from './HikeHeader'
 import { TrailSection } from './TrailSection'
 import CloudTransition from '../../components/CloudTransition'
+import { saveWalkReturn, takeWalkReturn } from '../../lib/walkReturn'
+import { SimilarHikes } from './SimilarHikes'
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
 
@@ -42,6 +43,24 @@ export default function Hike() {
   const title = useRef<HTMLHeadingElement>(null)
   useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
   const [openingWalk, setOpeningWalk] = useState(false)
+  // Back from the 3D walk: play the clouds in reverse and put the page back where it was (the walk reloads the app, so the position is kept in sessionStorage)
+  const [returnY, setReturnY] = useState<number | null>(() => (id ? takeWalkReturn(window.sessionStorage, id) : null))
+  const returning = returnY != null
+  useEffect(() => {
+    // charts and photos load after mount, so the page may be too short at first: keep trying for about a second
+    let raf = 0
+    const t0 = performance.now()
+    const restore = () => {
+      if (returnY == null) return
+      window.scrollTo(0, returnY)
+      if (Math.abs(window.scrollY - returnY) > 2 && performance.now() - t0 < 1200) raf = requestAnimationFrame(restore)
+    }
+    restore()
+    // the page is restored from the back/forward cache with the overlay still up: drop it and play the reverse
+    const onShow = (e: PageTransitionEvent) => { if (e.persisted) { setOpeningWalk(false); setReturnY(window.scrollY) } }
+    window.addEventListener('pageshow', onShow)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('pageshow', onShow) }
+  }, [returnY])
 
   const backTo = { pathname: '/', search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '').toString()}` }
   const limits = toLimits(filters)
@@ -92,7 +111,7 @@ export default function Hike() {
         walkHref={walkHref}
         seasonLabel={sel.season}
         titleRef={title}
-        onWalkStart={() => setOpeningWalk(true)}
+        onWalkStart={() => { saveWalkReturn(window.sessionStorage, hike.id, window.scrollY); setOpeningWalk(true) }}
       />
 
       <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
@@ -186,8 +205,11 @@ export default function Hike() {
         <p className="fine">Typical, from past data. Not a price quote.</p>
       </section>
 
+      <SimilarHikes hike={hike} />
+
       <p className="fine hp-foot">Every number on this page is typical, from past years (not a forecast or a price quote). <Link to="/about">How the numbers are made: About the data</Link>.</p>
       {openingWalk && walkHref && <CloudTransition hikeId={hike.id} season={sel.season} onDone={() => window.location.assign(walkHref)} />}
+      {returning && !openingWalk && <CloudTransition direction="out" hikeId={hike.id} season={sel.season} onDone={() => setReturnY(null)} />}
     </main>
   )
 }
