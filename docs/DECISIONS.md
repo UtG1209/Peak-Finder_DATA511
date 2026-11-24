@@ -108,3 +108,10 @@ Each is one small change if the team disagrees. Tick the box when confirmed.
 - [ ] **2026-11-20 10:30. Daylight (`pipeline/daylight.py`): NOAA solar formulas for the 15th of each month, local clock via the IANA zone for the state (Arizona has no daylight saving; Guadalupe Mountains is Mountain time).** Checked to the minute against Denver's June solstice. Needs `tzdata` on Windows.
 - [ ] **2026-11-20 10:30. `build.py` writes `data/processed/hike_month.json` and does not touch `app/public` unless run with `--publish`.** CI runs `scripts/make_fake_data.py` and fails if `app/public` differs, so real data cannot land until CI skips that step when `meta.json` says `"fake": false`. `.github/` is owned by the lead.
       `closed` is still carried over from the fake file (seasonal closures need the hike catalogue).
+
+## Hike list (lane 1)
+- [ ] **2026-11-22 18:49. The final list is 40 hikes, no extra 10.** Decided by Adnan (lane 1). Supersedes the earlier "40 plus 10" idea.
+      Start from the current 40 (the placeholder list in `scripts/make_fake_data.py`, nothing in the plan or lane brief names a pool). Hikes that fail the data gate are replaced by another hike, so the count stays 40. The 7 hikes with built 3D walks stay in.
+      Open: what replaces Guadalupe Peak (no weather station) and Alkali Flat (no air-quality data), and any others that fail the gate. The team signs off on the final list.
+- [ ] **2026-11-23 19:59. Guadalupe Peak and Alkali Flat are removed from the list for now (38 hikes), kept on the branch `archive/guadalupe-peak-alkali-flat`.** Asked by Utkarsh so the real data set can build and land on main; replacements or a fix are decided after that.
+      Guadalupe Peak: no station within 50 km passes 80% (the closest official one, Pine Springs `USW00023055`, has 76% highs and 78% rain over 2015-24). Alkali Flat: Otero County has no EPA air monitor. The data-contract test floor is lowered from 40 to 38 until the list is back to 40.
