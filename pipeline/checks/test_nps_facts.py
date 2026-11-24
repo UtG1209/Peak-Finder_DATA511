@@ -38,3 +38,9 @@ def test_a_row_without_a_length_is_flagged_for_a_check():
         if not row["length_mi"]:
             assert row["needs_check"] == "yes", row["id"]
             assert row["note"], row["id"]
+
+
+def test_no_row_has_extra_columns():
+    for row in read("nps_facts.csv"):
+        assert None not in row, row["id"]
+        assert all(value is not None for value in row.values()), row["id"]

@@ -1,11 +1,11 @@
 id,source_url,route_used,length_mi,length_type,gain_ft,difficulty,max_elev_ft,needs_check,note
 angels-landing,https://www.nps.gov/zion/planyourvisit/angels-landing-hiking-permits.htm,West Rim Trail to Angels Landing,5.4,round-trip,1488,strenuous,,no,Permit needed past Scout Lookout
 bright-angel-trail,https://www.nps.gov/places/000/bright-angel-trail.htm,,,,,,,yes,"Page lists day-hike turnarounds only; no Phantom Ranch figure. Longest listed: Plateau Point 12 mi round trip 3,080 ft change"
-cascade-pass-sahale,https://www.nps.gov/noca/planyourvisit/cascade-pass-trail.htm,Cascade Pass Trail to Sahale Glacier,5.9,one-way,3940,,,no,Cascade Pass alone is 3.7 mi one way and 1,700 ft gain
+cascade-pass-sahale,https://www.nps.gov/noca/planyourvisit/cascade-pass-trail.htm,Cascade Pass Trail to Sahale Glacier,5.9,one-way,3940,,,no,"Cascade Pass alone is 3.7 mi one way and 1,700 ft gain"
 mount-washburn,https://www.nps.gov/thingstodo/yell-trail-dunraven-pass-mount-washburn.htm,Dunraven Pass to Mount Washburn summit,6.0,round-trip,,strenuous,,no,No gain or summit elevation on the page
-fairy-falls-grand-prismatic,https://www.nps.gov/thingstodo/yell-trail-fairy-falls.htm,Fairy Falls,,,,,,yes,"Page gives 5.4 mi or 6.7 mi round trip depending on the trailhead and does not say which is main; no gain"
+fairy-falls-grand-prismatic,https://www.nps.gov/places/000/fairy-falls-trailhead-ok5.htm,Fairy Falls from the Fairy Falls Trailhead (lane 2's route),4.5,round-trip,,easy,,no,Trail page gives 5.4 or 6.7 mi round trip for two approaches; this trailhead page gives 4.5 mi for the route lane 2 built. No gain stated
 grinnell-glacier,https://www.nps.gov/places/grinnell-glacier-trailhead.htm,Grinnell Glacier Trail from the trailhead,5.0,one-way,2596,,,no,"Boat option: 3.7 mi one way, 2,461 ft gain"
-glacier-highline,https://www.nps.gov/places/highline-trailhead.htm,Highline Trail from Logan Pass to The Loop,11.8,one-way,2388,,,yes,"Differs from our hike (to Granite Park Chalet). Loss 4,773 ft. A different NPS shuttle page gives 7.6 mi one way to the chalet"
+glacier-highline,https://www.nps.gov/places/highline-trailhead.htm,Highline Trail from Logan Pass to Granite Park Chalet (lane 2's route),,,,,,yes,"Lane 2's route kept. No fetched NPS page states this route's length or gain. The Highline Trailhead page gives 11.8 mi one way to The Loop with 2,388 ft gain"
 half-dome,https://www.nps.gov/yose/planyourvisit/halfdome.htm,,,,,,,yes,Page text has no length or gain
 upper-yosemite-falls,https://www.nps.gov/places/000/upper-yosemite-fall-trailhead.htm,Upper Yosemite Fall Trail to the top,7.2,round-trip,2700,,,no,Columbia Rock alone is 2 mi round trip and 1000 ft
 moro-rock,https://www.nps.gov/seki/planyourvisit/moro.htm,,,,,,,yes,Page text has no length or gain
