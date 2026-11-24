@@ -1,0 +1,39 @@
+id,source_url,route_used,length_mi,length_type,gain_ft,difficulty,max_elev_ft,needs_check,note
+angels-landing,https://www.nps.gov/zion/planyourvisit/angels-landing-hiking-permits.htm,West Rim Trail to Angels Landing,5.4,round-trip,1488,strenuous,,no,Permit needed past Scout Lookout
+bright-angel-trail,https://www.nps.gov/places/000/bright-angel-trail.htm,,,,,,,yes,"Page lists day-hike turnarounds only; no Phantom Ranch figure. Longest listed: Plateau Point 12 mi round trip 3,080 ft change"
+cascade-pass-sahale,https://www.nps.gov/noca/planyourvisit/cascade-pass-trail.htm,Cascade Pass Trail to Sahale Glacier,5.9,one-way,3940,,,no,Cascade Pass alone is 3.7 mi one way and 1,700 ft gain
+mount-washburn,https://www.nps.gov/thingstodo/yell-trail-dunraven-pass-mount-washburn.htm,Dunraven Pass to Mount Washburn summit,6.0,round-trip,,strenuous,,no,No gain or summit elevation on the page
+fairy-falls-grand-prismatic,https://www.nps.gov/thingstodo/yell-trail-fairy-falls.htm,Fairy Falls,,,,,,yes,"Page gives 5.4 mi or 6.7 mi round trip depending on the trailhead and does not say which is main; no gain"
+grinnell-glacier,https://www.nps.gov/places/grinnell-glacier-trailhead.htm,Grinnell Glacier Trail from the trailhead,5.0,one-way,2596,,,no,"Boat option: 3.7 mi one way, 2,461 ft gain"
+glacier-highline,https://www.nps.gov/places/highline-trailhead.htm,Highline Trail from Logan Pass to The Loop,11.8,one-way,2388,,,yes,"Differs from our hike (to Granite Park Chalet). Loss 4,773 ft. A different NPS shuttle page gives 7.6 mi one way to the chalet"
+half-dome,https://www.nps.gov/yose/planyourvisit/halfdome.htm,,,,,,,yes,Page text has no length or gain
+upper-yosemite-falls,https://www.nps.gov/places/000/upper-yosemite-fall-trailhead.htm,Upper Yosemite Fall Trail to the top,7.2,round-trip,2700,,,no,Columbia Rock alone is 2 mi round trip and 1000 ft
+moro-rock,https://www.nps.gov/seki/planyourvisit/moro.htm,,,,,,,yes,Page text has no length or gain
+delicate-arch,https://www.nps.gov/arch/planyourvisit/delicate-arch.htm,Delicate Arch Trail,3.0,round-trip,480,,,no,Another NPS page gives 538 ft
+mesa-arch,https://www.nps.gov/places/mesa-arch.htm,Mesa Arch Trail,0.6,round-trip,56,,,yes,56 ft is listed as elevation change
+navajo-loop-queens-garden,https://www.nps.gov/brca/planyourvisit/qgnavajocombo.htm,Queens Garden and Navajo combination,2.9,loop,625,moderate,,no,
+cassidy-arch,https://www.nps.gov/care/planyourvisit/trailguide.htm,,,,,,,yes,Trail guide page has no length or gain for this trail
+skyline-trail,https://www.nps.gov/mora/planyourvisit/skyline-trail.htm,Skyline Trail loop from Paradise,5.5,round-trip,1700,,,no,4.5 hours round trip
+hurricane-hill,https://www.nps.gov/places/000/hurricane-hill-trailhead.htm,Hurricane Hill Trail,1.63,one-way,645,,,yes,Accessibility table lists 1.63 mi for the whole trail and 645 ft gain; one way is assumed
+garfield-peak,https://www.nps.gov/crla/planyourvisit/hiking.htm,,,,,,,yes,Park trail list has no length or gain for this trail
+lassen-peak,https://www.nps.gov/thingstodo/hikelassenpeak.htm,Lassen Peak Trail,5.0,round-trip,1957,,10457,yes,"Page gives 5 miles without saying round trip. Trailhead 8,500 ft plus 1,957 ft gain is 10,457 ft"
+lady-bird-johnson-grove,https://www.nps.gov/places/lbjtrailhead.htm,Lady Bird Johnson Grove Trail,1.5,loop,,easy,,no,
+pinnacles-high-peaks,https://www.nps.gov/thingstodo/pinnacles-hike-high-peaks-to-bear-gulch-loop.htm,High Peaks to Bear Gulch Loop,6.7,loop,1425,strenuous,,yes,Page labels 1425 ft as maximum grade; read here as gain. Other loops: 5.3 and 8.4 mi
+ryan-mountain,https://www.nps.gov/thingstodo/hike-ryan-mountain.htm,,,,,,,yes,Page text has no length or gain
+golden-canyon,https://www.nps.gov/deva/planyourvisit/golden-canyon.htm,Golden Canyon to Red Cathedral,3.0,round-trip,,,,yes,Page lists a 2.7 mi loop and a 4.3 mi loop as well; which line is Red Cathedral is inferred
+lost-mine-trail,https://www.nps.gov/thingstodo/hike-the-lost-mine-trail.htm,Lost Mine Trail,4.8,round-trip,1100,,,no,
+emerald-lake,https://www.nps.gov/romo/planyourvisit/list_hiking_trails.htm,,,,,,,yes,Park list page; no length or gain found in the page text
+high-dune,https://www.nps.gov/places/high-dune-on-first-ridge.htm,,,,,,,yes,Page text has no length or gain
+inspiration-point,https://www.nps.gov/tripideas/jennylake-hikes.htm,,,,,,,yes,Page lists the hikes with no length or gain
+cadillac-north-ridge,https://www.nps.gov/thingstodo/hike-cadillac-north-ridge-trail.htm,Cadillac North Ridge Trail,4.4,round-trip,,,,no,No gain or difficulty found in the page text
+alum-cave-leconte,https://www.nps.gov/thingstodo/leconte-via-alum-cave-trail.htm,Alum Cave Trail to Mount LeConte,10.0,round-trip,,,,no,No gain found in the page text
+clingmans-dome,https://www.nps.gov/places/kuwohi-observation-tower.htm,Trail to the Kuwohi observation tower,1.0,round-trip,,,6643,no,Paved but very steep; 6643 ft is the summit of the mountain
+old-rag,https://www.nps.gov/thingstodo/old-rag-circuit.htm,Old Rag circuit,9.4,loop,2348,very strenuous,,no,7 hours 30 minutes
+anhinga-trail,https://www.nps.gov/ever/planyourvisit/anhinga-trail.htm,Anhinga Trail,0.8,round-trip,,,,no,Flat and accessible
+wheeler-peak,https://www.nps.gov/thingstodo/hike-to-wheeler-peak.htm,Wheeler Peak Summit Trail,8.6,round-trip,3100,,,yes,Round trip is assumed from the page; trailhead is 10160 ft
+south-kaibab-skeleton-point,https://www.nps.gov/places/000/south-kaibab-trail.htm,South Kaibab Trail to Skeleton Point,6.0,round-trip,2040,,,yes,Pairing of 6 mi with 2040 ft elevation change read from the page's day-hike table
+zion-narrows,https://www.nps.gov/zion/planyourvisit/narrowsbottomup.htm,The Narrows bottom-up to Big Spring,9.4,round-trip,,strenuous,,no,No permit for the bottom-up hike
+longs-peak,https://home.nps.gov/romo/planyourvisit/longspeak.htm,,,,,,,yes,Page text has no length or gain
+general-sherman-tree,https://www.nps.gov/thingstodo/the-general-sherman-tree-summer.htm,Walk from the main parking lot to the tree,0.5,one-way,,,,no,
+hall-of-mosses,https://www.nps.gov/olym/planyourvisit/visiting-the-hoh.htm,Hall of Mosses Trail,0.8,loop,,,,no,
+devils-garden,https://www.nps.gov/arch/planyourvisit/devils-garden.htm,Full Devils Garden loop with the Primitive Trail,7.9,loop,,,,yes,Page also lists Landscape Arch at 1.9 mi round trip
