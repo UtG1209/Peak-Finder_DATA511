@@ -114,3 +114,9 @@ def test_output_file_is_complete_and_scaled_to_the_busiest_month():
         assert max(levels) == 1.0, code
         for month in months:
             assert month["crowd_band"] == nps_visits.band(month["crowd_level"]), code
+
+
+def test_monthly_visits_add_up_to_the_published_2023_annual_totals():
+    published = {"ZION": 4_623_238, "GRCA": 4_733_705, "YELL": 4_501_382}
+    for code, total in published.items():
+        assert year_total(visits(code), 2023) == total, code
