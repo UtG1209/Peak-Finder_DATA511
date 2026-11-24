@@ -427,36 +427,6 @@ def build_profile(hk, m):
             "nps_length_m": m["nps_len"], "scale": round(m["nps_len"] / length, 3), "checkpoints": cps}
 
 
-def build_advice():
-    irma = "https://irma.nps.gov/STATS/"
-    epa = "https://aqs.epa.gov/aqsweb/airdata/download_files.html"
-    return [
-        {"hike_id": "glacier-highline", "claim": "Go in September for quiet",
-         "finding": "September visits were 44.6% of July in 2010 and 76.6% in 2023, so the quiet shoulder season is mostly gone.",
-         "numbers": {"2010": 0.446, "2023": 0.766}, "source": "NPS IRMA, Recreation Visits by Month", "url": irma},
-        {"hike_id": "angels-landing", "claim": "Zion is busiest in summer, in August",
-         "finding": "June 2023 was the busiest month: 564,036 visits, 12.20% of the 4,623,238 year total.",
-         "numbers": {"June 2023": 564036, "Year 2023": 4623238}, "source": "NPS IRMA, Recreation Visits by Month", "url": irma},
-        {"hike_id": "angels-landing", "claim": "Zion summers are hot but not that hot",
-         "finding": "Springdale averaged 13.0 days at or above 100 F each August in 2015-24 (130 days), far more than reanalysis models suggest.",
-         "numbers": {"Station mean Aug high (F)": 97.9, "Days >= 100 F per August": 13.0}, "source": "NOAA GHCN-Daily, station USC00429717",
-         "url": "https://www.ncei.noaa.gov/access/search/data-search/daily-summaries"},
-        {"hike_id": "half-dome", "claim": "Bad air in Yosemite means wildfire smoke",
-         "finding": "In Mariposa County, 71 of 310 August days had AQI over 100 (2015-24). Only 33 were PM2.5 smoke; 38 were ozone.",
-         "numbers": {"AQI>100 days": 71, "PM2.5 (smoke) days": 33, "Ozone days": 38}, "source": "EPA AirData, daily AQI by county", "url": epa},
-        {"hike_id": "grinnell-glacier", "claim": "Glacier's air is always clean",
-         "finding": "Flathead County August days over AQI 100 went from 4 (2005-14) to 38 (2015-24), all of them PM2.5 smoke.",
-         "numbers": {"2005-14": 4, "2015-24": 38}, "source": "EPA AirData, daily AQI by county", "url": epa},
-        {"hike_id": "cadillac-north-ridge", "claim": "Acadia is quiet once summer ends",
-         "finding": "September and October together carried 28.8% of visits in 2010 and 30.5% in 2023: fall is now a main season.",
-         "numbers": {"2010": 0.288, "2023": 0.305}, "source": "NPS IRMA, Recreation Visits by Month", "url": irma},
-        {"hike_id": "angels-landing", "claim": "Flights to Las Vegas are cheap from Seattle",
-         "finding": "The average one-way Seattle to Las Vegas fare was $169.78 in Q3 2025, not the $118 some tools suggest.",
-         "numbers": {"Q3 2025 average one-way fare ($)": 169.78}, "source": "DOT Consumer Airfare Report, Table 6",
-         "url": "https://www.transportation.gov/policy/aviation-policy/domestic-airline-consumer-airfare-report"},
-    ]
-
-
 def build_meta(n_hikes):
     return {
         "fake": True,
@@ -497,11 +467,11 @@ def placeholder_svg(name: str, park: str) -> str:
     )
 
 
-REAL_FILES = {"hike_month.json", "hikes.json", "meta.json"}  # pipeline output, never overwritten once present
+REAL_FILES = {"advice.json", "cost.json", "hike_month.json", "hikes.json", "meta.json", "travel.json"}  # pipeline output, never overwritten once present
 
 
 def dump(path: Path, obj):
-    if path.name in REAL_FILES and path.exists():
+    if (path.name in REAL_FILES or path.parent.name == "profiles") and path.exists():
         return path.stat().st_size
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
@@ -516,10 +486,14 @@ def main():
     photos = out.parent / "photos"
 
     # start clean so hikes dropped from the list leave no stale profiles or photos behind
-    for stale in list((out / "profiles").glob("*.json")) + list(photos.glob("*.svg")):
+    for stale in photos.glob("*.svg"):
         stale.unlink()
 
     hikes, mrows = build_hikes()
+    # profiles that already exist are kept (some are real pipeline output); only those of dropped hikes go
+    for stale in (out / "profiles").glob("*.json"):
+        if stale.stem not in {m["hid"] for m in mrows}:
+            stale.unlink()
     months = build_months(hikes, mrows)
     travel = build_travel(hikes, mrows)
     cost = build_cost(hikes, mrows, travel)
@@ -528,7 +502,7 @@ def main():
         "hike_month.json": dump(out / "hike_month.json", months),
         "travel.json": dump(out / "travel.json", travel),
         "cost.json": dump(out / "cost.json", cost),
-        "advice.json": dump(out / "advice.json", build_advice()),
+        "advice.json": dump(out / "advice.json", None),
         "meta.json": dump(out / "meta.json", build_meta(len(hikes))),
     }
     prof = 0

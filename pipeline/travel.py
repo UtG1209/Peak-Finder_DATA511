@@ -7,6 +7,7 @@ The matrix responses and DOT source rows are cached in data/raw/lane2/.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -23,6 +24,7 @@ from lane2_common import DATA, RAW, ensure_finite, hikes, read_json, require_key
 ORS_MATRIX = "https://api.heigit.org/openrouteservice/v2/matrix/driving-car"
 DOT_TABLE6 = "https://data.transportation.gov/resource/yj5y-b2ir.json"
 ORS_CALLS = 0
+MAX_ALT_KM = 400  # how much farther than the nearest airport we will go to find one with a real fare
 
 # Coordinates are airport reference points (WGS84). City airports are the consistent fare origins;
 # the destination set includes the commercial airports commonly serving the 40 selected parks.
@@ -40,7 +42,7 @@ AIRPORTS: dict[str, tuple[float, float]] = {
     "GJT": (39.1224, -108.5267), "CNY": (38.7550, -109.7548), "CDC": (37.7009, -113.0988),
     "SBA": (34.4262, -119.8404), "ONT": (34.0560, -117.6012), "RNO": (39.4991, -119.7681),
     "EGE": (39.6426, -106.9177), "HDN": (40.4812, -107.2177), "CPR": (42.9080, -106.4644),
-    "TWF": (42.4818, -114.4877), "ELP": (31.8072, -106.3776), "SAF": (35.6171, -106.0894),
+    "TWF": (42.4818, -114.4877), "BGR": (44.8074, -68.8281), "ELP": (31.8072, -106.3776), "SAF": (35.6171, -106.0894),
 }
 CITY_AIRPORT = {"SEA": "SEA", "SFO": "SFO", "LAX": "LAX", "PHX": "PHX", "DEN": "DEN", "DFW": "DFW", "ORD": "ORD", "ATL": "ATL", "NYC": "JFK", "DCA": "DCA"}
 CITY_COORDS = {
@@ -58,7 +60,7 @@ AIRPORT_CITY = {
     "FAT": "Fresno, CA", "MMH": "Mammoth Lakes, CA", "BIH": "Bishop, CA", "ASE": "Aspen, CO",
     "GJT": "Grand Junction, CO", "CNY": "Moab, UT", "CDC": "Cedar City, UT", "SBA": "Santa Barbara, CA",
     "ONT": "Ontario, CA", "RNO": "Reno, NV", "EGE": "Eagle, CO", "HDN": "Hayden, CO", "CPR": "Casper, WY",
-    "TWF": "Twin Falls, ID", "ELP": "El Paso, TX", "SAF": "Santa Fe, NM",
+    "TWF": "Twin Falls, ID", "PDX": "Portland, OR", "SJC": "San Jose, CA", "BGR": "Bangor, ME", "ELP": "El Paso, TX", "SAF": "Santa Fe, NM",
 }
 
 
@@ -166,7 +168,10 @@ def fare_lookup(rows: list[dict[str, Any]], origin: str, destination: str, quart
 def build_travel(hike_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[tuple[str, str], float], dict[str, str]]:
     city_codes = list(CITY_COORDS)
     hikes_local = [h for h in hike_rows if h.get("trailhead")]
-    hcoords = [[float(h["trailhead"]["lon"]), float(h["trailhead"]["lat"])] for h in hikes_local]
+    # Some trailheads sit off the drivable network (shuttle-only roads, far from a road): route to the lot visitors drive to.
+    with (Path(__file__).parent / "catalogue" / "drive_points.csv").open(newline="") as f:
+        drive_pt = {r["id"]: [float(r["lon"]), float(r["lat"])] for r in csv.DictReader(f)}
+    hcoords = [drive_pt.get(h["id"]) or [float(h["trailhead"]["lon"]), float(h["trailhead"]["lat"])] for h in hikes_local]
     city_locs = [[CITY_COORDS[c][0], CITY_COORDS[c][1]] for c in city_codes]
     matrix = ors_matrix(city_locs + hcoords, list(range(len(city_codes))), list(range(len(city_codes), len(city_codes) + len(hcoords))))
     drive_dur, drive_dist = {}, {}
@@ -179,8 +184,36 @@ def build_travel(hike_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
             drive_dur[(h["id"], city)] = float(duration) / 3600
             drive_dist[(h["id"], city)] = float(distance) / 1609.344
 
-    airport_by_hike = {h["id"]: min(AIRPORTS, key=lambda code: haversine_m((h["trailhead"]["lon"], h["trailhead"]["lat"]), (AIRPORTS[code][1], AIRPORTS[code][0]))) for h in hikes_local}
-    unique_airports = sorted(set(airport_by_hike.values()))
+    # Destination airport per hike AND home city: the nearest airport to the trailhead that has a DOT Table 6 fare from that
+    # home airport in all four quarters (Table 6 lists only busy markets), within MAX_ALT_KM; else the nearest airport, whose fare stays a placeholder.
+    wanted = {normalize(c) for c in AIRPORT_CITY.values()}
+    dot = [r for r in dot_rows() if any(w in normalize(_first(r, ("city1", "city_1"), "")) for w in wanted) and any(w in normalize(_first(r, ("city2", "city_2"), "")) for w in wanted)]
+    fare_ok: dict[tuple[str, str], bool] = {}
+
+    def has_fare(origin: str, dest: str) -> bool:
+        if (origin, dest) not in fare_ok:
+            try:
+                for q in range(1, 5):
+                    fare_lookup(dot, origin, dest, q)
+                fare_ok[(origin, dest)] = True
+            except ValueError:
+                fare_ok[(origin, dest)] = False
+        return fare_ok[(origin, dest)]
+
+    def pick_airport(h: dict[str, Any], origin: str) -> str:
+        spot = (h["trailhead"]["lon"], h["trailhead"]["lat"])
+        ranked = sorted(AIRPORTS, key=lambda code: haversine_m(spot, (AIRPORTS[code][1], AIRPORTS[code][0])))
+        limit = max(MAX_ALT_KM * 1000, haversine_m(spot, (AIRPORTS[ranked[0]][1], AIRPORTS[ranked[0]][0])))
+        for code in ranked:
+            if haversine_m(spot, (AIRPORTS[code][1], AIRPORTS[code][0])) > limit:
+                break
+            if code != origin and has_fare(origin, code):
+                return code
+        return ranked[0]
+
+    dest_by = {(h["id"], city): pick_airport(h, CITY_AIRPORT[city]) for h in hikes_local for city in city_codes}
+    airport_by_hike = {h["id"]: dest_by[(h["id"], city_codes[0])] for h in hikes_local}  # kept for callers: the first home city's pick
+    unique_airports = sorted(set(dest_by.values()))
     airport_drive: dict[tuple[str, str], float] = {}
     for start in range(0, len(unique_airports), 10):
         chunk = unique_airports[start:start + 10]
@@ -194,9 +227,9 @@ def build_travel(hike_rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
 
     rows = []
     for h in hikes_local:
-        dest = airport_by_hike[h["id"]]
         for city in city_codes:
             origin = CITY_AIRPORT[city]
+            dest = dest_by[(h["id"], city)]
             air_miles = haversine_m((AIRPORTS[origin][1], AIRPORTS[origin][0]), (AIRPORTS[dest][1], AIRPORTS[dest][0])) / 1609.344
             # 1.5 h for airport processes plus 1 h ground travel to the origin airport.
             fly_hours = 1.0 + 1.5 + air_miles / 500 + airport_drive.get((h["id"], dest), 0)

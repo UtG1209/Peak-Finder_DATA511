@@ -12,9 +12,9 @@ def built():
     return json.loads(meta.OUT_FILE.read_text(encoding="utf-8"))
 
 
-def test_the_data_is_marked_real_with_the_right_hike_count():
+def test_the_data_stays_marked_fake_while_files_are_placeholders_and_has_the_right_hike_count():
     result = built()
-    assert result["fake"] is False
+    assert result["fake"] is True
     assert result["hike_count"] == len(json.loads(meta.HIKES_FILE.read_text(encoding="utf-8")))
 
 
