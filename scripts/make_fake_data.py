@@ -497,7 +497,7 @@ def placeholder_svg(name: str, park: str) -> str:
     )
 
 
-REAL_FILES = {"hike_month.json", "hikes.json"}  # pipeline output, never overwritten once present
+REAL_FILES = {"hike_month.json", "hikes.json", "meta.json"}  # pipeline output, never overwritten once present
 
 
 def dump(path: Path, obj):
