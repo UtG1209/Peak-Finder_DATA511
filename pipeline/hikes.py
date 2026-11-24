@@ -3,14 +3,16 @@
 Each field takes the sourced value where one exists and keeps the placeholder from the
 fake hike list otherwise. hikes_coverage.csv says which it was, hike by hike and field by field.
 
-Run from the repo root:  .venv/Scripts/python.exe pipeline/hikes.py
+Run from the repo root:  .venv/Scripts/python.exe pipeline/hikes.py [--publish]
 Output: data/processed/hikes.json and pipeline/catalogue/hikes_coverage.csv
-Nothing is copied into app/public/data/.
+--publish also copies hikes.json into app/public/data/ (scripts/make_fake_data.py then leaves it alone).
 """
 
 import csv
 import json
 import re
+import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -109,6 +111,10 @@ def main():
         placeholders = sum(1 for row in coverage if row[name] == "placeholder")
         if placeholders:
             print(f"  still placeholder: {name} for {placeholders} hikes")
+
+    if "--publish" in sys.argv:
+        shutil.copyfile(OUT_FILE, BASE_FILE)
+        print("Copied to app/public/data/hikes.json")
 
 
 if __name__ == "__main__":
