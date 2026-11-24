@@ -100,8 +100,6 @@ h("pinnacles-high-peaks", "High Peaks Loop", "PINN", "Pinnacles National Park", 
 h("ryan-mountain", "Ryan Mountain", "JOTR", "Joshua Tree National Park", "CA", "Ryan Mountain Trailhead", 34.0113, -116.1585, "Summit", 34.0126, -116.1507, 3.0, 1050, 5457, "out-and-back", "moderate", "desert", -10, "winter", "06071", "San Bernardino County, CA", ["no-shade", "extra-water"], None, ())
 h("golden-canyon", "Golden Canyon to Red Cathedral", "DEVA", "Death Valley National Park", "CA", "Golden Canyon Trailhead", 36.4209, -116.8271, "Red Cathedral", 36.4283, -116.8135, 3.0, 600, 400, "out-and-back", "easy", "hotdesert", 0, "winter", "06027", "Inyo County, CA", ["no-shade", "extra-water"], None, ())
 h("lost-mine-trail", "Lost Mine Trail", "BIBE", "Big Bend National Park", "TX", "Lost Mine Trailhead", 29.2755, -103.2990, "Juniper Canyon Overlook", 29.2720, -103.3040, 4.8, 1100, 6850, "out-and-back", "moderate", "desert", -8, "winter", "48043", "Brewster County, TX", ["exposure", "no-shade", "extra-water"], None, ())
-h("guadalupe-peak", "Guadalupe Peak", "GUMO", "Guadalupe Mountains National Park", "TX", "Pine Springs Trailhead", 31.8886, -104.8218, "Guadalupe Peak", 31.8912, -104.8607, 8.4, 3000, 8751, "out-and-back", "hard", "desert", -8, "desert", "48109", "Culberson County, TX", ["steep", "exposure", "extra-water"], None, ())
-h("alkali-flat", "Alkali Flat Trail", "WHSA", "White Sands National Park", "NM", "Alkali Flat Trailhead", 32.7790, -106.1780, "Alkali Flat Loop", 32.8040, -106.2350, 5.0, 100, 4000, "loop", "easy", "desert", -10, "year", "35035", "Otero County, NM", ["no-shade", "extra-water"], None, ())
 h("emerald-lake", "Emerald Lake", "ROMO", "Rocky Mountain National Park", "CO", "Bear Lake Trailhead", 40.3114, -105.6450, "Emerald Lake", 40.3070, -105.6660, 3.2, 650, 10110, "out-and-back", "moderate", "alpine", -4, "summer", "08069", "Larimer County, CO", ["snow-gear"], None, ())
 h("high-dune", "High Dune", "GRSA", "Great Sand Dunes National Park", "CO", "Dunes Parking Area", 37.7503, -105.5144, "High Dune", 37.7480, -105.5400, 2.6, 700, 8700, "out-and-back", "moderate", "montane", 8, "summer", "08003", "Alamosa County, CO", ["no-shade", "extra-water", "steep"], None, ())
 h("inspiration-point", "Hidden Falls and Inspiration Point", "GRTE", "Grand Teton National Park", "WY", "Jenny Lake Visitor Center", 43.7569, -110.7264, "Inspiration Point", 43.7587, -110.7524, 7.6, 700, 7200, "out-and-back", "moderate", "alpine", 6, "summer", "56039", "Teton County, WY", ["bear-spray"], None, ())
@@ -499,7 +497,12 @@ def placeholder_svg(name: str, park: str) -> str:
     )
 
 
+REAL_FILES = {"hike_month.json", "hikes.json", "meta.json"}  # pipeline output, never overwritten once present
+
+
 def dump(path: Path, obj):
+    if path.name in REAL_FILES and path.exists():
+        return path.stat().st_size
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
     return path.stat().st_size
