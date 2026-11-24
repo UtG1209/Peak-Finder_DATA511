@@ -121,7 +121,13 @@ def commons_photos(hike):
     return good
 
 
-def row_for(hike, crowds, weather, aqi):
+def nps_pages():
+    path = Path(__file__).resolve().parent / "nps_pages.csv"
+    with path.open(encoding="utf-8", newline="") as handle:
+        return {row["id"]: row["nps_page"] for row in csv.DictReader(handle)}
+
+
+def row_for(hike, crowds, weather, aqi, pages):
     park = crowds["parks"].get(hike["park_code"], {})
     station = weather["hikes"].get(hike["id"], {}).get("station")
     county = aqi["hikes"].get(hike["id"], {})
@@ -139,7 +145,7 @@ def row_for(hike, crowds, weather, aqi):
         "osm_trailhead_m": head_m if head_m is not None else "",
         "osm_named_paths": sum(1 for e in elements if e["type"] == "way"),
         "commons_photos": len(photos), "commons_best": photos[0] if photos else "",
-        "nps_page": "",
+        "nps_page": pages.get(hike["id"], ""),
     }
     row["complete"] = all([row["visits"], row["station"], row["aqi"], row["osm_trailhead"], row["osm_named_paths"] > 0, row["commons_photos"] > 0])
     return row
@@ -151,9 +157,10 @@ def main():
     weather = json.loads((PROCESSED / "weather.json").read_text(encoding="utf-8"))
     aqi = json.loads((PROCESSED / "aqi.json").read_text(encoding="utf-8"))
 
+    pages = nps_pages()
     rows = []
     for hike in hikes:
-        row = row_for(hike, crowds, weather, aqi)
+        row = row_for(hike, crowds, weather, aqi, pages)
         rows.append(row)
         print(f"{hike['id']}: complete={row['complete']} photos={row['commons_photos']} trailhead_m={row['osm_trailhead_m']}")
 
