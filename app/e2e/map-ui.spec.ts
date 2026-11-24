@@ -47,7 +47,7 @@ test('toggling the theme recolours the pane and the land on the 2D map, without 
   await page.goto(URL_GO)
   const canvas = page.locator('#mapPane canvas.maplibregl-canvas')
   await expect(canvas).toBeVisible()
-  await expect(page.locator('.ranked li')).toHaveCount(40)
+  await expect(page.locator('.ranked li')).toHaveCount(38)
   await page.waitForTimeout(1500)
   await canvas.evaluate((c) => ((c as HTMLElement).dataset.mark = 'same')) // survives only if the canvas is not re-created
 
@@ -118,7 +118,7 @@ test('with WebGL blocked the map pane explains it and the ranked list still work
   await page.goto(URL_GO)
   await expect(page.locator('.map-fail-msg')).toContainText('The map needs WebGL')
   await expect(page.locator('.map-fail-msg')).toContainText('The ranked list on the left has every hike')
-  await expect(page.locator('.ranked li')).toHaveCount(40)
+  await expect(page.locator('.ranked li')).toHaveCount(38)
   await page.locator('.ranked li').first().hover() // the page is alive
   await expect(page.locator('#count')).toBeVisible()
 })

@@ -3,13 +3,13 @@ import { expect, test, type Page } from '@playwright/test'
 // Explore interactions added with the restyle: quarter re-sort, the designed empty state, the guide.
 const names = (page: Page) => page.locator('.ranked li .name').allTextContents()
 
-test('changing the quarter keeps 40 rows and can change the order', async ({ page }) => {
+test('changing the quarter keeps 38 rows and can change the order', async ({ page }) => {
   await page.goto('./#/?from=SEA&q=1&temp=60-80&go=1')
-  await expect(page.locator('.ranked li')).toHaveCount(40)
+  await expect(page.locator('.ranked li')).toHaveCount(38)
   const q1 = await names(page)
   await page.getByRole('button', { name: /^Q3/ }).click()
   await expect(page).toHaveURL(/q=3/)
-  await expect(page.locator('.ranked li')).toHaveCount(40)
+  await expect(page.locator('.ranked li')).toHaveCount(38)
   await expect.poll(() => names(page)).not.toEqual(q1) // the list re-sorts a moment after the URL changes
   const q3 = await names(page)
   expect([...q3].sort()).toEqual([...q1].sort()) // same hikes, new order
