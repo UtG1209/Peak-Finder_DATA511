@@ -38,6 +38,12 @@ def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def closed_months():
+    """{(hike_id, month)} from closed_months.csv: months an official notice says the hike is not available."""
+    with (CATALOGUE / "closed_months.csv").open(encoding="utf-8", newline="") as handle:
+        return {(row["id"], int(row["month"])) for row in csv.DictReader(handle)}
+
+
 def number(text):
     value = float(text)
     return int(value) if value == int(value) and "." not in text else value
@@ -51,7 +57,7 @@ def length_fields(facts, route_type):
     return round(length, 1), LENGTH_TYPE_FOR_ROUTE[route_type]
 
 
-def build_hike(base, pages, facts, fields, photos, ends, weather, aqi):
+def build_hike(base, pages, facts, fields, photos, ends, weather, aqi, geo=None):
     hike = dict(base)
     source = {name: "placeholder" for name in COVERAGE_FIELDS}
 
@@ -75,6 +81,17 @@ def build_hike(base, pages, facts, fields, photos, ends, weather, aqi):
     if own["max_elev_ft"]:
         hike["max_elev_ft"], source["max_elev"] = number(own["max_elev_ft"]), "nps"
 
+    place = (geo or {}).get(base["id"])
+    if place:
+        # Sourced coordinates and elevations (geo_facts.csv); a blank cell leaves the placeholder.
+        if place["trailhead_lat"]:
+            hike["trailhead"] = {"name": place["trailhead_name"], "lat": float(place["trailhead_lat"]), "lon": float(place["trailhead_lon"])}
+            source["trailhead"] = place["trailhead_source"]
+        if place["max_elev_ft"]:
+            hike["max_elev_ft"], source["max_elev"] = number(place["max_elev_ft"]), place["max_elev_source"]
+        if place["gain_ft"]:
+            hike["gain_ft"], source["gain"] = number(place["gain_ft"]), place["gain_source"]
+
     if base["id"] in photos:
         credit = photos[base["id"]]
         hike["photo"] = {key: credit[key] for key in ("file", "author", "license", "license_url", "page")}
@@ -87,6 +104,9 @@ def build_hike(base, pages, facts, fields, photos, ends, weather, aqi):
         end = ends[base["id"]]
         hike["end"] = {"name": end["end_name"], "lat": float(end["end_lat"]), "lon": float(end["end_lon"])}
         source["end"] = "walk"
+    elif place and place["end_lat"]:
+        hike["end"] = {"name": place["end_name"], "lat": float(place["end_lat"]), "lon": float(place["end_lon"])}
+        source["end"] = place["end_source"]
 
     station = weather["hikes"][base["id"]]["station"]
     hike["station"], source["station"] = station, "pipeline"
@@ -96,14 +116,14 @@ def build_hike(base, pages, facts, fields, photos, ends, weather, aqi):
 
 def main():
     base_hikes = read_json(BASE_FILE)
-    pages, facts, fields, photos, ends = (
-        read_csv(name) for name in ("nps_pages.csv", "nps_facts.csv", "hike_fields.csv", "photos.csv", "end_points.csv")
+    pages, facts, fields, photos, ends, geo = (
+        read_csv(name) for name in ("nps_pages.csv", "nps_facts.csv", "hike_fields.csv", "photos.csv", "end_points.csv", "geo_facts.csv")
     )
     weather, aqi = read_json(PROCESSED / "weather.json"), read_json(PROCESSED / "aqi.json")
 
     hikes, coverage = [], []
     for base in base_hikes:
-        hike, source = build_hike(base, pages, facts, fields, photos, ends, weather, aqi)
+        hike, source = build_hike(base, pages, facts, fields, photos, ends, weather, aqi, geo)
         hikes.append(hike)
         coverage.append({"id": base["id"], **source})
 

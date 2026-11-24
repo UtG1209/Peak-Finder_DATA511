@@ -87,8 +87,12 @@ def test_coverage_names_every_placeholder_field(built):
         rows = list(csv.DictReader(handle))
     assert [row["id"] for row in rows] == [hike["id"] for hike in built]
     ends = hikes.read_csv("end_points.csv")
-    assert all(row["trailhead"] == "placeholder" for row in rows)
-    assert all(row["end"] == ("walk" if row["id"] in ends else "placeholder") for row in rows)
+    geo = hikes.read_csv("geo_facts.csv")
+    for row in rows:
+        own = geo.get(row["id"], {})
+        assert row["trailhead"] == (own["trailhead_source"] if own.get("trailhead_lat") else "placeholder"), row["id"]
+        want_end = "walk" if row["id"] in ends else (own["end_source"] if own.get("end_lat") else "placeholder")
+        assert row["end"] == want_end, row["id"]
     assert all(set(row) == {"id", *hikes.COVERAGE_FIELDS} for row in rows)
 
 
@@ -98,3 +102,23 @@ def test_a_hike_with_a_walk_ends_where_the_walk_route_ends(built):
         if hike["id"] in ends:
             assert hike["end"]["lat"] == float(ends[hike["id"]]["end_lat"]), hike["id"]
             assert hike["end"]["lon"] == float(ends[hike["id"]]["end_lon"]), hike["id"]
+
+
+def test_sourced_places_and_elevations_reach_hikes_json_and_the_coverage_table(built):
+    geo = hikes.read_csv("geo_facts.csv")
+    coverage = hikes.read_csv("hikes_coverage.csv")
+    by_id = {h["id"]: h for h in built}
+    for hike_id, row in geo.items():
+        for field, key in (("trailhead", "trailhead"), ("end", "end")):
+            if row[f"{field}_lat"] and not (field == "end" and coverage[hike_id]["end"] == "walk"):
+                assert by_id[hike_id][key]["lat"] == float(row[f"{field}_lat"]), (hike_id, field)
+                assert coverage[hike_id][field] == row[f"{field}_source"] != "placeholder", (hike_id, field)
+        if row["max_elev_ft"]:
+            assert by_id[hike_id]["max_elev_ft"] == float(row["max_elev_ft"]), hike_id
+            assert coverage[hike_id]["max_elev"] == row["max_elev_source"] != "placeholder", hike_id
+
+
+def test_closed_months_are_real_months_of_known_hikes(built):
+    ids = {h["id"] for h in built}
+    for hike_id, month in hikes.closed_months():
+        assert hike_id in ids and 1 <= month <= 12

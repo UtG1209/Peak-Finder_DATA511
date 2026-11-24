@@ -15,6 +15,8 @@ import shutil
 import sys
 from pathlib import Path
 
+import hikes as hikes_catalogue
+
 ROOT = Path(__file__).resolve().parent.parent
 PROCESSED = ROOT / "data" / "processed"
 APP_DATA = ROOT / "app" / "public" / "data"
@@ -84,7 +86,7 @@ def main():
     weather = read_json(PROCESSED / "weather.json")
     aqi = read_json(PROCESSED / "aqi.json")
     daylight = read_json(PROCESSED / "daylight.json")
-    closed_months = closed_from_existing()
+    closed_months = hikes_catalogue.closed_months()
 
     rows = []
     for hike in hikes:
@@ -101,6 +103,8 @@ def main():
     if publish:
         shutil.copyfile(out_file, APP_DATA / "hike_month.json")
         print("Copied to app/public/data/hike_month.json")
+        shutil.copyfile(PROCESSED / "advice.json", APP_DATA / "advice.json")
+        print("Copied to app/public/data/advice.json")
 
 
 if __name__ == "__main__":
