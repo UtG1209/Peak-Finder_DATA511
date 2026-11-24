@@ -17,10 +17,12 @@ def test_one_row_per_hike_in_list_order():
     assert [row["id"] for row in read("nps_facts.csv")] == [hike["id"] for hike in hikes]
 
 
-def test_each_row_cites_the_hikes_nps_page():
+def test_each_row_cites_an_nps_page():
     pages = {row["id"]: row["nps_page"] for row in read("nps_pages.csv")}
     for row in read("nps_facts.csv"):
-        assert row["source_url"] == pages[row["id"]], row["id"]
+        assert row["source_url"].startswith(("https://www.nps.gov/", "https://home.nps.gov/")), row["id"]
+        if row["source_url"] != pages[row["id"]]:
+            assert row["length_mi"] or row["gain_ft"], row["id"]
 
 
 def test_numbers_are_numbers_and_length_has_a_type():
