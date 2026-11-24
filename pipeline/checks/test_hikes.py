@@ -86,5 +86,15 @@ def test_coverage_names_every_placeholder_field(built):
     with hikes.COVERAGE_FILE.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     assert [row["id"] for row in rows] == [hike["id"] for hike in built]
-    assert all(row["trailhead"] == "placeholder" and row["end"] == "placeholder" for row in rows)
+    ends = hikes.read_csv("end_points.csv")
+    assert all(row["trailhead"] == "placeholder" for row in rows)
+    assert all(row["end"] == ("walk" if row["id"] in ends else "placeholder") for row in rows)
     assert all(set(row) == {"id", *hikes.COVERAGE_FIELDS} for row in rows)
+
+
+def test_a_hike_with_a_walk_ends_where_the_walk_route_ends(built):
+    ends = hikes.read_csv("end_points.csv")
+    for hike in built:
+        if hike["id"] in ends:
+            assert hike["end"]["lat"] == float(ends[hike["id"]]["end_lat"]), hike["id"]
+            assert hike["end"]["lon"] == float(ends[hike["id"]]["end_lon"]), hike["id"]

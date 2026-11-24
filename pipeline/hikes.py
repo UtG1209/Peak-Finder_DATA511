@@ -51,7 +51,7 @@ def length_fields(facts, route_type):
     return round(length, 1), LENGTH_TYPE_FOR_ROUTE[route_type]
 
 
-def build_hike(base, pages, facts, fields, photos, weather, aqi):
+def build_hike(base, pages, facts, fields, photos, ends, weather, aqi):
     hike = dict(base)
     source = {name: "placeholder" for name in COVERAGE_FIELDS}
 
@@ -83,6 +83,11 @@ def build_hike(base, pages, facts, fields, photos, weather, aqi):
     else:
         source["photo"] = "walk"
 
+    if base["id"] in ends:
+        end = ends[base["id"]]
+        hike["end"] = {"name": end["end_name"], "lat": float(end["end_lat"]), "lon": float(end["end_lon"])}
+        source["end"] = "walk"
+
     station = weather["hikes"][base["id"]]["station"]
     hike["station"], source["station"] = station, "pipeline"
     hike["aqi_county"], source["aqi_county"] = aqi["hikes"][base["id"]]["county"], "pipeline"
@@ -91,12 +96,14 @@ def build_hike(base, pages, facts, fields, photos, weather, aqi):
 
 def main():
     base_hikes = read_json(BASE_FILE)
-    pages, facts, fields, photos = (read_csv(name) for name in ("nps_pages.csv", "nps_facts.csv", "hike_fields.csv", "photos.csv"))
+    pages, facts, fields, photos, ends = (
+        read_csv(name) for name in ("nps_pages.csv", "nps_facts.csv", "hike_fields.csv", "photos.csv", "end_points.csv")
+    )
     weather, aqi = read_json(PROCESSED / "weather.json"), read_json(PROCESSED / "aqi.json")
 
     hikes, coverage = [], []
     for base in base_hikes:
-        hike, source = build_hike(base, pages, facts, fields, photos, weather, aqi)
+        hike, source = build_hike(base, pages, facts, fields, photos, ends, weather, aqi)
         hikes.append(hike)
         coverage.append({"id": base["id"], **source})
 
