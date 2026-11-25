@@ -24,6 +24,8 @@ Hard is 10, not 7, because every hike that already has real data or a walk stays
 | 3 | [plan-3-walks.md](plan-3-walks.md) | Python plus patience | `walks/`, `walks/manifest.json`, the walk to app link |
 | 4 | [plan-4-app-end-to-end.md](plan-4-app-end-to-end.md) | React | every screen, button and test at 23 hikes, the integration sweep, release |
 
+Plan 5b ([plan-5b-build-from-v2.md](plan-5b-build-from-v2.md)) builds the Hike page from the approved v2 design; draft, plan only, starts when the user says go.
+
 Plan 6 ([plan-6-optimize-everything.md](plan-6-optimize-everything.md)) optimizes the whole codebase; plan only, runs after the Plan 5 design.
 
 Order: **Plan 1 step 1 first** (it fixes the list; about an hour). Then 1, 2, 3 run in parallel. Plan 4 starts its code work right away
