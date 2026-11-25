@@ -1,0 +1,1755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hike Almanac 3D</title>
+<meta name="description" content="Peak Finder hike page, 3D dashboard prototype: Angels Landing, where, when and how much in one scene.">
+<script>
+  // Theme before first paint (same idea as app/index.html): a stored manual choice wins over the system setting.
+  try { const t = localStorage.getItem('pf-3d-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t } catch (e) {}
+</script>
+<style>
+/* Colour tokens copied from app/src/styles/tokens.css (light default, dark by attribute, dark by system). Keep in sync by hand. */
+:root {
+  color-scheme: light;
+  --bg: #faf9f5; --surface: #f5f0e8; --surface-2: #efe9de; --surface-sunk: #e8e0d2;
+  --line: #ddd5c8; --line-strong: #7d7a72; --hover: #ebe4d8; --selected: #e9e1d3;
+  --text: #141413; --text-body: #3d3d3a; --text-muted: #66645e; --on-accent: #ffffff;
+  --accent: #9a4d34; --accent-hover: #843f29; --accent-text: #9a4d34; --accent-soft: #f1ddd3;
+  --hazard: #8a5300; --hazard-soft: #f7e6c4; --error: #a63a32;
+  --banner-bg: #fbeccc; --banner-text: #5c4200; --banner-line: #e3c681;
+  --off: #d8d0c2; --off-line: #7d7a72;
+  --cat-1: #3f6f86; --cat-2: #8a6a2c; --cat-3: #5f5a9c; --cat-4: #3d7a63; --on-cat: #faf9f5;
+  --cat-buffer: #d8d0c2; --hatch-a: #efe9de; --hatch-b: #7d7a72;
+  --diff-easy: #0f7a6e; --diff-moderate: #946400; --diff-hard: #6a4cc4;
+  --focus: #141413; --shadow-overlay: 0 8px 24px rgba(20, 20, 19, 0.16);
+  --glass: rgba(250, 249, 245, 0.62);
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #181715; --surface: #1f1e1b; --surface-2: #252320; --surface-sunk: #2d2a26;
+  --line: #3a3732; --line-strong: #77736a; --hover: #2a2825; --selected: #34312c;
+  --text: #faf9f5; --text-body: #d6d2c9; --text-muted: #a09d96; --on-accent: #181715;
+  --accent: #cc785c; --accent-hover: #d98a6f; --accent-text: #d9866a; --accent-soft: #3b2a23;
+  --hazard: #e8a55a; --hazard-soft: #3a2d18; --error: #e5776c;
+  --banner-bg: #3a2d14; --banner-text: #f3d9a0; --banner-line: #5a4719;
+  --off: #3a3732; --off-line: #77736a;
+  --cat-1: #7fa8bd; --cat-2: #c9a77c; --cat-3: #9a93c9; --cat-4: #7fb59f; --on-cat: #181715;
+  --cat-buffer: #3a3732; --hatch-a: #252320; --hatch-b: #8a867d;
+  --diff-easy: #68c9b8; --diff-moderate: #d9a441; --diff-hard: #a58be8;
+  --focus: #faf9f5; --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --glass: rgba(31, 30, 27, 0.58);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #181715; --surface: #1f1e1b; --surface-2: #252320; --surface-sunk: #2d2a26;
+    --line: #3a3732; --line-strong: #77736a; --hover: #2a2825; --selected: #34312c;
+    --text: #faf9f5; --text-body: #d6d2c9; --text-muted: #a09d96; --on-accent: #181715;
+    --accent: #cc785c; --accent-hover: #d98a6f; --accent-text: #d9866a; --accent-soft: #3b2a23;
+    --hazard: #e8a55a; --hazard-soft: #3a2d18; --error: #e5776c;
+    --banner-bg: #3a2d14; --banner-text: #f3d9a0; --banner-line: #5a4719;
+    --off: #3a3732; --off-line: #77736a;
+    --cat-1: #7fa8bd; --cat-2: #c9a77c; --cat-3: #9a93c9; --cat-4: #7fb59f; --on-cat: #181715;
+    --cat-buffer: #3a3732; --hatch-a: #252320; --hatch-b: #8a867d;
+    --diff-easy: #68c9b8; --diff-moderate: #d9a441; --diff-hard: #a58be8;
+    --focus: #faf9f5; --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --glass: rgba(31, 30, 27, 0.58);
+  }
+}
+:root {
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-num: 'Archivo', 'Arial Narrow', Arial, sans-serif;
+  --fs-micro: 11px; --fs-small: 12px; --fs-body: 14px; --fs-body-l: 16px; --fs-h3: 18px; --fs-h2: 22px; --fs-h1: clamp(30px, 4vw, 44px);
+  --fs-num-s: 15px; --fs-num-m: 20px; --fs-num-l: 32px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --hit: 44px; --radius-2: 6px; --radius-3: 8px; --radius-4: 12px; --radius-pill: 999px;
+  --dur-fast: 120ms; --dur: 200ms; --dur-slow: 400ms; --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text-body); font: var(--fs-body)/1.5 var(--font-body); }
+.page { max-width: 1320px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-12); display: flex; flex-direction: column; gap: var(--space-5); }
+@media (min-width: 860px) { .page { padding-inline: var(--space-8); } }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); flex-wrap: wrap; }
+.eyebrow { margin: 0; font-size: var(--fs-small); color: var(--text-muted); letter-spacing: var(--tracking-caps, .08em); text-transform: uppercase; }
+h1 { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-h1); line-height: 1.1; color: var(--text); margin: var(--space-1) 0; }
+.sub { margin: 0; color: var(--text-body); }
+.diff-hard { color: var(--diff-hard); font-weight: 600; }
+.btn { min-height: var(--hit); padding: 0 var(--space-4); border-radius: var(--radius-pill); border: 1px solid var(--line-strong); background: transparent; cursor: pointer; }
+.btn:hover { background: var(--hover); }
+.btn.pri { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.headline { font-size: var(--fs-h3); line-height: 1.35; color: var(--text); margin: 0; max-width: 72ch; }
+.headline b { color: var(--accent-text); }
+.note { font-size: var(--fs-small); color: var(--text-muted); margin: 0; }
+
+/* selection bar: the one shared selection (quarter, month, checkpoint) */
+.selbar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); align-items: center;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-4); padding: var(--space-2) var(--space-4); }
+.selbar fieldset { border: 0; margin: 0; padding: 0; display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
+.selbar legend { float: left; margin-right: var(--space-2); font-size: var(--fs-small); color: var(--text-muted); }
+.qchip { position: relative; }
+.qchip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.qchip span { display: inline-flex; flex-direction: column; justify-content: center; min-height: var(--hit); padding: 2px var(--space-3); border-radius: var(--radius-3); border: 1px solid var(--line-strong); font-size: var(--fs-small); line-height: 1.25; }
+.qchip span b { font-family: var(--font-num); font-size: var(--fs-num-s); color: var(--text); }
+.qchip input:checked + span { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+.qchip input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+.months { display: flex; gap: 2px; flex-wrap: wrap; }
+.months button { min-width: 38px; min-height: var(--hit); border: 1px solid transparent; background: transparent; border-radius: var(--radius-2); font-size: var(--fs-small); cursor: pointer; color: var(--text-muted); }
+.months button.inq { color: var(--text); background: var(--surface); }
+.months button[aria-pressed='true'] { border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.months button.gap { margin-left: var(--space-2); }
+#selText { font-size: var(--fs-small); color: var(--text-body); }
+
+/* stage */
+.stage { position: relative; height: min(72vh, 720px); min-height: 520px; border-radius: 20px; overflow: hidden; border: 1px solid var(--line);
+  background: radial-gradient(120% 90% at 50% 20%, var(--surface) 0%, var(--bg) 70%); }
+.stage:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.stage canvas { display: block; }
+#labels { position: absolute; inset: 0; z-index: 1; pointer-events: none; transition: opacity var(--dur-slow) var(--ease); }
+.glass { background: var(--glass); -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3);
+  border: 1px solid var(--line); border-radius: var(--radius-4); box-shadow: var(--shadow-overlay); color: var(--text-body); }
+.legend { position: absolute; z-index: 3; left: var(--space-4); top: var(--space-4); width: 240px; padding: var(--space-3) var(--space-4); font-size: var(--fs-small); line-height: 1.45; }
+.legend h2 { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-body-l); color: var(--text); margin: 0 0 var(--space-1); }
+.legend p { margin: var(--space-1) 0 0; }
+.legend b { color: var(--text); font-weight: 600; }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 3px; }
+.sw.hatch { background: repeating-linear-gradient(45deg, var(--hatch-a) 0 2px, var(--hatch-b) 2px 4px); }
+.whatif { position: absolute; z-index: 3; right: var(--space-4); bottom: var(--space-4); width: 250px; padding: var(--space-3) var(--space-4); display: grid; gap: var(--space-2); font-size: var(--fs-small); }
+.whatif h2 { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-body-l); color: var(--text); margin: 0; }
+.whatif label { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
+.whatif input[type=number] { width: 64px; min-height: 36px; padding: 0 var(--space-2); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-3); }
+.seg { display: flex; gap: var(--space-1); }
+.seg label { flex: 1; position: relative; justify-content: center; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { flex: 1; text-align: center; min-height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--line-strong); border-radius: var(--radius-3); padding: 0 var(--space-2); }
+.seg input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.seg input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+#costOut { color: var(--accent-text); }
+.tools { position: absolute; z-index: 3; left: var(--space-4); bottom: var(--space-4); display: flex; gap: var(--space-2); align-items: center; }
+.tools .btn { background: var(--glass); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.hint { font-size: var(--fs-micro); color: var(--text-muted); max-width: 300px; }
+
+/* frosted cards: hover follows the pointer, pinned docks top right */
+.card { position: absolute; z-index: 4; width: 300px; padding: var(--space-3) var(--space-4); font-size: var(--fs-small); line-height: 1.45; }
+#hovercard { pointer-events: none; opacity: 0; transform: translateY(4px) scale(.98); transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease); left: 0; top: 0; }
+#hovercard.on { opacity: 1; transform: none; }
+#pincard { right: var(--space-4); top: var(--space-4); width: 330px; max-height: calc(100% - 290px); overflow: auto; opacity: 0; transform: translateX(8px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+#pincard.on { opacity: 1; transform: none; }
+#pincard[hidden], #hovercard[hidden] { display: none; }
+.card h3 { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-h3); color: var(--text); margin: 0 0 var(--space-2); line-height: 1.2; }
+.card .c-eyebrow { margin: 0; font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); }
+.card dl { margin: 0; display: grid; gap: 3px; }
+.card .r { display: grid; grid-template-columns: 112px 1fr; gap: var(--space-2); padding: 2px 0; border-top: 1px solid var(--line); }
+.card .r dt { color: var(--text-muted); }
+.card .r dd { margin: 0; color: var(--text); font-variant-numeric: tabular-nums; }
+.card .r.em dd { color: var(--accent-text); font-weight: 600; }
+.card .c-src { margin: var(--space-2) 0 0; font-size: var(--fs-micro); color: var(--text-muted); }
+.card .c-pointing { margin: 0 0 var(--space-2); color: var(--accent-text); }
+.pinhead { display: flex; justify-content: flex-end; margin: -4px -8px 0 0; }
+.pinhead button { min-height: 32px; padding: 0 var(--space-3); border-radius: var(--radius-pill); border: 1px solid var(--line-strong); background: transparent; cursor: pointer; font-size: var(--fs-small); }
+.haz { color: var(--hazard); font-weight: 600; }
+.haz svg { vertical-align: -2px; margin-right: 3px; }
+
+/* 3D labels (CSS2DRenderer) */
+.lbl { font-size: var(--fs-micro); color: var(--text-body); white-space: nowrap; padding: 1px 6px; border-radius: var(--radius-pill); background: var(--glass); border: 1px solid var(--line); line-height: 1.5; }
+.lbl.plain { background: none; border: 0; color: var(--text-muted); }
+.lbl.sel { color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+.lbl.num { font-family: var(--font-num); font-size: var(--fs-small); color: var(--text); }
+.lbl.haz { color: var(--hazard); border-color: var(--hazard); background: var(--glass); }
+.lbl.cp { font-weight: 600; }
+.lbl.big { font-size: var(--fs-small); }
+
+/* trail bar under the stage: 2D profile + time scrubber, linked to the hiker */
+.trailbar { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: var(--space-4); align-items: center; margin-top: var(--space-3); }
+@media (max-width: 859px) { .trailbar { grid-template-columns: 1fr; } }
+.trailbar svg { width: 100%; height: 76px; display: block; }
+.scrub { display: flex; gap: var(--space-2); align-items: center; }
+.scrub input[type=range] { flex: 1; accent-color: var(--accent); min-height: var(--hit); }
+.scrub .btn { padding: 0 var(--space-3); }
+.trailtext { font-size: var(--fs-small); line-height: 1.5; }
+.trailtext p { margin: 0 0 var(--space-1); }
+.start { display: inline-flex; gap: var(--space-2); align-items: center; }
+.start input { min-height: 36px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-3); padding: 0 var(--space-2); }
+
+/* keyboard object list + text version */
+#objNav { display: grid; gap: var(--space-2); }
+#objNav h2 { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-body-l); color: var(--text); margin: 0; }
+#objNav .grp { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); align-items: center; }
+#objNav .grp > span { font-size: var(--fs-small); color: var(--text-muted); min-width: 72px; }
+#objNav button { min-height: 36px; padding: 0 var(--space-3); border-radius: var(--radius-pill); border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-size: var(--fs-small); }
+#objNav button:hover, #objNav button:focus-visible { border-color: var(--accent); }
+details { border: 1px solid var(--line); border-radius: var(--radius-4); padding: var(--space-3) var(--space-4); background: var(--surface); }
+summary { cursor: pointer; font-weight: 600; color: var(--text); min-height: 32px; }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-small); margin: var(--space-3) 0 var(--space-5); font-variant-numeric: tabular-nums; }
+caption { text-align: left; color: var(--text); font-weight: 600; padding-bottom: var(--space-1); }
+caption small { display: block; font-weight: 400; color: var(--text-muted); }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--text-muted); font-weight: 500; }
+tr.cur td { background: var(--accent-soft); }
+.tablewrap { overflow-x: auto; }
+#fallback { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; padding: var(--space-8); text-align: center; font-size: var(--fs-body-l); color: var(--text); }
+#fallback[hidden] { display: none; }
+footer { font-size: var(--fs-small); color: var(--text-muted); border-top: 1px solid var(--line); padding-top: var(--space-4); }
+footer ul { margin: var(--space-2) 0; padding-left: var(--space-5); }
+footer a { color: var(--accent-text); }
+.banner { background: var(--banner-bg); color: var(--banner-text); border: 1px solid var(--banner-line); border-radius: var(--radius-3); padding: var(--space-2) var(--space-3); font-size: var(--fs-small); }
+@media (prefers-reduced-motion: reduce) { * { transition-duration: 0ms !important; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Hike page, 3D dashboard prototype</p>
+      <h1>Angels Landing</h1>
+      <p class="sub">Zion National Park, UT &middot; <span class="diff-hard">Hard</span> &middot; chains, exposure, steep &middot; home city Seattle</p>
+    </div>
+    <button class="btn" id="themeBtn" type="button">Theme</button>
+  </header>
+
+  <p class="headline" id="headline" aria-live="polite"></p>
+  <p class="note" id="limitNote"></p>
+
+  <div class="selbar" role="group" aria-label="Your selection. Every object in the scene follows it.">
+    <fieldset id="quarters"><legend>Quarter</legend></fieldset>
+    <div class="months" id="months" role="group" aria-label="Month"></div>
+    <span id="selText" aria-live="polite"></span>
+  </div>
+
+  <section aria-labelledby="stageTitle">
+    <h2 id="stageTitle" class="sr">3D dashboard: the trail, the twelve months and the trip cost in one scene</h2>
+    <div class="stage" id="stage" tabindex="0" aria-describedby="stageHint">
+      <div id="fallback" hidden></div>
+      <div class="legend glass" id="legend">
+        <h2>How to read it</h2>
+        <p><b>Mountain</b>: the trail, from the real elevation profile. The hiker stands where you are at the time on the slider.</p>
+        <p><b>Ring</b>: twelve months. Height = typical high, glass band = your limit, figures = crowds, drops = wet days, haze = smoky days.</p>
+        <p><b>Cairns</b>: typical trip cost per quarter: <span class="sw" style="background:var(--cat-3)"></span>transport <span class="sw" style="background:var(--cat-1)"></span>lodging <span class="sw" style="background:var(--cat-2)"></span>food <span class="sw" style="background:var(--cat-4)"></span>entry <span class="sw hatch"></span>15% buffer.</p>
+        <p><b>Sun</b>: daylight of the selected month. <b>Dashed arc</b>: the trip from Seattle.</p>
+      </div>
+      <div class="card glass" id="hovercard" aria-hidden="true" hidden></div>
+      <div class="card glass" id="pincard" role="dialog" aria-modal="false" aria-labelledby="pinTitle" tabindex="-1" hidden>
+        <div class="pinhead"><button type="button" id="pinClose">Close (Esc)</button></div>
+        <div id="pinBody"></div>
+      </div>
+      <form class="whatif glass" id="whatif" aria-labelledby="whatifTitle" onsubmit="return false">
+        <h2 id="whatifTitle">What if</h2>
+        <label>Travellers <input type="number" id="travellers" min="1" max="8" value="1"></label>
+        <label>Nights <input type="number" id="nights" min="0" max="7" value="2"></label>
+        <div class="seg" role="radiogroup" aria-label="Travel mode">
+          <label><input type="radio" name="mode" value="fly"><span id="flyLbl">Fly</span></label>
+          <label><input type="radio" name="mode" value="drive"><span id="driveLbl">Drive</span></label>
+        </div>
+        <output id="costOut" aria-live="polite"></output>
+        <span class="note">Typical, from past data. Not a price quote.</span>
+      </form>
+      <div class="tools">
+        <button class="btn" type="button" id="resetView">Reset view</button>
+        <span class="hint" id="stageHint">Drag to orbit, scroll to zoom, right-drag to pan. Point at anything for its numbers, click to pin it. Keys here: left and right step checkpoints, up and down step months.</span>
+      </div>
+      <div id="labels"></div>
+    </div>
+
+    <div class="trailbar" aria-label="On the trail">
+      <div>
+        <svg id="spark" viewBox="0 0 600 76" role="img" aria-labelledby="sparkTitle"><title id="sparkTitle">Elevation profile, out and back</title></svg>
+        <div class="scrub">
+          <button class="btn" type="button" id="cpBack">Back</button>
+          <input type="range" id="time" min="0" max="1" step="1" value="0" aria-label="Time on the trail">
+          <button class="btn" type="button" id="cpFwd">Forward</button>
+        </div>
+      </div>
+      <div class="trailtext">
+        <p class="start"><label for="startTime">Start</label><input type="time" id="startTime" step="300"> <span class="note" id="startNote"></span></p>
+        <p id="posText" aria-live="polite"></p>
+        <p id="darkText"></p>
+      </div>
+    </div>
+  </section>
+
+  <nav id="objNav" aria-label="Objects in the scene"></nav>
+
+  <details id="textVersion">
+    <summary>Text version of everything in the scene</summary>
+    <div id="tables"></div>
+  </details>
+
+  <footer id="foot"></footer>
+</div>
+
+<!-- Data: copied from app/public/data/ (hikes.json, hike_month.json, profiles/angels-landing.json, cost.json and travel.json rows for SEA, meta.json). -->
+<script type="application/json" id="pf-data">{"hike":{"id":"angels-landing","name":"Angels Landing","park_code":"ZION","park_name":"Zion National Park","state":"UT","trailhead":{"name":"The Grotto (West Rim Trailhead)","lat":37.25997,"lon":-112.95153},"end":{"name":"Summit","lat":37.26918,"lon":-112.94794},"length_mi":5.4,"length_type":"round-trip","gain_ft":1488,"max_elev_ft":5759,"route_type":"out-and-back","difficulty":"hard","nps_url":"https://www.nps.gov/zion/planyourvisit/angels-landing-hiking-permits.htm","description":"Climb the West Rim Trail from the Grotto to Scout Lookout, then follow a chain-assisted ridge to the summit.","permit_note":"Permit required from Scout Lookout to the summit (lottery)","closure_note":null,"gear":["chains","exposure","steep"],"photo":{"file":"photos/angels-landing.jpg","author":"Diliff","license":"CC BY-SA","license_url":"https://creativecommons.org/licenses/by-sa/3.0/","page":"https://commons.wikimedia.org/wiki/File:Zion_angels_landing_view.jpg"},"featured":true,"walk_path":"walks/angels_landing/","station":{"id":"USC00429717","name":"Zion Np","dist_km":6.2,"elev_ft":4038},"aqi_county":{"fips":"49053","name":"Washington County, UT"}},"months":[{"hike_id":"angels-landing","month":1,"crowd_level":0.19,"crowd_band":"quiet","tmax_p25":47.0,"tmax_p50":52.0,"tmax_p75":59.0,"tmax_summit_est":45.9,"wet_days":6.4,"snow_days":1.3,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":9.9,"sunrise":"07:45","sunset":"17:36","closed":false,"missing":[]},{"hike_id":"angels-landing","month":2,"crowd_level":0.23,"crowd_band":"quiet","tmax_p25":50.5,"tmax_p50":59.0,"tmax_p75":65.0,"tmax_summit_est":52.9,"wet_days":4.5,"snow_days":1.4,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":10.8,"sunrise":"07:22","sunset":"18:10","closed":false,"missing":[]},{"hike_id":"angels-landing","month":3,"crowd_level":0.64,"crowd_band":"moderate","tmax_p25":57.8,"tmax_p50":65.0,"tmax_p75":71.2,"tmax_summit_est":58.9,"wet_days":5.8,"snow_days":0.7,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":11.9,"sunrise":"07:45","sunset":"19:38","closed":false,"missing":[]},{"hike_id":"angels-landing","month":4,"crowd_level":0.83,"crowd_band":"busy","tmax_p25":68.0,"tmax_p50":74.0,"tmax_p75":80.0,"tmax_summit_est":67.9,"wet_days":2.1,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":13.1,"sunrise":"06:59","sunset":"20:06","closed":false,"missing":[]},{"hike_id":"angels-landing","month":5,"crowd_level":0.91,"crowd_band":"busy","tmax_p25":75.0,"tmax_p50":82.0,"tmax_p75":88.0,"tmax_summit_est":75.9,"wet_days":2.8,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.1,"heat_days":0.1,"daylight_hr":14.1,"sunrise":"06:24","sunset":"20:32","closed":false,"missing":[]},{"hike_id":"angels-landing","month":6,"crowd_level":1.0,"crowd_band":"busy","tmax_p25":92.0,"tmax_p50":97.0,"tmax_p75":102.0,"tmax_summit_est":90.9,"wet_days":0.7,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.6,"heat_days":12.8,"daylight_hr":14.7,"sunrise":"06:11","sunset":"20:53","closed":false,"missing":[]},{"hike_id":"angels-landing","month":7,"crowd_level":0.99,"crowd_band":"busy","tmax_p25":98.0,"tmax_p50":101.0,"tmax_p75":105.0,"tmax_summit_est":94.9,"wet_days":2.5,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.0,"heat_days":20.2,"daylight_hr":14.5,"sunrise":"06:22","sunset":"20:53","closed":false,"missing":[]},{"hike_id":"angels-landing","month":8,"crowd_level":0.83,"crowd_band":"busy","tmax_p25":94.0,"tmax_p50":98.0,"tmax_p75":101.0,"tmax_summit_est":91.9,"wet_days":3.9,"snow_days":0.0,"smoky_days":0.2,"ozone_days":0.1,"heat_days":11.2,"daylight_hr":13.6,"sunrise":"06:48","sunset":"20:26","closed":false,"missing":[]},{"hike_id":"angels-landing","month":9,"crowd_level":0.87,"crowd_band":"busy","tmax_p25":86.0,"tmax_p50":91.0,"tmax_p75":96.0,"tmax_summit_est":84.9,"wet_days":2.8,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.1,"heat_days":3.5,"daylight_hr":12.5,"sunrise":"07:13","sunset":"19:42","closed":false,"missing":[]},{"hike_id":"angels-landing","month":10,"crowd_level":0.76,"crowd_band":"busy","tmax_p25":71.0,"tmax_p50":79.0,"tmax_p75":84.2,"tmax_summit_est":72.9,"wet_days":2.4,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":11.3,"sunrise":"07:38","sunset":"18:56","closed":false,"missing":[]},{"hike_id":"angels-landing","month":11,"crowd_level":0.41,"crowd_band":"moderate","tmax_p25":58.0,"tmax_p50":65.5,"tmax_p75":72.0,"tmax_summit_est":59.4,"wet_days":2.9,"snow_days":0.0,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":10.2,"sunrise":"07:10","sunset":"17:23","closed":false,"missing":[]},{"hike_id":"angels-landing","month":12,"crowd_level":0.3,"crowd_band":"quiet","tmax_p25":47.2,"tmax_p50":56.0,"tmax_p75":60.0,"tmax_summit_est":49.9,"wet_days":5.3,"snow_days":0.6,"smoky_days":0.0,"ozone_days":0.0,"heat_days":0.0,"daylight_hr":9.6,"sunrise":"07:38","sunset":"17:15","closed":false,"missing":[]}],"profile":{"hike_id":"angels-landing","step_m":10,"points":[[0,1304.2],[10,1304.9],[20,1305.8],[30,1304.8],[40,1303.1],[50,1302.6],[60,1302.5],[70,1302.4],[80,1302.5],[90,1304.2],[100,1304.9],[110,1305.4],[120,1303.1],[130,1302.4],[140,1302.5],[150,1302.7],[160,1303.1],[170,1304.6],[180,1306.0],[190,1303.4],[200,1303.6],[210,1303.7],[220,1304.2],[230,1308.1],[240,1312.2],[250,1315.1],[260,1313.7],[270,1315.0],[280,1314.3],[290,1315.1],[300,1316.6],[310,1317.1],[320,1315.0],[330,1309.1],[340,1310.1],[350,1308.0],[360,1307.5],[370,1303.3],[380,1304.1],[390,1311.3],[400,1314.7],[410,1315.6],[420,1316.2],[430,1316.4],[440,1316.2],[450,1314.4],[460,1314.3],[470,1314.5],[480,1314.7],[490,1314.8],[500,1314.9],[510,1315.3],[520,1315.5],[530,1315.6],[540,1316.1],[550,1316.4],[560,1315.3],[570,1315.6],[580,1316.2],[590,1317.0],[600,1317.9],[610,1320.3],[620,1321.3],[630,1322.2],[640,1321.5],[650,1322.3],[660,1322.5],[670,1324.4],[680,1323.3],[690,1322.1],[700,1322.4],[710,1323.1],[720,1323.5],[730,1323.8],[740,1325.6],[750,1327.0],[760,1328.4],[770,1329.6],[780,1331.0],[790,1333.7],[800,1334.5],[810,1335.2],[820,1336.5],[830,1339.1],[840,1339.8],[850,1343.0],[860,1342.2],[870,1342.3],[880,1343.5],[890,1346.2],[900,1346.0],[910,1344.6],[920,1347.9],[930,1348.7],[940,1352.9],[950,1353.4],[960,1350.0],[970,1350.6],[980,1350.7],[990,1353.6],[1000,1356.1],[1010,1357.9],[1020,1358.1],[1030,1362.5],[1040,1365.7],[1050,1365.1],[1060,1367.0],[1070,1368.2],[1080,1369.8],[1090,1369.4],[1100,1369.8],[1110,1373.5],[1120,1377.3],[1130,1381.4],[1140,1383.1],[1150,1381.4],[1160,1378.4],[1170,1377.6],[1180,1376.7],[1190,1375.2],[1200,1376.0],[1210,1373.4],[1220,1374.3],[1230,1379.4],[1240,1380.3],[1250,1382.2],[1260,1382.9],[1270,1383.5],[1280,1384.0],[1290,1380.7],[1300,1380.6],[1310,1384.2],[1320,1387.8],[1330,1388.2],[1340,1384.4],[1350,1384.9],[1360,1390.6],[1370,1393.1],[1380,1400.4],[1390,1403.1],[1400,1403.3],[1410,1404.2],[1420,1405.3],[1430,1407.2],[1440,1409.1],[1450,1411.5],[1460,1413.1],[1470,1415.8],[1480,1414.7],[1490,1419.9],[1500,1413.6],[1510,1425.7],[1520,1425.6],[1530,1426.6],[1540,1424.4],[1550,1421.6],[1560,1416.0],[1570,1426.1],[1580,1425.7],[1590,1427.5],[1600,1430.4],[1610,1436.0],[1620,1436.0],[1630,1433.1],[1640,1436.6],[1650,1435.8],[1660,1435.8],[1670,1442.4],[1680,1444.0],[1690,1446.8],[1700,1451.7],[1710,1457.0],[1720,1453.9],[1730,1450.7],[1740,1460.9],[1750,1455.2],[1760,1464.9],[1770,1463.0],[1780,1471.5],[1790,1471.5],[1800,1462.1],[1810,1471.5],[1820,1484.4],[1830,1503.0],[1840,1485.1],[1850,1472.6],[1860,1487.0],[1870,1495.3],[1880,1496.8],[1890,1493.0],[1900,1494.7],[1910,1494.7],[1920,1494.0],[1930,1500.2],[1940,1494.4],[1950,1502.1],[1960,1499.5],[1970,1501.7],[1980,1503.5],[1990,1505.1],[2000,1503.1],[2010,1504.2],[2020,1505.0],[2030,1503.1],[2040,1504.0],[2050,1504.9],[2060,1505.8],[2070,1503.2],[2080,1504.1],[2090,1504.9],[2100,1503.7],[2110,1504.2],[2120,1505.6],[2130,1508.7],[2140,1508.6],[2150,1513.5],[2160,1517.7],[2170,1512.4],[2180,1513.4],[2190,1515.8],[2200,1510.2],[2210,1515.0],[2220,1517.7],[2230,1512.4],[2240,1514.8],[2250,1520.9],[2260,1515.4],[2270,1517.6],[2280,1524.8],[2290,1517.5],[2300,1521.1],[2310,1523.6],[2320,1528.6],[2330,1517.5],[2340,1519.4],[2350,1525.8],[2360,1527.5],[2370,1529.4],[2380,1523.3],[2390,1524.9],[2400,1527.2],[2410,1530.3],[2420,1535.0],[2430,1523.8],[2440,1525.4],[2450,1534.0],[2460,1540.1],[2470,1547.9],[2480,1539.0],[2490,1543.1],[2500,1547.6],[2510,1553.2],[2520,1564.6],[2530,1587.8],[2540,1610.3],[2550,1618.7],[2560,1619.4],[2570,1622.4],[2580,1623.7],[2590,1625.5],[2600,1624.3],[2610,1626.3],[2620,1623.7],[2630,1621.2],[2640,1621.1],[2650,1626.7],[2660,1629.1],[2670,1628.7],[2680,1627.5],[2690,1631.7],[2700,1637.2],[2710,1640.0],[2720,1640.4],[2730,1640.2],[2740,1640.8],[2750,1641.7],[2760,1643.4],[2770,1645.6],[2780,1655.6],[2790,1664.3],[2800,1667.2],[2810,1664.3],[2820,1659.7],[2830,1662.5],[2840,1660.8],[2850,1656.2],[2860,1651.5],[2870,1652.0],[2880,1652.8],[2890,1646.3],[2900,1638.3],[2910,1631.5],[2920,1631.3],[2930,1623.7],[2940,1625.2],[2950,1626.2],[2960,1628.7],[2970,1624.9],[2980,1635.5],[2990,1653.8],[3000,1656.4],[3010,1638.4],[3020,1638.2],[3030,1677.1],[3040,1690.7],[3050,1690.7],[3060,1704.9],[3070,1701.0],[3080,1702.0],[3090,1694.5],[3100,1721.3],[3110,1726.9],[3120,1727.4],[3130,1739.8],[3140,1746.5],[3150,1751.7],[3160,1757.2],[3170,1756.1],[3180,1755.2],[3190,1761.6],[3200,1766.3],[3210,1764.6],[3220,1762.9],[3230,1766.5],[3240,1768.0],[3250,1768.3],[3260,1767.7],[3270,1766.8],[3280,1761.3],[3290,1760.8],[3300,1763.1],[3307,1767.8]],"osm_length_m":3307,"nps_length_m":4345,"scale":1.314,"checkpoints":[{"id":"c0","name":"The Grotto shuttle stop","dist_m":0,"photo":null},{"id":"c1","name":"Up the canyon wall","dist_m":990,"photo":"walks/angels_landing/photos/climb.jpg"},{"id":"c2","name":"Refrigerator Canyon","dist_m":2050,"photo":"walks/angels_landing/photos/refrigerator.jpg"},{"id":"c3","name":"Walter's Wiggles","dist_m":2410,"photo":"walks/angels_landing/photos/wiggles.jpg"},{"id":"c4","name":"Where most hikers stop","dist_m":2650,"photo":"walks/angels_landing/photos/scout.jpg"},{"id":"c5","name":"Holding the chains","dist_m":2940,"photo":"walks/angels_landing/photos/chains.jpg"},{"id":"c6","name":"Angels Landing summit","dist_m":3307,"photo":null}]},"cost":[{"hike_id":"angels-landing","city":"SEA","quarter":1,"fare_one_way":307.64,"car_per_day":60.0,"drive_mi":1132.0,"gas_per_gal":4.89,"mpg":25.0,"lodging_per_night":110,"meals_per_day":68.0,"entry_fee_vehicle":35.0,"permit_fee":6.0},{"hike_id":"angels-landing","city":"SEA","quarter":2,"fare_one_way":361.23,"car_per_day":60.0,"drive_mi":1132.0,"gas_per_gal":4.89,"mpg":25.0,"lodging_per_night":110,"meals_per_day":68.0,"entry_fee_vehicle":35.0,"permit_fee":6.0},{"hike_id":"angels-landing","city":"SEA","quarter":3,"fare_one_way":327.86,"car_per_day":60.0,"drive_mi":1132.0,"gas_per_gal":4.89,"mpg":25.0,"lodging_per_night":110,"meals_per_day":68.0,"entry_fee_vehicle":35.0,"permit_fee":6.0},{"hike_id":"angels-landing","city":"SEA","quarter":4,"fare_one_way":306.16,"car_per_day":60.0,"drive_mi":1132.0,"gas_per_gal":4.89,"mpg":25.0,"lodging_per_night":110,"meals_per_day":68.0,"entry_fee_vehicle":35.0,"permit_fee":6.0}],"travel":{"hike_id":"angels-landing","city":"SEA","drive_hr":17.8,"drive_mi":1132,"airport":"SGU","fly_drive_hr":5.3,"default_mode":"fly"},"meta":{"fake":true,"generated":"2026-11-24","typical_years":"2015-2024 (2020 excluded)","sources":[{"name":"NPS Visitor Use Statistics (IRMA)","url":"https://irma.nps.gov/STATS/","as_of":"2026-11-24"},{"name":"NOAA GHCN-Daily","url":"https://www.ncei.noaa.gov/access/search/data-search/daily-summaries","as_of":"2026-11-24"},{"name":"EPA AirData daily AQI by county","url":"https://aqs.epa.gov/aqsweb/airdata/download_files.html","as_of":"2026-11-24"},{"name":"NPS park pages (trail length, gain, difficulty, permits)","url":"https://www.nps.gov/","as_of":"2026-11-23"},{"name":"Wikimedia Commons (hike photos, open licences)","url":"https://commons.wikimedia.org/","as_of":"2026-11-23"},{"name":"FCC Area API (trailhead county)","url":"https://geo.fcc.gov/api/census/","as_of":"2026-11-24"},{"name":"DOT Consumer Airfare Report, Table 6","url":"https://www.transportation.gov/policy/aviation-policy/domestic-airline-consumer-airfare-report","as_of":"2026-11-24"},{"name":"GSA per diem","url":"https://www.gsa.gov/travel/plan-a-trip/per-diem-rates","as_of":"2026-11-24"},{"name":"EIA gasoline prices","url":"https://www.eia.gov/petroleum/gasdiesel/","as_of":"2026-11-24"},{"name":"OpenRouteService","url":"https://openrouteservice.org/","as_of":"2026-11-24"},{"name":"US states outline (us-atlas, from US Census, ISC licence)","url":"https://github.com/topojson/us-atlas","as_of":"static asset"}],"cost_sources":{"fare":{"label":"U.S. DOT Consumer Airfare Report, Table 6","detail":"Latest available annual quarter-pair averages; years 2024\u20132026. Average one-way city-pair fare.","url":"https://data.transportation.gov/d/yj5y-b2ir"},"lodging":{"label":"GSA per diem, FY2026","detail":"County/locality lodging and meals rates; nightly lodging and M&IE are typical unit inputs.","url":"https://www.gsa.gov/travel/plan-a-trip/per-diem-rates"},"gas":{"label":"EIA weekly retail gasoline prices","detail":"Mean of the latest 52 available weekly regular-gasoline observations by PADD region; 25 mpg assumed.","url":"https://www.eia.gov/petroleum/gasdiesel/"},"fees":{"label":"National Park Service entrance and permit fees","detail":"Manually verified per-vehicle park entrance and per-party hike permit amounts. Source notes and UNVERIFIED flags are in pipeline/nps_fees.json.","url":"https://www.nps.gov/planyourvisit/fees.htm"},"assumed":{"label":"Team assumption","detail":"Rental car $60 per day, one car for a fly trip; fuel economy 25 mpg.","url":""}}}}</script>
+
+<script type="module">
+// Part 1: data, models and the 2D/HTML parts. No imports, so the text version still works if three.js fails to load.
+const D = JSON.parse(document.getElementById('pf-data').textContent)
+const HIKE = D.hike
+const MONTHS = [...D.months].sort((a, b) => a.month - b.month)
+const PROFILE = D.profile
+const COSTROWS = [...D.cost].sort((a, b) => a.quarter - b.quarter)
+const TRAVEL = D.travel
+const META = D.meta
+
+// MODEL-START (pure functions, ported from app/src/models/match.ts, checkpoints.ts and cost.ts; checked in node against them)
+const LIMIT = { temp: [55, 85] } // this demo's limits: 55 to 85 F; every other slider is on "Any"
+const TEMP_TOL = 10
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const SEASON = ['', 'Winter', 'Spring', 'Summer', 'Autumn']
+const qMonths = (q) => [3 * q - 2, 3 * q - 1, 3 * q]
+const quarterOf = (m) => Math.ceil(m / 3)
+const qRange = (q) => `${MON[3 * q - 3]} to ${MON[3 * q - 1]}`
+const mean = (xs) => xs.reduce((s, x) => s + x, 0) / xs.length
+const sum = (xs) => xs.reduce((s, x) => s + x, 0)
+const crowdBand = (r) => (r < 0.4 ? 'quiet' : r < 0.7 ? 'moderate' : 'busy')
+
+function quarterFit(q) {
+  const ms = qMonths(q).map((m) => MONTHS[m - 1])
+  const tempMissing = ms.some((m) => m.missing.includes('temp') || m.tmax_p50 == null)
+  const temp = tempMissing ? null : mean(ms.map((m) => m.tmax_p50))
+  const past = temp == null ? 0 : Math.max(0, LIMIT.temp[0] - temp, temp - LIMIT.temp[1])
+  const score = temp == null ? 1 : Math.max(0, 1 - past / TEMP_TOL)
+  return {
+    q, temp, past, score, tempMissing,
+    match: 100 * score, // only the temperature factor is active, so match = its score
+    crowd: mean(ms.map((m) => m.crowd_level)),
+    smoky: sum(ms.map((m) => m.smoky_days)),
+    wet: sum(ms.map((m) => m.wet_days)),
+    closed: ms.some((m) => m.closed),
+  }
+}
+
+function bestQuarter(matches, costs) {
+  let best = 0
+  for (let i = 1; i < matches.length; i++) {
+    const diff = matches[i] - matches[best]
+    if (diff > 1e-9) best = i
+    else if (Math.abs(diff) <= 1e-9 && (costs[i] ?? Infinity) < (costs[best] ?? Infinity)) best = i
+  }
+  return best + 1
+}
+
+function tripCost(row, p) {
+  const travellers = Math.max(1, Math.floor(p.travellers))
+  const nights = Math.max(0, Math.floor(p.nights))
+  const vehicles = Math.ceil(travellers / 4)
+  const rooms = Math.ceil(travellers / 2)
+  const lines = {
+    transport: p.mode === 'fly'
+      ? [
+          { label: `Flights (${travellers} × 2 × $${row.fare_one_way.toFixed(2)})`, amount: row.fare_one_way * 2 * travellers, source: 'fare' },
+          { label: `Rental car ($${row.car_per_day}/day × ${nights + 1} days, assumed)`, amount: row.car_per_day * (nights + 1), source: 'assumed' },
+        ]
+      : [{ label: `Gas (${row.drive_mi * 2} mi at ${row.mpg} mpg, ${vehicles} vehicle${vehicles > 1 ? 's' : ''})`, amount: ((row.drive_mi * 2) / row.mpg) * row.gas_per_gal * vehicles, source: 'gas' }],
+    lodging: [{ label: `Lodging ($${row.lodging_per_night} × ${nights} nights × ${rooms} room${rooms > 1 ? 's' : ''}, incl. 12% tax)`, amount: row.lodging_per_night * nights * rooms * 1.12, source: 'lodging' }],
+    food: [{ label: `Meals ($${row.meals_per_day}/day × ${nights + 0.5} days × ${travellers})`, amount: row.meals_per_day * (nights + 0.5) * travellers, source: 'lodging' }],
+    activity: [{ label: `Park entry (${vehicles} vehicle${vehicles > 1 ? 's' : ''}, capped at $80)`, amount: Math.min(row.entry_fee_vehicle * vehicles, 80), source: 'fees' }],
+  }
+  if (row.permit_fee > 0) lines.activity.push({ label: 'Permit (per party)', amount: row.permit_fee, source: 'fees' })
+  const t = (k) => sum(lines[k].map((l) => l.amount))
+  const out = { transport: t('transport'), lodging: t('lodging'), food: t('food'), activity: t('activity'), lines }
+  const subtotal = out.transport + out.lodging + out.food + out.activity
+  out.buffer = subtotal * 0.15
+  out.total = subtotal + out.buffer
+  return out
+}
+
+// Tobler, as in models/checkpoints.ts: smooth ~50 m, cap slope at 0.6, scale distances by NPS / OSM, +10 min per stop.
+const STOP_MINUTES = 10, SMOOTH_WINDOW_M = 50, MAX_SLOPE = 0.6
+const toblerSpeedKmh = (s) => 6 * Math.exp(-3.5 * Math.abs(s + 0.05))
+function smoothElevations(points, stepM) {
+  const half = Math.max(0, Math.round(SMOOTH_WINDOW_M / Math.max(1, stepM) / 2))
+  return points.map((_, i) => {
+    const lo = Math.max(0, i - half), hi = Math.min(points.length - 1, i + half)
+    let s = 0
+    for (let j = lo; j <= hi; j++) s += points[j][1]
+    return s / (hi - lo + 1)
+  })
+}
+function stepsFor(profile, reverse) {
+  const scale = profile.nps_length_m / profile.osm_length_m
+  const raw = reverse ? [...profile.points].reverse() : profile.points
+  const smooth = smoothElevations(raw, profile.step_m)
+  const steps = []
+  for (let i = 0; i < raw.length - 1; i++) {
+    const d0 = raw[i][0], d1 = raw[i + 1][0], e0 = smooth[i], e1 = smooth[i + 1]
+    const runM = Math.abs(d1 - d0) * scale
+    if (runM === 0) continue
+    const slope = Math.max(-MAX_SLOPE, Math.min(MAX_SLOPE, (e1 - e0) / runM))
+    steps.push({ from: d0, to: d1, runM, minutes: (runM / 1000 / toblerSpeedKmh(slope)) * 60 })
+  }
+  return steps
+}
+function minutesBetween(steps, a, b) {
+  const lo = Math.min(a, b), hi = Math.max(a, b)
+  let t = 0
+  for (const s of steps) {
+    const sLo = Math.min(s.from, s.to), sHi = Math.max(s.from, s.to)
+    const overlap = Math.min(hi, sHi) - Math.max(lo, sLo)
+    if (overlap > 0) t += s.minutes * (overlap / (sHi - sLo))
+  }
+  return t
+}
+function elevationAt(profile, d) {
+  const pts = profile.points
+  if (d <= pts[0][0]) return pts[0][1]
+  for (let i = 1; i < pts.length; i++) {
+    if (d <= pts[i][0]) {
+      const [d0, e0] = pts[i - 1], [d1, e1] = pts[i]
+      return e0 + ((e1 - e0) * (d - d0)) / (d1 - d0 || 1)
+    }
+  }
+  return pts[pts.length - 1][1]
+}
+function timeline(profile, startMin, roundTrip = true) {
+  const scale = profile.nps_length_m / profile.osm_length_m
+  const cps = [...profile.checkpoints].sort((a, b) => a.dist_m - b.dist_m)
+  const out = stepsFor(profile, false), back = roundTrip ? stepsFor(profile, true) : []
+  const events = []
+  let t = startMin, walked = 0, prev = 0
+  const lastIdx = cps.length - 1
+  cps.forEach((cp, i) => {
+    t += minutesBetween(out, prev, cp.dist_m)
+    walked += Math.abs(cp.dist_m - prev) * scale
+    prev = cp.dist_m
+    const stop = i === 0 || (!roundTrip && i === lastIdx) ? 0 : STOP_MINUTES
+    events.push({ checkpoint: cp, dir: 'up', time: t, stopMin: stop, walkedM: walked, elevM: elevationAt(profile, cp.dist_m) })
+    t += stop
+  })
+  if (roundTrip) {
+    for (let i = lastIdx - 1; i >= 0; i--) {
+      const cp = cps[i]
+      t += minutesBetween(back, prev, cp.dist_m)
+      walked += Math.abs(prev - cp.dist_m) * scale
+      prev = cp.dist_m
+      const stop = i === 0 ? 0 : STOP_MINUTES
+      events.push({ checkpoint: cp, dir: 'down', time: t, stopMin: stop, walkedM: walked, elevM: elevationAt(profile, cp.dist_m) })
+      t += stop
+    }
+  }
+  return Object.assign(events, { startMin, profile, out, back })
+}
+function positionAt(tl, t) {
+  const profile = tl.profile
+  const scale = profile.nps_length_m / profile.osm_length_m
+  const first = tl[0], last = tl[tl.length - 1]
+  const elapsed = Math.max(0, t - tl.startMin)
+  const at = (e, next) => ({ dist: e.checkpoint.dist_m, elev: e.elevM, dir: e.dir, nextCheckpoint: next, elapsedMin: elapsed, walkedM: e.walkedM })
+  if (t <= first.time) return { ...at(first, tl[1] ?? null), walkedM: 0 }
+  if (t >= last.time) return at(last, null)
+  for (let i = 0; i < tl.length - 1; i++) {
+    const a = tl[i], b = tl[i + 1]
+    const departs = a.time + a.stopMin
+    if (t < a.time || t > b.time) continue
+    if (t <= departs) return at(a, b)
+    const steps = b.dir === 'down' ? tl.back : tl.out
+    let remaining = t - departs, pos = a.checkpoint.dist_m
+    const target = b.checkpoint.dist_m
+    const lo = Math.min(pos, target), hi = Math.max(pos, target)
+    const dir = target >= a.checkpoint.dist_m ? 1 : -1
+    // Walk the steps in travel order (the return leg's steps are already reversed).
+    for (const s of steps) {
+      const sLo = Math.min(s.from, s.to), sHi = Math.max(s.from, s.to)
+      const overlap = Math.min(hi, sHi) - Math.max(lo, sLo)
+      if (overlap <= 0) continue
+      const cost = s.minutes * (overlap / (sHi - sLo))
+      pos += dir * overlap * Math.min(1, remaining / cost)
+      remaining -= cost
+      if (remaining <= 0) break
+    }
+    return { dist: pos, elev: elevationAt(profile, pos), dir: b.dir, nextCheckpoint: b, elapsedMin: elapsed, walkedM: a.walkedM + Math.abs(pos - a.checkpoint.dist_m) * scale }
+  }
+  return at(last, null)
+}
+const parseClock = (s) => { const [h, m] = s.split(':').map(Number); return h * 60 + m }
+function formatClock(min) {
+  const m = ((Math.round(min) % 1440) + 1440) % 1440
+  const h24 = Math.floor(m / 60), mm = String(m % 60).padStart(2, '0'), h12 = h24 % 12 === 0 ? 12 : h24 % 12
+  return `${h12}:${mm} ${h24 < 12 ? 'am' : 'pm'}`
+}
+function eventIndexAt(tl, t) { let idx = -1; for (let i = 0; i < tl.length; i++) if (tl[i].time <= t + 1e-9) idx = i; return idx }
+// MODEL-END
+
+// ---------- formatting ----------
+const $ = (s) => document.querySelector(s)
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+const f0 = (n) => Math.round(n).toLocaleString('en-US')
+const f1 = (n) => (Math.round(n * 10) / 10).toLocaleString('en-US', { maximumFractionDigits: 1 })
+const usd = (n) => '$' + f0(n)
+const ftOf = (m) => m * 3.28084
+const miOf = (m) => m / 1609.344
+const dur = (min) => { const t = Math.max(0, Math.round(min)), h = Math.floor(t / 60), m = t % 60; return h ? `${h} h ${m} min` : `${m} min` }
+const cpNum = (cp) => cp.id.replace(/\D/g, '')
+const SCALE = PROFILE.nps_length_m / PROFILE.osm_length_m
+const HAZ_ICON = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1 L11.5 11 H0.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 4.6 V7.4 M6 8.8 V9.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>'
+const SRC = {
+  years: 'Typical, past years 2015 to 2024 (2020 excluded).',
+  weather: `NOAA GHCN-Daily, station ${HIKE.station.name} (${HIKE.station.dist_km} km from the trailhead)`,
+  crowds: 'NPS Visitor Use Statistics (IRMA), monthly visits, park level',
+  air: `EPA AirData daily AQI, ${HIKE.aqi_county.name}`,
+  daylight: 'Daylight: computed from the trailhead position and date',
+  profile: 'Profile: OpenStreetMap trail line and AWS Terrarium terrain (trail kit), length scaled to the NPS figure',
+  tobler: "Times: Tobler's hiking function on 10 m steps, plus 10 min at each stop (typical pace, not a promise)",
+  travel: 'OpenRouteService drive times; airport from DOT Consumer Airfare Report, Table 6',
+}
+const costSrc = (k) => META.cost_sources[k]?.label ?? k
+
+// ---------- shared selection ----------
+const state = { q: 4, month: 11, time: 0, start: 0, travellers: 1, nights: 2, mode: TRAVEL.default_mode }
+const listeners = new Set()
+const emit = (what) => { for (const f of listeners) f(what) }
+let TL = null
+const defaultStart = (m) => parseClock(MONTHS[m - 1].sunrise) + 60
+function rebuildTimeline() { TL = timeline(PROFILE, state.start, HIKE.route_type === 'out-and-back') }
+const clampTime = (t) => Math.min(TL[TL.length - 1].time, Math.max(TL[0].time, t))
+
+function setMonth(m) {
+  state.month = m; state.q = quarterOf(m); state.start = defaultStart(m)
+  rebuildTimeline(); state.time = TL[0].time; emit('selection')
+}
+// A quarter's default month is its middle month (CLAUDE.md: start time from the quarter's middle month).
+const setQuarter = (q) => setMonth(qMonths(q)[1])
+function setTime(t) { state.time = clampTime(t); emit('time') }
+function setStart(min) { state.start = min; rebuildTimeline(); state.time = TL[0].time; emit('selection') }
+function setCheckpoint(id) { const ev = TL.find((e) => e.checkpoint.id === id && e.dir === 'up') ?? TL.find((e) => e.checkpoint.id === id); if (ev) setTime(ev.time + 0.01) }
+function stepCheckpoint(dir) {
+  const t = state.time
+  const ev = dir > 0 ? TL.find((e) => e.time > t + 0.5) : [...TL].reverse().find((e) => e.time < t - 0.5)
+  setTime(ev ? ev.time + 0.01 : dir > 0 ? TL[TL.length - 1].time : TL[0].time)
+}
+function setTrip(patch) { Object.assign(state, patch); emit('cost') }
+const costs = () => COSTROWS.map((r) => tripCost(r, state))
+const fits = () => [1, 2, 3, 4].map(quarterFit)
+const best = () => bestQuarter(fits().map((f) => f.match), costs().map((c) => c.total))
+function currentEvent() { const i = eventIndexAt(TL, state.time); return TL[Math.max(0, i)] }
+const position = () => positionAt(TL, state.time)
+const travelHr = (mode) => (mode === 'fly' ? TRAVEL.fly_drive_hr : TRAVEL.drive_hr)
+
+// ---------- card content (shared by hover and pinned cards; rich = pinned) ----------
+const row = (dt, dd, em) => `<div class="r${em ? ' em' : ''}"><dt>${dt}</dt><dd>${dd}</dd></div>`
+const card = (eyebrow, title, rows, src, extra = '', pointing = '') =>
+  `<p class="c-eyebrow">${eyebrow}</p><h3 id="pinTitle">${title}</h3>${pointing ? `<p class="c-pointing">${pointing}</p>` : ''}<dl>${rows.filter(Boolean).join('')}</dl>${extra}<p class="c-src">${src}</p>`
+const fitWords = (t) => (t < LIMIT.temp[0] ? `${f0(LIMIT.temp[0] - t)}°F below your ${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F limit` : t > LIMIT.temp[1] ? `${f0(t - LIMIT.temp[1])}°F above your ${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F limit` : `inside your ${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F limit`)
+const POINTING = {
+  high: 'Column height: the typical daytime high.',
+  range: 'Glass sleeve: the middle half of past days (25th to 75th percentile).',
+  fit: 'Cap colour: inside or outside your temperature limit.',
+  crowd: 'Figures: one figure for each tenth of the park\'s busiest month.',
+  wet: 'Rain drops: more drops, more wet days (0.1 in or more).',
+  snow: 'Snowflakes: days with snow on the ground or falling.',
+  smoky: 'Haze: smoky days (AQI over 100, PM2.5 as the cause).',
+}
+const PART_ROW = { high: 0, range: 0, fit: 1, crowd: 2, smoky: 3, wet: 4, snow: 4 }
+
+function monthCard(m, rich, part) {
+  const r = MONTHS[m - 1]
+  const em = PART_ROW[part] ?? -1
+  const missing = r.missing.length ? `<p class="c-pointing">No data for: ${r.missing.map(esc).join(', ')}. Left out of the match.</p>` : ''
+  const rows = [
+    row('Typical high', `${f0(r.tmax_p50)}°F <span class="note">(middle half ${f0(r.tmax_p25)} to ${f0(r.tmax_p75)}°F)</span>`, em === 0),
+    row('Your limit', fitWords(r.tmax_p50), em === 1),
+    row('Crowds', `${crowdBand(r.crowd_level)[0].toUpperCase() + crowdBand(r.crowd_level).slice(1)}, ${r.crowd_level.toFixed(2)} of the busiest month`, em === 2),
+    row('Smoky days', `${f1(r.smoky_days)}${rich ? ` <span class="note">(ozone days ${f1(r.ozone_days)})</span>` : ''}`, em === 3),
+    row('Wet days', `${f1(r.wet_days)}${rich || part === 'snow' ? ` <span class="note">(snow days ${f1(r.snow_days)})</span>` : ''}`, em === 4),
+    row('Daylight', `${f1(r.daylight_hr)} h, ${formatClock(parseClock(r.sunrise))} to ${formatClock(parseClock(r.sunset))}`),
+    r.heat_days >= 1 ? row(`<span class="haz">${HAZ_ICON}Heat</span>`, `<span class="haz">${f1(r.heat_days)} days at 100°F or more</span>`) : '',
+    rich ? row('Summit estimate', `${f0(r.tmax_summit_est)}°F (estimate: 3.5°F cooler per 1,000 ft)`) : '',
+    r.closed ? row('<span class="haz">Closed</span>', '<span class="haz">Closed in past years this month</span>') : '',
+  ]
+  const extra = rich ? `<p class="note" style="margin:8px 0 0">${m === state.month ? 'This month is selected: the sun, the start time and the hiker follow it.' : ''}</p>` : ''
+  return card(`${MON[m - 1]} &middot; Q${quarterOf(m)} ${SEASON[quarterOf(m)]} &middot; typical`, MONTH_NAMES[m - 1], rows,
+    `${SRC.years} Highs, rain, snow: ${SRC.weather}. Crowds: ${SRC.crowds}. Smoke: ${SRC.air}. ${SRC.daylight}.`, missing + extra, POINTING[part] ?? '')
+}
+
+function quarterCard(q, rich) {
+  const f = quarterFit(q), c = costs()[q - 1], b = best()
+  const rows = [
+    row('Match', `${f0(f.match)}% of your limits${q === b ? ', best quarter' : ''}`, true),
+    row('Typical high', f.temp == null ? 'No station data: left out of the match' : `${f1(f.temp)}°F, ${fitWords(f.temp)}${f.past ? ` (scores ${f0(f.score * 100)}%)` : ''}`),
+    row('Crowds', `${crowdBand(f.crowd)}, ${f.crowd.toFixed(2)} on average. Not counted: limit on Any`),
+    row('Smoky days', `${f1(f.smoky)} in the quarter. Not counted: limit on Any`),
+    row('Wet days', `${f1(f.wet)} in the quarter. Not counted: limit on Any`),
+    row('Door to trailhead', `${f1(travelHr(state.mode))} h by ${state.mode}. Not counted: no travel limit`),
+    row('Typical trip', `${usd(c.total)} (${state.travellers} traveller${state.travellers > 1 ? 's' : ''}, ${state.nights} nights, ${state.mode})`),
+  ]
+  const extra = rich ? '<p class="note" style="margin:8px 0 0">Match = 100 × the mean of the active factor scores. A factor scores 1 inside your limit and falls to 0 at its tolerance (temperature: 10°F past the limit).</p>' : ''
+  return card(`Q${q} &middot; ${qRange(q)} &middot; ${SEASON[q]}`, `Fit for Q${q}`, rows, `${SRC.years} ${SRC.weather}; ${SRC.crowds}; ${SRC.air}. Cost: see the cairn.`, extra)
+}
+
+const PARTS = [['transport', 'Transport'], ['lodging', 'Lodging'], ['food', 'Food'], ['activity', 'Entry and permit'], ['buffer', 'Buffer 15%']]
+function costCard(q, part, rich) {
+  const c = costs()[q - 1]
+  const name = PARTS.find((p) => p[0] === part)?.[1] ?? part
+  const rows = []
+  const parts = rich ? PARTS.map((p) => p[0]) : [part]
+  for (const k of parts) {
+    if (k === 'buffer') { rows.push(row('Buffer 15%', `${usd(c.buffer)} <span class="note">(15% of the sum, for the unexpected)</span>`, k === part)); continue }
+    for (const l of c.lines[k]) rows.push(row(PARTS.find((p) => p[0] === k)[1], `${usd(l.amount)} <span class="note">${esc(l.label)}. ${esc(costSrc(l.source))}</span>`, k === part))
+  }
+  rows.push(row('Total', `<b>${usd(c.total)}</b> typical`))
+  const srcKeys = part === 'buffer' ? [] : [...new Set(c.lines[part]?.map((l) => l.source) ?? [])]
+  const src = `Typical, from past data. Not a price quote. ${state.travellers} traveller${state.travellers > 1 ? 's' : ''}, ${state.nights} nights, ${state.mode === 'fly' ? `flying SEA to ${TRAVEL.airport}` : 'driving from Seattle'}. Sources: ${rich ? 'DOT Table 6 fares, GSA per diem lodging and meals, EIA gasoline, NPS fees, team assumption for the rental car' : part === 'buffer' ? 'Peak Finder cost model (15% buffer)' : srcKeys.map(costSrc).map(esc).join('; ')}.`
+  return card(`Q${q} &middot; ${qRange(q)} &middot; how much`, rich ? `Trip cost, Q${q}` : `${name}: ${usd(c[part])}`, rows, src)
+}
+
+function cpCard(id, rich) {
+  const ups = TL.filter((e) => e.checkpoint.id === id)
+  const up = ups.find((e) => e.dir === 'up'), down = ups.find((e) => e.dir === 'down')
+  const cp = (up ?? down).checkpoint
+  const rows = [
+    row('From the trailhead', `${f1(miOf(cp.dist_m * SCALE))} mi (NPS-scaled)`),
+    row('Elevation', `${f0(ftOf(elevationAt(PROFILE, cp.dist_m)))} ft`),
+    up ? row('Going up', formatClock(up.time), true) : '',
+    down ? row('Coming back', formatClock(down.time), true) : '',
+    row('Stop', cp.id === 'c0' ? 'Start and finish' : `${STOP_MINUTES} min`),
+    rich ? row('Start', `${formatClock(state.start)}${state.start === defaultStart(state.month) ? `, 1 hour after the ${MONTH_NAMES[state.month - 1]} sunrise` : ', set by you'}`) : '',
+  ]
+  return card(`Checkpoint C${cpNum(cp)} &middot; ${MONTH_NAMES[state.month - 1]} start`, esc(cp.name), rows, `${SRC.profile}. ${SRC.tobler}.`)
+}
+
+function hikerCard(rich) {
+  const p = position(), ev = currentEvent()
+  const rows = [
+    row('Clock', formatClock(state.time), true),
+    row('Direction', p.dir === 'up' ? 'Going up' : 'Coming back'),
+    row('Walked', `${f1(miOf(p.walkedM))} mi of ${f1(HIKE.length_mi)} mi`),
+    row('Elevation', `${f0(ftOf(p.elev))} ft`),
+    row('Elapsed', dur(p.elapsedMin)),
+    row('Last checkpoint', `C${cpNum(ev.checkpoint)} ${esc(ev.checkpoint.name)}`),
+    p.nextCheckpoint ? row('Next', `C${cpNum(p.nextCheckpoint.checkpoint)} ${esc(p.nextCheckpoint.checkpoint.name)} at ${formatClock(p.nextCheckpoint.time)}`) : row('Next', 'Finished'),
+  ]
+  return card('You, on the trail', 'The hiker', rows, `${SRC.tobler}. ${SRC.profile}.`, rich ? '<p class="note" style="margin:8px 0 0">Move the time slider or use Back and Forward to walk.</p>' : '')
+}
+
+function sunCard() {
+  const r = MONTHS[state.month - 1], set = parseClock(r.sunset), fin = TL[TL.length - 1].time
+  const ok = fin <= set
+  const rows = [
+    row('Sunrise', formatClock(parseClock(r.sunrise))),
+    row('Sunset', formatClock(set)),
+    row('Daylight', `${f1(r.daylight_hr)} h, typical for ${MONTH_NAMES[state.month - 1]}`),
+    row('Back at the trailhead', formatClock(fin), true),
+    row('Before dark?', ok ? `Yes, ${dur(set - fin)} to spare` : `<span class="haz">${HAZ_ICON}No: ${dur(fin - set)} after sunset</span>`),
+    row('Sun now', state.time < parseClock(r.sunrise) ? 'Not risen yet' : state.time > set ? 'Set' : `${formatClock(state.time)}, the light and shadows in the scene follow it`),
+  ]
+  return card(`${MONTH_NAMES[state.month - 1]} &middot; daylight`, 'The sun', rows, `${SRC.daylight}. The arc is placed for legibility, not the true sun path.`)
+}
+
+function routeCard(rich, terrain) {
+  const rows = [
+    row('Length', `${f1(HIKE.length_mi)} mi ${esc(HIKE.length_type)} (NPS)`, true),
+    row('Climb', `${f0(HIKE.gain_ft)} ft typical gain (NPS)`),
+    row('Summit', `${f0(HIKE.max_elev_ft)} ft (NPS)`),
+    row('Route', `${esc(HIKE.route_type)}, ${esc(HIKE.difficulty)}`),
+    row('Gear', HIKE.gear.map(esc).join(', ')),
+    HIKE.permit_note ? row('Permit', esc(HIKE.permit_note)) : '',
+    HIKE.closure_note ? row('<span class="haz">Closure</span>', `<span class="haz">${esc(HIKE.closure_note)}</span>`) : '',
+    terrain || rich ? row('Trailhead', `${esc(HIKE.trailhead.name)}, ${HIKE.trailhead.lat.toFixed(4)}, ${HIKE.trailhead.lon.toFixed(4)}`) : '',
+    terrain || rich ? row('Weather station', `${esc(HIKE.station.name)}, ${HIKE.station.dist_km} km away`) : '',
+  ]
+  const extra = `<p class="note" style="margin:8px 0 0">The climb follows the real profile (${f0(ftOf(PROFILE.points[0][1]))} to ${f0(ftOf(Math.max(...PROFILE.points.map((p) => p[1]))))} ft). The plan shape and the rock around it are illustrative: the profile has distance and elevation only. ${window.PF_EXAGGERATION ? `Height is exaggerated about ${window.PF_EXAGGERATION} times.` : ''}</p>`
+  return card(`Where &middot; ${esc(HIKE.park_name)}, ${esc(HIKE.state)}`, terrain ? 'The mountain' : esc(HIKE.name), rows, `NPS park page; ${SRC.profile}.`, extra)
+}
+
+function limitCard() {
+  const inside = MONTHS.filter((r) => r.tmax_p50 >= LIMIT.temp[0] && r.tmax_p50 <= LIMIT.temp[1]).map((r) => MON[r.month - 1])
+  return card('Your limit &middot; set on the map', `${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F typical high`, [
+    row('Months inside', inside.join(', '), true),
+    row('Other limits', 'Crowds, smoke, rain and travel are on Any, so they are not counted'),
+  ], `${SRC.years} ${SRC.weather}.`)
+}
+
+function travelCard() {
+  return card('Where from &middot; your home city', 'Seattle to the trailhead', [
+    row('Fly', `${f1(TRAVEL.fly_drive_hr)} h door to trailhead, via ${esc(TRAVEL.airport)}${TRAVEL.default_mode === 'fly' ? ' (shorter, the default)' : ''}`, state.mode === 'fly'),
+    row('Drive', `${f1(TRAVEL.drive_hr)} h, ${f0(TRAVEL.drive_mi)} mi each way${TRAVEL.default_mode === 'drive' ? ' (shorter, the default)' : ''}`, state.mode === 'drive'),
+  ], `Typical. ${SRC.travel}. The arc's direction is roughly true (Seattle lies north-north-west); its length is not to scale.`)
+}
+
+function cardHTML(key, part, rich) {
+  const [kind, a, b] = key.split(':')
+  if (kind === 'month') return monthCard(+a, rich, part)
+  if (kind === 'quarter') return quarterCard(+a, rich)
+  if (kind === 'cost') return costCard(+a, b, rich)
+  if (kind === 'cp') return cpCard(a, rich)
+  if (kind === 'hiker') return hikerCard(rich)
+  if (kind === 'sun') return sunCard()
+  if (kind === 'route') return routeCard(rich, false)
+  if (kind === 'terrain') return routeCard(rich, true)
+  if (kind === 'limit') return limitCard()
+  if (kind === 'travel') return travelCard()
+  return ''
+}
+
+// ---------- page UI ----------
+function themeNow() { const t = document.documentElement.dataset.theme; return t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') }
+function renderThemeBtn() { const t = themeNow(); $('#themeBtn').textContent = t === 'dark' ? 'Light theme' : 'Dark theme'; $('#themeBtn').setAttribute('aria-label', `Switch to the ${t === 'dark' ? 'light' : 'dark'} theme`) }
+$('#themeBtn').addEventListener('click', () => {
+  const next = themeNow() === 'dark' ? 'light' : 'dark'
+  document.documentElement.dataset.theme = next
+  try { localStorage.setItem('pf-3d-theme', next) } catch (e) {}
+  renderThemeBtn()
+})
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderThemeBtn)
+renderThemeBtn()
+
+// quarter chips + month buttons
+const qBox = $('#quarters')
+for (let q = 1; q <= 4; q++) {
+  const l = document.createElement('label'); l.className = 'qchip'
+  l.innerHTML = `<input type="radio" name="q" value="${q}"><span><b id="qm${q}"></b>Q${q} ${qRange(q)}</span>`
+  l.querySelector('input').addEventListener('change', () => setQuarter(q))
+  qBox.append(l)
+}
+const mBox = $('#months')
+for (let m = 1; m <= 12; m++) {
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = MON[m - 1]; b.dataset.m = m
+  if (m > 1 && m % 3 === 1) b.classList.add('gap')
+  b.setAttribute('aria-label', `${MONTH_NAMES[m - 1]}, Q${quarterOf(m)}`)
+  b.addEventListener('click', () => setMonth(m))
+  mBox.append(b)
+}
+
+// what-if
+const tIn = $('#travellers'), nIn = $('#nights')
+const readInt = (el, lo, hi, fallback) => { const v = Math.floor(Number(el.value)); return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : fallback }
+tIn.addEventListener('input', () => setTrip({ travellers: readInt(tIn, 1, 8, 1) }))
+nIn.addEventListener('input', () => setTrip({ nights: readInt(nIn, 0, 7, 2) }))
+for (const r of document.querySelectorAll('input[name=mode]')) {
+  r.checked = r.value === state.mode
+  r.addEventListener('change', () => r.checked && setTrip({ mode: r.value }))
+}
+$('#flyLbl').textContent = `Fly ${f1(TRAVEL.fly_drive_hr)} h`
+$('#driveLbl').textContent = `Drive ${f1(TRAVEL.drive_hr)} h`
+
+// trail controls
+const tRange = $('#time')
+tRange.addEventListener('input', () => setTime(Number(tRange.value)))
+$('#cpBack').addEventListener('click', () => stepCheckpoint(-1))
+$('#cpFwd').addEventListener('click', () => stepCheckpoint(1))
+$('#startTime').addEventListener('change', (e) => { const v = e.target.value; if (/^\d\d:\d\d$/.test(v)) setStart(parseClock(v)) })
+$('#stage').addEventListener('keydown', (e) => {
+  if (e.target !== e.currentTarget) return
+  if (e.key === 'ArrowRight') stepCheckpoint(1)
+  else if (e.key === 'ArrowLeft') stepCheckpoint(-1)
+  else if (e.key === 'ArrowUp') setMonth((state.month % 12) + 1)
+  else if (e.key === 'ArrowDown') setMonth(((state.month + 10) % 12) + 1)
+  else return
+  e.preventDefault()
+})
+
+// 2D profile sparkline (out and back), linked to the hiker
+const SP = { w: 600, top: 8, bottom: 56 }
+const L = PROFILE.osm_length_m
+const eMin = Math.min(...PROFILE.points.map((p) => p[1])), eMax = Math.max(...PROFILE.points.map((p) => p[1]))
+const spX = (outDist) => 6 + (outDist / (2 * L)) * (SP.w - 12)
+const spY = (e) => SP.bottom - ((e - eMin) / (eMax - eMin)) * (SP.bottom - SP.top)
+function drawSpark() {
+  const pts = PROFILE.points.filter((_, i) => i % 2 === 0 || i === PROFILE.points.length - 1)
+  const there = pts.map((p) => `${spX(p[0]).toFixed(1)},${spY(p[1]).toFixed(1)}`)
+  const back = [...pts].reverse().map((p) => `${spX(2 * L - p[0]).toFixed(1)},${spY(p[1]).toFixed(1)}`)
+  const line = [...there, ...back].join(' ')
+  const cps = PROFILE.checkpoints.map((c) => `<circle cx="${spX(c.dist_m).toFixed(1)}" cy="${spY(elevationAt(PROFILE, c.dist_m)).toFixed(1)}" r="2.6" fill="var(--text-body)"/>` + (c.dist_m < L ? `<circle cx="${spX(2 * L - c.dist_m).toFixed(1)}" cy="${spY(elevationAt(PROFILE, c.dist_m)).toFixed(1)}" r="2.6" fill="var(--text-body)"/>` : ''))
+  $('#spark').innerHTML = `<title id="sparkTitle">Elevation profile, out and back: ${f0(ftOf(eMin))} ft at the trailhead to ${f0(ftOf(eMax))} ft at the summit and back, ${f1(HIKE.length_mi)} mi in all.</title>
+    <polygon points="${spX(0)},${SP.bottom} ${line} ${spX(2 * L)},${SP.bottom}" fill="var(--accent-soft)"/>
+    <polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+    ${cps.join('')}
+    <line x1="6" x2="${SP.w - 6}" y1="${SP.bottom}" y2="${SP.bottom}" stroke="var(--line-strong)"/>
+    <text x="6" y="70" font-size="10" fill="var(--text-muted)">0 mi</text>
+    <text x="${spX(L)}" y="70" font-size="10" fill="var(--text-muted)" text-anchor="middle">Summit, ${f1(miOf(L * SCALE))} mi</text>
+    <text x="${SP.w - 6}" y="70" font-size="10" fill="var(--text-muted)" text-anchor="end">${f1(HIKE.length_mi)} mi</text>
+    <text x="${SP.w - 6}" y="12" font-size="10" fill="var(--text-muted)" text-anchor="end">${f0(ftOf(eMax))} ft</text>
+    <g id="spMark"><line id="spLine" y1="${SP.top - 4}" y2="${SP.bottom}" stroke="var(--accent)" stroke-width="1.5"/><circle id="spDot" r="5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/></g>`
+}
+drawSpark()
+
+// Objects list: the keyboard path into the 3D scene (each button pins the object's card and flies the camera to it).
+function buildNav() {
+  const groups = [
+    ['Where', [['terrain', 'Mountain'], ['route', 'Trail'], ['hiker', 'Hiker'], ['travel', 'Trip from Seattle'], ...PROFILE.checkpoints.map((c) => [`cp:${c.id}`, `C${cpNum(c)} ${c.name}`])]],
+    ['When', [['sun', 'Sun and daylight'], ['limit', 'Your limit band'], ...MON.map((m, i) => [`month:${i + 1}`, m]), ...[1, 2, 3, 4].map((q) => [`quarter:${q}`, `Q${q} fit`])]],
+    ['How much', [1, 2, 3, 4].map((q) => [`cost:${q}:transport`, `Q${q} cost cairn`])],
+  ]
+  $('#objNav').innerHTML = '<h2>Objects in the scene</h2><p class="note">Tab to an object and press Enter: its card opens and the camera flies to it. Esc closes the card.</p>' +
+    groups.map(([g, items]) => `<div class="grp" role="group" aria-label="${g}"><span>${g}</span>${items.map(([k, t]) => `<button type="button" data-key="${k}">${esc(t)}</button>`).join('')}</div>`).join('')
+  $('#objNav').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-key]'); if (!b) return
+    window.PF.scene?.focusKey(b.dataset.key, b)
+  })
+  $('#objNav').addEventListener('focusin', (e) => { const b = e.target.closest('button[data-key]'); if (b) window.PF.scene?.hoverKey(b.dataset.key) })
+  $('#objNav').addEventListener('focusout', () => window.PF.scene?.hoverKey(null))
+}
+buildNav()
+
+// ---------- renderers ----------
+function renderSelection() {
+  const F = fits(), C = costs(), b = best()
+  for (let q = 1; q <= 4; q++) {
+    qBox.querySelector(`input[value="${q}"]`).checked = q === state.q
+    $(`#qm${q}`).textContent = `${f0(F[q - 1].match)}%${q === b ? ' best' : ''}`
+  }
+  for (const btn of mBox.children) {
+    const m = +btn.dataset.m
+    btn.setAttribute('aria-pressed', String(m === state.month))
+    btn.classList.toggle('inq', quarterOf(m) === state.q)
+  }
+  const f = F[state.q - 1], c = C[state.q - 1]
+  $('#headline').innerHTML = `Q${state.q} (${qRange(state.q)}) fits <b>${f0(f.match)}%</b>: typical high ${f.temp == null ? 'unknown' : f0(f.temp) + '°F'}, ${f1(f.smoky)} smoky days, about <b>${usd(c.total)}</b> from Seattle.${state.q !== b ? ` Best quarter: Q${b}.` : ' The best quarter.'}`
+  $('#limitNote').textContent = `Your limit: typical high ${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F (the other limits are on Any). Typical, from past years; not a forecast.`
+  const st = $('#startTime'); st.value = `${String(Math.floor(state.start / 60)).padStart(2, '0')}:${String(state.start % 60).padStart(2, '0')}`
+  $('#startNote').textContent = state.start === defaultStart(state.month) ? `1 hour after the ${MON[state.month - 1]} sunrise` : 'your start time'
+  tRange.min = String(Math.floor(TL[0].time)); tRange.max = String(Math.ceil(TL[TL.length - 1].time))
+  const r = MONTHS[state.month - 1], set = parseClock(r.sunset), fin = TL[TL.length - 1].time
+  $('#darkText').innerHTML = fin <= set
+    ? `Back at the trailhead about ${formatClock(fin)}. Sunset ${formatClock(set)}: finishes before dark, ${dur(set - fin)} to spare.`
+    : `<span class="haz">${HAZ_ICON}Finishes after dark: back about ${formatClock(fin)}, sunset ${formatClock(set)}. Start earlier.</span>`
+  renderCostOut()
+  renderTime()
+  renderTables()
+}
+function renderCostOut() {
+  const c = costs()[state.q - 1]
+  $('#costOut').textContent = `Q${state.q} about ${usd(c.total)} typical`
+}
+function renderTime() {
+  const p = position(), ev = currentEvent()
+  tRange.value = String(Math.round(state.time))
+  const where = `C${cpNum(ev.checkpoint)} ${ev.checkpoint.name}`
+  tRange.setAttribute('aria-valuetext', `${formatClock(state.time)}, ${p.dir === 'up' ? 'going up' : 'coming back'}, last checkpoint ${where}`)
+  $('#posText').textContent = `${formatClock(state.time)}, ${p.dir === 'up' ? 'going up' : 'coming back'}: ${f1(miOf(p.walkedM))} mi walked, ${f0(ftOf(p.elev))} ft, ${dur(p.elapsedMin)} elapsed. ${p.nextCheckpoint ? `Next: C${cpNum(p.nextCheckpoint.checkpoint)} ${p.nextCheckpoint.checkpoint.name} at ${formatClock(p.nextCheckpoint.time)}.` : 'Back at the trailhead.'}`
+  $('#selText').textContent = `Selected: Q${state.q} ${qRange(state.q)}, ${MONTH_NAMES[state.month - 1]}, ${where}`
+  const x = spX(p.dir === 'up' ? p.dist : 2 * L - p.dist), y = spY(p.elev)
+  $('#spLine')?.setAttribute('x1', x); $('#spLine')?.setAttribute('x2', x)
+  $('#spDot')?.setAttribute('cx', x); $('#spDot')?.setAttribute('cy', y)
+}
+function renderTables() {
+  const F = fits(), C = costs()
+  const mRows = MONTHS.map((r) => `<tr class="${r.month === state.month ? 'cur' : ''}"><td>${MONTH_NAMES[r.month - 1]}</td><td>Q${quarterOf(r.month)}</td><td>${f0(r.tmax_p50)} (${f0(r.tmax_p25)} to ${f0(r.tmax_p75)})</td><td>${fitWords(r.tmax_p50)}</td><td>${crowdBand(r.crowd_level)} (${r.crowd_level.toFixed(2)})</td><td>${f1(r.smoky_days)}</td><td>${f1(r.wet_days)}</td><td>${f1(r.snow_days)}</td><td>${f1(r.heat_days)}</td><td>${f1(r.daylight_hr)} (${r.sunrise} to ${r.sunset})</td></tr>`).join('')
+  const qRows = F.map((f, i) => `<tr class="${f.q === state.q ? 'cur' : ''}"><td>Q${f.q} ${qRange(f.q)}</td><td>${f0(f.match)}%</td><td>${f.temp == null ? 'no data' : f1(f.temp) + '°F'}</td><td>${crowdBand(f.crowd)}</td><td>${f1(f.smoky)}</td><td>${f1(f.wet)}</td><td>${usd(C[i].total)}</td></tr>`).join('')
+  const cRows = C.map((c, i) => `<tr class="${i + 1 === state.q ? 'cur' : ''}"><td>Q${i + 1}</td><td>${usd(c.transport)}</td><td>${usd(c.lodging)}</td><td>${usd(c.food)}</td><td>${usd(c.activity)}</td><td>${usd(c.buffer)}</td><td><b>${usd(c.total)}</b></td></tr>`).join('')
+  const cps = [...PROFILE.checkpoints].sort((a, b) => a.dist_m - b.dist_m)
+  const tRows = cps.map((cp) => {
+    const up = TL.find((e) => e.checkpoint.id === cp.id && e.dir === 'up'), dn = TL.find((e) => e.checkpoint.id === cp.id && e.dir === 'down')
+    return `<tr class="${currentEvent().checkpoint.id === cp.id ? 'cur' : ''}"><td>C${cpNum(cp)} ${esc(cp.name)}</td><td>${f1(miOf(cp.dist_m * SCALE))}</td><td>${f0(ftOf(elevationAt(PROFILE, cp.dist_m)))}</td><td>${up ? formatClock(up.time) : ''}</td><td>${dn ? formatClock(dn.time) : ''}</td></tr>`
+  }).join('')
+  $('#tables').innerHTML = `
+    <p>${esc(HIKE.name)}, ${esc(HIKE.park_name)}, ${esc(HIKE.state)}. ${f1(HIKE.length_mi)} mi ${esc(HIKE.length_type)}, ${f0(HIKE.gain_ft)} ft gain, summit ${f0(HIKE.max_elev_ft)} ft (NPS). ${esc(HIKE.difficulty)}; gear: ${HIKE.gear.map(esc).join(', ')}. ${esc(HIKE.permit_note ?? '')}.
+    From Seattle: fly via ${esc(TRAVEL.airport)} about ${f1(TRAVEL.fly_drive_hr)} h door to trailhead, or drive ${f1(TRAVEL.drive_hr)} h (${f0(TRAVEL.drive_mi)} mi). ${SRC.travel}.</p>
+    <div class="tablewrap"><table><caption>When: month by month<small>${SRC.years} ${SRC.weather}; ${SRC.crowds}; ${SRC.air}. ${SRC.daylight}.</small></caption>
+      <thead><tr><th>Month</th><th>Quarter</th><th>Typical high °F (middle half)</th><th>Vs your limit</th><th>Crowds</th><th>Smoky days</th><th>Wet days</th><th>Snow days</th><th>Days at 100°F+</th><th>Daylight h (sunrise to sunset)</th></tr></thead><tbody>${mRows}</tbody></table></div>
+    <div class="tablewrap"><table><caption>When: quarters<small>Match with your ${LIMIT.temp[0]} to ${LIMIT.temp[1]}°F limit; other limits on Any. Day counts are sums for the quarter.</small></caption>
+      <thead><tr><th>Quarter</th><th>Match</th><th>Typical high</th><th>Crowds</th><th>Smoky days</th><th>Wet days</th><th>Typical trip</th></tr></thead><tbody>${qRows}</tbody></table></div>
+    <div class="tablewrap"><table><caption>On the trail, starting ${formatClock(state.start)} in ${MONTH_NAMES[state.month - 1]}<small>${SRC.tobler}. ${SRC.profile}.</small></caption>
+      <thead><tr><th>Checkpoint</th><th>Miles from trailhead</th><th>Elevation ft</th><th>Going up</th><th>Coming back</th></tr></thead><tbody>${tRows}</tbody></table></div>
+    <div class="tablewrap"><table><caption>How much: typical trip cost<small>${state.travellers} traveller${state.travellers > 1 ? 's' : ''}, ${state.nights} nights, ${state.mode}. Typical, from past data. Not a price quote. Sources: DOT Table 6, GSA per diem, EIA, NPS fees, team assumption (car).</small></caption>
+      <thead><tr><th>Quarter</th><th>Transport</th><th>Lodging</th><th>Food</th><th>Entry and permit</th><th>Buffer 15%</th><th>Total</th></tr></thead><tbody>${cRows}</tbody></table></div>`
+}
+function renderFooter() {
+  $('#foot').innerHTML = `${META.fake ? '<p class="banner">Illustrative: these numbers come from the project data files, and some of them are still placeholders while the pipeline is finished.</p>' : ''}
+    <p>Typical values from past years (${esc(META.typical_years ?? '2015 to 2024, 2020 excluded')}). Not a forecast or a price quote. Sources:</p>
+    <ul>${META.sources.map((s) => `<li>${s.url ? `<a href="${esc(s.url)}">${esc(s.name)}</a>` : esc(s.name)}, as of ${esc(s.as_of)}</li>`).join('')}</ul>`
+}
+
+listeners.add((what) => {
+  if (what === 'selection') renderSelection()
+  else if (what === 'time') { renderTime(); renderTables() }
+  else if (what === 'cost') { renderCostOut(); renderSelection() }
+})
+
+function showFallback(msg) {
+  const fb = $('#fallback'); fb.textContent = msg; fb.hidden = false
+  for (const sel of ['#legend', '.tools']) document.querySelector(sel).hidden = true
+  $('#objNav').hidden = true
+  $('#textVersion').open = true
+}
+
+state.start = defaultStart(state.month)
+rebuildTimeline()
+state.time = TL[0].time
+renderFooter()
+renderSelection()
+
+window.PF = {
+  HIKE, MONTHS, PROFILE, TRAVEL, META, LIMIT, MON, MONTH_NAMES, state, on: (f) => listeners.add(f),
+  get tl() { return TL }, position, currentEvent, costs, fits, best, quarterOf, qMonths, qRange, parseClock, formatClock, smoothElevations, elevationAt,
+  setMonth, setQuarter, setTime, setCheckpoint, stepCheckpoint, cardHTML, showFallback, scene: null,
+}
+</script>
+
+<script type="module">
+// Part 2: the 3D scene. If this module fails (no WebGL, three.js blocked), the page above still works.
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
+
+const PF = window.PF
+function hasWebGL() { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')) } catch (e) { return false } }
+
+if (!PF) {
+  // Part 1 failed: nothing to link to.
+} else if (matchMedia('(max-width: 859px)').matches) {
+  PF.showFallback('The 3D dashboard is for desktop screens, 860 px and wider. On a phone the hike page shows the 2D charts. Every number is in the text version below.')
+} else if (!hasWebGL()) {
+  PF.showFallback('This 3D view needs WebGL, which this browser has turned off or does not support. Every number from the scene is in the text version below.')
+} else {
+  try { main() } catch (err) {
+    console.error(err)
+    PF.showFallback('The 3D view could not start in this browser. Every number from the scene is in the text version below.')
+  }
+}
+
+function main() {
+  const S = PF.state
+  const stage = document.getElementById('stage')
+  const reduceMQ = matchMedia('(prefers-reduced-motion: reduce)')
+  let RM = reduceMQ.matches
+
+  // ---------- tokens -> THREE colours (re-read on every theme switch) ----------
+  const TOKENS = ['bg', 'surface', 'surface-2', 'surface-sunk', 'line', 'line-strong', 'text', 'text-body', 'text-muted', 'accent', 'accent-text', 'accent-soft', 'hazard', 'cat-1', 'cat-2', 'cat-3', 'cat-4', 'hatch-a', 'hatch-b', 'off', 'off-line']
+  const T = {}
+  const readTokens = () => { const cs = getComputedStyle(document.documentElement); for (const k of TOKENS) T[k] = cs.getPropertyValue('--' + k).trim() || 'gray' }
+  readTokens()
+  const C = (k) => new THREE.Color(T[k])
+  const MIX = (a, b, t) => C(a).lerp(C(b), t)
+  const lum = (c) => 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
+  const PAPER = () => (lum(C('bg')) > lum(C('text')) ? 'bg' : 'text') // the light end of the palette in either theme
+  const INK = () => (PAPER() === 'bg' ? 'text' : 'bg')
+  const themeHooks = []
+  const themed = (fn) => { themeHooks.push(fn); fn() }
+
+  // ---------- renderer, camera, controls ----------
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap
+  renderer.toneMapping = THREE.NeutralToneMapping
+  renderer.toneMappingExposure = 1.1
+  renderer.setClearAlpha(0)
+  renderer.domElement.setAttribute('aria-hidden', 'true')
+  stage.prepend(renderer.domElement)
+  const labelRenderer = new CSS2DRenderer({ element: document.getElementById('labels') })
+
+  const scene = new THREE.Scene()
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.5, 220)
+  const HOME = { pos: new THREE.Vector3(2, 33, 43), target: new THREE.Vector3(0, 0.6, 1.5) }
+  camera.position.copy(HOME.pos)
+  const controls = new OrbitControls(camera, renderer.domElement)
+  controls.target.copy(HOME.target)
+  controls.enableDamping = !RM
+  controls.dampingFactor = 0.08
+  controls.minDistance = 5
+  controls.maxDistance = 70
+  controls.maxPolarAngle = 1.36 // never under the floor
+  controls.autoRotate = false
+  controls.update()
+
+  let needsRender = true
+  const requestRender = () => { needsRender = true }
+  controls.addEventListener('change', requestRender)
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight
+    if (!w || !h) return
+    renderer.setSize(w, h)
+    labelRenderer.setSize(w, h)
+    camera.aspect = w / h
+    camera.updateProjectionMatrix()
+    requestRender()
+  }
+  new ResizeObserver(resize).observe(stage)
+  resize()
+
+  // ---------- lights ----------
+  const hemi = new THREE.HemisphereLight()
+  hemi.intensity = 1.4
+  themed(() => { hemi.color.copy(C(PAPER())); hemi.groundColor.copy(C('surface-sunk')) })
+  scene.add(hemi)
+  const sunLight = new THREE.DirectionalLight()
+  sunLight.intensity = 2.2
+  sunLight.castShadow = true
+  sunLight.shadow.mapSize.set(2048, 2048)
+  Object.assign(sunLight.shadow.camera, { left: -24, right: 24, top: 24, bottom: -24, near: 1, far: 90 })
+  sunLight.shadow.bias = -0.0004
+  sunLight.shadow.normalBias = 0.03
+  sunLight.shadow.radius = 4
+  scene.add(sunLight, sunLight.target)
+
+  // ---------- material helpers ----------
+  const hlMats = [] // { m, key, cur }
+  function std(color, opts = {}, key = null) {
+    const m = new THREE.MeshStandardMaterial({ roughness: 0.82, metalness: 0, ...opts })
+    themed(() => {
+      if (color) m.color.copy(typeof color === 'function' ? color() : C(color))
+      if (key) m.emissive.copy(C('accent'))
+    })
+    if (key) { m.emissiveIntensity = 0; hlMats.push({ m, key, cur: 0 }) }
+    return m
+  }
+  const HIT = new THREE.MeshBasicMaterial({ visible: false }) // invisible but raycastable hit shapes for thin objects
+
+  // ---------- picking registry ----------
+  const pickables = []
+  const objects = new Map() // key -> Object3D to fly to
+  function pickable(mesh, key, part = null) { mesh.userData.key = key; mesh.userData.part = part; pickables.push(mesh); return mesh }
+  const registerFocus = (key, obj) => objects.set(key, obj)
+
+  // ---------- labels ----------
+  function label(text, cls = '') { const el = document.createElement('div'); el.className = 'lbl ' + cls; el.textContent = text; return new CSS2DObject(el) }
+
+  // ---------- small helpers ----------
+  const TAU = Math.PI * 2
+  const clamp01 = (x) => Math.min(1, Math.max(0, x))
+  const ease = (x) => 1 - Math.pow(1 - clamp01(x), 3)
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2)
+  // Clock layout seen from the default camera (south, looking north): c = clockwise angle from 12 o'clock.
+  const polar = (r, c, y = 0) => new THREE.Vector3(r * Math.sin(c), y, -r * Math.cos(c))
+  const rotFor = (c) => -Math.atan2(-Math.cos(c), Math.sin(c)) // rotation.y that points local +x at clock angle c
+  const monthC = (m) => ((m - 0.5) / 12) * TAU
+  function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296 } }
+  function sectorGeo(r0, r1, half, depth) {
+    const s = new THREE.Shape()
+    s.absarc(0, 0, r1, -half, half, false)
+    s.absarc(0, 0, r0, half, -half, true)
+    s.closePath()
+    const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 20 })
+    g.rotateX(-Math.PI / 2) // extrude upward (+y); the sector stays centred on local +x
+    return g
+  }
+
+  // ---------- layout constants (world units) ----------
+  const R_T = 8.2 // terrain disc
+  const RING_IN = 9.4, RING_OUT = 12.4, RING_BASE = 0.08
+  const R_CAIRN = 15.8
+  const yT = (t) => 0.1 + (t - 35) * 0.055 // typical high (F) -> column height
+
+  // floor ("the table")
+  const floor = new THREE.Mesh(new THREE.CylinderGeometry(21.5, 21.8, 0.4, 128), std('surface', { roughness: 1 }))
+  floor.position.y = -0.2
+  floor.receiveShadow = true
+  scene.add(floor)
+
+  // =====================================================================
+  // WHERE / ON THE TRAIL: the mountain, built around the real profile
+  // =====================================================================
+  const mountain = new THREE.Group()
+  scene.add(mountain)
+  const P = PF.PROFILE
+  const smoothE = PF.smoothElevations(P.points, P.step_m)
+  const E0 = Math.min(...smoothE), E1 = Math.max(...smoothE)
+  const EV = 3.5 / (E1 - E0) // world units per metre of elevation
+  const Y0 = 0.34
+  // Illustrative plan shape (the profile has no lat/lon): valley floor, switchbacks up the wall, the slot of
+  // Refrigerator Canyon, the tight zigzags of Walter's Wiggles, then the fin to the summit.
+  const plan = new THREE.CatmullRomCurve3([
+    [-5.3, 4.1], [-4.1, 4.5], [-2.9, 4.3], [-2.2, 3.6], [-2.9, 3.0], [-1.9, 2.5], [-2.6, 1.9], [-1.6, 1.4], [-1.3, 0.5],
+    [-0.4, -0.3], [0.5, -1.1], [1.2, -1.7], [1.7, -2.0], [1.15, -2.3], [1.75, -2.6], [1.2, -2.9], [1.8, -3.25], [2.3, -3.6],
+    [3.1, -3.3], [3.9, -2.6], [4.5, -1.9], [5.0, -1.2],
+  ].map(([x, z]) => new THREE.Vector3(x, 0, z)), false, 'centripetal')
+  const planPts = plan.getSpacedPoints(600)
+  const planLen = plan.getLength()
+  const exaggeration = EV / (planLen / P.osm_length_m)
+  window.PF_EXAGGERATION = exaggeration.toFixed(1)
+  // One 3D point per profile point; x/z from the plan at the same fraction of the length.
+  const route3 = P.points.map(([d], i) => {
+    const u = (d / P.osm_length_m) * 600
+    const i0 = Math.min(599, Math.floor(u)), f = u - i0
+    const p = planPts[i0].clone().lerp(planPts[i0 + 1], f)
+    p.y = Y0 + (smoothE[i] - E0) * EV
+    return p
+  })
+  const routeDists = P.points.map((p) => p[0])
+  function routeAt(d) {
+    let lo = 0, hi = routeDists.length - 1
+    if (d <= 0) return route3[0].clone()
+    if (d >= routeDists[hi]) return route3[hi].clone()
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (routeDists[mid] <= d) lo = mid; else hi = mid }
+    const f = (d - routeDists[lo]) / (routeDists[hi] - routeDists[lo] || 1)
+    return route3[lo].clone().lerp(route3[hi], f)
+  }
+
+  // --- terrain: terraced sandstone mesas, carved by the route corridor ---
+  function hash(x, z) { const s = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return s - Math.floor(s) }
+  function vnoise(x, z) {
+    const xi = Math.floor(x), zi = Math.floor(z), xf = x - xi, zf = z - zi
+    const u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf)
+    const a = hash(xi, zi), b = hash(xi + 1, zi), c = hash(xi, zi + 1), d = hash(xi + 1, zi + 1)
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v
+  }
+  const fbm = (x, z) => vnoise(x, z) * 0.55 + vnoise(x * 2.1, z * 2.1) * 0.3 + vnoise(x * 4.3, z * 4.3) * 0.15
+  const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t) }
+  function terrace(h, step) { const k = Math.floor(h / step), f = h / step - k; return step * (k + smooth(0.55, 1, f)) }
+  // mesa: [cx, cz, rx, rz, angle, height]
+  const summitY = Y0 + 3.5
+  const MESAS = [
+    [-4.6, -3.2, 4.2, 3.4, 0.3, summitY + 0.35], // west rim, higher than the landing
+    [3.3, -2.3, 2.7, 0.85, -0.7, summitY - 0.35], // the fin
+    [-1.9, 2.0, 2.2, 1.6, 0.4, 1.25], // bench under the switchbacks
+    [0.3, -6.6, 3.6, 1.8, 0.0, summitY - 0.6], // north wall
+    [5.6, 3.6, 2.6, 2.0, 0.5, 2.7], // east wall across the valley
+  ]
+  function bgHeight(x, z) {
+    let h = 0.22 + 0.1 * fbm(x * 0.6, z * 0.6)
+    for (const [cx, cz, rx, rz, a, H] of MESAS) {
+      const dx = x - cx, dz = z - cz, ca = Math.cos(a), sa = Math.sin(a)
+      const lx = (dx * ca - dz * sa) / rx, lz = (dx * sa + dz * ca) / rz
+      const d = Math.sqrt(lx * lx + lz * lz) + 0.12 * (fbm(x * 1.7, z * 1.7) - 0.5)
+      h = Math.max(h, terrace(H * smooth(1.0, 0.72, d), 0.42) + 0.05 * fbm(x * 3, z * 3))
+    }
+    return h
+  }
+  const SEG = 220
+  const tGeo = new THREE.PlaneGeometry(R_T * 2, R_T * 2, SEG, SEG)
+  tGeo.rotateX(-Math.PI / 2)
+  const pos = tGeo.attributes.position
+  const heights = new Float32Array(pos.count)
+  function heightAt(x, z) {
+    let h = bgHeight(x, z)
+    // Route corridor: the ground under the trail equals the trail's own elevation (a flat bed, soft shoulders).
+    let best = Infinity, by = 0
+    for (let j = 0; j < route3.length; j += 2) { const p = route3[j], d = (p.x - x) ** 2 + (p.z - z) ** 2; if (d < best) { best = d; by = p.y } }
+    const w = 1 - smooth(0.1, 0.62, Math.sqrt(best))
+    h = h + (by - 0.025 - h) * w
+    return 0.04 + (h - 0.04) * smooth(R_T, R_T - 1.4, Math.hypot(x, z)) // fade into the plinth at the rim
+  }
+  function shapeDisc(geo, out) {
+    const ps = geo.attributes.position
+    for (let i = 0; i < ps.count; i++) {
+      let x = ps.getX(i), z = ps.getZ(i)
+      const r = Math.hypot(x, z)
+      let h = 0.04
+      if (r > R_T) { x *= R_T / r; z *= R_T / r } // clamp the square onto the disc
+      else h = heightAt(x, z)
+      ps.setXYZ(i, x, h, z)
+      if (out) out[i] = h
+    }
+    geo.computeVertexNormals()
+  }
+  shapeDisc(tGeo, heights)
+  const tColors = new Float32Array(pos.count * 3)
+  tGeo.setAttribute('color', new THREE.BufferAttribute(tColors, 3))
+  function paintTerrain() {
+    // Height and slope ramp from tokens: green-grey valley floor, warm sand walls, pale caprock; steep faces darker (cheap AO).
+    const lowC = MIX('surface-sunk', 'cat-4', 0.4), midC = MIX('surface-sunk', 'cat-2', 0.62), topC = MIX('cat-2', PAPER(), 0.55)
+    const n = tGeo.attributes.normal, c = new THREE.Color()
+    for (let i = 0; i < pos.count; i++) {
+      const hr = clamp01((heights[i] - 0.2) / 3.8), slope = 1 - n.getY(i)
+      if (hr < 0.18) c.copy(lowC).lerp(midC, hr / 0.18)
+      else c.copy(midC).lerp(topC, smooth(0.45, 0.95, hr))
+      c.multiplyScalar(1 - 0.32 * smooth(0.25, 0.8, slope)).multiplyScalar(0.86 + 0.14 * hr)
+      tColors[i * 3] = c.r; tColors[i * 3 + 1] = c.g; tColors[i * 3 + 2] = c.b
+    }
+    tGeo.attributes.color.needsUpdate = true
+  }
+  themed(paintTerrain)
+  const terrain = new THREE.Mesh(tGeo, std(() => new THREE.Color(1, 1, 1), { vertexColors: true, roughness: 0.95 }, 'terrain'))
+  terrain.castShadow = terrain.receiveShadow = true
+  mountain.add(terrain)
+  const tHitGeo = new THREE.PlaneGeometry(R_T * 2, R_T * 2, 56, 56)
+  tHitGeo.rotateX(-Math.PI / 2)
+  shapeDisc(tHitGeo, null)
+  terrain.add(pickable(new THREE.Mesh(tHitGeo, HIT), 'terrain')) // child, so it follows the intro scale
+  registerFocus('terrain', terrain)
+  const plinth = new THREE.Mesh(new THREE.CylinderGeometry(R_T, R_T + 0.12, 0.42, 128, 1, true), std('surface-sunk', { side: THREE.DoubleSide }))
+  plinth.position.y = -0.17
+  plinth.receiveShadow = true
+  mountain.add(plinth)
+
+  // --- the trail ---
+  const routeCurve = new THREE.CatmullRomCurve3(route3.filter((_, i) => i % 3 === 0 || i === route3.length - 1).map((p) => p.clone().add(new THREE.Vector3(0, 0.06, 0))))
+  const TUBE_SEG = 700, TUBE_RAD = 8
+  const routeMesh = new THREE.Mesh(new THREE.TubeGeometry(routeCurve, TUBE_SEG, 0.065, TUBE_RAD, false), std('accent', { roughness: 0.5 }, 'route'))
+  routeMesh.castShadow = true
+  mountain.add(routeMesh)
+  const routeHit = new THREE.Mesh(new THREE.TubeGeometry(routeCurve, 240, 0.2, 6, false), HIT)
+  mountain.add(pickable(routeHit, 'route'))
+  registerFocus('route', routeMesh)
+  const routeIndexCount = routeMesh.geometry.index.count
+
+  // --- checkpoints: flags on the route ---
+  const flagGeo = new THREE.PlaneGeometry(0.34, 0.2); flagGeo.translate(0.17, 0, 0)
+  const poleGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.8, 6); poleGeo.translate(0, 0.4, 0)
+  const cpObjs = []
+  for (const cp of P.checkpoints) {
+    const key = `cp:${cp.id}`
+    const g = new THREE.Group()
+    g.position.copy(routeAt(cp.dist_m)).add(new THREE.Vector3(0, 0.04, 0))
+    const pole = new THREE.Mesh(poleGeo, std('text-muted'))
+    const flag = new THREE.Mesh(flagGeo, std('text-body', { side: THREE.DoubleSide }, key))
+    flag.position.y = 0.7
+    pole.castShadow = flag.castShadow = true
+    const hit = new THREE.Mesh(new THREE.SphereGeometry(0.32, 8, 6), HIT); hit.position.y = 0.5
+    g.add(pole, flag, pickable(hit, key))
+    const lb = label(`C${cp.id.replace(/\D/g, '')}`, 'cp')
+    lb.position.set(0, 1.05, 0)
+    g.add(lb)
+    mountain.add(g)
+    registerFocus(key, g)
+    cpObjs.push({ cp, g, flag, lb, phase: Math.random() * TAU })
+  }
+
+  // --- the hiker ---
+  const hiker = new THREE.Group()
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.1, 0.24, 4, 10), std('accent', { roughness: 0.45 }, 'hiker'))
+  body.position.y = 0.24
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.085, 14, 10), std(() => C(PAPER())))
+  head.position.y = 0.5
+  const halo = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.3, 32), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55, depthWrite: false }))
+  themed(() => halo.material.color.copy(C('accent')))
+  halo.rotation.x = -Math.PI / 2; halo.position.y = 0.03
+  body.castShadow = head.castShadow = true
+  const hikerHit = new THREE.Mesh(new THREE.SphereGeometry(0.42, 8, 6), HIT); hikerHit.position.y = 0.3
+  const hikerLbl = label('', 'num sel')
+  hikerLbl.position.set(0, 1.5, 0)
+  hiker.add(body, head, halo, pickable(hikerHit, 'hiker'), hikerLbl)
+  mountain.add(hiker)
+  registerFocus('hiker', hiker)
+
+  // =====================================================================
+  // WHEN: the month ring
+  // =====================================================================
+  const HALF = TAU / 24 - 0.03
+  const wedgeGeo = sectorGeo(RING_IN, RING_OUT, HALF, 1)
+  const capGeo = sectorGeo(RING_IN, RING_OUT, HALF, 0.07)
+  const sleeveGeo = sectorGeo(RING_IN + 0.28, RING_OUT - 0.28, HALF - 0.025, 1)
+  const pegGeo = new THREE.CapsuleGeometry(0.065, 0.16, 3, 8)
+  const dropGeo = new THREE.CylinderGeometry(0.013, 0.013, 0.24, 4)
+  const flakeGeo = new THREE.OctahedronGeometry(0.06, 0)
+  const puffGeo = new THREE.IcosahedronGeometry(0.3, 1)
+  const cloudGeo = new THREE.SphereGeometry(0.42, 14, 10)
+  const pegMat = std('text-body', { roughness: 0.6 })
+  const dropMat = std('cat-1', { transparent: true, opacity: 0.85, roughness: 0.3 })
+  const flakeMat = std(() => C(PAPER()), { roughness: 0.4 })
+  const cloudMat = std(() => MIX(PAPER(), 'line-strong', 0.3), { transparent: true, opacity: 0.9, roughness: 1 })
+  const fitIn = () => C('cat-4'), fitOut = () => MIX('off', 'off-line', 0.35)
+  const months = []
+  const drops = [], flakes = [], puffs = []
+  for (const r of PF.MONTHS) {
+    const m = r.month, key = `month:${m}`, c = monthC(m), R = rng(m * 97)
+    const g = new THREE.Group()
+    g.position.y = RING_BASE
+    g.rotation.y = rotFor(c)
+    const h = yT(r.tmax_p50)
+    const bodyM = new THREE.Mesh(wedgeGeo, std(() => MIX('surface-2', 'text-muted', 0.28), {}, key))
+    bodyM.castShadow = bodyM.receiveShadow = true
+    const sleeve = new THREE.Mesh(sleeveGeo, std('text-body', { transparent: true, opacity: 0.22, depthWrite: false, roughness: 0.2 }))
+    const top = new THREE.Group()
+    const inside = r.tmax_p50 >= PF.LIMIT.temp[0] && r.tmax_p50 <= PF.LIMIT.temp[1]
+    const cap = new THREE.Mesh(capGeo, std(inside ? fitIn : fitOut, { roughness: 0.6 }, key))
+    cap.castShadow = true
+    top.add(pickable(cap, key, 'fit'))
+    // crowd figures: one per tenth of the busiest month, two rows along the arc
+    const nPeg = Math.round(r.crowd_level * 10)
+    for (let k = 0; k < nPeg; k++) {
+      const col = Math.floor(k / 2), rowI = k % 2
+      const a = (-HALF * 0.72) + (col / 4) * HALF * 1.44, rr = rowI ? 11.5 : 10.3
+      const peg = new THREE.Mesh(pegGeo, pegMat)
+      peg.position.set(rr * Math.cos(a), 0.07 + 0.145, rr * Math.sin(a))
+      peg.castShadow = true
+      top.add(pickable(peg, key, 'crowd'))
+    }
+    // wet days: a small cloud and falling drops (more days, more drops and a bigger cloud)
+    const cloud = new THREE.Group()
+    const cs = 0.55 + r.wet_days / 9
+    for (const [dx, dy, dz, s] of [[0, 0, 0, 1], [0.32, -0.05, 0.18, 0.75], [-0.3, -0.06, -0.15, 0.7]]) {
+      const puff = new THREE.Mesh(cloudGeo, cloudMat)
+      puff.position.set(dx * cs, dy, dz * cs); puff.scale.set(s * cs, s * cs * 0.55, s * cs)
+      cloud.add(pickable(puff, key, 'wet'))
+    }
+    cloud.position.set((RING_IN + RING_OUT) / 2, 2.15, 0)
+    top.add(cloud)
+    const nDrop = Math.round(r.wet_days * 1.6)
+    for (let k = 0; k < nDrop; k++) {
+      const d = new THREE.Mesh(dropGeo, dropMat)
+      const a = (R() - 0.5) * HALF * 1.2, rr = 10.1 + R() * 1.6
+      d.position.set(rr * Math.cos(a), 0, rr * Math.sin(a))
+      drops.push({ mesh: d, phase: R(), speed: 0.9 + R() * 0.4 })
+      top.add(pickable(d, key, 'wet'))
+    }
+    const nFlake = Math.round(r.snow_days * 2.5)
+    for (let k = 0; k < nFlake; k++) {
+      const f = new THREE.Mesh(flakeGeo, flakeMat)
+      const a = (R() - 0.5) * HALF * 1.2, rr = 10.1 + R() * 1.6
+      f.position.set(rr * Math.cos(a), 0, rr * Math.sin(a))
+      flakes.push({ mesh: f, phase: R(), speed: 0.25 + R() * 0.1 })
+      top.add(pickable(f, key, 'snow'))
+    }
+    // smoky days: haze puffs (any smoke at all shows at least one faint puff)
+    const nPuff = r.smoky_days > 0 ? Math.max(1, Math.round(r.smoky_days * 5)) : 0
+    for (let k = 0; k < nPuff; k++) {
+      const p = new THREE.Mesh(puffGeo, std('line-strong', { transparent: true, opacity: 0.5, depthWrite: false, roughness: 1 }))
+      const a = (R() - 0.5) * HALF, rr = 10.4 + R() * 1.2
+      p.position.set(rr * Math.cos(a), 0.6, rr * Math.sin(a))
+      p.scale.setScalar(0.7 + r.smoky_days)
+      puffs.push({ mesh: p, phase: R(), base: p.position.clone() })
+      top.add(pickable(p, key, 'smoky'))
+    }
+    // heat hazard: amber, icon and words (CLAUDE.md: amber only for hazards)
+    if (r.heat_days >= 5) {
+      const el = document.createElement('div'); el.className = 'lbl haz'
+      el.innerHTML = `<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1 L11.5 11 H0.5 Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 4.6 V7.4 M6 8.8 V9.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Heat: ${Math.round(r.heat_days)} days at 100°F+`
+      const hl = new CSS2DObject(el); hl.position.set(RING_OUT - 0.3, 3.0, 0)
+      top.add(hl)
+    }
+    g.add(pickable(bodyM, key, 'high'), pickable(sleeve, key, 'range'), top)
+    scene.add(g)
+    const ml = label(PF.MON[m - 1], 'plain big'); ml.position.copy(polar(RING_OUT + 0.85, c, 0.12)); scene.add(ml)
+    registerFocus(key, g)
+    months.push({ m, r, g, bodyM, sleeve, top, h, ml })
+  }
+
+  // quarter sectors under the ring (click = the quarter's fit)
+  const quarterObjs = []
+  for (let q = 1; q <= 4; q++) {
+    const key = `quarter:${q}`, c = monthC(3 * q - 1)
+    const mesh = new THREE.Mesh(sectorGeo(RING_IN - 0.3, RING_OUT + 0.5, TAU / 8 - 0.025, RING_BASE), std(() => MIX('surface-sunk', 'surface-2', 0.3), { roughness: 0.9 }, key))
+    mesh.rotation.y = rotFor(c)
+    mesh.receiveShadow = true
+    scene.add(pickable(mesh, key))
+    registerFocus(key, mesh)
+    quarterObjs.push({ q, mesh })
+  }
+
+  // your temperature limit: a glass band around the ring, between 55 and 85 F
+  const yLo = RING_BASE + yT(PF.LIMIT.temp[0]), yHi = RING_BASE + yT(PF.LIMIT.temp[1])
+  const band = new THREE.Mesh(new THREE.CylinderGeometry(RING_OUT + 0.14, RING_OUT + 0.14, yHi - yLo, 160, 1, true),
+    new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false, roughness: 0.1 }))
+  themed(() => band.material.color.copy(C('accent-text')))
+  band.position.y = (yLo + yHi) / 2
+  scene.add(band)
+  const limitGroup = new THREE.Group()
+  for (const y of [yLo, yHi]) {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(RING_OUT + 0.14, 0.022, 6, 200), std('accent-text', { roughness: 0.4 }, 'limit'))
+    ring.rotation.x = Math.PI / 2; ring.position.y = y
+    const hit = new THREE.Mesh(new THREE.TorusGeometry(RING_OUT + 0.14, 0.14, 6, 100), HIT)
+    hit.rotation.x = Math.PI / 2; hit.position.y = y
+    limitGroup.add(ring, pickable(hit, 'limit'))
+  }
+  const llo = label(`${PF.LIMIT.temp[0]}°F`, 'num'); llo.position.copy(polar(RING_OUT + 0.6, TAU / 4, yLo))
+  const lhi = label(`${PF.LIMIT.temp[1]}°F your limit`, 'num'); lhi.position.copy(polar(RING_OUT + 0.6, TAU / 4, yHi))
+  limitGroup.add(llo, lhi)
+  scene.add(limitGroup)
+  registerFocus('limit', limitGroup)
+
+  // =====================================================================
+  // HOW MUCH: one cairn of stacked stones per quarter
+  // =====================================================================
+  const hatchCanvas = document.createElement('canvas'); hatchCanvas.width = hatchCanvas.height = 64
+  const hatchTex = new THREE.CanvasTexture(hatchCanvas)
+  hatchTex.colorSpace = THREE.SRGBColorSpace
+  hatchTex.wrapS = hatchTex.wrapT = THREE.RepeatWrapping
+  hatchTex.repeat.set(10, 1)
+  themed(() => {
+    const g = hatchCanvas.getContext('2d')
+    g.fillStyle = T['hatch-a']; g.fillRect(0, 0, 64, 64)
+    g.strokeStyle = T['hatch-b']; g.lineWidth = 7
+    for (let i = -64; i < 128; i += 18) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + 64, 64); g.stroke() }
+    hatchTex.needsUpdate = true
+  })
+  const SEG_COLOURS = { transport: 'cat-3', lodging: 'cat-1', food: 'cat-2', activity: 'cat-4' }
+  const PART_KEYS = ['transport', 'lodging', 'food', 'activity', 'buffer']
+  const stoneGeo = new THREE.CylinderGeometry(0.93, 1, 1, 48)
+  const defaultMax = Math.max(...PF.costs().map((c) => c.total))
+  const cairns = []
+  for (let q = 1; q <= 4; q++) {
+    const c = monthC(3 * q - 1)
+    const g = new THREE.Group(); g.position.copy(polar(R_CAIRN, c, 0))
+    const segs = PART_KEYS.map((part, i) => {
+      const key = `cost:${q}:${part}`
+      const mat = part === 'buffer'
+        ? std(() => new THREE.Color(1, 1, 1), { map: hatchTex, roughness: 0.9 }, key)
+        : std(SEG_COLOURS[part], { roughness: 0.7 }, key)
+      const mesh = new THREE.Mesh(stoneGeo, mat)
+      const rad = 0.9 - i * 0.06
+      mesh.scale.set(rad, 0.001, rad)
+      mesh.castShadow = mesh.receiveShadow = true
+      g.add(pickable(mesh, key, part))
+      return { part, mesh, cur: 0, target: 0, rad }
+    })
+    const totalLbl = label('', 'num'); g.add(totalLbl)
+    const baseLbl = label('', 'big'); baseLbl.position.copy(polar(2.0, c, 0.1)); g.add(baseLbl)
+    scene.add(g)
+    for (const part of PART_KEYS) registerFocus(`cost:${q}:${part}`, g)
+    cairns.push({ q, g, segs, totalLbl, baseLbl })
+  }
+  let costK = 3.6 / defaultMax
+  function updateCostTargets() {
+    const all = PF.costs()
+    const maxTotal = Math.max(...all.map((c) => c.total))
+    costK = Math.min(3.6 / defaultMax, 7 / maxTotal) // fixed scale so what-if changes show; shrink only when towers would get too tall
+    const b = PF.best()
+    let cheapest = 0
+    all.forEach((c, i) => { if (c.total < all[cheapest].total) cheapest = i })
+    for (const cr of cairns) {
+      const c = all[cr.q - 1]
+      for (const s of cr.segs) s.target = Math.max(0.001, c[s.part] * costK)
+      cr.totalLbl.element.textContent = `${'$' + Math.round(c.total).toLocaleString('en-US')} typical`
+      cr.baseLbl.element.textContent = `Q${cr.q} ${PF.qRange(cr.q)} · fits ${Math.round(PF.fits()[cr.q - 1].match)}%${cr.q - 1 === cheapest ? ' · cheapest' : ''}${cr.q === b ? ' · best' : ''}`
+      cr.baseLbl.element.classList.toggle('sel', cr.q === S.q)
+      cr.totalLbl.element.classList.toggle('sel', cr.q === S.q)
+    }
+  }
+  let costGrow = RM ? 1 : 0 // intro multiplier
+  function layoutCairns(dt) {
+    let moving = false
+    for (const cr of cairns) {
+      let y = 0
+      for (const s of cr.segs) {
+        const goal = s.target * costGrow
+        const k = RM ? 1 : Math.min(1, dt * 7)
+        s.cur += (goal - s.cur) * k
+        if (Math.abs(goal - s.cur) > 0.002) moving = true
+        const h = Math.max(0.001, s.cur)
+        s.mesh.scale.y = h
+        s.mesh.position.y = y + h / 2
+        y += h + (h > 0.01 ? 0.035 : 0)
+      }
+      cr.totalLbl.position.set(0, y + 0.45, 0)
+    }
+    return moving
+  }
+
+  // =====================================================================
+  // WHERE FROM: the trip from Seattle (dashed arc into the trailhead)
+  // =====================================================================
+  const stripeCanvas = document.createElement('canvas'); stripeCanvas.width = 64; stripeCanvas.height = 4
+  { const g = stripeCanvas.getContext('2d'); g.fillStyle = 'white'; g.fillRect(0, 0, 32, 4); g.fillStyle = 'black'; g.fillRect(32, 0, 32, 4) }
+  const stripeTex = new THREE.CanvasTexture(stripeCanvas)
+  stripeTex.wrapS = THREE.RepeatWrapping; stripeTex.repeat.set(60, 1)
+  const homeAngle = (330 / 360) * TAU // Seattle lies north-north-west of Zion
+  const trailhead = route3[0].clone()
+  const homeP = polar(20, homeAngle, 0.4)
+  const travelCurve = new THREE.QuadraticBezierCurve3(homeP, homeP.clone().lerp(trailhead, 0.5).add(new THREE.Vector3(0, 10, 0)), trailhead.clone().add(new THREE.Vector3(0, 0.1, 0)))
+  const travelMat = new THREE.MeshBasicMaterial({ transparent: true, alphaMap: stripeTex, depthWrite: false })
+  themed(() => travelMat.color.copy(C('text-muted')))
+  const travelMesh = new THREE.Mesh(new THREE.TubeGeometry(travelCurve, 160, 0.05, 6, false), travelMat)
+  const travelHit = new THREE.Mesh(new THREE.TubeGeometry(travelCurve, 80, 0.3, 6, false), HIT)
+  const homePin = new THREE.Mesh(new THREE.SphereGeometry(0.28, 16, 12), std('text-muted', {}, 'travel'))
+  homePin.position.copy(homeP)
+  const homeLbl = label('', 'big'); homeLbl.position.copy(homeP).add(new THREE.Vector3(0, 0.8, 0))
+  const travelGroup = new THREE.Group()
+  travelGroup.add(travelMesh, pickable(travelHit, 'travel'), pickable(homePin, 'travel'), homeLbl)
+  scene.add(travelGroup)
+  registerFocus('travel', travelGroup)
+
+  // =====================================================================
+  // DAYLIGHT: the sun on an arc, moved by the time slider; the light follows it
+  // =====================================================================
+  const sunPos = (f) => new THREE.Vector3(18 * Math.cos(Math.PI * f), 0.6 + 8 * Math.sin(Math.PI * f), -6)
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(0.55, 24, 16), new THREE.MeshBasicMaterial())
+  themed(() => sun.material.color.copy(MIX('cat-2', PAPER(), 0.35)))
+  const sunHit = new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 6), HIT)
+  sun.add(pickable(sunHit, 'sun'))
+  const arcGeo = new THREE.BufferGeometry().setFromPoints(Array.from({ length: 81 }, (_, i) => sunPos(i / 80)))
+  const arc = new THREE.Line(arcGeo, new THREE.LineDashedMaterial({ dashSize: 0.35, gapSize: 0.25, transparent: true, opacity: 0.7 }))
+  arc.computeLineDistances()
+  themed(() => arc.material.color.copy(C('text-muted')))
+  const riseLbl = label('', 'plain'), setLbl = label('', 'plain')
+  riseLbl.position.copy(sunPos(0)).add(new THREE.Vector3(0, 0.7, 0)); setLbl.position.copy(sunPos(1)).add(new THREE.Vector3(0, 0.7, 0))
+  const finDot = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 8), new THREE.MeshBasicMaterial())
+  themed(() => finDot.material.color.copy(C('accent')))
+  const finLbl = label('', '')
+  const sunLbl = label('', 'num')
+  sunLbl.position.set(0, 1.0, 0); sun.add(sunLbl)
+  const sunGroup = new THREE.Group(); sunGroup.add(sun, arc, riseLbl, setLbl, finDot, finLbl)
+  scene.add(sunGroup)
+  registerFocus('sun', sunGroup)
+
+  // =====================================================================
+  // linked state -> scene
+  // =====================================================================
+  let currentCp = 'c0'
+  function updateSunAndHiker() {
+    const r = PF.MONTHS[S.month - 1]
+    const rise = PF.parseClock(r.sunrise), set = PF.parseClock(r.sunset)
+    const f = (S.time - rise) / (set - rise)
+    const fc = Math.min(1.07, Math.max(-0.07, f))
+    sun.position.copy(sunPos(fc))
+    sunLight.position.copy(sun.position).normalize().multiplyScalar(40)
+    const elev = Math.sin(Math.PI * clamp01(f))
+    const up = f >= 0 && f <= 1
+    sunLight.intensity = up ? 0.5 + 2.1 * elev : 0.12
+    sunLight.color.copy(C(PAPER())).lerp(C('cat-2'), up ? 0.45 * (1 - elev) : 0.6)
+    hemi.intensity = up ? 1.25 + 0.3 * elev : 0.8
+    sunLbl.element.textContent = up ? PF.formatClock(S.time) : f < 0 ? 'before sunrise' : 'after sunset'
+    // hiker
+    const p = PF.position()
+    hiker.position.copy(routeAt(p.dist))
+    const ahead = routeAt(p.dir === 'up' ? p.dist + 15 : p.dist - 15)
+    const dx = ahead.x - hiker.position.x, dz = ahead.z - hiker.position.z
+    if (dx * dx + dz * dz > 1e-8) hiker.rotation.y = Math.atan2(dx, dz)
+    hikerLbl.element.textContent = `${PF.formatClock(S.time)} ${p.dir === 'up' ? 'going up' : 'coming back'}`
+    const ev = PF.currentEvent()
+    currentCp = ev.checkpoint.id
+    for (const o of cpObjs) {
+      const evs = PF.tl.filter((e) => e.checkpoint.id === o.cp.id)
+      const sel = o.cp.id === currentCp
+      o.lb.element.textContent = `C${o.cp.id.replace(/\D/g, '')}${sel ? ` ${o.cp.name}, ${evs.map((e) => PF.formatClock(e.time)).join(' and ')}` : ''}`
+      o.lb.element.classList.toggle('sel', sel)
+    }
+    requestRender()
+  }
+  function updateSelection() {
+    const r = PF.MONTHS[S.month - 1]
+    const rise = PF.parseClock(r.sunrise), set = PF.parseClock(r.sunset)
+    riseLbl.element.textContent = `Sunrise ${PF.formatClock(rise)}`
+    setLbl.element.textContent = `Sunset ${PF.formatClock(set)}`
+    const fin = PF.tl[PF.tl.length - 1].time
+    const ff = Math.min(1.07, Math.max(-0.07, (fin - rise) / (set - rise)))
+    finDot.position.copy(sunPos(ff))
+    finLbl.position.copy(sunPos(ff)).add(new THREE.Vector3(0, -0.7, 0))
+    finLbl.element.textContent = `Back ${PF.formatClock(fin)}${fin > set ? ', after dark' : ''}`
+    finLbl.element.className = 'lbl ' + (fin > set ? 'haz' : 'sel')
+    for (const mo of months) mo.ml.element.classList.toggle('sel', mo.m === S.month)
+    homeLbl.element.textContent = `Seattle: ${S.mode === 'fly' ? `fly ${PF.TRAVEL.fly_drive_hr} h` : `drive ${PF.TRAVEL.drive_hr} h`} door to trailhead`
+    updateCostTargets()
+    updateSunAndHiker()
+    refreshPinned()
+  }
+
+  // =====================================================================
+  // highlight, hover card, pinned card, fly-to
+  // =====================================================================
+  let hoverKey = null, hoverPart = null, pinnedKey = null, pinnedPart = null, navHoverKey = null
+  function levelFor(key) {
+    let v = 0
+    if (key === hoverKey || key === navHoverKey) v = 0.5
+    if (key === pinnedKey) v = Math.max(v, 0.55)
+    const [kind, a] = key.split(':')
+    if (kind === 'month') v = Math.max(v, +a === S.month ? 0.42 : PF.quarterOf(+a) === S.q ? 0.13 : 0)
+    else if (kind === 'quarter' && +a === S.q) v = Math.max(v, 0.32)
+    else if (kind === 'cost' && +a === S.q) v = Math.max(v, 0.14)
+    else if (kind === 'cp' && a === currentCp) v = Math.max(v, 0.65)
+    else if (kind === 'terrain') v = Math.min(v, 0.08) // a whole mountain glowing is too much
+    else if (kind === 'route' || kind === 'hiker') v = Math.max(v, 0.25)
+    // hovering any segment lights its whole cairn a little
+    if (kind === 'cost' && hoverKey && hoverKey.startsWith(`cost:${a}:`) && key !== hoverKey) v = Math.max(v, 0.2)
+    return v
+  }
+  function stepHighlights(dt) {
+    let moving = false
+    const k = RM ? 1 : Math.min(1, dt * 12)
+    for (const h of hlMats) {
+      const target = levelFor(h.key)
+      h.cur += (target - h.cur) * k
+      if (Math.abs(target - h.cur) > 0.004) moving = true
+      h.m.emissiveIntensity = h.cur * 0.7 // tone down: token colours are already bright in the dark theme
+    }
+    return moving
+  }
+
+  const hoverCard = document.getElementById('hovercard')
+  const pinCard = document.getElementById('pincard')
+  const pinBody = document.getElementById('pinBody')
+  let returnFocus = null
+  function showHover(key, part, x, y) {
+    if (!key || key === pinnedKey) { hoverCard.classList.remove('on'); hoverCard.hidden = true; return }
+    if (hoverCard.dataset.key !== key + '|' + part) { hoverCard.innerHTML = PF.cardHTML(key, part, false).replace('id="pinTitle"', ''); hoverCard.dataset.key = key + '|' + part }
+    hoverCard.hidden = false
+    const sr = stage.getBoundingClientRect()
+    const w = hoverCard.offsetWidth, h = hoverCard.offsetHeight
+    let lx = x - sr.left + 18, ly = y - sr.top + 18
+    if (lx + w > sr.width - 8) lx = x - sr.left - w - 18
+    if (ly + h > sr.height - 8) ly = Math.max(8, sr.height - h - 8)
+    hoverCard.style.transform = ''
+    hoverCard.style.left = Math.max(8, lx) + 'px'
+    hoverCard.style.top = Math.max(8, ly) + 'px'
+    hoverCard.classList.add('on')
+  }
+  function hideHover() { hoverCard.classList.remove('on'); hoverCard.hidden = true; hoverCard.dataset.key = '' }
+  function refreshPinned() { if (pinnedKey) pinBody.innerHTML = PF.cardHTML(pinnedKey, pinnedPart, true) }
+  function pin(key, part, { fly = true, focusCard = false, from = null } = {}) {
+    pinnedKey = key; pinnedPart = part
+    // Clicking a data object also moves the shared selection where it has one.
+    const [kind, a] = key.split(':')
+    if (kind === 'month') PF.setMonth(+a)
+    else if (kind === 'quarter') PF.setQuarter(+a)
+    else if (kind === 'cost' && PF.quarterOf(S.month) !== +a) PF.setQuarter(+a)
+    else if (kind === 'cp') PF.setCheckpoint(a)
+    refreshPinned()
+    pinCard.hidden = false
+    requestAnimationFrame(() => pinCard.classList.add('on'))
+    hideHover()
+    if (fly && objects.get(key)) flyTo(objects.get(key))
+    if (focusCard) { returnFocus = from; pinCard.focus({ preventScroll: true }) }
+    requestRender()
+  }
+  function unpin() {
+    if (!pinnedKey) return
+    pinnedKey = null; pinnedPart = null
+    pinCard.classList.remove('on'); pinCard.hidden = true
+    if (returnFocus) { returnFocus.focus(); returnFocus = null }
+    requestRender()
+  }
+  document.getElementById('pinClose').addEventListener('click', unpin)
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && pinnedKey) { e.preventDefault(); unpin() } })
+
+  let tween = null
+  controls.addEventListener('start', () => { tween = null })
+  function flyToPose(toP, toT) {
+    if (RM) { camera.position.copy(toP); controls.target.copy(toT); controls.update(); requestRender(); return }
+    tween = { t0: performance.now(), dur: 950, fromP: camera.position.clone(), fromT: controls.target.clone(), toP, toT }
+  }
+  function flyTo(obj) {
+    const box = new THREE.Box3().setFromObject(obj)
+    if (box.isEmpty()) return
+    const sph = box.getBoundingSphere(new THREE.Sphere())
+    if (!Number.isFinite(sph.radius)) return
+    const dir = camera.position.clone().sub(controls.target).normalize()
+    dir.y = Math.max(dir.y, 0.55); dir.normalize()
+    const dist = THREE.MathUtils.clamp(sph.radius * 3.4, 12, 46)
+    flyToPose(sph.center.clone().addScaledVector(dir, dist), sph.center.clone())
+  }
+  function stepTween(now) {
+    const k = Math.min(1, (now - tween.t0) / tween.dur), e = easeInOut(k)
+    camera.position.lerpVectors(tween.fromP, tween.toP, e)
+    controls.target.lerpVectors(tween.fromT, tween.toT, e)
+    if (k >= 1) tween = null
+  }
+  document.getElementById('resetView').addEventListener('click', () => flyToPose(HOME.pos.clone(), HOME.target.clone()))
+
+  // pointer: hover raycast once per frame at most; a click is a press that did not drag
+  const ray = new THREE.Raycaster()
+  const ndc = new THREE.Vector2()
+  let lastPointer = null, downAt = null, pointerDirty = false
+  controls.addEventListener('change', () => { pointerDirty = true })
+  function pick(clientX, clientY) {
+    const r = renderer.domElement.getBoundingClientRect()
+    ndc.set(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1)
+    ray.setFromCamera(ndc, camera)
+    const hit = ray.intersectObjects(pickables, false).find((h) => h.object.userData.key)
+    return hit ? { key: hit.object.userData.key, part: hit.object.userData.part } : null
+  }
+  renderer.domElement.addEventListener('pointermove', (e) => { lastPointer = { x: e.clientX, y: e.clientY }; pointerDirty = true })
+  renderer.domElement.addEventListener('pointerleave', () => { lastPointer = null; hoverKey = null; hideHover(); renderer.domElement.style.cursor = ''; requestRender() })
+  renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY } })
+  renderer.domElement.addEventListener('pointerup', (e) => {
+    if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 5) { downAt = null; return }
+    downAt = null
+    const h = pick(e.clientX, e.clientY)
+    if (h) pin(h.key, h.part)
+    else unpin()
+  })
+  function processHover() {
+    if (!lastPointer || tween || !pointerDirty) return
+    pointerDirty = false
+    const h = pick(lastPointer.x, lastPointer.y)
+    const key = h?.key ?? null
+    if (key !== hoverKey) { hoverKey = key; requestRender() }
+    hoverPart = h?.part ?? null
+    renderer.domElement.style.cursor = key ? 'pointer' : ''
+    showHover(key, hoverPart, lastPointer.x, lastPointer.y)
+  }
+
+  // ---------- theme ----------
+  function applyTheme() { readTokens(); for (const f of themeHooks) f(); updateSunAndHiker(); requestRender() }
+  new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme)
+  reduceMQ.addEventListener('change', (e) => { RM = e.matches; controls.enableDamping = !RM; if (RM) { introT = 1; applyIntro(1); resetIdle() } requestRender() })
+
+  // ---------- intro build-up: terrain rises, the trail draws itself, months grow, cairns stack ----------
+  let introT = RM ? 1 : 0, introStart = null
+  const INTRO_MS = 2800
+  function applyIntro(t) {
+    terrain.scale.y = Math.max(0.001, ease(t / 0.28))
+    plinth.scale.y = terrain.scale.y
+    const rt = ease((t - 0.26) / 0.32)
+    const segs = Math.floor(rt * TUBE_SEG)
+    routeMesh.geometry.setDrawRange(0, segs * TUBE_RAD * 6) // TubeGeometry: 6 indices per radial step per segment
+    const show = t > 0.55
+    hiker.visible = show
+    for (const o of cpObjs) o.g.visible = t > 0.4 + (o.cp.dist_m / P.osm_length_m) * 0.18
+    months.forEach((mo, i) => {
+      const gk = Math.max(0.001, ease((t - 0.3 - i * 0.022) / 0.3))
+      const h = mo.h * gk
+      mo.bodyM.scale.y = h
+      mo.top.position.y = h
+      mo.top.visible = gk > 0.6
+      const p25 = yT(mo.r.tmax_p25) * gk, p75 = yT(mo.r.tmax_p75) * gk
+      mo.sleeve.position.y = p25
+      mo.sleeve.scale.y = Math.max(0.001, p75 - p25)
+    })
+    quarterObjs.forEach((qo) => { qo.mesh.scale.y = Math.max(0.001, ease((t - 0.25) / 0.2)) })
+    band.visible = limitGroup.visible = t > 0.7
+    costGrow = ease((t - 0.58) / 0.36)
+    sunGroup.visible = travelGroup.visible = t > 0.75
+    labelRenderer.domElement.style.opacity = t > 0.85 ? '1' : '0'
+  }
+  applyIntro(introT)
+
+  // ---------- idle motion (stops with reduced motion; camera never auto-rotates) ----------
+  function idle(sec) {
+    for (const d of drops) d.mesh.position.y = 2.0 - ((sec * d.speed + d.phase) % 1) * 1.8
+    for (const f of flakes) { const k = (sec * f.speed + f.phase) % 1; f.mesh.position.y = 2.0 - k * 1.8; f.mesh.rotation.y = sec + f.phase * 6 }
+    for (const p of puffs) { const k = (sec * 0.12 + p.phase) % 1; p.mesh.position.y = p.base.y + k * 1.4; p.mesh.material.opacity = 0.5 * Math.sin(Math.PI * k) }
+    for (const o of cpObjs) o.flag.rotation.y = 0.25 * Math.sin(sec * 1.6 + o.phase)
+    stripeTex.offset.x = -sec * 0.6
+    halo.scale.setScalar(1 + 0.18 * Math.sin(sec * 2.4))
+  }
+  function resetIdle() {
+    for (const d of drops) d.mesh.position.y = 2.0 - d.phase * 1.8
+    for (const f of flakes) f.mesh.position.y = 2.0 - f.phase * 1.8
+    for (const p of puffs) { p.mesh.position.copy(p.base); p.mesh.material.opacity = 0.4 }
+    for (const o of cpObjs) o.flag.rotation.y = 0
+    stripeTex.offset.x = 0
+    halo.scale.setScalar(1)
+  }
+  if (RM) resetIdle()
+
+  let visible = true
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; requestRender() }).observe(stage)
+
+  // ---------- frame loop: renders only when something changed, or every frame while motion runs ----------
+  let last = performance.now()
+  function frame(now) {
+    requestAnimationFrame(frame)
+    const dt = Math.min(0.1, (now - last) / 1000); last = now
+    if (!visible) return
+    let active = false
+    if (introT < 1) {
+      introStart ??= now
+      introT = Math.min(1, (now - introStart) / INTRO_MS)
+      applyIntro(introT); active = true
+    }
+    if (tween) { stepTween(now); active = true }
+    if (controls.update()) active = true
+    processHover()
+    if (stepHighlights(dt)) active = true
+    if (layoutCairns(dt)) active = true
+    if (!RM) { idle(now / 1000); active = true }
+    if (active || needsRender) {
+      renderer.render(scene, camera)
+      labelRenderer.render(scene, camera)
+      needsRender = false
+    }
+  }
+
+  PF.on((what) => {
+    if (what === 'selection') updateSelection()
+    else if (what === 'time') { updateSunAndHiker(); refreshPinned() }
+    else if (what === 'cost') { updateSelection() }
+  })
+  updateSelection()
+  layoutCairns(1)
+  requestAnimationFrame(frame)
+
+  PF.scene = {
+    focusKey(key, from) { pin(key, null, { fly: true, focusCard: true, from }) },
+    hoverKey(key) { navHoverKey = key; requestRender() },
+  }
+}
+</script>
+</body>
+</html>

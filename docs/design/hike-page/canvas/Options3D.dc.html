@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>3D dashboard options</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#181715;color:#faf9f5;font-family:Inter,system-ui,sans-serif}
+.p{max-width:1280px;margin:0 auto;padding:40px 48px 48px;box-sizing:border-box;display:flex;flex-direction:column;gap:28px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:36px;margin:0}
+.row{display:flex;gap:20px;flex-wrap:wrap}
+.o{flex:1 1 340px;background:#1f1e1b;border:1px solid #2d2a26;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.o h2{font-family:Fraunces,serif;font-weight:500;font-size:22px;margin:0}
+.q{font-size:13px;color:#a09d96;margin:0;line-height:1.5}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{border-bottom:1px solid #2d2a26;text-align:left;padding:8px;vertical-align:top;color:#d6d2c9}th{color:#faf9f5}
+.tag{display:inline-block;background:#3b2a23;color:#d9866a;border-radius:999px;padding:2px 10px;font-size:12px}
+svg text{font-family:Inter,sans-serif}
+</style>
+</helmet>
+<div class="p">
+  <div><h1>3D dashboard options</h1><p class="q" style="margin-top:8px">Stills of three candidates. The live, rotatable versions with real data are in <b style="color:#faf9f5">docs/design/hike-page/3d-options.html</b> (three.js 0.170, drag to orbit, nothing auto-rotates). Each has a 2D fallback and a text table.</p></div>
+  <div class="row">
+    <div class="o"><span class="tag">A. Recommended</span><h2>Terrain ribbon</h2>
+      <svg viewBox="0 0 360 230" width="100%" role="img" aria-label="Sketch of a 3D route ribbon climbing to a summit, with a curtain beneath it and a hiker marker.">
+        <path d="M20 205 L340 205 L360 190 L40 190Z" fill="#252320" stroke="#3a3631"/>
+        <path d="M30 180 Q80 150 130 140 T210 100 T290 40 L296 70 Q250 120 200 125 T136 168 Q84 180 40 205Z" fill="#cc785c" opacity=".18"/>
+        <path d="M30 180 Q80 150 130 140 T210 100 T290 40" fill="none" stroke="#68c9b8" stroke-width="5"/>
+        <path d="M210 100 T290 40" fill="none" stroke="#cc785c" stroke-width="5"/>
+        <circle cx="210" cy="100" r="8" fill="#cc785c"/><text x="222" y="96" font-size="11" fill="#faf9f5">You, 09:10</text>
+        <circle cx="130" cy="140" r="4" fill="#a09d96"/><circle cx="290" cy="40" r="5" fill="#faf9f5"/><text x="240" y="34" font-size="11" fill="#d6d2c9">Summit 10:05</text>
+      </svg>
+      <p class="q">Answers: what does the climb feel like, where is the steep part, where am I at 09:10. Linked to the 2D profile scrubber (same state). Gentle teal, steep terracotta.</p></div>
+    <div class="o"><span class="tag">B. Optional</span><h2>Match landscape</h2>
+      <svg viewBox="0 0 360 230" width="100%" role="img" aria-label="Sketch of a 3D surface, months by temperature band, with a plateau around October and November.">
+        <path d="M20 190 L120 215 L340 170 L250 150Z" fill="#252320" stroke="#3a3631"/>
+        <path d="M40 180 L90 130 L130 120 L170 150 L210 100 L250 80 L300 110 L330 150 L250 150 L120 215Z" fill="#cc785c" opacity=".35" stroke="#d9866a"/>
+        <path d="M220 70 L250 60 L300 85 L330 150 L270 155 L230 110Z" fill="#cc785c" opacity=".6"/>
+        <rect x="236" y="56" width="70" height="110" fill="none" stroke="#faf9f5" stroke-dasharray="4 3" rx="4"/>
+        <text x="240" y="50" font-size="11" fill="#faf9f5">Q4 slab</text>
+      </svg>
+      <p class="q">Answers: how wide is my window if I move my limit? Height = fit. Best for the "When" question but harder to read than the 2D chart; ship only with the table and the 2D month chart beside it.</p></div>
+    <div class="o"><span class="tag">C. Optional</span><h2>Hike galaxy</h2>
+      <svg viewBox="0 0 360 230" width="100%" role="img" aria-label="Sketch of a 3D scatter of 23 hikes with one ringed.">
+        <path d="M30 200 L250 200 L330 150 L110 150Z" fill="#252320" stroke="#3a3631"/><path d="M30 200 L30 40" stroke="#3a3631"/><path d="M330 150 L330 20" stroke="#3a3631"/>
+        <g fill="#68c9b8"><circle cx="60" cy="190" r="6"/><circle cx="85" cy="180" r="6"/><circle cx="120" cy="170" r="6"/></g>
+        <g fill="#d9a441"><circle cx="150" cy="140" r="6"/><circle cx="180" cy="125" r="6"/><circle cx="170" cy="150" r="6"/><circle cx="200" cy="110" r="6"/></g>
+        <g fill="#a58be8"><circle cx="230" cy="80" r="6"/><circle cx="270" cy="60" r="6"/><circle cx="300" cy="40" r="6"/><circle cx="185" cy="115" r="6"/></g>
+        <circle cx="185" cy="115" r="12" fill="none" stroke="#faf9f5" stroke-width="2"/>
+      </svg>
+      <p class="q">Answers: which hikes are like this one, in length, gain and climate together. Replaces the 2D scatter only on desktop; 2D scatter stays for phone and for keyboard use.</p></div>
+  </div>
+  <div class="o">
+    <h2>Compare</h2>
+    <table>
+      <tr><th></th><th>A Terrain ribbon</th><th>B Match landscape</th><th>C Hike galaxy</th></tr>
+      <tr><td>Where on page</td><td>On the trail, toggle 2D | 3D</td><td>When, toggle beside the month chart</td><td>Similar hikes, toggle beside the scatter</td></tr>
+      <tr><td>Data used</td><td>profiles/&lt;id&gt;.json, checkpoints</td><td>hike_month tmax, crowd_level</td><td>hikes.json, hike_month</td></tr>
+      <tr><td>New model code</td><td>None (reuses checkpoints.ts)</td><td>Small: match grid over limit centre (tested)</td><td>None (reuses twins.ts z-scores)</td></tr>
+      <tr><td>Does 3D beat 2D?</td><td>Yes, shows steepness and route turns</td><td>Marginal</td><td>Marginal, depth axis adds climate</td></tr>
+      <tr><td>Effort</td><td>Medium</td><td>Small</td><td>Small</td></tr>
+      <tr><td>Fallbacks</td><td>2D profile, checkpoint list</td><td>2D month chart, table</td><td>2D scatter, table</td></tr>
+    </table>
+    <p class="q">All three: lazy chunk, one shared three.js bundle (about 150 KB gzip with OrbitControls, under the 250 KB budget), desktop only, no auto-rotate, reduced motion removes damping, WebGL missing gives one line in words.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

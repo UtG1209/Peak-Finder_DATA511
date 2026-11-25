@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hike page v2, phone light</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&amp;family=Inter:wght@400;500;600&amp;family=Archivo+Narrow:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#faf9f5}
+.ph{--bg:#faf9f5;--surface:#f5f0e8;--surface-2:#efe9de;--sunk:#e8e0d2;--line:#ddd5c8;--line-strong:#7d7a72;--hover:#ebe4d8;--selected:#e9e1d3;--text:#141413;--body:#3d3d3a;--muted:#66645e;--off-text:#66645e;--on-accent:#ffffff;--accent:#9a4d34;--accent-text:#9a4d34;--accent-soft:#f1ddd3;--hazard:#8a5300;--hazard-soft:#f7e6c4;--off-line:#7d7a72;--cat-1:#3f6f86;--cat-2:#8a6a2c;--cat-3:#5f5a9c;--cat-4:#3d7a63;--hatch-a:#efe9de;--hatch-b:#7d7a72;--hard:#6a4cc4;--shadow:0 8px 24px rgba(20,20,19,.16);
+width:390px;min-height:5400px;box-sizing:border-box;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;overflow:hidden}
+.in{padding:0 16px;display:flex;flex-direction:column;gap:16px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;border-bottom:1px solid var(--line)}
+.brand{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:18px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--line-strong);background:transparent;color:var(--text);font:500 14px/1 Inter,system-ui,sans-serif;text-decoration:none;box-sizing:border-box;cursor:pointer}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.ico{width:44px;padding:0;border-color:transparent}
+.btn.wide{width:100%}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line-strong);border-radius:999px;overflow:hidden}
+.seg.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.seg button{min-height:44px;border:0;background:transparent;color:var(--body);font:500 14px/1 Inter,system-ui,sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent-text)}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0}
+h1{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:30px;line-height:1.1;margin:0}
+h2{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:22px;line-height:1.3;margin:0}
+.ans{font-family:Fraunces,Georgia,serif;font-size:16px;line-height:1.3;color:var(--body);margin:0}
+.verdict{font-family:Fraunces,Georgia,serif;font-size:18px;line-height:1.3;margin:0}
+.verdict b{font-weight:600;color:var(--accent-text)}
+.num{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.n-l{font-size:32px}.n-m{font-size:20px}.n-s{font-size:15px}
+.cap{font-size:12px;color:var(--muted);margin:0}
+.body{color:var(--body)}
+.sec{display:flex;flex-direction:column;gap:12px;padding-top:24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;box-sizing:border-box}
+.panel{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}
+.stats>div{padding:10px 8px 10px 0;display:flex;flex-direction:column;gap:2px}
+.stats>div+div{padding-left:8px;border-left:1px solid var(--line)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.facts>div{display:flex;flex-direction:column}
+.hz{display:flex;align-items:center;gap:8px;background:var(--hazard-soft);color:var(--hazard);border-radius:8px;padding:10px 12px;font-weight:500}
+.sel{position:sticky;top:0;z-index:3;background:var(--surface-2);border-bottom:1px solid var(--line);box-shadow:var(--shadow);padding:8px 16px;display:flex;flex-direction:column;gap:6px}
+.qs{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 4px}
+.qc{flex:0 0 150px;scroll-snap-align:start;display:flex;flex-direction:column;gap:4px;text-align:left;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--text);font:400 12px/1.4 Inter,system-ui,sans-serif;min-height:44px}
+.qc.on{border:2px solid var(--accent);padding:11px;background:var(--accent-soft)}
+.qc.off{background:transparent;border:1px dashed var(--off-line);color:var(--off-text)}
+.tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+svg text{font-family:Inter,system-ui,sans-serif}
+.tx{fill:var(--text)}.tb{fill:var(--body)}.tm{fill:var(--muted)}.ta{fill:var(--accent-text)}.th{fill:var(--hazard)}
+.sn{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:600}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kv>div{display:flex;flex-direction:column}
+.hb{display:grid;grid-template-columns:56px 1fr 40px;gap:8px;align-items:center;font-size:12px;color:var(--body)}
+.hb i{display:block;height:16px;border-radius:2px;background:var(--line-strong)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-weight:500;color:var(--muted);text-align:left;padding:6px 8px 6px 0;border-bottom:1px solid var(--line-strong)}
+.tbl td{padding:8px 8px 8px 0;border-bottom:1px solid var(--line);color:var(--body)}
+.tbl td.n{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:600;font-size:15px;color:var(--text)}
+.tbl tr.on td{background:var(--selected)}
+.field{display:flex;justify-content:space-between;align-items:center}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:8px}
+.stepper button{width:44px;height:44px;border:0;background:transparent;color:var(--text);display:inline-flex;align-items:center;justify-content:center}
+.stepper output{min-width:28px;text-align:center}
+.leg{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--body)}
+.leg>div{display:grid;grid-template-columns:14px 1fr auto;gap:8px;align-items:center}
+.leg i{width:12px;height:12px;border-radius:2px;display:block}
+.twins{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.twin{display:flex;flex-direction:column;color:var(--text);text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.twin img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--sunk)}
+.twin-body{display:flex;flex-direction:column;gap:4px;padding:12px 16px 16px}
+.twin-name{font:400 18px/1.3 Fraunces,Georgia,serif}
+.twin-sub{font-size:12px;color:var(--muted)}
+.twin-why{font-size:14px;color:var(--body)}
+input[type=range]{width:100%;accent-color:var(--accent);height:44px;margin:0}
+input[type=time]{min-height:44px;padding:0 10px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--text);font:500 14px Inter,system-ui,sans-serif;color-scheme:light}
+</style>
+</helmet>
+<div class="ph">
+<header class="top">
+  <a class="btn ico" href="#map" aria-label="Back to map"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H4M9 5l-5 5 5 5"/></svg></a>
+  <span class="brand">Peak Finder</span>
+  <div class="row" style="gap:0"><button class="btn ico" aria-label="Switch to dark theme"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 11.5A6.5 6.5 0 018.5 4a6.5 6.5 0 107.5 7.5z"/></svg></button><button class="btn ico" aria-label="Share link"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 12.5V3M6.5 6.5L10 3l3.5 3.5M5 10v5.5a1 1 0 001 1h8a1 1 0 001-1V10"/></svg></button></div>
+</header>
+<img src="/_blob/b43ed56e015232779be4830fca53dc91" alt="The Angels Landing ridge in Zion Canyon, seen from above, with the Virgin River below" style="width:390px;height:260px;object-fit:cover;display:block;background:var(--sunk)">
+<div class="in">
+  <p class="cap" style="margin-top:6px">Photo: Diliff, CC BY-SA 3.0, Wikimedia Commons</p>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <p class="eyebrow" style="display:flex;gap:10px"><span>Zion National Park, Utah</span><span style="display:inline-flex;gap:6px;align-items:center;color:var(--hard)"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1L9.5 9h-9z" fill="currentColor"/></svg>Hard</span></p>
+    <h1>Angels Landing</h1>
+  </div>
+  <p class="verdict">Go in <b>Q4, Oct to Dec</b>. It fits all your limits: typical high 67°F, no smoky days, about <b>$1,437</b> from Seattle.</p>
+  <div class="stats">
+    <div><span class="cap">Best</span><span class="num n-m">Q4</span><span class="cap">Oct to Dec</span></div>
+    <div><span class="cap">Fits</span><span class="num n-m">100%</span><span class="cap">Q1, Q2 too</span></div>
+    <div><span class="cap">Trip</span><span class="num n-m">$1,437</span><span class="cap">cheapest</span></div>
+  </div>
+  <div class="facts">
+    <div><span class="num n-s">5.4 mi</span><span class="cap">Round trip, NPS</span></div>
+    <div><span class="num n-s">1,488 ft</span><span class="cap">Gain, NPS</span></div>
+    <div><span class="num n-s">5,759 ft</span><span class="cap">Summit, NPS</span></div>
+    <div><span class="num n-s">4 h 34 min</span><span class="cap">Typical pace</span></div>
+  </div>
+  <div class="row body" style="gap:16px"><span class="row" style="gap:6px"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 11.5l3-3M7.5 13.5a2.5 2.5 0 01-3.5-3.5l2-2a2.5 2.5 0 013.5 0M12.5 6.5a2.5 2.5 0 013.5 3.5l-2 2a2.5 2.5 0 01-3.5 0"/></svg>Chains</span><span class="row" style="gap:6px"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 7h8v10.5M14.5 7v2M14.5 11.5v2M14.5 16v1.5"/></svg>Exposure</span><span class="row" style="gap:6px"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 16.5L16.5 4.5v12zM7 16.5v-4"/></svg>Steep</span></div>
+  <div class="hz"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg>Permit from Scout Lookout to the summit (lottery)</div>
+  <a class="btn pri wide" href="#walk">Walk it in 3D</a>
+</div>
+
+<div class="sel" role="region" aria-label="Your selection" style="margin-top:20px">
+  <div class="seg" role="group" aria-label="Quarter"><button aria-pressed="false">Q1</button><button aria-pressed="false">Q2</button><button aria-pressed="false">Q3</button><button aria-pressed="true">Q4</button></div>
+  <span class="cap">Nov · C4 Where most hikers stop, 9:44 am · every chart follows</span>
+</div>
+
+<div class="in">
+<section class="sec" aria-labelledby="pw">
+  <p class="eyebrow">When</p><h2 id="pw">Autumn is the pick</h2>
+  <p class="ans">Q4 runs 67°F with moderate crowds. Q3 is 97°F, 12°F past your limit.</p>
+  <div class="qs" role="group" aria-label="Pick a quarter">
+    <button class="qc on" aria-pressed="true"><span class="tag">Best, cheapest</span><b>Q4 Oct to Dec</b><span class="num n-l">100%</span><span>67°F, moderate</span></button>
+    <button class="qc" aria-pressed="false"><span class="cap">Winter</span><b>Q1 Jan to Mar</b><span class="num n-l">100%</span><span>59°F, quiet</span></button>
+    <button class="qc" aria-pressed="false"><span class="cap">Spring</span><b>Q2 Apr to Jun</b><span class="num n-l">100%</span><span>84°F, busy</span></button>
+    <button class="qc off" aria-pressed="false"><span>Summer</span><b>Q3 Jul to Sep</b><span class="num n-l">0%</span><span>Too hot: 97°F</span></button>
+  </div>
+  <div class="card">
+    <svg viewBox="0 0 358 222" width="100%" role="img" aria-label="Typical high by month, 52 F in January to 101 F in July; your 55 to 85 F band shaded; heat days June to August; crowd bars below; November selected.">
+      <rect x="278.5" y="4" width="79.5" height="214" rx="6" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+      <rect x="305" y="4" width="26.5" height="214" fill="var(--selected)"/>
+      <rect x="40" y="48.5" width="318" height="39" fill="var(--accent-soft)"/>
+      <rect x="172.5" y="14" width="79.5" height="93" fill="var(--hazard-soft)"/>
+      <g font-size="11" class="tm" text-anchor="end"><text x="34" y="32">100°F</text><text x="34" y="52" class="ta">85</text><text x="34" y="91" class="ta">55</text><text x="34" y="110">40</text></g>
+      <polygon points="53.2,82.3 79.8,74.5 106.2,66.4 132.8,55 159.2,44.6 185.8,26.4 212.2,22.5 238.8,27.7 265.2,34.2 291.8,49.5 318.2,65.4 344.8,81 344.8,97.6 318.2,83.6 291.8,66.7 265.2,47.2 238.8,36.8 212.2,31.6 185.8,39.4 159.2,61.5 132.8,70.6 106.2,83.9 79.8,93.4 53.2,97.9" fill="var(--line-strong)" opacity=".35"/>
+      <polyline points="53.2,91.4 79.8,82.3 106.2,74.5 132.8,62.8 159.2,52.4 185.8,32.9 212.2,27.7 238.8,31.6 265.2,40.7 291.8,56.3 318.2,73.8 344.8,86.2" fill="none" stroke="var(--text)" stroke-width="2"/>
+      <circle cx="318.2" cy="73.8" r="5" fill="var(--accent-text)"/>
+      <g transform="translate(176,4)"><path d="M5 .5l4.5 8h-9zM5 3.3v2.2M5 7v.01" fill="none" stroke="var(--hazard)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="188" y="12" font-size="11" class="th" font-weight="600">Heat, Jun to Aug</text>
+      <g fill="var(--line-strong)"><rect x="47.2" y="162.4" width="12" height="7.6"/><rect x="73.8" y="160.8" width="12" height="9.2"/><rect x="100.2" y="144.4" width="12" height="25.6"/><rect x="126.8" y="136.8" width="12" height="33.2"/><rect x="153.2" y="133.6" width="12" height="36.4"/><rect x="179.8" y="130" width="12" height="40"/><rect x="206.2" y="130.4" width="12" height="39.6"/><rect x="232.8" y="136.8" width="12" height="33.2"/><rect x="259.2" y="135.2" width="12" height="34.8"/></g>
+      <g fill="var(--accent-text)"><rect x="285.8" y="139.6" width="12" height="30.4"/><rect x="312.2" y="153.6" width="12" height="16.4"/><rect x="338.8" y="158" width="12" height="12"/></g>
+      <line x1="40" y1="170" x2="358" y2="170" stroke="var(--line-strong)"/>
+      <text x="34" y="152" font-size="11" class="tm" text-anchor="end">Crowds</text>
+      <g font-size="11" class="tb" text-anchor="middle"><text x="53.2" y="188">J</text><text x="79.8" y="188">F</text><text x="106.2" y="188">M</text><text x="132.8" y="188">A</text><text x="159.2" y="188">M</text><text x="185.8" y="188">J</text><text x="212.2" y="188">J</text><text x="238.8" y="188">A</text><text x="265.2" y="188">S</text><text x="291.8" y="188" class="tx">O</text><text x="318.2" y="188" class="ta" font-weight="600">N</text><text x="344.8" y="188" class="tx">D</text></g>
+      <g font-size="11" class="tm" text-anchor="middle"><text x="79.8" y="210">Q1</text><text x="159.2" y="210">Q2</text><text x="238.8" y="210">Q3</text><text x="318.2" y="210" class="ta" font-weight="600">Q4</text></g>
+    </svg>
+    <div class="kv" style="border-top:1px solid var(--line);padding-top:10px;margin-top:4px">
+      <div><span class="num n-m">66°F</span><span class="cap">Nov high (58 to 72)</span></div>
+      <div><span class="num n-m">0.41</span><span class="cap">Crowds, moderate</span></div>
+      <div><span class="num n-m">0 · 2.9</span><span class="cap">Smoky days · wet days</span></div>
+      <div><span class="num n-m">10.2 h</span><span class="cap">Daylight</span></div>
+    </div>
+    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="cap">Tap a month. Typical, past years.</span><button class="btn">Table</button></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="pa" style="border-top:1px solid var(--line-strong);margin-top:24px">
+  <p class="eyebrow" id="pa">Advice vs data, 1 of 3</p>
+  <p class="verdict">"Zion is busiest in summer, in August."</p>
+  <p class="body" style="margin:0"><b style="color:var(--text)">Partly true.</b> June 2023 was the busiest month: 564,036 visits, 12.20% of the year.</p>
+  <div style="display:flex;flex-direction:column;gap:6px" role="img" aria-label="Typical crowd level: June 1.00, July 0.99, August 0.83">
+    <div class="hb"><span>June</span><i style="width:100%;background:var(--accent-text)"></i><span class="num n-s">1.00</span></div>
+    <div class="hb"><span>July</span><i style="width:99%"></i><span class="num n-s">0.99</span></div>
+    <div class="hb"><span>August</span><i style="width:83%"></i><span class="num n-s">0.83</span></div>
+  </div>
+  <p class="cap">Source: NPS IRMA, Recreation Visits by Month</p>
+</section>
+
+<section class="sec" aria-labelledby="pt" style="margin-top:24px">
+  <p class="eyebrow">On the trail</p><h2 id="pt">Back at 12:44 pm</h2>
+  <p class="ans">Start 8:10 am; summit 10:32 am; done 4 h 39 min before the 5:23 pm sunset.</p>
+  <div class="field"><label for="pst" class="body">Start time</label><input id="pst" type="time" value="08:10"></div>
+  <div class="card">
+    <svg viewBox="0 0 358 196" width="100%" role="img" aria-label="Elevation profile, out and back, 5.4 miles; permit and chains section from Scout Lookout to the summit; you are at C4 at 9:44 am.">
+      <rect x="151.4" y="24" width="65.2" height="134" fill="var(--hazard-soft)"/>
+      <g transform="translate(120,6)"><path d="M5 .5l4.5 8h-9zM5 3.3v2.2M5 7v.01" fill="none" stroke="var(--hazard)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><text x="14" y="8" font-size="11" class="th" font-weight="600">Permit, chains</text></g>
+      <g stroke="var(--line)"><line x1="20" y1="50.9" x2="348" y2="50.9"/><line x1="20" y1="96.8" x2="348" y2="96.8"/><line x1="20" y1="142.7" x2="348" y2="142.7"/></g>
+      <g font-size="11" class="tm"><text x="20" y="47">5,600 ft</text><text x="20" y="93">5,000</text><text x="20" y="139">4,400</text></g>
+      <path d="M20,151.8 L23,152.3 L26,152 L28.9,152 L31.9,150.5 L34.9,149.3 L37.9,151 L40.8,149.3 L43.8,149.3 L46.8,149 L49.7,148.3 L52.7,147.3 L55.7,147 L58.7,145.2 L61.7,143 L64.7,141.5 L67.6,140.2 L70.6,138 L73.6,135.7 L76.5,133.2 L79.5,134 L82.5,132.4 L85.4,131.9 L88.4,128.7 L91.4,125.7 L94.4,122.9 L97.4,121.9 L100.4,119.4 L103.3,116.6 L106.3,113.4 L109.3,109.1 L112.2,105.4 L115.2,103.8 L118.2,102.1 L121.2,101.8 L124.1,101.6 L127.1,99.6 L130.1,99.1 L133.1,97.8 L136.1,96.6 L139,95.8 L142,93.8 L145,84 L148,72 L150.9,71.5 L153.9,69 L156.9,66 L159.8,62.2 L162.8,66 L165.8,71 L168.8,66.2 L171.8,54.2 L174.8,45.1 L177.7,37.9 L180.7,36.1 L183.7,36.6 L184,36.9 L185.8,36.4 L188.8,36.6 L191.8,40.6 L194.8,49.9 L197.7,59.9 L200.7,68.7 L203.7,68.7 L206.6,63.5 L209.6,63.5 L212.6,67.5 L215.6,70.5 L218.5,71.7 L221.5,76 L224.5,90.8 L227.5,95.1 L230.5,96.6 L233.4,97.3 L236.4,98.3 L239.4,99.1 L242.4,100.6 L245.3,101.8 L248.3,101.8 L251.3,103.1 L254.3,104.4 L257.2,107.6 L260.2,111.9 L263.2,114.9 L266.2,118.4 L269.2,120.9 L272.1,122.4 L275.1,124.4 L278.1,126.7 L281,130.4 L284,132.2 L287,133.5 L290,133.5 L292.9,134.2 L295.9,136.7 L298.9,139.5 L301.9,140.7 L304.9,142.2 L307.8,144 L310.8,146.2 L313.8,147.3 L316.7,147.8 L319.7,149 L322.7,149.3 L325.7,149.3 L328.7,150.5 L331.6,150 L334.6,149.3 L337.6,151.5 L340.6,152.3 L343.5,152 L346.5,152 L348,151.8 L348,158 L20,158 Z" fill="var(--accent-soft)" stroke="var(--accent-text)" stroke-width="2" stroke-linejoin="round"/>
+      <line x1="20" y1="158" x2="348" y2="158" stroke="var(--line-strong)"/>
+      <g fill="var(--surface)" stroke="var(--text)" stroke-width="1.5"><circle cx="20" cy="152" r="3.5"/><circle cx="69.1" cy="139.5" r="3.5"/><circle cx="121.6" cy="101.6" r="3.5"/><circle cx="139.5" cy="95.3" r="3.5"/><circle cx="165.8" cy="71.5" r="3.5"/><circle cx="184" cy="35.6" r="3.5"/><circle cx="202.2" cy="71.5" r="3.5"/><circle cx="216.6" cy="71" r="3.5"/><circle cx="228.5" cy="95.3" r="3.5"/><circle cx="246.4" cy="101.6" r="3.5"/><circle cx="298.9" cy="139.5" r="3.5"/><circle cx="348" cy="152" r="3.5"/></g>
+      <line x1="151.4" y1="24" x2="151.4" y2="158" stroke="var(--accent)" stroke-width="2"/>
+      <circle cx="151.4" cy="71" r="7" fill="var(--accent)" stroke="var(--bg)" stroke-width="2"/>
+      <g font-size="11" class="tm" text-anchor="middle"><text x="20" y="174" text-anchor="start">0 mi</text><text x="80.7" y="174">1</text><text x="141.5" y="174">2</text><text x="184" y="174" class="tb">2.7</text><text x="263" y="174">4</text><text x="348" y="174" text-anchor="end">5.4 mi</text></g>
+      <text x="151.4" y="190" font-size="12" class="ta" text-anchor="middle" font-weight="600">You, 9:44 am</text>
+    </svg>
+    <label for="ptt" class="cap">Time on the trail: 9:44 am</label>
+    <input id="ptt" type="range" min="490" max="764" value="584" aria-valuetext="9:44 am, at C4">
+    <svg viewBox="0 0 358 48" width="100%" role="img" aria-label="November daylight 7:10 am to 5:23 pm; your hike 8:10 am to 12:44 pm.">
+      <rect x="16" y="18" width="326" height="12" rx="2" fill="var(--sunk)"/><rect x="47.7" y="18" width="277.5" height="12" fill="var(--line)"/><rect x="74.9" y="18" width="124" height="12" rx="2" fill="var(--accent-text)"/>
+      <g font-size="11"><text x="47.7" y="12" class="tm">7:10 am</text><text x="325.2" y="12" class="tm" text-anchor="end">Sunset 5:23 pm</text><text x="136.9" y="44" class="ta" text-anchor="middle" font-weight="600">Your hike</text></g>
+    </svg>
+  </div>
+  <div class="panel">
+    <img src="/_blob/ab79c924cd360f0867b8da4ceee93275" alt="Hikers on the trail toward Scout Lookout" style="width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:8px;display:block">
+    <p class="cap" style="margin-top:-6px">Photo: tsaiproject, CC BY 2.0, Wikimedia Commons</p>
+    <b style="font-family:Fraunces,Georgia,serif;font-weight:500;font-size:18px">C4 Where most hikers stop</b>
+    <div class="kv"><div><span class="num n-m">9:44 am</span><span class="cap">Arrive</span></div><div><span class="num n-m">1 h 34 min</span><span class="cap">Elapsed</span></div><div><span class="num n-m">2.16 mi</span><span class="cap">From trailhead</span></div><div><span class="num n-m">5,338 ft</span><span class="cap">Elevation</span></div></div>
+    <div class="row" style="flex-wrap:nowrap"><button class="btn" style="flex:1">Back</button><button class="btn pri" style="flex:1">Forward</button></div>
+  </div>
+  <table class="tbl">
+    <thead><tr><th scope="col">Stop</th><th scope="col">Up</th><th scope="col">Back</th><th scope="col">Mi</th></tr></thead>
+    <tbody>
+      <tr><td>C0 Grotto</td><td class="n">8:10</td><td class="n">12:44</td><td>0</td></tr>
+      <tr><td>C1 Canyon wall</td><td class="n">8:28</td><td class="n">12:19</td><td>0.81</td></tr>
+      <tr><td>C2 Refrigerator Cyn</td><td class="n">9:04</td><td class="n">11:50</td><td>1.67</td></tr>
+      <tr><td>C3 Walter's Wiggles</td><td class="n">9:21</td><td class="n">11:34</td><td>1.97</td></tr>
+      <tr class="on"><td>C4 Most hikers stop</td><td class="n">9:44</td><td class="n">11:14</td><td>2.16</td></tr>
+      <tr><td>C5 The chains</td><td class="n">10:02</td><td class="n">10:57</td><td>2.40</td></tr>
+      <tr><td>C6 Summit</td><td class="n">10:32</td><td class="n">turn</td><td>2.70</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="sec" aria-labelledby="pc" style="margin-top:24px">
+  <p class="eyebrow">How much</p><h2 id="pc">About $1,437 in Q4</h2>
+  <p class="ans">The cheapest quarter. Flights and car are 55% of it.</p>
+  <div class="card">
+    <svg viewBox="0 0 358 250" width="100%" role="img" aria-label="Typical cost by quarter: Q1 1,441 dollars, Q2 1,564, Q3 1,487, Q4 1,437, cheapest.">
+      <defs><pattern id="phb" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="var(--hatch-a)"/><line x1="0" y1="0" x2="0" y2="6" stroke="var(--hatch-b)" stroke-width="2"/></pattern></defs>
+      <g opacity=".7">
+        <rect x="24" y="130.5" width="60" height="89.5" fill="var(--cat-3)"/><rect x="24" y="102.8" width="60" height="27.7" fill="var(--cat-1)"/><rect x="24" y="83.7" width="60" height="19.1" fill="var(--cat-2)"/><rect x="24" y="79.1" width="60" height="4.6" fill="var(--cat-4)"/><rect x="24" y="57.9" width="60" height="21.1" fill="url(#phb)"/>
+        <rect x="104" y="118.5" width="60" height="101.5" fill="var(--cat-3)"/><rect x="104" y="90.8" width="60" height="27.7" fill="var(--cat-1)"/><rect x="104" y="71.6" width="60" height="19.1" fill="var(--cat-2)"/><rect x="104" y="67" width="60" height="4.6" fill="var(--cat-4)"/><rect x="104" y="44.1" width="60" height="22.9" fill="url(#phb)"/>
+        <rect x="184" y="126" width="60" height="94" fill="var(--cat-3)"/><rect x="184" y="98.3" width="60" height="27.7" fill="var(--cat-1)"/><rect x="184" y="79.1" width="60" height="19.1" fill="var(--cat-2)"/><rect x="184" y="74.5" width="60" height="4.6" fill="var(--cat-4)"/><rect x="184" y="52.7" width="60" height="21.8" fill="url(#phb)"/>
+      </g>
+      <rect x="264" y="130.9" width="60" height="89.1" fill="var(--cat-3)"/><rect x="264" y="103.1" width="60" height="27.7" fill="var(--cat-1)"/><rect x="264" y="84" width="60" height="19.1" fill="var(--cat-2)"/><rect x="264" y="79.4" width="60" height="4.6" fill="var(--cat-4)"/><rect x="264" y="58.3" width="60" height="21.1" fill="url(#phb)"/>
+      <rect x="263" y="57.3" width="62" height="163.7" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+      <line x1="16" y1="220" x2="342" y2="220" stroke="var(--line-strong)"/>
+      <g font-size="15" class="tb sn" text-anchor="middle"><text x="54" y="50">$1,441</text><text x="134" y="36">$1,564</text><text x="214" y="45">$1,487</text><text x="294" y="50" class="tx">$1,437</text></g>
+      <g font-size="12" class="tb" text-anchor="middle"><text x="54" y="238">Q1</text><text x="134" y="238">Q2</text><text x="214" y="238">Q3</text><text x="294" y="238" class="ta" font-weight="600">Q4 cheapest</text></g>
+    </svg>
+    <div class="leg">
+      <div><i style="background:var(--cat-3)"></i><span>Transport: flights $612, car $180</span><b class="num n-s">$792</b></div>
+      <div><i style="background:var(--cat-1)"></i><span>Lodging, 2 nights, tax incl.</span><b class="num n-s">$246</b></div>
+      <div><i style="background:var(--cat-2)"></i><span>Food</span><b class="num n-s">$170</b></div>
+      <div><i style="background:var(--cat-4)"></i><span>Entry and permit</span><b class="num n-s">$41</b></div>
+      <div><i style="background:var(--hatch-b)"></i><span>Buffer, 15%</span><b class="num n-s">$187</b></div>
+    </div>
+  </div>
+  <div class="panel">
+    <b style="font-family:Fraunces,Georgia,serif;font-weight:500;font-size:18px">What if</b>
+    <div class="field"><span id="plt" class="body">Travellers</span><div class="stepper" role="group" aria-labelledby="plt"><button aria-label="One fewer traveller"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button><output class="num n-m">1</output><button aria-label="One more traveller"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button></div></div>
+    <div class="field"><span id="pln" class="body">Nights</span><div class="stepper" role="group" aria-labelledby="pln"><button aria-label="One fewer night"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button><output class="num n-m">2</output><button aria-label="One more night"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button></div></div>
+    <div class="seg two" role="group" aria-label="Travel mode"><button aria-pressed="true">Fly, 5.3 h</button><button aria-pressed="false">Drive, 17.8 h</button></div>
+    <p class="body" style="margin:0">One more night <b class="num n-s">+$289</b>. Driving <b class="num n-s">$1,035</b>, $402 less but 17.8 h each way.</p>
+    <p class="cap">Typical, from past data. Not a price quote.</p>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="ps" style="margin-top:24px">
+  <h2 id="ps">Similar hikes</h2>
+  <ul class="twins">
+    <li><a class="twin" href="#zion-narrows"><img src="/_blob/87d31c70aa306fb7c5aa238c0574e0fa" alt=""><span class="twin-body"><b class="twin-name">The Narrows, bottom-up</b><span class="twin-sub">Zion National Park · Hard · same park</span><span class="twin-why">A similar pattern of typical temperatures through the year and similar high point (4,900 ft and 5,759 ft).</span></span></a></li>
+    <li><a class="twin" href="#delicate-arch"><img src="/_blob/32d24101595dce0c0e23dbdf0108be86" alt=""><span class="twin-body"><b class="twin-name">Delicate Arch</b><span class="twin-sub">Arches National Park · Moderate</span><span class="twin-why">Similar high point (4,771 ft and 5,759 ft) and a similar pattern of typical temperatures through the year.</span></span></a></li>
+    <li><a class="twin" href="#moro-rock"><img src="/_blob/6e24777728b67f10e5d2a0a0bf8a91fa" alt=""><span class="twin-body"><b class="twin-name">Moro Rock</b><span class="twin-sub">Sequoia and Kings Canyon National Parks · Easy</span><span class="twin-why">Similar high point (6,275 ft and 5,759 ft) and a similar pattern of typical temperatures through the year.</span></span></a></li>
+  </ul>
+  <p class="cap">Matched on length, climb, high point and typical highs in each month. Typical, from past years.</p>
+</section>
+
+<footer style="border-top:1px solid var(--line);margin-top:16px;padding:16px 0 32px;display:flex;flex-direction:column;gap:8px">
+  <p class="cap">Typical values from past years (2015 to 2024, 2020 left out). Not a forecast or a price quote.</p>
+  <a class="btn" href="#about">About the data</a>
+</footer>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":5400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

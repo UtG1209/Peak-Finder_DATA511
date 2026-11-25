@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mockup, phone dark</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Inter:wght@400;500;600&family=Archivo+Narrow:wght@600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#181715;color:#faf9f5;font-family:Inter,system-ui,sans-serif}
+.btn{border:1px solid #4a463f;border-radius:999px;padding:10px 16px;font-size:14px;color:#faf9f5;background:transparent;font-family:inherit;min-height:44px}
+.btn.pri{background:#cc785c;border-color:#cc785c;color:#181715;font-weight:600}
+.card{background:#1f1e1b;border:1px solid #2d2a26;border-radius:14px;padding:14px}
+.k{font-family:'Archivo Narrow',Inter,sans-serif;font-weight:600;font-size:26px;line-height:1}
+.u{font-size:11px;color:#a09d96;margin-top:4px}
+h2{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:24px;margin:0}
+.q{font-size:11px;color:#a09d96;margin:4px 0 0}
+svg text{font-family:Inter,sans-serif}
+</style>
+</helmet>
+<div style="width:390px;height:2200px;box-sizing:border-box;padding:12px 16px 32px;display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;justify-content:space-between;align-items:center"><button class="btn">Map</button><b style="font-family:Fraunces,serif;font-weight:500">Peak Finder</b><span style="font-size:13px;color:#a09d96">Theme</span></div>
+  <div style="height:200px;border-radius:16px;background:linear-gradient(160deg,#3a2d26,#252320 60%,#1f2a28);position:relative"><div style="position:absolute;left:10px;bottom:8px;font-size:10px;color:#d6d2c9">Photo. Credit: Wikimedia Commons</div></div>
+  <div>
+    <div style="font-size:12px;color:#d6d2c9">Zion National Park, UT &middot; <span style="color:#a58be8">Hard</span></div>
+    <h1 style="font-family:Fraunces,Georgia,serif;font-weight:500;font-size:38px;line-height:1.05;margin:6px 0 10px">Angels Landing</h1>
+    <p style="font-size:17px;line-height:1.4;margin:0">Q4 fits <b style="color:#d9866a">91%</b>: typical high 67&deg;F, no smoky days, about <b style="color:#d9866a">$1,440</b>.</p>
+  </div>
+  <div style="display:flex;gap:16px"><div><div class="k">5.4 mi</div><div class="u">Round trip</div></div><div><div class="k">1,500 ft</div><div class="u">Gain</div></div><div><div class="k">5,790 ft</div><div class="u">Summit</div></div></div>
+  <button class="btn pri" style="width:100%">Walk it in 3D</button>
+
+  <div style="position:sticky;top:0;background:#252320;border:1px solid #3a3631;border-radius:12px;padding:8px;display:flex;gap:6px" role="group" aria-label="Quarter">
+    <button class="btn" style="flex:1;padding:8px 0">Q1</button><button class="btn" style="flex:1;padding:8px 0">Q2</button><button class="btn" style="flex:1;padding:8px 0">Q3</button><button class="btn" style="flex:1;padding:8px 0;background:#3b2a23;border-color:#cc785c">Q4</button>
+  </div>
+
+  <section>
+    <h2>When</h2>
+    <div class="card" style="margin-top:12px"><b>Q4 best</b> <span class="k" style="font-size:24px;float:right">91%</span><p class="q" style="color:#d6d2c9;font-size:13px">Nov sits near the cold edge of your limit.</p></div>
+    <div style="overflow-x:auto;margin-top:12px" class="card" tabindex="0" aria-label="Month chart, scrolls sideways">
+      <svg viewBox="0 0 640 200" width="640" role="img" aria-label="Typical high by month, 52 F in January, 101 F in July, 56 F in December.">
+        <rect x="30" y="50" width="580" height="50" fill="#3b2a23" opacity=".6"/><rect x="455" y="6" width="150" height="190" fill="none" stroke="#cc785c" rx="8"/>
+        <polyline points="30,104 80,92 130,84 180,70 230,56 280,32 330,26 380,31 430,42 480,62 530,83 580,96" fill="none" stroke="#faf9f5" stroke-width="2.5"/>
+        <g fill="#a09d96"><rect x="22" y="150" width="16" height="9"/><rect x="172" y="132" width="16" height="27"/><rect x="272" y="124" width="16" height="35"/><rect x="472" y="134" width="16" height="25" fill="#d9866a"/><rect x="572" y="148" width="16" height="11"/></g>
+        <g font-size="12" fill="#d6d2c9" text-anchor="middle"><text x="30" y="185">J</text><text x="130" y="185">M</text><text x="230" y="185">M</text><text x="330" y="185">J</text><text x="430" y="185">S</text><text x="480" y="185" fill="#d9866a">O</text><text x="580" y="185">D</text></g>
+      </svg>
+    </div>
+    <p class="q">Swipe for months. Tap a month to select it. Table below.</p>
+  </section>
+
+  <section>
+    <h2>On the trail</h2><p class="q">Start 07:45. Sunset 18:56, finishes before dark.</p>
+    <div class="card" style="margin-top:12px">
+      <svg viewBox="0 0 330 150" width="100%" role="img" aria-label="Elevation profile, out and back, summit 5,790 feet."><path d="M10 130 L50 120 L85 105 L110 95 L135 70 L160 24 L185 70 L210 95 L235 105 L270 120 L320 130" fill="#3b2a23" stroke="#d9866a" stroke-width="2"/><line x1="135" y1="8" x2="135" y2="135" stroke="#cc785c" stroke-width="2"/><circle cx="135" cy="70" r="7" fill="#cc785c"/></svg>
+      <input type="range" aria-label="Time on the trail" style="width:100%;accent-color:#cc785c;margin-top:6px" min="0" max="100" value="38">
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" style="flex:1">Back</button><button class="btn pri" style="flex:1">Forward</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How much</h2><p class="q">Typical, from past data. Not a price quote.</p>
+    <div class="card" style="margin-top:12px">
+      <svg viewBox="0 0 330 170" width="100%" role="img" aria-label="Cost by quarter, Q4 cheapest at 1,436 dollars."><g><rect x="10" y="60" width="52" height="100" fill="#cc785c" opacity=".6"/><rect x="92" y="50" width="52" height="110" fill="#cc785c" opacity=".6"/><rect x="174" y="55" width="52" height="105" fill="#cc785c" opacity=".6"/><rect x="256" y="60" width="64" height="100" fill="#cc785c" stroke="#faf9f5" stroke-width="2"/></g><g font-size="11" fill="#faf9f5" text-anchor="middle"><text x="36" y="168" dy="-0">Q1</text><text x="118" y="168">Q2</text><text x="200" y="168">Q3</text><text x="288" y="52" font-weight="600">$1,436</text></g></svg>
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" style="flex:1;background:#3b2a23;border-color:#cc785c">Fly</button><button class="btn" style="flex:1">Drive</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Similar hikes</h2>
+    <p class="q">Unchanged from the live site.</p><div class="card" style="margin-top:10px"><b>Skyline Trail</b> <span class="q">Mount Rainier</span></div>
+    <div class="card" style="margin-top:10px"><b>Mount Washburn</b> <span class="q">Yellowstone</span></div>
+  </section>
+  <p class="q" style="text-align:center">Typical, from past years.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":2200}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
