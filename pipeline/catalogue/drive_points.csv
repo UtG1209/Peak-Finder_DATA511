@@ -1,8 +1,5 @@
 id,lat,lon,source,note
 angels-landing,37.2001074,-112.9869151,OpenStreetMap relation 14639470 (Zion Canyon Visitor Center; Nominatim),Canyon road is shuttle-only in season; visitors park at the visitor center and take the shuttle to the Grotto
 zion-narrows,37.2001074,-112.9869151,OpenStreetMap relation 14639470 (Zion Canyon Visitor Center; Nominatim),Same lot: shuttle to Temple of Sinawava for the Riverside Walk
-upper-yosemite-falls,37.7427246,-119.6031922,OpenStreetMap node 1742213296 (Yosemite Falls Trailhead; Nominatim),Valley-floor trailhead by Yosemite Valley Lodge; the listed Camp 4 coordinate is off the Valley road
 navajo-loop-queens-garden,37.6404359,-112.1695917,OpenStreetMap way 131697989 (Bryce Canyon National Park Visitors Center; Overpass),Sunrise Point is about 1.3 mi further on the rim road; OpenRouteService finds no drivable road within 350 m of the Sunrise Point lot or trailhead
-hurricane-hill,48.0993172,-123.4256435,OpenStreetMap way 316489009 (Olympic National Park Visitor Center Port Angeles; Nominatim),Last point OpenRouteService can route to; Hurricane Ridge Road (about 17 mi uphill) is not reachable in its graph so drive time and miles are understated
 clingmans-dome,35.6108094,-83.4278609,OpenStreetMap way 19607229 (Kuwohi Access Road junction with US-441; Overpass),Last point OpenRouteService can route to; the 7 mi access road to the Clingmans Dome lot is not reachable in its graph so drive time and miles are understated
-wheeler-peak,39.0113597,-114.3025641,OpenStreetMap way 363344101 (Wheeler Peak Campground; Nominatim),Summit Trailhead is at the campground on Wheeler Peak Scenic Drive
