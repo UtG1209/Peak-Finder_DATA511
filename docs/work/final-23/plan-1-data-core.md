@@ -4,7 +4,8 @@
 **You own:** `pipeline/hikes.py`, `pipeline/build.py`, `pipeline/advice.py`, `pipeline/meta.py`, `pipeline/catalogue/*`, `pipeline/checks/`, `scripts/make_fake_data.py`, `app/public/photos/`, the hike counts in `CLAUDE.md`.
 **Do not touch:** `app/src`, `walks/`, `travel.py`, `cost.py`, `profiles.py` (Plan 2).
 
-## Step 1 (do first, others wait on it): cut to the 23
+## Step 1 (do first, others wait on it): cut to the 23 — DONE 2026-11-24
+Done with `pipeline/cut_to_final.py` (idempotent; `pipeline/catalogue/final_hikes.csv` is the list; `make_fake_data.py` honours it too). Counts, contract test and e2e specs now say 23. Steps 2 to 5 remain.
 1. Copy `docs/work/final-23/final_hikes.csv` to `pipeline/catalogue/final_hikes.csv` (keep this folder's copy as the record).
 2. Make the list the one place that decides membership: `hikes.py`, `build.py` and `scripts/make_fake_data.py` keep only ids in `final_hikes.csv`. Every per-hike file (`hike_month`, `travel`, `cost`, `profiles/`, `advice`) must follow the same list, so no row refers to a missing hike.
 3. Delete what belongs only to the 15 cut hikes: `app/public/data/profiles/<id>.json`, their `app/public/photos/*` (main photo and stop `.svg`), and their rows in the catalogue CSVs that nothing else reads. Keep the raw caches (git-ignored).

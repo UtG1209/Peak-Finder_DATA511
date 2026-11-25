@@ -490,6 +490,10 @@ def main():
         stale.unlink()
 
     hikes, mrows = build_hikes()
+    # the final list (docs/work/final-23/) decides which hikes exist
+    keep = {l.split(",")[0] for l in (ROOT / "pipeline" / "catalogue" / "final_hikes.csv").read_text(encoding="utf-8").splitlines()[1:]}
+    pairs = [(h, m) for h, m in zip(hikes, mrows) if m["hid"] in keep]
+    hikes, mrows = [h for h, _ in pairs], [m for _, m in pairs]
     # profiles that already exist are kept (some are real pipeline output); only those of dropped hikes go
     for stale in (out / "profiles").glob("*.json"):
         if stale.stem not in {m["hid"] for m in mrows}:

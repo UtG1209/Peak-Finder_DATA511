@@ -19,7 +19,7 @@ test('Show hikes reveals a map that has size, a canvas and bubbles', async ({ pa
 
   await guide.getByRole('button', { name: /Show hikes/ }).click()
   await expect(page.locator('#mapPane')).not.toHaveClass(/blurred/)
-  await expect(page.locator('#count')).toContainText('of 38 hikes fit')
+  await expect(page.locator('#count')).toContainText('of 23 hikes fit')
 
   // the regression this test exists for: MapLibre's stylesheet must not collapse the container
   const map = page.locator('#mapPane .us-map')
@@ -31,7 +31,7 @@ test('Show hikes reveals a map that has size, a canvas and bubbles', async ({ pa
   expect((await canvas.boundingBox())!.height).toBeGreaterThan(300)
 
   // bubbles drawn: the legend and ranked list exist, and the map reports rendered features
-  await expect(page.locator('.ranked li')).toHaveCount(38)
+  await expect(page.locator('.ranked li')).toHaveCount(23)
   expect(errors, 'uncaught page errors').toEqual([])
   expect(failed, 'failed requests under the site base path').toEqual([])
 })

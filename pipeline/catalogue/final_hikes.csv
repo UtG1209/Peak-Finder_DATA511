@@ -1,0 +1,24 @@
+id,name,park_code,difficulty,status,walk
+fairy-falls-grand-prismatic,Fairy Falls / Grand Prismatic,YELL,easy,built,built
+mesa-arch,Mesa Arch,CANY,easy,priority-real,to-build
+general-sherman-tree,General Sherman Tree,SEKI,easy,new,optional
+moro-rock,Moro Rock,SEKI,easy,new,optional
+clingmans-dome,Clingmans Dome,GRSM,easy,new,optional
+anhinga-trail,Anhinga Trail,EVER,easy,new,skip
+glacier-highline,Highline Trail to Granite Park,GLAC,moderate,built,built
+delicate-arch,Delicate Arch,ARCH,moderate,priority-real,to-build
+navajo-loop-queens-garden,Navajo Loop / Queens Garden,BRCA,moderate,priority-real,to-build
+skyline-trail,Skyline Trail,MORA,moderate,priority-real,to-build
+inspiration-point,Inspiration Point,GRTE,moderate,priority-real,to-build
+cadillac-north-ridge,Cadillac North Ridge,ACAD,moderate,priority-real,to-build
+emerald-lake,Emerald Lake,ROMO,moderate,new,optional
+angels-landing,Angels Landing,ZION,hard,built,built
+bright-angel-trail,Bright Angel Trail,GRCA,hard,built,built
+cascade-pass-sahale,Cascade Pass to Sahale Glacier,NOCA,hard,built,built
+mount-washburn,Mount Washburn,YELL,hard,built-walk-data-partly-placeholder,built
+grinnell-glacier,Grinnell Glacier,GLAC,hard,built,built
+half-dome,Half Dome,YOSE,hard,priority-real,to-build
+alum-cave-leconte,Alum Cave to Mount LeConte,GRSM,hard,priority-real,to-build
+ryan-mountain,Ryan Mountain,JOTR,hard,priority-real,to-build
+zion-narrows,Zion Narrows,ZION,hard,new,skip
+longs-peak,Longs Peak,ROMO,hard,new,optional
