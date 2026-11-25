@@ -23,7 +23,7 @@ Today the page is one long scroll with text, numbers and a few charts. Replace t
 ## Design deliverables (the user does these first, in Claude Design or Figma)
 1. Page structure: order of dashboards, what is above the fold on desktop and phone, the one headline sentence ("Q3 fits 84%: cooler than your limit, 1 smoky day, about $640").
 2. For every row above: the chart type, the interaction (hover, brush, click, scrub, toggle), the empty and missing-data state, the phone version.
-3. Which pieces are 3D and why (candidates: terrain ribbon route with hiker marker; month by quarter "match landscape" surface; 3D scatter of the 23 hikes). Each 3D piece needs a 2D fallback and a text equivalent.
+3. Which pieces are 3D and why (DECIDED 2026-11-25: none for now; 3D is a later optional add-on, see docs/design/hike-page/README.md) (candidates: terrain ribbon route with hiker marker; month by quarter "match landscape" surface; 3D scatter of the 23 hikes). Each 3D piece needs a 2D fallback and a text equivalent.
 4. One linked-state rule: the selected quarter, month or checkpoint is shared by every chart on the page (today the quarter already is, via the URL `q`).
 5. A token sheet: colours only from `tokens.css`, the three difficulty colours, one terracotta accent, amber and red only for hazards with icon and words. Both themes.
 

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Token sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&amp;family=Inter:wght@400;500;600&amp;family=Archivo+Narrow:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ts{width:1280px;height:1500px;box-sizing:border-box;padding:48px;background:#efe9de;color:#141413;font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:32px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.th{border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:18px;border:1px solid #ddd5c8}
+.th.d{background:#181715;color:#faf9f5;border-color:#3a3732}
+.th.l{background:#faf9f5;color:#141413}
+.grp{display:flex;flex-direction:column;gap:8px}
+.gl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.d .gl,.d .hx{color:#a09d96}.l .gl,.l .hx{color:#66645e}
+.sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.sw>div{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.chip{display:block;height:40px;border-radius:6px}
+.d .chip{border:1px solid #3a3732}.l .chip{border:1px solid #ddd5c8}
+.hx{font-size:11px;font-variant-numeric:tabular-nums}
+.pair{display:flex;justify-content:space-between;font-size:12px;padding:6px 0}
+.d .pair{border-bottom:1px solid #3a3732}.l .pair{border-bottom:1px solid #ddd5c8}
+.num{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:600;font-variant-numeric:tabular-nums}
+.ser{font-family:Fraunces,Georgia,serif;font-weight:500}
+.box{background:#faf9f5;border:1px solid #ddd5c8;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.scale{display:flex;flex-direction:column;gap:10px}
+.scale>div{display:grid;grid-template-columns:150px 1fr;align-items:baseline;gap:16px;border-bottom:1px solid #ddd5c8;padding-bottom:8px}
+.sp{display:flex;gap:16px;align-items:flex-end}
+.sp>div{display:flex;flex-direction:column;gap:6px;align-items:center;font-size:11px;color:#66645e}
+.sp i{display:block;background:#9a4d34}
+</style>
+</helmet>
+<div class="ts">
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <h1 class="ser" style="margin:0;font-size:44px;line-height:1.1">Token sheet</h1>
+    <p style="margin:0;color:#3d3d3a;max-width:80ch">Every colour on the v2 boards is a value from app/src/styles/tokens.css. One accent (terracotta), three difficulty colours, amber only for hazards and always with an icon and words. Contrast ratios are computed with the WCAG formula; all text pairs pass 4.5:1.</p>
+  </div>
+  <div class="cols">
+    <div class="th d">
+      <b class="ser" style="font-size:22px">Dark</b>
+      <div class="grp"><span class="gl">Surfaces and lines</span><div class="sw">
+        <div><i class="chip" style="background:#181715"></i>--bg<span class="hx">#181715</span></div>
+        <div><i class="chip" style="background:#1f1e1b"></i>--surface<span class="hx">#1f1e1b</span></div>
+        <div><i class="chip" style="background:#252320"></i>--surface-2<span class="hx">#252320</span></div>
+        <div><i class="chip" style="background:#2d2a26"></i>--surface-sunk<span class="hx">#2d2a26</span></div>
+        <div><i class="chip" style="background:#3a3732"></i>--line<span class="hx">#3a3732</span></div>
+        <div><i class="chip" style="background:#77736a"></i>--line-strong<span class="hx">#77736a</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Text, accent, hazard</span><div class="sw">
+        <div><i class="chip" style="background:#faf9f5"></i>--text<span class="hx">#faf9f5</span></div>
+        <div><i class="chip" style="background:#d6d2c9"></i>--text-body<span class="hx">#d6d2c9</span></div>
+        <div><i class="chip" style="background:#a09d96"></i>--text-muted<span class="hx">#a09d96</span></div>
+        <div><i class="chip" style="background:#cc785c"></i>--accent<span class="hx">#cc785c</span></div>
+        <div><i class="chip" style="background:#3b2a23"></i>--accent-soft<span class="hx">#3b2a23</span></div>
+        <div><i class="chip" style="background:#e8a55a"></i>--hazard<span class="hx">#e8a55a</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Difficulty and cost categories</span><div class="sw">
+        <div><i class="chip" style="background:#68c9b8"></i>Easy<span class="hx">#68c9b8</span></div>
+        <div><i class="chip" style="background:#d9a441"></i>Moderate<span class="hx">#d9a441</span></div>
+        <div><i class="chip" style="background:#a58be8"></i>Hard<span class="hx">#a58be8</span></div>
+        <div><i class="chip" style="background:#9a93c9"></i>Transport<span class="hx">cat-3</span></div>
+        <div><i class="chip" style="background:#7fa8bd"></i>Lodging<span class="hx">cat-1</span></div>
+        <div><i class="chip" style="background:#c9a77c"></i>Food<span class="hx">cat-2</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Contrast, computed</span>
+        <div class="pair"><span>Text on bg</span><b class="num">17.0 : 1</b></div>
+        <div class="pair"><span>Muted on surface-2 (captions in panels)</span><b class="num">5.8 : 1</b></div>
+        <div class="pair"><span>Accent text on accent-soft (selected chip)</span><b class="num">4.9 : 1</b></div>
+        <div class="pair"><span>On-accent on accent (primary button)</span><b class="num">5.5 : 1</b></div>
+        <div class="pair"><span>Hazard on hazard-soft (warning chip)</span><b class="num">6.4 : 1</b></div>
+      </div>
+      <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button style="min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #cc785c;background:#cc785c;color:#181715;font:600 14px Inter,sans-serif">Primary</button>
+        <button style="min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #77736a;background:transparent;color:#faf9f5;font:500 14px Inter,sans-serif">Secondary</button>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#3a2d18;color:#e8a55a;border-radius:8px;padding:0 12px;min-height:44px;font-weight:500"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg>Hazard, with words</span>
+      </div>
+    </div>
+    <div class="th l">
+      <b class="ser" style="font-size:22px">Light</b>
+      <div class="grp"><span class="gl">Surfaces and lines</span><div class="sw">
+        <div><i class="chip" style="background:#faf9f5"></i>--bg<span class="hx">#faf9f5</span></div>
+        <div><i class="chip" style="background:#f5f0e8"></i>--surface<span class="hx">#f5f0e8</span></div>
+        <div><i class="chip" style="background:#efe9de"></i>--surface-2<span class="hx">#efe9de</span></div>
+        <div><i class="chip" style="background:#e8e0d2"></i>--surface-sunk<span class="hx">#e8e0d2</span></div>
+        <div><i class="chip" style="background:#ddd5c8"></i>--line<span class="hx">#ddd5c8</span></div>
+        <div><i class="chip" style="background:#7d7a72"></i>--line-strong<span class="hx">#7d7a72</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Text, accent, hazard</span><div class="sw">
+        <div><i class="chip" style="background:#141413"></i>--text<span class="hx">#141413</span></div>
+        <div><i class="chip" style="background:#3d3d3a"></i>--text-body<span class="hx">#3d3d3a</span></div>
+        <div><i class="chip" style="background:#66645e"></i>--text-muted<span class="hx">#66645e</span></div>
+        <div><i class="chip" style="background:#9a4d34"></i>--accent<span class="hx">#9a4d34</span></div>
+        <div><i class="chip" style="background:#f1ddd3"></i>--accent-soft<span class="hx">#f1ddd3</span></div>
+        <div><i class="chip" style="background:#8a5300"></i>--hazard<span class="hx">#8a5300</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Difficulty and cost categories</span><div class="sw">
+        <div><i class="chip" style="background:#0f7a6e"></i>Easy<span class="hx">#0f7a6e</span></div>
+        <div><i class="chip" style="background:#946400"></i>Moderate<span class="hx">#946400</span></div>
+        <div><i class="chip" style="background:#6a4cc4"></i>Hard<span class="hx">#6a4cc4</span></div>
+        <div><i class="chip" style="background:#5f5a9c"></i>Transport<span class="hx">cat-3</span></div>
+        <div><i class="chip" style="background:#3f6f86"></i>Lodging<span class="hx">cat-1</span></div>
+        <div><i class="chip" style="background:#8a6a2c"></i>Food<span class="hx">cat-2</span></div>
+      </div></div>
+      <div class="grp"><span class="gl">Contrast, computed</span>
+        <div class="pair"><span>Text on bg</span><b class="num">17.5 : 1</b></div>
+        <div class="pair"><span>Muted on surface-2 (captions in panels)</span><b class="num">4.9 : 1</b></div>
+        <div class="pair"><span>Accent text on accent-soft (selected chip)</span><b class="num">4.6 : 1</b></div>
+        <div class="pair"><span>On-accent on accent (primary button)</span><b class="num">6.0 : 1</b></div>
+        <div class="pair"><span>Hazard on hazard-soft (warning chip)</span><b class="num">5.1 : 1</b></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button style="min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #9a4d34;background:#9a4d34;color:#ffffff;font:600 14px Inter,sans-serif">Primary</button>
+        <button style="min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #7d7a72;background:transparent;color:#141413;font:500 14px Inter,sans-serif">Secondary</button>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#f7e6c4;color:#8a5300;border-radius:8px;padding:0 12px;min-height:44px;font-weight:500"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg>Hazard, with words</span>
+      </div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="box">
+      <span class="gl" style="color:#66645e">Type scale (tokens only; v1 used 56, 40, 30 and 28 px, which are off the scale)</span>
+      <div class="scale">
+        <div><span class="hx" style="color:#66645e">--fs-h1 44 Fraunces 500</span><span class="ser" style="font-size:44px;line-height:1.1">Angels Landing</span></div>
+        <div><span class="hx" style="color:#66645e">--fs-h2 22 Fraunces</span><span class="ser" style="font-size:22px;font-weight:400">Go in Q4, October to December.</span></div>
+        <div><span class="hx" style="color:#66645e">--fs-h3 18 Fraunces 400</span><span class="ser" style="font-size:18px;font-weight:400">Section answer sentence</span></div>
+        <div><span class="hx" style="color:#66645e">--fs-num-l 32 Archivo Narrow</span><span class="num" style="font-size:32px">$1,437 · 100%</span></div>
+        <div><span class="hx" style="color:#66645e">--fs-num-m 20 / num-s 15</span><span class="num" style="font-size:20px">5.4 mi · 9:44 am <span style="font-size:15px">· 12:44</span></span></div>
+        <div><span class="hx" style="color:#66645e">--fs-body 14 Inter 400</span><span style="font-size:14px;color:#3d3d3a">Typical, from past years. Body and table text.</span></div>
+        <div><span class="hx" style="color:#66645e">--fs-small 12 / micro 11</span><span style="font-size:12px;color:#66645e">Captions and sources · <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">Eyebrow</span></span></div>
+      </div>
+    </div>
+    <div class="box">
+      <span class="gl" style="color:#66645e">Space, radius, targets</span>
+      <div class="sp">
+        <div><i style="width:4px;height:4px"></i>4</div><div><i style="width:8px;height:8px"></i>8</div><div><i style="width:12px;height:12px"></i>12</div><div><i style="width:16px;height:16px"></i>16</div><div><i style="width:20px;height:20px"></i>20</div><div><i style="width:24px;height:24px"></i>24</div><div><i style="width:32px;height:32px"></i>32</div><div><i style="width:48px;height:48px"></i>48</div>
+      </div>
+      <p style="margin:0;color:#3d3d3a;font-size:14px">Section gap 48. Card padding 20 (12 on phone). Grid gap 20. Radius 8 for controls, 12 for cards, pill only for toggles. Every control is at least 44 by 44 px.</p>
+      <span class="gl" style="color:#66645e;margin-top:8px">Card roles</span>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-size:12px;color:#3d3d3a">
+        <div style="background:#f5f0e8;border:1px solid #ddd5c8;border-radius:12px;padding:12px;min-height:72px"><b style="color:#141413">Chart card</b><br>surface, hairline, radius 12</div>
+        <div style="background:#efe9de;border:1px solid #ddd5c8;border-radius:12px;padding:12px;min-height:72px"><b style="color:#141413">Control panel</b><br>surface-2: what-if, stop card</div>
+        <div style="border-top:1px solid #7d7a72;border-bottom:1px solid #ddd5c8;padding:12px 0;min-height:72px"><b style="color:#141413">Evidence</b><br>ruled, no box: advice vs data</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

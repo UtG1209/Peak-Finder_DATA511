@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hike World</title>
+<style>
+:root{--bg:#faf9f5;--surface:#f5f0e8;--text:#141413;--muted:#66645e;--accent:#9a4d34;--line:#e8e0d2;--glass:rgba(250,249,245,.58);--glassline:rgba(20,20,19,.14)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181715;--surface:#1f1e1b;--text:#faf9f5;--muted:#a09d96;--accent:#d9866a;--line:#2d2a26;--glass:rgba(31,30,27,.55);--glassline:rgba(255,255,255,.16);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#181715;--surface:#1f1e1b;--text:#faf9f5;--muted:#a09d96;--accent:#d9866a;--line:#2d2a26;--glass:rgba(31,30,27,.55);--glassline:rgba(255,255,255,.16);color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
+.w{max-width:1280px;margin:0 auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font:500 28px/1.2 Georgia,serif;margin:4px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button,select{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 16px;min-height:44px;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+#stage{position:relative;height:min(76vh,700px);min-height:420px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--bg)}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.lb{position:absolute;font-size:11px;color:var(--text);pointer-events:none;white-space:nowrap;transform:translate(-50%,-50%);text-shadow:0 0 6px var(--bg),0 0 2px var(--bg)}
+.lb.z{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);border:1px solid var(--glassline);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.22);color:var(--text)}
+#tip{position:absolute;pointer-events:none;padding:10px 14px;font-size:13px;max-width:260px;display:none;z-index:3}
+#panel{position:absolute;right:12px;bottom:12px;width:min(320px,calc(100% - 24px));padding:16px 18px;display:none;z-index:4;animation:in .28s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#panel{animation:none}}
+.glass h3{margin:0 0 2px;font:500 17px/1.25 Georgia,serif}
+.glass .sub{color:var(--muted);font-size:12px;margin-bottom:6px}
+.glass dl{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:6px 0 0;font-size:13px}
+.glass dt{color:var(--muted)}.glass dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.glass .fine{font-size:11px;color:var(--muted);margin-top:8px}
+.glass .chip{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11px;border:1px solid var(--glassline);margin-left:6px;vertical-align:middle}
+#x{position:absolute;top:8px;right:8px;min-height:32px;padding:2px 10px;font-size:12px}
+.note{color:var(--muted);font-size:13px;margin:6px 0}
+table{border-collapse:collapse;font-size:13px;width:100%}td,th{border-bottom:1px solid var(--line);padding:4px 8px;text-align:left}
+.tw{overflow-x:auto}
+input[type=range]{width:160px;accent-color:var(--accent)}
+</style>
+</head><body>
+<div class="w">
+<h1>Hike World</h1>
+<p class="note">One 3D world for Angels Landing: the mountain with its trail and checkpoint flags, a ring of month pillars, and four cost towers. Hover anything for a frosted card, click to pin it and fly there. Drag to orbit, scroll to zoom. Numbers are illustrative and typical (past years), not a quote.</p>
+<div class="row" id="zones" role="group" aria-label="Fly to">
+<button data-z="overview" aria-pressed="true">Overview</button><button data-z="mountain" aria-pressed="false">Trail</button><button data-z="seasons" aria-pressed="false">Seasons</button><button data-z="cost" aria-pressed="false">Cost</button>
+<span style="flex:1"></span>
+<label>Quarter <select id="q"><option value="1">Q1 Jan-Mar</option><option value="2">Q2 Apr-Jun</option><option value="3">Q3 Jul-Sep</option><option value="4" selected>Q4 Oct-Dec</option></select></label>
+<button id="play" aria-pressed="true">Hiker walking</button><button id="th">Dark / light</button>
+</div>
+<div id="stage"><canvas id="cv" role="img" aria-label="3D world of the Angels Landing hike page. A text version follows below the scene."></canvas><div id="tip" class="glass"></div><div id="panel" class="glass" role="dialog" aria-label="Details"><button id="x" aria-label="Close details">Close</button><div id="pc"></div></div></div>
+<p id="nogl" class="note" hidden>3D view needs WebGL. The 2D charts on the page show the same numbers.</p>
+<details><summary>Text version of everything in the world</summary><div class="tw" id="tbl"></div></details>
+</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const D={"hikes":[{"id":"angels-landing","name":"Angels Landing","park":"Zion National Park","d":"h","len":5.4,"gain":1488,"top":5759},{"id":"bright-angel-trail","name":"Bright Angel Trail to Phantom Ranch","park":"Grand Canyon National Park","d":"h","len":9.9,"gain":4314,"top":6860},{"id":"cascade-pass-sahale","name":"Cascade Pass to Sahale Glacier","park":"North Cascades National Park","d":"h","len":11.8,"gain":3940,"top":7594},{"id":"mount-washburn","name":"Mount Washburn via Dunraven Pass","park":"Yellowstone National Park","d":"h","len":6.0,"gain":1400,"top":10243},{"id":"fairy-falls-grand-prismatic","name":"Fairy Falls (without Grand Prismatic Overlook)","park":"Yellowstone National Park","d":"e","len":4.5,"gain":54,"top":7304},{"id":"grinnell-glacier","name":"Grinnell Glacier","park":"Glacier National Park","d":"h","len":10.0,"gain":2596,"top":6488},{"id":"glacier-highline","name":"Highline Trail to Granite Park Chalet","park":"Glacier National Park","d":"m","len":7.6,"gain":800,"top":7273},{"id":"half-dome","name":"Half Dome","park":"Yosemite National Park","d":"h","len":16.2,"gain":4830,"top":8800},{"id":"moro-rock","name":"Moro Rock","park":"Sequoia and Kings Canyon National Parks","d":"e","len":0.5,"gain":300,"top":6275},{"id":"delicate-arch","name":"Delicate Arch","park":"Arches National Park","d":"m","len":3.0,"gain":480,"top":4771},{"id":"mesa-arch","name":"Mesa Arch","park":"Canyonlands National Park","d":"e","len":0.6,"gain":56,"top":6139},{"id":"navajo-loop-queens-garden","name":"Navajo Loop and Queen's Garden","park":"Bryce Canyon National Park","d":"m","len":2.9,"gain":625,"top":8002},{"id":"skyline-trail","name":"Skyline Trail","park":"Mount Rainier National Park","d":"m","len":5.5,"gain":1700,"top":6901},{"id":"ryan-mountain","name":"Ryan Mountain","park":"Joshua Tree National Park","d":"h","len":3.0,"gain":1050,"top":5456},{"id":"emerald-lake","name":"Emerald Lake","park":"Rocky Mountain National Park","d":"m","len":3.6,"gain":605,"top":10110},{"id":"inspiration-point","name":"Hidden Falls and Inspiration Point","park":"Grand Teton National Park","d":"m","len":5.7,"gain":870,"top":7221},{"id":"cadillac-north-ridge","name":"Cadillac North Ridge","park":"Acadia National Park","d":"m","len":4.4,"gain":1134,"top":1527},{"id":"alum-cave-leconte","name":"Alum Cave to Mount LeConte","park":"Great Smoky Mountains National Park","d":"h","len":10.0,"gain":2494,"top":6593},{"id":"clingmans-dome","name":"Clingmans Dome Tower","park":"Great Smoky Mountains National Park","d":"e","len":1.0,"gain":330,"top":6643},{"id":"anhinga-trail","name":"Anhinga Trail","park":"Everglades National Park","d":"e","len":0.8,"gain":0,"top":10},{"id":"zion-narrows","name":"The Narrows, bottom-up","park":"Zion National Park","d":"h","len":9.4,"gain":200,"top":4900},{"id":"longs-peak","name":"Longs Peak Keyhole Route","park":"Rocky Mountain National Park","d":"h","len":15.0,"gain":5100,"top":14259},{"id":"general-sherman-tree","name":"General Sherman Tree","park":"Sequoia and Kings Canyon National Parks","d":"e","len":1.0,"gain":200,"top":7050}],"months":{"angels-landing":{"t":[52.0,59.0,65.0,74.0,82.0,97.0,101.0,98.0,91.0,79.0,65.5,56.0],"c":[0.19,0.23,0.64,0.83,0.91,1.0,0.99,0.83,0.87,0.76,0.41,0.3]},"bright-angel-trail":{"t":[40.0,45.0,51.5,62.0,68.0,82.0,85.0,81.0,75.0,64.0,53.0,44.0],"c":[0.26,0.3,0.61,0.66,0.77,0.86,1.0,0.98,0.73,0.66,0.47,0.43]},"cascade-pass-sahale":{"t":[34.0,34.0,40.0,45.0,56.0,62.0,71.0,71.0,59.0,47.0,35.0,31.0],"c":[0.0,0.0,0.01,0.01,0.12,0.33,0.77,1.0,0.61,0.09,0.01,0.0]},"mount-washburn":{"t":[28.0,30.0,38.0,45.0,55.0,67.0,75.0,71.0,63.0,46.0,33.5,26.0],"c":[0.03,0.04,0.03,0.06,0.46,0.84,1.0,0.87,0.72,0.25,0.02,0.03]},"fairy-falls-grand-prismatic":{"t":[29.0,30.0,39.0,45.0,56.0,70.0,79.0,76.0,69.0,51.0,34.0,27.0],"c":[0.03,0.04,0.03,0.06,0.46,0.84,1.0,0.87,0.72,0.25,0.02,0.03]},"grinnell-glacier":{"t":[34.0,32.0,40.0,48.0,59.0,69.0,79.0,77.0,63.0,49.0,36.0,32.0],"c":[0.02,0.02,0.03,0.05,0.23,0.68,1.0,0.85,0.61,0.12,0.03,0.02]},"glacier-highline":{"t":[34.0,32.0,40.0,48.0,59.0,69.0,79.0,77.0,63.0,49.0,36.0,32.0],"c":[0.02,0.02,0.03,0.05,0.23,0.68,1.0,0.85,0.61,0.12,0.03,0.02]},"half-dome":{"t":[44.0,42.0,43.0,53.0,59.0,72.0,78.0,78.0,72.0,61.0,52.0,45.0],"c":[0.22,0.22,0.29,0.47,0.66,0.92,0.98,1.0,0.91,0.72,0.37,0.25]},"moro-rock":{"t":[62.0,66.0,70.0,79.5,86.0,97.0,102.0,100.0,95.0,85.0,71.0,60.0],"c":[0.19,0.17,0.31,0.45,0.66,0.79,1.0,0.95,0.74,0.48,0.3,0.24]},"delicate-arch":{"t":[43.0,52.0,62.0,73.0,81.0,95.5,101.0,97.0,90.0,73.0,57.0,43.0],"c":[0.14,0.21,0.68,0.79,1.0,0.99,1.0,0.88,0.96,0.75,0.38,0.22]},"mesa-arch":{"t":[39.0,45.0,54.0,65.0,73.5,88.0,93.0,89.0,83.0,67.0,50.0,39.0],"c":[0.06,0.12,0.57,0.84,1.0,0.77,0.61,0.6,0.84,0.72,0.31,0.13]},"navajo-loop-queens-garden":{"t":[36.0,39.0,44.0,56.0,62.0,76.5,81.0,78.0,71.0,58.0,46.5,38.0],"c":[0.08,0.09,0.25,0.55,0.85,1.0,0.93,0.84,0.99,0.63,0.2,0.12]},"skyline-trail":{"t":[35.0,32.0,36.0,40.0,51.0,59.0,66.0,68.0,56.0,46.0,37.0,32.0],"c":[0.07,0.05,0.08,0.08,0.26,0.6,1.0,0.99,0.54,0.3,0.12,0.07]},"ryan-mountain":{"t":[64.0,68.0,75.0,85.0,90.0,102.0,105.0,104.0,97.0,85.0,72.0,64.0],"c":[0.59,0.7,1.0,0.89,0.61,0.39,0.32,0.35,0.39,0.55,0.75,0.75]},"emerald-lake":{"t":[28.0,29.0,37.0,45.0,53.0,68.0,73.0,70.5,65.0,50.5,38.0,30.0],"c":[0.13,0.11,0.16,0.18,0.32,0.76,1.0,0.86,0.74,0.42,0.16,0.13]},"inspiration-point":{"t":[25.0,29.0,38.0,47.0,60.0,73.0,82.0,79.0,71.0,54.5,37.0,28.0],"c":[0.07,0.07,0.08,0.08,0.37,0.82,1.0,0.91,0.68,0.26,0.06,0.06]},"cadillac-north-ridge":{"t":[32.0,34.0,41.0,52.0,63.0,72.0,79.0,77.0,71.0,60.0,46.0,36.0],"c":[0.02,0.02,0.03,0.12,0.32,0.65,0.99,1.0,0.79,0.66,0.07,0.02]},"alum-cave-leconte":{"t":[39.0,47.0,52.0,59.0,68.0,73.0,76.0,74.0,71.0,63.0,52.0,46.0],"c":[0.27,0.31,0.53,0.64,0.73,0.94,1.0,0.83,0.86,0.98,0.58,0.45]},"clingmans-dome":{"t":[39.0,47.0,52.0,59.0,68.0,73.0,76.0,74.0,71.0,63.0,52.0,46.0],"c":[0.27,0.31,0.53,0.64,0.73,0.94,1.0,0.83,0.86,0.98,0.58,0.45]},"anhinga-trail":{"t":[78.0,82.0,84.0,87.0,89.0,91.0,92.0,92.0,91.0,88.0,83.0,82.0],"c":[0.92,0.76,1.0,0.75,0.58,0.51,0.5,0.45,0.35,0.4,0.51,0.64]},"zion-narrows":{"t":[52.0,59.0,65.0,74.0,82.0,97.0,101.0,98.0,91.0,79.0,65.5,56.0],"c":[0.19,0.23,0.64,0.83,0.91,1.0,0.99,0.83,0.87,0.76,0.41,0.3]},"longs-peak":{"t":[35.0,37.0,43.0,50.0,58.0,72.0,77.0,75.0,72.0,58.0,45.0,36.0],"c":[0.13,0.11,0.16,0.18,0.32,0.76,1.0,0.86,0.74,0.42,0.16,0.13]},"general-sherman-tree":{"t":[62.0,66.0,70.0,79.5,86.0,97.0,102.0,100.0,95.0,85.0,71.0,60.0],"c":[0.19,0.17,0.31,0.45,0.66,0.79,1.0,0.95,0.74,0.48,0.3,0.24]}},"prof":{"pts":[[0,1304],[40,1303],[80,1302],[120,1303],[160,1303],[200,1304],[240,1312],[280,1314],[320,1315],[360,1308],[400,1315],[440,1316],[480,1315],[520,1316],[560,1315],[600,1318],[640,1322],[680,1323],[720,1324],[760,1328],[800,1334],[840,1340],[880,1344],[920,1348],[960,1350],[1000,1356],[1040,1366],[1080,1370],[1120,1377],[1160,1378],[1200,1376],[1240,1380],[1280,1384],[1320,1388],[1360,1391],[1400,1403],[1440,1409],[1480,1415],[1520,1426],[1560,1416],[1600,1430],[1640,1437],[1680,1444],[1720,1454],[1760,1465],[1800,1462],[1840,1485],[1880,1497],[1920,1494],[1960,1500],[2000,1503],[2040,1504],[2080,1504],[2120,1506],[2160,1518],[2200,1510],[2240,1515],[2280,1525],[2320,1529],[2360,1528],[2400,1527],[2440,1525],[2480,1539],[2520,1565],[2560,1619],[2600,1624],[2640,1621],[2680,1628],[2720,1640],[2760,1643],[2800,1667],[2840,1661],[2880,1653],[2920,1631],[2960,1629],[3000,1656],[3040,1691],[3080,1702],[3120,1727],[3160,1757],[3200,1766],[3240,1768],[3280,1761]],"cps":[["The Grotto shuttle stop",0],["Up the canyon wall",990],["Refrigerator Canyon",2050],["Walter's Wiggles",2410],["Where most hikers stop",2650],["Holding the chains",2940],["Angels Landing summit",3307]],"scale":1.314}};
+const $=s=>document.querySelector(s);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const TH={dark:{bg:0x181715,fog:0x181715,ground:0x24221f,plinth:0x2d2a26,accent:0xcc785c,easy:0x68c9b8,mod:0xd9a441,hard:0xa58be8,lo:0x4a3a30,hi:0xd6d2c9,glass:0xfaf9f5},
+          light:{bg:0xfaf9f5,fog:0xfaf9f5,ground:0xefe9de,plinth:0xe0d6c4,accent:0x9a4d34,easy:0x0f7a6e,mod:0x946400,hard:0x6a4cc4,lo:0xa89078,hi:0xf5f0e8,glass:0x141413}};
+let theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light', quarter=4, playing=!reduce, s=0.3, hoverObj=null, pinned=null, zone='overview';
+const cv=$('#cv');let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true});}catch(e){$('#nogl').hidden=false;$('#stage').hidden=true;throw e}
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.5,400),ctl=new OrbitControls(cam,cv);
+ctl.enableDamping=!reduce;ctl.maxPolarAngle=Math.PI*.49;ctl.minDistance=6;ctl.maxDistance=90;
+const c=()=>TH[theme],hex=k=>new THREE.Color(c()[k]);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const WET=[6.4,4.5,5.8,2.1,2.8,0.7,2.5,3.9,2.8,2.4,2.9,5.3],SMK=[0,0,0,0,0,0,0,.2,0,0,0,0],DAY=[9.9,10.8,11.9,13.1,14.1,14.7,14.5,13.6,12.5,11.3,10.2,9.6];
+const RISE=['07:45','07:22','07:45','06:59','06:24','06:11','06:22','06:48','07:13','07:38','07:10','07:38'],SET=['17:36','18:10','19:38','20:06','20:32','20:53','20:53','20:26','19:42','18:56','17:23','17:15'];
+const COST={t:[795,902,836,792],l:246,f:170,a:41};
+const segs=q=>{const base=COST.t[q]+COST.l+COST.f+COST.a;return [['Transport','Flight and rental car',COST.t[q],'DOT airfare Table 6, car rental assumed'],['Lodging','2 nights, 12% tax',COST.l,'GSA per diem'],['Food','2.5 days',COST.f,'GSA meals'],['Entry and permit','Vehicle fee + permit',COST.a,'NPS fees'],['Buffer','15% of the rest',Math.round(base*.15),'Team assumption']]};
+const QM=[0,[0,1,2],[3,4,5],[6,7,8],[9,10,11]],qAvg=(a,q)=>QM[q].reduce((x,i)=>x+a[i],0)/3,money=n=>'$'+Math.round(n).toLocaleString();
+const band=v=>v<.35?'Quiet':v<.65?'Moderate':'Busy';
+let labels=[],pick=[],anims=[],mats=[],U={};
+const ease=t=>1-Math.pow(1-t,3);
+function tween(ms,fn,delay=0){const t0=performance.now()+delay;anims.push(now=>{const t=Math.min(1,Math.max(0,(now-t0)/ms));fn(reduce?1:ease(t));return t<1||reduce&&false});wake()}
+function label(text,v,cls=''){const el=document.createElement('div');el.className='lb '+cls;el.textContent=text;$('#stage').appendChild(el);labels.push({el,v});return el}
+function mat(col,o={}){const m=new THREE.MeshStandardMaterial({color:col,flatShading:true,roughness:.85,metalness:0,...o});mats.push(m);return m}
+function box(w,h,d,m,x,y,z){const g=new THREE.BoxGeometry(w,h,d);g.translate(0,h/2,0);const o=new THREE.Mesh(g,m);o.position.set(x,y,z);scene.add(o);return o}
+function clear(){scene.traverse(n=>{n.geometry?.dispose();});mats.forEach(m=>m.dispose());mats=[];while(scene.children.length)scene.remove(scene.children[0]);labels.forEach(l=>l.el.remove());labels=[];pick=[];anims=[];hoverObj=null;U={};hideTip()}
+
+/* ---------- world ---------- */
+const H=14,R=9,TRAIL=D.prof.pts;
+const noise=(th,u)=>1+.07*Math.sin(3*th+u*6)+.05*Math.sin(7*th-u*3);
+const surf=(th,u)=>{const r=R*Math.pow(1-u,.9)*noise(th,u);return new THREE.Vector3(Math.cos(th)*r,u*H,Math.sin(th)*r)};
+function build(){
+  clear();scene.background=hex('bg');scene.fog=new THREE.Fog(c().fog,70,170);
+  scene.add(new THREE.HemisphereLight(0xffffff,c().ground,theme==='dark'?1.15:1.35));
+  const sun=new THREE.DirectionalLight(0xfff1e0,theme==='dark'?1.5:1.9);sun.position.set(25,45,20);scene.add(sun);
+  const ground=new THREE.Mesh(new THREE.CylinderGeometry(70,70,1,64),mat(c().ground));ground.position.y=-.5;scene.add(ground);
+
+  /* mountain */
+  const SR=72,SH=26,pos=[],col=[],idx=[],lo=hex('lo'),hi=hex('hi'),cc=new THREE.Color();
+  for(let j=0;j<=SH;j++){const u=j/SH;for(let i=0;i<=SR;i++){const th=i/SR*Math.PI*2,p=surf(th,Math.min(u,.999));pos.push(p.x,p.y,p.z);cc.copy(lo).lerp(hi,Math.pow(u,1.4));col.push(cc.r,cc.g,cc.b)}}
+  for(let j=0;j<SH;j++)for(let i=0;i<SR;i++){const a=j*(SR+1)+i,b=a+SR+1;idx.push(a,a+1,b,a+1,b+1,b)}
+  const mg=new THREE.BufferGeometry();mg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));mg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));mg.setIndex(idx);mg.computeVertexNormals();
+  const mtn=new THREE.Mesh(mg,mat(0xffffff,{vertexColors:true}));scene.add(mtn);
+  mtn.userData={zone:'mountain',card:()=>card('Angels Landing','Zion National Park, UT <span class="chip">Hard</span>',[['Round trip (NPS)','5.4 mi'],['Typical gain','1,500 ft'],['Summit','5,790 ft'],['Permit','Lottery from Scout Lookout']],'Chains and exposure above Scout Lookout. Typical, from past years.')};pick.push(mtn);
+  /* trail */
+  const e0=TRAIL[0][1],e1=TRAIL[TRAIL.length-1][1],N=TRAIL.length,curvePts=[];
+  TRAIL.forEach(([d,e],i)=>{const u=Math.min(.97,(e-e0)/(e1-e0)*.97),th=.4+i/(N-1)*Math.PI*2.3,p=surf(th,u);const n=p.clone().setY(0).normalize().multiplyScalar(.12);curvePts.push(p.add(n))});
+  const curve=new THREE.CatmullRomCurve3(curvePts);U.curve=curve;
+  const trail=new THREE.Mesh(new THREE.TubeGeometry(curve,260,.13,6),mat(c().accent,{emissive:c().accent,emissiveIntensity:.5}));scene.add(trail);
+  trail.userData={glow:.5,zone:'mountain',card:()=>card('Trail','West Rim Trail to the summit',[['Route','Out and back'],['Climb','about 1,500 ft'],['Steepest','Walter\'s Wiggles']],'Same route as the 2D elevation profile.')};pick.push(trail);
+  /* checkpoint flags */
+  U.flags=[];
+  D.prof.cps.forEach(([name,dm],k)=>{const i=TRAIL.findIndex(p=>p[0]>=dm-1),t=(i<0?N-1:i)/(N-1),p=curve.getPoint(t),g=new THREE.Group();
+    const pole=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,1.5,6),mat(c().glass));pole.position.y=.75;g.add(pole);
+    const fl=new THREE.Mesh(new THREE.ConeGeometry(.4,.8,3),mat(k===D.prof.cps.length-1?c().glass:c().accent,{emissive:c().accent,emissiveIntensity:.25}));fl.rotation.z=-Math.PI/2;fl.position.set(.38,1.2,0);g.add(fl);
+    g.position.copy(p);scene.add(g);
+    const mins=Math.round(dm*1.314/1000/2.2*60)+k*10,cl=(h)=>{const m=7*60+45+h;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+    const info=()=>card('C'+k+'  '+name,'Checkpoint',[['Distance',(dm/1609).toFixed(1)+' mi'],['Elevation',Math.round(TRAIL[i<0?N-1:i][1]*3.281).toLocaleString()+' ft'],['Reach (start 07:45)',cl(mins)]],'Clock time is a typical estimate for a Q4 start.');
+    [pole,fl].forEach(o=>{o.userData={zone:'mountain',card:info,flag:g,glow:o===fl?.25:0};pick.push(o)});U.flags.push(g)});
+  /* hiker */
+  const hk=new THREE.Mesh(new THREE.SphereGeometry(.38,20,14),mat(c().accent,{emissive:c().accent,emissiveIntensity:.8}));scene.add(hk);U.hk=hk;
+  hk.userData={glow:.8,zone:'mountain',card:()=>{const f=hikerT();const i=Math.min(N-1,Math.round(f*(N-1)));return card('You','Hiker marker, '+(s<=.5?'going up':'coming down'),[['Distance',(TRAIL[i][0]/1609).toFixed(1)+' mi'],['Elevation',Math.round(TRAIL[i][1]*3.281).toLocaleString()+' ft']],'Same scrubber as the 2D profile.')}};pick.push(hk);
+  label('Angels Landing',new THREE.Vector3(0,H+2.4,0),'z');
+
+  /* clouds */
+  U.clouds=[];for(let k=0;k<5;k++){const g=new THREE.Group(),m=mat(0xffffff,{transparent:true,opacity:theme==='dark'?.28:.7});for(let j=0;j<4;j++){const sp=new THREE.Mesh(new THREE.IcosahedronGeometry(1.4+Math.random()*.8,1),m);sp.position.set(j*1.6-2.4,Math.random()*.6,Math.random()*.8);sp.scale.y=.55;g.add(sp)}g.userData={r:16+k*3.2,a:k*1.3,y:H+4+k*1.2,sp:.04+k*.01};scene.add(g);U.clouds.push(g)}
+
+  /* seasons ring */
+  const Z0=18,plinth=box(26,.5,5,mat(c().plinth),0,0,Z0);plinth.position.y=0;
+  const tl=D.months['angels-landing'],bandBox=new THREE.Mesh(new THREE.BoxGeometry(24,3,3.4),mat(c().accent,{transparent:true,opacity:.14}));bandBox.position.set(0,.5+5.5+1.5,Z0);scene.add(bandBox);
+  label('Your limit 55 to 85 F',new THREE.Vector3(-9.4,9.6,Z0+1.8));
+  label('Seasons',new THREE.Vector3(0,13.6,Z0),'z');
+  U.pillars=[];
+  MON.forEach((mn,m)=>{const t=tl.t[m],cr=tl.c[m],h=t/10,x=(m-5.5)*2,col=hex('plinth').lerp(hex('accent'),cr);
+    const p=box(1.3,1,1.3,mat(col,{emissive:c().accent,emissiveIntensity:0}),x,.5,Z0);p.scale.y=.001;p.userData={zone:'seasons',h,m,card:()=>card(mn,'Month '+(m+1)+(QM[quarter].includes(m)?' <span class="chip">in Q'+quarter+'</span>':''),[['Typical high',t+' F'],['Crowds',band(cr)+' ('+cr+')'],['Smoky days',SMK[m]],['Wet days',WET[m]],['Daylight',DAY[m]+' h'],['Sun',RISE[m]+' to '+SET[m]]],'Typical, past years 2015 to 2024 without 2020. Park-level crowds.')};
+    pick.push(p);U.pillars.push(p);label(mn[0],new THREE.Vector3(x,.1,Z0+1.4));
+    tween(900,g=>{p.scale.y=Math.max(.001,h*g)},m*60);
+    if(SMK[m]>0){const sm=new THREE.Mesh(new THREE.IcosahedronGeometry(.35+SMK[m]*1.2,1),mat(0x8a8780,{transparent:true,opacity:.7}));sm.position.set(x,h+1,Z0);scene.add(sm)}});
+
+  /* cost towers */
+  const X0=30,pl2=box(6,.5,22,mat(c().plinth),X0,0,0);label('Cost',new THREE.Vector3(X0,14.5,0),'z');label('One traveller, 2 nights, from Seattle',new THREE.Vector3(X0,13.4,0));
+  U.stacks=[];const SC=[c().accent,0xa8664f,0x7d5a4c,0xe3b8a6,c().glass];
+  for(let q=0;q<4;q++){const z=-8.25+q*5.5,g=[];let acc=.5,tot=0;
+    segs(q).forEach(([nm,dsc,v,src],k)=>{const h=v/120,b=box(3.2,1,3.2,mat(SC[k],{emissive:SC[k],emissiveIntensity:0,transparent:k===4,opacity:k===4?.42:1}),X0,acc,z);b.scale.y=.001;
+      b.userData={zone:'cost',q,k,h,y0:acc,card:()=>card(nm+', Q'+(q+1),dsc,[['Amount',money(v)],['Quarter total',money(segs(q).reduce((a,x)=>a+x[2],0))]],src+'. Typical, from past data. Not a price quote.')};
+      pick.push(b);g.push(b);acc+=h;tot+=v});
+    g.forEach((b,k)=>tween(900,e=>{b.scale.y=Math.max(.001,b.userData.h*e);b.position.y=.5+g.slice(0,k).reduce((a,x)=>a+x.userData.h,0)*e},q*160));
+    U.stacks.push(g);label('Q'+(q+1),new THREE.Vector3(X0,.1,z+2.4));label(money(tot),new THREE.Vector3(X0,tot/120+1.6,z),'z').style.fontSize='11px'}
+
+  setQuarterGlow();ctl.update();fly(zone==='overview'?'overview':zone,true);
+}
+function setQuarterGlow(){U.pillars.forEach(p=>{p.userData.glow=QM[quarter].includes(p.userData.m)?.55:0;p.material.emissiveIntensity=p.userData.glow});
+  U.stacks.forEach((g,q)=>g.forEach(b=>{b.userData.glow=q===quarter-1?.45:0;b.material.emissiveIntensity=b.userData.glow}))}
+
+/* ---------- cards ---------- */
+function card(t,sub,rows,fine){return '<h3>'+t+'</h3><div class="sub">'+sub+'</div><dl>'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('')+'</dl><div class="fine">'+fine+'</div>'}
+const tip=$('#tip'),panel=$('#panel');
+function hideTip(){tip.style.display='none'}
+function setHover(o,e){
+  if(hoverObj&&hoverObj!==o){hl(hoverObj,false)}
+  hoverObj=o;cv.style.cursor=o?'pointer':'grab';
+  if(!o){hideTip();return}
+  hl(o,true);tip.innerHTML=o.userData.card();tip.style.display='block';
+  const r=$('#stage').getBoundingClientRect();let x=e.clientX-r.left+16,y=e.clientY-r.top+16;
+  x=Math.min(x,r.width-tip.offsetWidth-8);y=Math.min(y,r.height-tip.offsetHeight-8);tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px'}
+function hl(o,on){const g=o.userData.flag,tgt=g?g.children:[o];tgt.forEach(m=>{if(m.material?.emissive)m.material.emissiveIntensity=on?1:(m.userData.glow||0)});
+  const k=on?1.12:1;if(o.userData.zone==='seasons'){o.scale.x=o.scale.z=(o.userData.me?1.4:1)*k}else if(g){g.scale.setScalar(k)}}
+function pin(o){pinned=o;$('#pc').innerHTML=o.userData.card();panel.style.display='block';panel.style.animation='none';void panel.offsetWidth;panel.style.animation='';fly(o.userData.zone)}
+$('#x').onclick=()=>{panel.style.display='none';pinned=null};
+addEventListener('keydown',e=>{if(e.key==='Escape'){panel.style.display='none';pinned=null}});
+
+/* ---------- camera ---------- */
+const V={overview:[[0,30,64],[0,5,4]],mountain:[[-15,13,19],[0,6.5,0]],seasons:[[0,9,35],[0,4.5,18]],cost:[[48,12,12],[30,5,0]]};
+let flyA=null;
+function fly(z,instant){zone=z;document.querySelectorAll('#zones [data-z]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.z===z));
+  const [p,t]=V[z],P=new THREE.Vector3(...p),T=new THREE.Vector3(...t);
+  if(instant||reduce){cam.position.copy(P);ctl.target.copy(T);ctl.update();wake();return}
+  const p0=cam.position.clone(),t0=ctl.target.clone(),st=performance.now();flyA=now=>{const k=ease(Math.min(1,(now-st)/1200));cam.position.lerpVectors(p0,P,k);ctl.target.lerpVectors(t0,T,k);return k<1}}
+document.querySelectorAll('#zones [data-z]').forEach(b=>b.onclick=()=>fly(b.dataset.z));
+
+/* ---------- loop ---------- */
+const clock=()=>performance.now()/1000;
+const hikerT=()=>s<=.5?s*2:(1-s)*2;
+let running=false;
+function wake(){if(!running){running=true;requestAnimationFrame(loop)}}
+function loop(now){
+  anims=anims.filter(f=>f(now));
+  if(flyA&&!flyA(now))flyA=null;
+  const t=now/1000;
+  if(!reduce){
+    U.clouds?.forEach(g=>{const d=g.userData;d.a+=d.sp*.01;g.position.set(Math.cos(d.a)*d.r,d.y+Math.sin(t+d.r)*.25,Math.sin(d.a)*d.r)});
+    U.flags?.forEach((g,i)=>{g.rotation.y=Math.sin(t*1.4+i)*.25});
+    if(playing){s=(s+.0011)%1;slider.value=Math.round(s*1000)}
+  }
+  if(U.hk){const f=hikerT();U.hk.position.copy(U.curve.getPoint(f));U.hk.position.y+=.45}
+  ctl.update();render(now);
+  running=(!reduce)||anims.length>0||!!flyA;
+  if(running)requestAnimationFrame(loop)}
+function render(){const w=$('#stage').clientWidth,h=$('#stage').clientHeight;if(cv.width!==Math.round(w*renderer.getPixelRatio())||cv.height!==Math.round(h*renderer.getPixelRatio())){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+  renderer.render(scene,cam);
+  labels.forEach(l=>{const v=l.v.clone().project(cam);l.el.style.display=v.z>1?'none':'block';l.el.style.left=(v.x+1)/2*w+'px';l.el.style.top=(1-v.y)/2*h+'px'})}
+ctl.addEventListener('change',wake);addEventListener('resize',wake);
+
+/* ---------- input ---------- */
+const ray=new THREE.Raycaster();let down=null;
+function hit(e){const r=cv.getBoundingClientRect();ray.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1),cam);return ray.intersectObjects(pick,false)[0]?.object||null}
+cv.addEventListener('pointermove',e=>{if(e.buttons)return;const o=hit(e);if(o!==hoverObj||o)setHover(o,e);wake()});
+cv.addEventListener('pointerleave',()=>{setHover(null);wake()});
+cv.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+cv.addEventListener('pointerup',e=>{if(!down)return;const d=Math.hypot(e.clientX-down[0],e.clientY-down[1]);down=null;if(d<5){const o=hit(e);if(o)pin(o)}});
+
+/* ---------- controls + text version ---------- */
+const slider=document.createElement('input');slider.type='range';slider.min=0;slider.max=1000;slider.value=300;slider.setAttribute('aria-label','Hiker position on the trail');
+$('#zones').insertBefore(slider,$('#play'));slider.oninput=e=>{s=e.target.value/1000;wake()};
+$('#play').onclick=e=>{playing=!playing;e.target.setAttribute('aria-pressed',playing);wake()};
+$('#q').onchange=e=>{quarter=+e.target.value;setQuarterGlow();if(pinned)$('#pc').innerHTML=pinned.userData.card();text();wake()};
+$('#th').onclick=()=>{theme=theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;build();wake()};
+function text(){const tl=D.months['angels-landing'];
+  $('#tbl').innerHTML='<table><tr><th>Month</th><th>Typical high F</th><th>Crowds</th><th>Smoky days</th><th>Wet days</th><th>Daylight h</th></tr>'+MON.map((m,i)=>'<tr><td>'+m+'</td><td>'+tl.t[i]+'</td><td>'+band(tl.c[i])+' ('+tl.c[i]+')</td><td>'+SMK[i]+'</td><td>'+WET[i]+'</td><td>'+DAY[i]+'</td></tr>').join('')+'</table><br><table><tr><th>Quarter</th>'+segs(0).map(x=>'<th>'+x[0]+'</th>').join('')+'<th>Total</th></tr>'+[0,1,2,3].map(q=>'<tr><td>Q'+(q+1)+'</td>'+segs(q).map(x=>'<td>'+money(x[2])+'</td>').join('')+'<td>'+money(segs(q).reduce((a,x)=>a+x[2],0))+'</td></tr>').join('')+'</table><br><table><tr><th>Checkpoint</th><th>Distance mi</th></tr>'+D.prof.cps.map((c,k)=>'<tr><td>C'+k+' '+c[0]+'</td><td>'+(c[1]/1609).toFixed(1)+'</td></tr>').join('')+'</table>'}
+document.documentElement.dataset.theme=theme;$('#play').setAttribute('aria-pressed',playing);text();build();wake();
+</script>
+
+</body></html>

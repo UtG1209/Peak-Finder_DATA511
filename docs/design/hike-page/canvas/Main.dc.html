@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wireframe, desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#fff;font-family:Inter,system-ui,sans-serif;color:#222}
+.p{max-width:1280px;margin:0 auto;padding:24px 40px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:20px}
+.bar{display:flex;gap:16px;align-items:center;justify-content:space-between;border-bottom:2px solid #222;padding-bottom:10px;font-size:13px}
+.sec{border:2px solid #444;padding:16px;display:flex;flex-direction:column;gap:12px;position:relative}
+.tag{position:absolute;top:-12px;left:12px;background:#222;color:#fff;font-size:11px;padding:3px 8px;letter-spacing:.04em}
+.h{font-size:15px;font-weight:600;margin:0}
+.g{background:#e4e4e4;border:1px dashed #888;display:flex;align-items:center;justify-content:center;font-size:12px;color:#444;text-align:center;padding:6px;box-sizing:border-box}
+.row{display:flex;gap:16px;flex-wrap:wrap}
+.note{font-size:12px;color:#444;line-height:1.5;margin:0}
+.note b{color:#000}
+.sel{background:#222;color:#fff;font-size:12px;padding:8px 12px;display:flex;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:2}
+</style>
+</helmet>
+<div class="p">
+  <div class="bar"><span>&larr; Back to map (keeps pick, filters, scroll)</span><b>Peak Finder</b><span>Theme | Share link | Units</span></div>
+  <div class="sel"><b>LINKED SELECTION BAR (sticky, one state for the whole page):</b><span>Quarter Q4</span><span>Month Oct</span><span>Checkpoint C2</span><span>Clear</span></div>
+
+  <div class="sec"><span class="tag">1 HERO: answer first</span>
+    <div class="row">
+      <div class="g" style="width:440px;height:280px">Photo (900 px, lazy) + Commons credit</div>
+      <div style="flex:1;min-width:360px;display:flex;flex-direction:column;gap:12px">
+        <p class="note">Park, state &middot; difficulty chip &middot; gear icons</p>
+        <div class="g" style="height:44px;font-size:15px"><b>NAME (serif display)</b></div>
+        <div class="g" style="height:70px;font-size:15px">HEADLINE: "Q4 fits 91%: typical high 67&deg;F, no smoky days, about $1,440 from SEA"</div>
+        <div class="row"><div class="g" style="width:110px;height:64px">Length (NPS)</div><div class="g" style="width:110px;height:64px">Gain</div><div class="g" style="width:110px;height:64px">Summit</div><div class="g" style="flex:1;height:64px">Mini profile glyph (sparkline of the route)</div></div>
+        <div class="row"><div class="g" style="width:150px;height:40px">Walk it in 3D (featured only)</div><div class="g" style="width:150px;height:40px">Permit / closure note</div></div>
+      </div>
+    </div>
+    <p class="note"><b>Hover:</b> any hero number shows source and definition. <b>Missing data:</b> grey cell with the words, factor named in the headline as "left out".</p>
+  </div>
+
+  <div class="sec"><span class="tag">2 WHEN: season lens (replaces quarter chips + breakdown + month strip)</span>
+    <div class="row">
+      <div style="width:360px;display:flex;flex-direction:column;gap:10px">
+        <p class="h">Small multiples, Q1 to Q4</p>
+        <div class="row"><div class="g" style="width:170px;height:120px">Q1 card: match %, radar of 5 factors vs limits</div><div class="g" style="width:170px;height:120px">Q2</div><div class="g" style="width:170px;height:120px;border:2px solid #000">Q3 (selected = outlined)</div><div class="g" style="width:170px;height:120px">Q4 (best star)</div></div>
+        <p class="note"><b>Click / arrow keys:</b> pick quarter. Each card lists the one factor that costs it most, in words.</p>
+      </div>
+      <div style="flex:1;min-width:480px;display:flex;flex-direction:column;gap:10px">
+        <p class="h">One linked month chart (12 columns)</p>
+        <div class="g" style="height:230px">Typical-high band (p25 to p75) as an area, with the user's limit as two lines. Under it: crowd bars, smoky dots, wet dots, daylight line. Quarter framed.</div>
+        <p class="note"><b>Hover / brush a month:</b> every measure for that month highlights and the selection bar shows it. <b>Arrow keys:</b> step months. Text table behind a "Show as table" toggle.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><span class="tag">3 TRUTH CHECK: advice vs data</span>
+    <div class="row"><div class="g" style="width:300px;height:90px">Claim: "Go in September for quiet" (quote)</div><div class="g" style="flex:1;min-width:360px;height:90px">Two bars: claim vs data (e.g. crowd level 2010 vs 2023), difference labelled</div><div class="g" style="width:160px;height:90px">Source link</div></div>
+    <p class="note">Shown only when advice.json has a card for this hike. Otherwise the block is not rendered (no empty box).</p>
+  </div>
+
+  <div class="sec"><span class="tag">4 ON THE TRAIL</span>
+    <div class="row" style="align-items:center"><div class="g" style="width:160px;height:36px">Start time input</div><div class="g" style="width:160px;height:36px">2D | 3D ribbon toggle (3D desktop only)</div><div class="g" style="width:240px;height:36px">Daylight warning in words</div></div>
+    <div class="row">
+      <div class="g" style="flex:1;min-width:560px;height:300px">2D elevation profile: distance x, elevation y, checkpoints C0..Cn with up and down clock times, daylight band, scrubber. OR 3D terrain ribbon with the hiker marker (same scrubber).</div>
+      <div style="width:300px;display:flex;flex-direction:column;gap:10px"><div class="g" style="height:140px">Current stop photo + elapsed, distance, elevation</div><div class="g" style="height:46px">&larr; Back | Forward &rarr; (arrow keys)</div><div class="g" style="height:90px">Checkpoint list = text equivalent</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><span class="tag">5 HOW MUCH</span>
+    <div class="row">
+      <div class="g" style="flex:1;min-width:560px;height:260px">Four stacked columns Q1..Q4 (lodging, food, transport, activity, hatched buffer), selected quarter focused, cheapest + best labelled. Waterfall for the selected quarter below the chart.</div>
+      <div style="width:300px;display:flex;flex-direction:column;gap:10px"><div class="g" style="height:50px">Party size</div><div class="g" style="height:50px">Nights</div><div class="g" style="height:50px">Fly | Drive</div><div class="g" style="height:90px">Live "what if" delta: "+1 night = +$180"</div></div>
+    </div>
+    <p class="note"><b>Click a segment:</b> popover with line items and source. <b>Always visible:</b> "Typical, from past data. Not a price quote."</p>
+  </div>
+
+  <div class="sec"><span class="tag">6 SIMILAR HIKES (unchanged, as on the live site)</span>
+    <div class="row">
+      <div class="g" style="flex:1;min-width:240px;height:200px">Twin card 1: photo first, name, park, difficulty, one line why</div><div class="g" style="flex:1;min-width:240px;height:200px">Twin card 2</div><div class="g" style="flex:1;min-width:240px;height:200px">Twin card 3 (at least one from another park)</div>
+    </div>
+  </div>
+
+  <p class="note" style="text-align:center">Footer: "Typical values from past years (2015 to 2024, 2020 excluded). Sources one hover away. See About the data."</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2260}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

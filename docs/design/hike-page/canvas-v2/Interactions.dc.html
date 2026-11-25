@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Interactions and states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&amp;family=Inter:wght@400;500;600&amp;family=Archivo+Narrow:wght@600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.ib{--bg:#181715;--surface:#1f1e1b;--surface-2:#252320;--sunk:#2d2a26;--line:#3a3732;--line-strong:#77736a;--selected:#34312c;--text:#faf9f5;--body:#d6d2c9;--muted:#a09d96;--off-text:#a09d96;--on-accent:#181715;--accent:#cc785c;--accent-text:#d9866a;--accent-soft:#3b2a23;--hazard:#e8a55a;--hazard-soft:#3a2d18;--error:#e5776c;--off-line:#77736a;--cat-3:#9a93c9;--shadow:0 8px 24px rgba(0,0,0,.5);
+width:1280px;height:1800px;box-sizing:border-box;padding:48px;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:32px}
+.ser{font-family:Fraunces,Georgia,serif;font-weight:500}
+.num{font-family:'Archivo Narrow','Arial Narrow',sans-serif;font-weight:600;font-variant-numeric:tabular-nums}
+.cap{font-size:12px;color:var(--muted);margin:0}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{font-size:12px;font-weight:500;color:var(--muted);text-align:left;padding:8px 16px 8px 0;border-bottom:1px solid var(--line-strong);vertical-align:bottom}
+.tbl td{padding:10px 16px 10px 0;border-bottom:1px solid var(--line);color:var(--body);vertical-align:top}
+.tbl td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+kbd{font:600 11px/1 Inter,system-ui,sans-serif;border:1px solid var(--line-strong);border-radius:4px;padding:2px 5px;color:var(--text);background:var(--surface-2)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.st{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--line-strong);background:transparent;color:var(--text);font:500 14px/1 Inter,system-ui,sans-serif;cursor:pointer}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.btn.ico{width:44px;padding:0}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hz{display:flex;align-items:flex-start;gap:8px;background:var(--hazard-soft);color:var(--hazard);border-radius:8px;padding:10px 12px;font-weight:500}
+.pop{background:var(--surface-2);border:1px solid var(--line-strong);border-radius:12px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px}
+.li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.grey{background:var(--surface-2);border:1px dashed var(--off-line);color:var(--off-text);border-radius:6px;padding:8px;font-size:12px}
+.skel{background:var(--sunk);border-radius:6px}
+svg text{font-family:Inter,system-ui,sans-serif}
+.tm{fill:var(--muted)}.ta{fill:var(--accent-text)}.th{fill:var(--hazard)}.tb{fill:var(--body)}
+.rule{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.rule>div{border-top:2px solid var(--accent);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+</style>
+</helmet>
+<div class="ib">
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <h1 class="ser" style="margin:0;font-size:44px;line-height:1.1">Interactions and states</h1>
+    <p style="margin:0;color:var(--body);max-width:90ch">One selection lives in one place and every block reads it. Hover previews, click or Enter commits, arrow keys step the focused set, Esc closes and gives focus back. With reduced motion every change is instant or a fade.</p>
+  </div>
+
+  <section aria-labelledby="lr" style="display:flex;flex-direction:column;gap:14px">
+    <h2 id="lr" class="ser" style="margin:0;font-size:22px">The linked-state rule</h2>
+    <div class="rule">
+      <div><span class="eyebrow">Quarter, in the URL as q</span><b>Q4 Oct to Dec</b><span class="cap" style="color:var(--body)">Drives the hero sentence, the quarter cards, the month-chart frame, the start time and daylight band (middle month, Nov), and the cost bar in focus. <kbd>Left</kbd> <kbd>Right</kbd> step Q1 to Q4.</span></div>
+      <div><span class="eyebrow">Month, page state</span><b>Nov</b><span class="cap" style="color:var(--body)">Set by hover or tap on the month chart or the bar arrows. Shows the tooltip and the five measures in the bar. Picking a month in another quarter moves the quarter too. <kbd>Left</kbd> <kbd>Right</kbd> step months, <kbd>Home</kbd> <kbd>End</kbd> jump to Jan and Dec.</span></div>
+      <div><span class="eyebrow">Checkpoint, page state</span><b>C4 Where most hikers stop, 9:44 am</b><span class="cap" style="color:var(--body)">Set by scrub, Back and Forward or a table row. Moves the hiker marker, the stop card and the highlighted row. <kbd>Left</kbd> <kbd>Right</kbd> step C0 to C6 and back to C0.</span></div>
+    </div>
+  </section>
+
+  <table class="tbl">
+    <thead><tr><th scope="col">Block</th><th scope="col">Hover</th><th scope="col">Click or tap</th><th scope="col">Keyboard</th><th scope="col">Scrub or drag</th></tr></thead>
+    <tbody>
+      <tr><td>Hero</td><td>A number shows its source and definition in a small tooltip</td><td>Walk it in 3D plays the cloud transition; Back to map returns to the same map view</td><td><kbd>Tab</kbd> reaches every number with a source; <kbd>Esc</kbd> closes the tooltip</td><td>None</td></tr>
+      <tr><td>Selection bar</td><td>None</td><td>Quarter chip sets q; month arrows; the checkpoint pill scrolls to the trail</td><td>Arrows inside each group, one tab stop per group</td><td>None</td></tr>
+      <tr><td>Quarter cards</td><td>Frames the card's three months in the chart</td><td>Selects the quarter</td><td>Roving focus, <kbd>Left</kbd> <kbd>Right</kbd>, <kbd>Enter</kbd></td><td>Phone: swipe, snap per card</td></tr>
+      <tr><td>Month chart</td><td>Column highlight and tooltip, all rows of that month emphasised</td><td>Sets the month; Show as table swaps in a real table</td><td><kbd>Left</kbd> <kbd>Right</kbd> <kbd>Home</kbd> <kbd>End</kbd>, <kbd>Esc</kbd> hides the tooltip</td><td>Phone: tap a column</td></tr>
+      <tr><td>Advice vs data</td><td>None</td><td>Previous and next card; source link</td><td>Buttons in tab order</td><td>None</td></tr>
+      <tr><td>On the trail</td><td>Profile shows a ghost marker and its clock time</td><td>Click the profile to jump; Back and Forward step checkpoints; table row selects</td><td><kbd>Left</kbd> <kbd>Right</kbd> step checkpoints; on the slider each arrow is 1 min, <kbd>PageUp</kbd> 10 min</td><td>Drag along the profile or the time slider</td></tr>
+      <tr><td>How much</td><td>Segment highlight and its label</td><td>Segment opens a popover with line items and source; steppers and Fly or Drive recompute live</td><td>Quarter labels and segments are buttons; <kbd>Esc</kbd> closes the popover and returns focus</td><td>None</td></tr>
+      <tr><td>Similar hikes</td><td>Card border strengthens (as deployed)</td><td>Opens that hike's page</td><td>Links in tab order</td><td>None</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="ser" style="margin:0;font-size:22px">States</h2>
+  <div class="grid">
+    <div class="st">
+      <span class="eyebrow">Missing data</span>
+      <b>No station within 50 km</b>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+        <div class="grey">Oct<br>No station within 50 km</div><div class="grey">Nov<br>No station within 50 km</div><div class="grey">Dec<br>No station within 50 km</div>
+      </div>
+      <p class="cap" style="color:var(--body)">The temperature row turns into grey cells with the words. Temperature is left out of the match and the quarter card says "1 factor left out: temperature". Drawn for a hike without a station; Angels Landing has one, 6.2 km away.</p>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Hazards: amber, icon and words</span>
+      <div class="hz"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg><span>Heat: 13, 20 and 11 days at or above 100°F in Jun, Jul and Aug (typical, NOAA station Zion Np)</span></div>
+      <div class="hz"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg><span>Permit and exposure: chains from Scout Lookout to the summit; permit by lottery</span></div>
+      <p class="cap">Never colour alone and never a red and green pair. Hatching marks the same span on the charts.</p>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Daylight warning</span>
+      <b>Start 1:00 pm in November</b>
+      <svg viewBox="0 0 340 56" width="100%" role="img" aria-label="Daylight 7:10 am to 5:23 pm. A 1:00 pm start finishes at 5:34 pm, 11 minutes after sunset.">
+        <rect x="10" y="22" width="320" height="12" rx="2" fill="var(--sunk)"/>
+        <rect x="41.1" y="22" width="272.5" height="12" fill="var(--line)"/>
+        <rect x="196.7" y="22" width="116.9" height="12" fill="var(--accent-text)"/>
+        <rect x="313.6" y="22" width="4.8" height="12" fill="var(--hazard)"/>
+        <line x1="313.6" y1="16" x2="313.6" y2="40" stroke="var(--text)" stroke-width="1.5"/>
+        <g font-size="11"><text x="41.1" y="14" class="tm">Sunrise 7:10 am</text><text x="313.6" y="14" class="tm" text-anchor="end">Sunset 5:23 pm</text><text x="257" y="52" class="ta" text-anchor="middle" font-weight="600">1:00 to 5:34 pm</text></g>
+      </svg>
+      <div class="hz"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3L18 16.5H2zM10 8.5v4M10 14.6h.01"/></svg><span>You would finish at 5:34 pm, 11 min after sunset. Start by 12:49 pm to be back in daylight.</span></div>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Hovered month (also on board 1)</span>
+      <div class="pop" role="tooltip" style="box-shadow:none">
+        <b>October, typical</b>
+        <span style="color:var(--body)">High 79°F (71 to 84°F)<br>Crowds busy, 0.76 of the peak month<br>0 smoky days, 2.4 wet days<br>11.3 h daylight</span>
+        <span class="cap">NOAA GHCN-Daily, NPS IRMA, EPA AirData. Past years.</span>
+      </div>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Cost popover, Q4 transport</span>
+      <div class="pop" role="dialog" aria-labelledby="pt">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b id="pt">Transport <span class="num" style="font-size:20px">$792</span></b><button class="btn ico" aria-label="Close (Esc)"><svg class="i" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg></button></div>
+        <div class="li"><span style="color:var(--body)">Flights (1 × 2 × $306.16)<br><span class="cap">DOT Consumer Airfare Report, Table 6</span></span><b class="num" style="font-size:15px">$612.32</b></div>
+        <div class="li"><span style="color:var(--body)">Rental car ($60/day × 3 days)<br><span class="cap">Team assumption</span></span><b class="num" style="font-size:15px">$180.00</b></div>
+        <span class="cap">Typical, from past data. Not a price quote.</span>
+      </div>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Source tooltip on a hero number</span>
+      <div class="pop" role="tooltip" style="box-shadow:none">
+        <b class="num" style="font-size:20px">$1,437</b>
+        <span style="color:var(--body)">Typical Q4 trip for 1 traveller, 2 nights, flying from Seattle, with a 15% buffer.</span>
+        <span class="cap">Fares DOT Table 6 · lodging and meals GSA FY2026 · fees NPS · car assumed</span>
+      </div>
+    </div>
+    <div class="st">
+      <span class="eyebrow">No home city</span>
+      <p class="ser" style="margin:0;font-size:18px;font-weight:400">Q4 fits all your limits: typical high 67°F, no smoky days.</p>
+      <p class="cap" style="color:var(--body)">Travel time and cost need a home city. The cost block keeps its bars hidden and says so.</p>
+      <button class="btn">Pick a home city</button>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Loading</span>
+      <div class="skel" style="height:28px;width:70%"></div>
+      <div class="skel" style="height:14px;width:90%"></div>
+      <div class="skel" style="height:120px"></div>
+      <p class="cap">Skeletons keep each block's height, so nothing jumps.</p>
+    </div>
+    <div class="st">
+      <span class="eyebrow">Data failed to load</span>
+      <p style="margin:0;color:var(--body)">The hike data did not load.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri">Retry</button><a class="btn" href="#about">About the data</a></div>
+      <p class="cap">Hikes without a walk show no 3D button and no promise of one.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

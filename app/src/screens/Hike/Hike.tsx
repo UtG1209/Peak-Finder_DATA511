@@ -7,17 +7,13 @@ import { ThemeToggle } from '../../components/ThemeToggle'
 import { Icon } from '../../components/Icon'
 import { costFor, quarterMonths, travelFor } from '../../data/loaders'
 import type { Quarter } from '../../data/schema'
-import { CITIES } from '../../lib/cities'
 import { toLimits } from '../../lib/filters'
-import { usd } from '../../lib/money'
 import { QUARTERS } from '../../lib/quarters'
 import { useFilters } from '../../lib/useFilters'
 import { walkUrl } from '../../lib/walks'
 import { bestQuarter, computeMatch } from '../../models/match'
 import { tripCost, type TravelMode } from '../../models/cost'
-import { CostBars } from '../../components/charts/CostBars'
 import { MonthStrip } from '../../components/charts/MonthStrip'
-import { PART_LABEL, type Part } from '../../lib/costParts'
 import { stripColumns } from '../../lib/monthStrip'
 import { AdviceCard } from './AdviceCard'
 import { FitSection } from './FitSection'
@@ -26,8 +22,7 @@ import { TrailSection } from './TrailSection'
 import CloudTransition from '../../components/CloudTransition'
 import { saveWalkReturn, takeWalkReturn } from '../../lib/walkReturn'
 import { SimilarHikes } from './SimilarHikes'
-
-const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
+import { CostSection } from './CostSection'
 
 export default function Hike() {
   const { id } = useParams()
@@ -38,7 +33,6 @@ export default function Hike() {
   const [travellers, setTravellers] = useState(2)
   const [nights, setNights] = useState(3)
   const [modePick, setModePick] = useState<TravelMode | null>(null)
-  const [active, setActive] = useState<{ q: Quarter; part: Part } | null>(null)
   // a new page: put keyboard and screen-reader focus on its title, so Tab starts at the top of this page and the change is announced
   const title = useRef<HTMLHeadingElement>(null)
   useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
@@ -95,11 +89,6 @@ export default function Hike() {
   const sel = QUARTERS[filters.q - 1]
   const advice = data.advice.find((a) => a.hike_id === hike.id)
   const walkHref = walkUrl(hike, sel.season, { back: window.location.hash, backname: hike.name })
-  const cheapest = costs.reduce<{ q: Quarter; total: number } | null>((b, c, i) => (c && (!b || c.total < b.total) ? { q: (i + 1) as Quarter, total: c.total } : b), null)
-  const selCost = costs[filters.q - 1]
-  const saving = cheapest && selCost && cheapest.q !== filters.q ? selCost.total - cheapest.total : 0
-  const activeLines = active && costs[active.q - 1] && active.part !== 'buffer' ? costs[active.q - 1]!.lines[active.part] : null
-  const row = filters.from ? costFor(index, hike.id, filters.from, filters.q) : null
 
   return (
     <main className="hikepage">
@@ -124,86 +113,7 @@ export default function Hike() {
 
       <TrailSection hike={hike} quarterMonths={byQuarter} q={filters.q} units={filters.units} onQuarter={(q) => update({ q })} />
 
-      <section aria-labelledby="cost-h" className="costsec">
-        <h2 id="cost-h">What it costs</h2>
-        <div className="cost-controls">
-          <label>Home city
-            <select className="select" value={filters.from ?? ''} onChange={(e) => update({ from: e.target.value || null })}>
-              <option value="">Pick a city</option>
-              {CITIES.map((c) => <option key={c.code} value={c.code}>{c.name} ({c.code})</option>)}
-            </select>
-          </label>
-          <div className="field">
-            <span id="trav-l">Travellers</span>
-            <span className="stepper" role="group" aria-labelledby="trav-l">
-              <button type="button" aria-label="Fewer travellers" disabled={travellers <= 1} onClick={() => setTravellers((t) => clamp(t - 1, 1, 12))}><Icon name="minus" /></button>
-              <output aria-label={`${travellers} ${travellers === 1 ? 'traveller' : 'travellers'}`}>{travellers}</output>
-              <button type="button" aria-label="More travellers" disabled={travellers >= 12} onClick={() => setTravellers((t) => clamp(t + 1, 1, 12))}><Icon name="plus" /></button>
-            </span>
-          </div>
-          <div className="field">
-            <span id="nights-l">Nights</span>
-            <span className="stepper" role="group" aria-labelledby="nights-l">
-              <button type="button" aria-label="Fewer nights" disabled={nights <= 0} onClick={() => setNights((n) => clamp(n - 1, 0, 21))}><Icon name="minus" /></button>
-              <output aria-label={`${nights} ${nights === 1 ? 'night' : 'nights'}`}>{nights}</output>
-              <button type="button" aria-label="More nights" disabled={nights >= 21} onClick={() => setNights((n) => clamp(n + 1, 0, 21))}><Icon name="plus" /></button>
-            </span>
-          </div>
-          <div className="field">
-            <span id="mode-l">Getting there</span>
-            <span className="seg2" role="group" aria-labelledby="mode-l">
-              {(['fly', 'drive'] as const).map((m) => (
-                <button key={m} type="button" aria-pressed={mode === m} onClick={() => setModePick(m)}>{m === 'fly' ? 'Fly' : 'Drive'}{travel && travel.default_mode === m ? ' (shorter)' : ''}</button>
-              ))}
-            </span>
-          </div>
-        </div>
-
-        {!filters.from ? (
-          <p className="empty-cost">Pick a home city above to see the typical cost for each quarter.</p>
-        ) : (
-          <>
-            <p className="verdict" aria-live="polite">
-              {selCost && <>Typical for <b>{sel.label}</b>: <b>{usd(selCost.total)}</b> for {travellers} {travellers === 1 ? 'person' : 'people'}, {nights} {nights === 1 ? 'night' : 'nights'}. </>}
-              {cheapest && <>Cheapest quarter: <b>Q{cheapest.q}</b> ({usd(cheapest.total)}){saving > 0 ? `, ${usd(saving)} less than ${sel.label}` : ''}.</>}
-            </p>
-            <div className="costgrid">
-              <div>
-                <CostBars costs={costs} selectedQuarter={filters.q} bestQuarter={best} onSelectQuarter={(q) => update({ q })} onSelectPart={(q, part) => setActive({ q, part })} onClear={() => setActive(null)} active={active} />
-              </div>
-              <aside className="costdetail" aria-live="polite" onKeyDown={(e) => { if (e.key === 'Escape') setActive(null) }}>
-                {active && costs[active.q - 1] ? (
-                  <>
-                    <div className="cd-head"><h3>{PART_LABEL[active.part]}, Q{active.q}</h3><button type="button" className="icon-btn" aria-label="Close details" onClick={() => setActive(null)}><Icon name="close" /></button></div>
-                    {active.part === 'buffer' ? (
-                      <p>A fixed 15% on top of everything else, for the unexpected. {usd(costs[active.q - 1]!.buffer)} here.</p>
-                    ) : (
-                      <ul>
-                        {activeLines?.map((l) => {
-                          const src = data.meta.cost_sources[l.source]
-                          return (
-                            <li key={l.label}>
-                              <span>{l.label}</span><b>{usd(l.amount)}</b>
-                              {src && <small>Source: {src.url ? <a href={src.url} target="_blank" rel="noreferrer">{src.label}</a> : src.label}. {src.detail}</small>}
-                            </li>
-                          )
-                        })}
-                      </ul>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <h3>Pick a part of a bar</h3>
-                    <p>Click or press Enter on a segment to see its line items and where each number comes from.</p>
-                    {row && <p className="fine">{mode === 'fly' ? `Flight fare used: ${usd(row.fare_one_way)} one way.` : `Drive: ${row.drive_mi.toLocaleString()} mi each way.`}</p>}
-                  </>
-                )}
-              </aside>
-            </div>
-          </>
-        )}
-        <p className="fine">Typical, from past data. Not a price quote.</p>
-      </section>
+      <CostSection hikeId={hike.id} filters={filters} update={update} travel={travel} costs={costs} best={best} travellers={travellers} nights={nights} mode={mode} onTravellers={setTravellers} onNights={setNights} onMode={setModePick} />
 
       <SimilarHikes hike={hike} />
 
