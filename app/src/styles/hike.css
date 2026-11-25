@@ -112,7 +112,7 @@
 .cd-head .icon-btn { margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) 0 0; }
 .costdetail p { color: var(--text-body); line-height: var(--lh-body); margin: 0 0 var(--space-3); }
 .costdetail ul { list-style: none; margin: 0; padding: 0; }
-.costdetail li { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--line); }
+.costdetail li { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px var(--space-3); padding: var(--space-3) 0; border-top: 1px solid var(--line); }
 .costdetail li:first-child { border-top: 0; }
 .costdetail li b { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
 .costdetail li small { grid-column: 1 / -1; color: var(--text-muted); font-size: var(--fs-small); line-height: var(--lh-snug); }

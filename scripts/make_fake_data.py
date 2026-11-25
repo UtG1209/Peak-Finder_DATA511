@@ -422,7 +422,7 @@ def build_profile(hk, m):
     else:
         fr = [("Trailhead", 0), ("Quarter way", 0.25), ("Halfway", 0.5), ("Three-quarters", 0.75)]
     cps = [{"id": f"c{i}", "name": n, "dist_m": round(f * length / 10) * 10 if f < 1 else length,
-            "photo": photo_for(m["hid"], m["name"])["file"]} for i, (n, f) in enumerate(fr)]
+            "photo": None} for i, (n, f) in enumerate(fr)]  # no stop photo: the page says "No photo for this stop"
     return {"hike_id": m["hid"], "step_m": 10, "points": pts, "osm_length_m": length,
             "nps_length_m": m["nps_len"], "scale": round(m["nps_len"] / length, 3), "checkpoints": cps}
 
@@ -508,9 +508,6 @@ def main():
     prof = 0
     for hk, m in zip(hikes, mrows):
         prof += dump(out / "profiles" / f"{m['hid']}.json", build_profile(hk, m))
-        photos.mkdir(parents=True, exist_ok=True)
-        if m["hid"] not in REAL_PHOTOS:
-            (photos / f"{m['hid']}.svg").write_text(placeholder_svg(hk["name"], hk["park_name"]), encoding="utf-8")
 
     total = sum(sizes.values())
     print(f"{len(hikes)} hikes, {len(months)} hike_month, {len(travel)} travel, {len(cost)} cost rows")

@@ -23,11 +23,13 @@ only that brief and stay in its files.
 | 4 Hike page and About | `docs/work/lane-4-hike-page-about.md` | Hike page, About, charts, `models/checkpoints.ts` and `cost.ts`, user testing |
 | Design track | `docs/work/design-track.md` | UI polish with Claude Design: type scale, tokens, mobile, the Back button on the 3D walk |
 
+**Final scope (decided 2026-11-24): 23 hikes** (nothing built is cut; list in `docs/work/final-23/final_hikes.csv`). Four pickup plans (plus Plan 5, the hike page redesign), start at `docs/work/final-23/README.md`.
+
 Overview and working rules: `docs/work/README.md`. Setup and commands: `docs/SETUP.md`. Open decisions and defaults we chose: `docs/DECISIONS.md`.
 API keys (pipeline only, none needed to run the app): `docs/CREDENTIALS.md`.
 
 **Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (CLAUDE.md check, design-rule guard, lint, tests, build, performance budget: run it
-before every PR), `npm run design:check` (only the guard: `scripts/check-design-rules.mjs` fails on a raw hex colour or a glyph icon such as an arrow, cross, check or minus in `app/src` TypeScript; use tokens and `Icon`), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run e2e` (real-browser smoke test of the production build under the Pages base path, plus axe accessibility, keyboard-only, reduced-motion and phone-layout specs: run it after touching the map, CSS or routing).
+before every PR), `npm run design:check` (only the guard: `scripts/check-design-rules.mjs` fails on a raw hex colour or a glyph icon such as an arrow, cross, check or minus in `app/src` TypeScript; use tokens and `Icon`), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run verify:final` (final-goal data checks for the 23 hikes, `scripts/verify-final-23.mjs`), `npm run e2e` (real-browser smoke test of the production build under the Pages base path, plus axe accessibility, keyboard-only, reduced-motion and phone-layout specs: run it after touching the map, CSS or routing).
 
 **Hard rules for any agent.**
 1. Do not change the data shapes (section 4), the screen list (section 2) or the UX rules (section 3) without the user's explicit approval. Shapes live in `app/src/data/schema.ts`.
