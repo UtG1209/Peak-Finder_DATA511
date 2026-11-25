@@ -44,7 +44,7 @@ const fitCount = async (page: Page) => Number((await page.locator('#count b').in
 
 test('changing the quarter changes the count and the URL', async ({ page }) => {
   await page.goto('./#/?q=1&temp=60-80&go=1')
-  await expect(page.locator('#count')).toContainText('of 38 hikes fit in Q1')
+  await expect(page.locator('#count')).toContainText('of 23 hikes fit in Q1')
   const q1 = await fitCount(page)
   await page.locator('.qrow').getByRole('button', { name: /Q3/ }).click()
   await expect(page.locator('#count')).toContainText('in Q3')

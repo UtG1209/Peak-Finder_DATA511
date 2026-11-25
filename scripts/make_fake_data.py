@@ -422,7 +422,7 @@ def build_profile(hk, m):
     else:
         fr = [("Trailhead", 0), ("Quarter way", 0.25), ("Halfway", 0.5), ("Three-quarters", 0.75)]
     cps = [{"id": f"c{i}", "name": n, "dist_m": round(f * length / 10) * 10 if f < 1 else length,
-            "photo": photo_for(m["hid"], m["name"])["file"]} for i, (n, f) in enumerate(fr)]
+            "photo": None} for i, (n, f) in enumerate(fr)]  # no stop photo: the page says "No photo for this stop"
     return {"hike_id": m["hid"], "step_m": 10, "points": pts, "osm_length_m": length,
             "nps_length_m": m["nps_len"], "scale": round(m["nps_len"] / length, 3), "checkpoints": cps}
 
@@ -490,6 +490,10 @@ def main():
         stale.unlink()
 
     hikes, mrows = build_hikes()
+    # the final list (docs/work/final-23/) decides which hikes exist
+    keep = {l.split(",")[0] for l in (ROOT / "pipeline" / "catalogue" / "final_hikes.csv").read_text(encoding="utf-8").splitlines()[1:]}
+    pairs = [(h, m) for h, m in zip(hikes, mrows) if m["hid"] in keep]
+    hikes, mrows = [h for h, _ in pairs], [m for _, m in pairs]
     # profiles that already exist are kept (some are real pipeline output); only those of dropped hikes go
     for stale in (out / "profiles").glob("*.json"):
         if stale.stem not in {m["hid"] for m in mrows}:
@@ -508,9 +512,6 @@ def main():
     prof = 0
     for hk, m in zip(hikes, mrows):
         prof += dump(out / "profiles" / f"{m['hid']}.json", build_profile(hk, m))
-        photos.mkdir(parents=True, exist_ok=True)
-        if m["hid"] not in REAL_PHOTOS:
-            (photos / f"{m['hid']}.svg").write_text(placeholder_svg(hk["name"], hk["park_name"]), encoding="utf-8")
 
     total = sum(sizes.values())
     print(f"{len(hikes)} hikes, {len(months)} hike_month, {len(travel)} travel, {len(cost)} cost rows")

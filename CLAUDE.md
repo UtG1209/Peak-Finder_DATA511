@@ -23,11 +23,13 @@ only that brief and stay in its files.
 | 4 Hike page and About | `docs/work/lane-4-hike-page-about.md` | Hike page, About, charts, `models/checkpoints.ts` and `cost.ts`, user testing |
 | Design track | `docs/work/design-track.md` | UI polish with Claude Design: type scale, tokens, mobile, the Back button on the 3D walk |
 
+**Final scope (decided 2026-11-24): 23 hikes** (nothing built is cut; list in `docs/work/final-23/final_hikes.csv`). Four pickup plans (plus Plan 5, the hike page redesign), start at `docs/work/final-23/README.md`.
+
 Overview and working rules: `docs/work/README.md`. Setup and commands: `docs/SETUP.md`. Open decisions and defaults we chose: `docs/DECISIONS.md`.
 API keys (pipeline only, none needed to run the app): `docs/CREDENTIALS.md`.
 
 **Commands (repo root).** `npm run doctor` (check your machine), `npm run setup`, `npm run dev`, `npm run check` (CLAUDE.md check, design-rule guard, lint, tests, build, performance budget: run it
-before every PR), `npm run design:check` (only the guard: `scripts/check-design-rules.mjs` fails on a raw hex colour or a glyph icon such as an arrow, cross, check or minus in `app/src` TypeScript; use tokens and `Icon`), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run e2e` (real-browser smoke test of the production build under the Pages base path, plus axe accessibility, keyboard-only, reduced-motion and phone-layout specs: run it after touching the map, CSS or routing).
+before every PR), `npm run design:check` (only the guard: `scripts/check-design-rules.mjs` fails on a raw hex colour or a glyph icon such as an arrow, cross, check or minus in `app/src` TypeScript; use tokens and `Icon`), `npm run validate:data` (check data against the shapes), `npm run fake-data` (regenerate placeholder data), `npm run verify:final` (final-goal data checks for the 23 hikes, `scripts/verify-final-23.mjs`), `npm run e2e` (real-browser smoke test of the production build under the Pages base path, plus axe accessibility, keyboard-only, reduced-motion and phone-layout specs: run it after touching the map, CSS or routing).
 
 **Hard rules for any agent.**
 1. Do not change the data shapes (section 4), the screen list (section 2) or the UX rules (section 3) without the user's explicit approval. Shapes live in `app/src/data/schema.ts`.
@@ -44,7 +46,7 @@ CI runs `scripts/check-claude-md.mjs` (section 4 fields match `schema.ts`, refer
 One static web app that helps a hiker answer three questions in order:
 **Where** should I hike, **When** (which quarter), and **How much** will it cost.
 
-- **The 40 most famous hikes/peaks in lower-48 US national parks that also have complete data** (famous first, then kept only if
+- **The 23 final hikes/peaks in lower-48 US national parks (the 40 most famous that also have complete data was the first plan; scope is now `docs/work/final-23/final_hikes.csv`)** (famous first, then kept only if
   they pass the data-completeness gate in section 6: weather station within 50 km, county AQI monitor, NPS monthly visits, NPS page,
   OSM trail line, open-licence photo).
 - Built only from free, public, _past_ data (2015–2024, 2020 excluded for Covid). We show **typical** values,
@@ -172,7 +174,7 @@ Total except profiles < 1 MB. The app never calls a live API.
 
 ```jsonc
 // Example values are illustrative, not pipeline output.
-// hikes.json — 40
+// hikes.json — 23
 { "id": "angels-landing", "name": "Angels Landing", "park_code": "ZION", "park_name": "Zion National Park",
   "state": "UT", "trailhead": {"name": "The Grotto", "lat": 37.25897, "lon": -112.95097},
   "end": {"name": "Summit", "lat": 37.26931, "lon": -112.94792},
@@ -185,7 +187,7 @@ Total except profiles < 1 MB. The app never calls a live API.
   "station": {"id": "USC00429717", "name": "Zion National Park", "dist_km": 5.0, "elev_ft": 4050},
   "aqi_county": {"fips": "49053", "name": "Washington County, UT"} }
 
-// hike_month.json — 480 (hike × 12)
+// hike_month.json — 276 (hike × 12)
 { "hike_id": "angels-landing", "month": 8, "crowd_level": 0.92, "crowd_band": "busy",
   "tmax_p25": 95.1, "tmax_p50": 97.9, "tmax_p75": 100.4, "tmax_summit_est": 92.6,
   "wet_days": 3.1, "snow_days": 0, "smoky_days": 0.4, "ozone_days": 1.2, "heat_days": 13.0,
@@ -319,7 +321,7 @@ docs/                SETUP.md, DECISIONS.md, CREDENTIALS.md, work/ (the four lan
 - Build in this order: (1) scaffold + fake data in the exact shapes above + deploy; (2) models + tests;
   (3) Explore screen on fake data; (4) Hike page (profile/time, cost); (5) pipeline scripts replacing fake data
   source by source; (6) walks + cloud transition; (7) About, states, accessibility; (8) "Should" items.
-- `scripts/make_fake_data.py` (or `.ts`) generates plausible fake data for the 40 hikes so the UI can be built
+- `scripts/make_fake_data.py` (or `.ts`) generates plausible fake data for the final 23 hikes so the UI can be built
   before the pipeline is done. Fake data must be clearly marked in `meta.json` (`"fake": true`) and shown
   as a banner in the app.
 - Small PRs, one feature each, into `main`; CI must pass (`npm run check`). Never commit API keys (`.env` is gitignored).

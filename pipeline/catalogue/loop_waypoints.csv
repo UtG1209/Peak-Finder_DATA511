@@ -1,11 +1,11 @@
 id,order,lat,lon,source,note
 navajo-loop-queens-garden,1,37.6255455,-112.1588312,OpenStreetMap ways 650406548 and 909360574 (Queen's Garden Trail),"Far end of the first Queen's Garden switchbacks below Sunrise Point; forces the way down by Queen's Garden, not by the shorter rim and Navajo Loop"
-navajo-loop-queens-garden,2,37.6182299,-112.1620107,OpenStreetMap ways 650406545 (Queen's Garden Trail) and 1148074831 (Navajo Loop Trail),"Canyon floor junction where the Queen's Garden Trail meets the Navajo Loop Trail"
-navajo-loop-queens-garden,3,37.6226998,-112.1661263,OpenStreetMap way 1148074831 (Navajo Loop Trail),"Top of the Navajo Loop at Sunset Point on the rim; the Rim Trail (way 650406541) then returns to Sunrise Point"
+navajo-loop-queens-garden,2,37.6182299,-112.1620107,OpenStreetMap ways 650406545 (Queen's Garden Trail) and 1148074831 (Navajo Loop Trail),Canyon floor junction where the Queen's Garden Trail meets the Navajo Loop Trail
+navajo-loop-queens-garden,3,37.6226998,-112.1661263,OpenStreetMap way 1148074831 (Navajo Loop Trail),Top of the Navajo Loop at Sunset Point on the rim; the Rim Trail (way 650406541) then returns to Sunrise Point
 skyline-trail,1,46.7941376,-121.7361163,OpenStreetMap ways 348842091 and 514662032 (Skyline Trail),"Junction on the Skyline Trail above Paradise; forces the way up by the Skyline Trail, not the shorter Alta Vista Trail"
 skyline-trail,2,46.8024661,-121.7289677,OpenStreetMap way 514662032 (Skyline Trail),"Skyline Trail near Panorama Point (GNIS 46.80372,-121.72954)"
-skyline-trail,3,46.8042914,-121.7235192,OpenStreetMap way 439627178 (Skyline Trail),"Start of the eastern Skyline Trail branch east of Panorama Point"
-skyline-trail,4,46.7953254,-121.7168318,OpenStreetMap way 1216080552 (Skyline Trail),"Eastern end of the loop"
+skyline-trail,3,46.8042914,-121.7235192,OpenStreetMap way 439627178 (Skyline Trail),Start of the eastern Skyline Trail branch east of Panorama Point
+skyline-trail,4,46.7953254,-121.7168318,OpenStreetMap way 1216080552 (Skyline Trail),Eastern end of the loop
 skyline-trail,5,46.7919928,-121.7323425,OpenStreetMap way 1216080543 (Skyline Trail),"End of the return branch; OSM leaves a 50 m gap to the next piece, which the route joins straight"
-skyline-trail,6,46.7915596,-121.7325986,OpenStreetMap way 1216080540 (Skyline Trail),"Start of the last piece down to Paradise"
-skyline-trail,7,46.7875314,-121.7341038,OpenStreetMap way 286202121 (Skyline Trail),"Skyline Trail just above the Paradise lots"
+skyline-trail,6,46.7915596,-121.7325986,OpenStreetMap way 1216080540 (Skyline Trail),Start of the last piece down to Paradise
+skyline-trail,7,46.7875314,-121.7341038,OpenStreetMap way 286202121 (Skyline Trail),Skyline Trail just above the Paradise lots

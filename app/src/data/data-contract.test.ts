@@ -21,8 +21,8 @@ const meta = MetaSchema.parse(read('meta.json'))
 const ids = new Set(hikes.map((h) => h.id))
 
 describe('data contract', () => {
-  it('has the curated hikes (38 until two replacements are agreed, target 40) with unique ids', () => {
-    expect(hikes.length).toBeGreaterThanOrEqual(38)
+  it('has the final 23 hikes with unique ids', () => {
+    expect(hikes.length).toBe(23)
     expect(ids.size).toBe(hikes.length)
   })
 
