@@ -1,7 +1,7 @@
 """Advice vs data cards (lane 1): common travel advice checked against the official numbers.
 
-Every figure is computed from the cached downloads of nps_visits.py, ghcn.py and epa_aqi.py,
-except the fare card, which is lane 2's known answer from docs/ai-vs-data-check.md.
+Every figure is computed from the cached downloads of nps_visits.py, ghcn.py, epa_aqi.py
+and travel.py (DOT Table 6 for the fare card).
 
 Run from the repo root:  .venv/Scripts/python.exe pipeline/advice.py
 Output: data/processed/advice.json
@@ -13,6 +13,7 @@ from pathlib import Path
 import epa_aqi
 import ghcn
 import nps_visits
+import travel
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_FILE = ROOT / "data" / "processed" / "advice.json"
@@ -145,11 +146,12 @@ def acadia_fall():
 
 
 def seattle_fare():
+    fare, year = travel.fare_lookup(travel.dot_rows(), "SEA", "LAS", 3)
     return card(
         "angels-landing",
         "Flights to Las Vegas are cheap from Seattle",
-        "The average one-way Seattle to Las Vegas fare was $169.78 in Q3 2025, not the $118 some tools suggest.",
-        {"Q3 2025 average one-way fare ($)": 169.78},
+        f"The average one-way Seattle to Las Vegas fare was ${fare:.2f} in Q3 {year}, not the $118 some tools suggest.",
+        {f"Q3 {year} average one-way fare ($)": fare},
         FARES,
     )
 
