@@ -24,7 +24,7 @@ test('header: NPS numbers, gear with words, photo credit, 3D walk link, back lin
 })
 
 test('a hike without a 3D walk has no 3D button', async ({ page }) => {
-  await page.goto('./#/hike/half-dome?q=3&go=1')
+  await page.goto('./#/hike/anhinga-trail?q=3&go=1')
   await expect(page.locator('.hp-head h1')).toBeVisible()
   await expect(page.getByRole('link', { name: /Walk it in 3D/ })).toHaveCount(0)
 })
