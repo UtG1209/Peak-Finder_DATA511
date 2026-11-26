@@ -1,0 +1,67 @@
+{
+  "id": "skyline_trail",
+  "hike_id": "skyline-trail",
+  "title": "Skyline Trail from Paradise",
+  "map_label": "A 3D loop from Paradise through the wildflower meadows to Panorama Point and back.",
+  "end_label": "Paradise",
+  "pad_wide": 0.05,
+  "route_via": [
+    [
+      46.7941376,
+      -121.7361163
+    ],
+    [
+      46.8024661,
+      -121.7289677
+    ],
+    [
+      46.8042914,
+      -121.7235192
+    ],
+    [
+      46.7953254,
+      -121.7168318
+    ],
+    [
+      46.7919928,
+      -121.7323425
+    ],
+    [
+      46.7915596,
+      -121.7325986
+    ]
+  ],
+  "route_loop": true,
+  "snow": {
+    "winter": 1400,
+    "spring": 1850
+  },
+  "checkpoints": [
+    {
+      "name": "Panorama Point",
+      "at": 0.4
+    }
+  ],
+  "stops": [
+    {
+      "file": "Start of Skyline Trail - Comes Well Recommended - Flickr - brewbooks.jpg",
+      "title": "Skyline Trailhead, Paradise",
+      "alt": "The start of the Skyline Trail at Paradise.",
+      "text": "The loop starts at Paradise, around 5,400 feet up on the south side of Mount Rainier."
+    },
+    {
+      "key": "panorama",
+      "at": 0.4,
+      "file": "Looking down at Paradise Park from near Panorama Point (6 October 2024).jpg",
+      "title": "Panorama Point",
+      "alt": "Paradise Park seen from near Panorama Point.",
+      "text": "Near the high point of the loop the meadows of Paradise lie far below."
+    },
+    {
+      "file": "Mt. Rainier and stairs with John Muir quote.jpg",
+      "title": "Back at Paradise",
+      "alt": "Mount Rainier above the stairs at Paradise.",
+      "text": "The return branch brings you back to Paradise, with Mount Rainier ahead."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "walk": "inspiration_point",
+  "before_bytes": 8875227,
+  "types": {
+    "dem": {
+      "files": 24,
+      "before": 2611037,
+      "after": 1903784,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 3159845,
+      "after": 2291722,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 260321,
+      "after": 260321,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 7299920
+}

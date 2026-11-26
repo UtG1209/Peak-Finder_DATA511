@@ -1,0 +1,27 @@
+{
+  "id": "inspiration_point",
+  "hike_id": "inspiration-point",
+  "title": "Jenny Lake to Inspiration Point",
+  "map_label": "A 3D walk from the Jenny Lake area along the lake to Inspiration Point.",
+  "end_label": "Inspiration Point",
+  "pad_wide": 0.05,
+  "snow": {
+    "winter": 1950,
+    "spring": 2150
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "GrandTetonNP JennyLake HistoricBoatkeepersCabin.jpg",
+      "title": "Jenny Lake Trailhead",
+      "alt": "The historic boatkeeper's cabin on the shore of Jenny Lake.",
+      "text": "The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up."
+    },
+    {
+      "file": "Jenny Lake from Inspiration Point - Grand Teton National Park.jpg",
+      "title": "Inspiration Point",
+      "alt": "Jenny Lake seen from Inspiration Point, below the Teton peaks.",
+      "text": "You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "walk": "delicate_arch",
+  "before_bytes": 7026059,
+  "types": {
+    "dem": {
+      "files": 19,
+      "before": 2185333,
+      "after": 1614364,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 4,
+      "before": 1652693,
+      "after": 1313458,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 415385,
+      "after": 415385,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 4
+  },
+  "page_replacements": 9,
+  "after_bytes": 6115924
+}

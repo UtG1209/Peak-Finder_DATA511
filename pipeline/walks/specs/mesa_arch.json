@@ -1,0 +1,27 @@
+{
+  "id": "mesa_arch",
+  "hike_id": "mesa-arch",
+  "title": "Mesa Arch Trail",
+  "map_label": "A 3D walk from the Mesa Arch trailhead to the cliff-edge arch in Canyonlands.",
+  "end_label": "Mesa Arch",
+  "pad_wide": 0.035,
+  "scroll_vh": 700,
+  "zoom": 16,
+  "snow": {
+    "winter": 1750
+  },
+  "stops": [
+    {
+      "file": "Mesa Arch trail - panoramio.jpg",
+      "title": "Mesa Arch Trailhead",
+      "alt": "The short trail to Mesa Arch crossing slickrock and juniper.",
+      "text": "The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch."
+    },
+    {
+      "file": "View Through Mesa Arch Canyonlands NP Utah 2023.jpg",
+      "title": "Mesa Arch",
+      "alt": "The canyon seen through the opening of Mesa Arch.",
+      "text": "You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise."
+    }
+  ]
+}

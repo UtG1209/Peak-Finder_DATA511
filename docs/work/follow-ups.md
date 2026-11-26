@@ -49,7 +49,9 @@ Everything marked **Decision** needs the team's answer before work starts.
 ## Walks
 
 - Decision made: walks stay in this repo and on GitHub Pages (15 to 20 hikes fits under the 1 GB Pages limit at 30 MB each; build each walk once and never rebuild it, because git history keeps every version).
-- 6 of the 15 priority hikes have a walk. Still to build: Half Dome, Delicate Arch, Navajo Loop, Skyline, Cadillac North Ridge, Mesa Arch, Alum Cave, Inspiration Point and Ryan Mountain (`docs/WALKS.md`, one at a time, verify after each).
+- 16 of the final 23 hikes have a walk (Plan 3 built Tier A and B on 2026-11-25: Half Dome, Delicate Arch, Mesa Arch, Navajo Loop, Skyline, Cadillac North Ridge, Inspiration Point, Alum Cave, Ryan Mountain; each 4 to 12 MB). Still to build: Longs Peak, Emerald Lake, General Sherman, Moro Rock, Clingmans Dome, after Plans 1 and 2 give them real trailheads and profiles. Anhinga and Zion Narrows get none on purpose.
+- Walk photos: only summer photos are real for the new walks; the other seasons borrow one and the page says so. Cadillac and Alum Cave start photos are near the trailhead, not at it (the captions say so).
+- Walk page: the Back button reads "Back toHalf Dome..." (missing space) on every walk, and the end label of the elevation strip overlaps the distance on short walks. Template fix for the design track.
 
 ## Keys
 

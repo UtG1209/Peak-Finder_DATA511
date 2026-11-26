@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PART_CALLOUT, PART_ORDER, PART_SHORT, calloutHeight, labelMode, quarterTags, spreadCallouts } from './costParts'
+import { PART_CALLOUT, PART_DIRECT, PART_ORDER, PART_SHORT, calloutHeight, labelMode, quarterNote, quarterTags, spreadCallouts } from './costParts'
 
 describe('labelMode', () => {
   it('fits name and amount only in tall segments', () => {
@@ -22,9 +22,19 @@ describe('quarterTags', () => {
   })
 })
 
+describe('quarterNote', () => {
+  it('puts the tags in words under the quarter', () => {
+    expect(quarterNote(4, 4, 4)).toBe('best and cheapest')
+    expect(quarterNote(2, 2, 3)).toBe('cheapest')
+    expect(quarterNote(3, 2, 3)).toBe('best fit')
+    expect(quarterNote(1, 2, 3)).toBe('')
+  })
+})
+
 describe('parts', () => {
   it('has a short name for every stacked part', () => {
-    for (const p of PART_ORDER) expect(PART_SHORT[p]).toBeTruthy()
+    for (const p of PART_ORDER) expect(PART_SHORT[p] && PART_DIRECT[p]).toBeTruthy()
+    expect(PART_ORDER[0]).toBe('transport')
     expect(PART_ORDER.at(-1)).toBe('buffer')
   })
 })

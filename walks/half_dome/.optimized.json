@@ -1,0 +1,29 @@
+{
+  "walk": "half_dome",
+  "before_bytes": 14234173,
+  "types": {
+    "dem": {
+      "files": 34,
+      "before": 4079605,
+      "after": 2880764,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 12,
+      "before": 3727077,
+      "after": 2918086,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 413545,
+      "after": 413545,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 12
+  },
+  "page_replacements": 9,
+  "after_bytes": 12226410
+}

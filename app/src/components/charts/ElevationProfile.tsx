@@ -1,7 +1,7 @@
-// Elevation profile with time (CLAUDE.md "On the trail"). X = distance walked, Y = elevation, with axes and units.
-// An out-and-back hike is two humps: the climb (solid line, filled markers) and the return (dashed line, hollow markers).
-// Checkpoints C0..Cn carry the clock time you reach them. A hiker marker shows where you are at the scrubbed time;
-// drag anywhere on the chart to move it. D3 scales and shapes, React SVG.
+// Elevation profile with time (CLAUDE.md "On the trail", v2 design). X = distance walked, Y = elevation, drawn to scale from the
+// smoothed profile. An out-and-back hike is the climb and then the return. Checkpoints C0..Cn are labelled on the curve, and their
+// clock times (up and back) sit in a "Clock" row under the distance axis. The hiker marker shows where you are at the scrubbed time;
+// drag or click the chart to move it, hover for a ghost marker with its clock time. D3 scales and shapes, React SVG.
 import { area, line, scaleLinear, ticks } from 'd3'
 import { useLayoutEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { checkpointLabel, type TrailPoint } from '../../lib/trail'
@@ -12,17 +12,26 @@ interface Props {
   curve: TrailPoint[]
   events: TimelineEvent[]
   pos: Position
+  /** Clock minutes at the hiker marker (for its "You, 9:44 am" tag). */
+  nowMin: number
   units: Units
-  /** Drag: the distance walked (NPS-scaled metres) under the pointer. */
+  /** Drag or click: the distance walked (NPS-scaled metres) under the pointer. */
   onScrub: (walkedM: number) => void
+  /** Clock minutes when the hiker has walked `walkedM`, for the hover ghost. */
+  timeAt: (walkedM: number) => number
+  /** Index into `events` of the stop in focus, drawn filled. */
+  currentEvent: number
   hikeName: string
 }
 
-// The chart is drawn at the width it is shown at (1 SVG unit = 1 CSS pixel), so its text is the real size on a phone too.
-// Narrow (a phone): fewer ticks and checkpoint labels only at the start, the turnaround and the finish; the table under the chart has every time.
+// Drawn at the width it is shown at (1 SVG unit = 1 CSS pixel) so text keeps its real size on a phone.
+// Narrow (a phone): no clock row and fewer ticks; the checkpoint table has every time.
 const NARROW_BELOW = 560
-const DEFAULT_W = 780
+const DEFAULT_W = 760
+const LABEL_GAP = 22 // px: closer checkpoint labels are skipped (the table has them)
+const CLOCK_GAP = 34
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n))
+const short = (min: number) => formatClock(min).replace(/ (am|pm)$/, '')
 
 function useWidth() {
   const ref = useRef<HTMLDivElement>(null)
@@ -39,99 +48,150 @@ function useWidth() {
   return [ref, w] as const
 }
 
-export function ElevationProfile({ curve, events, pos, units, onScrub, hikeName }: Props) {
+export function ElevationProfile({ curve, events, pos, nowMin, units, onScrub, timeAt, currentEvent, hikeName }: Props) {
   const [wrap, W] = useWidth()
+  const [ghost, setGhost] = useState<number | null>(null)
   const narrow = W < NARROW_BELOW
-  const H = narrow ? 300 : 350
-  const M = narrow ? { top: 64, right: 12, bottom: 52, left: 56 } : { top: 78, right: 18, bottom: 52, left: 64 }
+  const M = narrow ? { top: 28, right: 12, bottom: 46, left: 52 } : { top: 34, right: 16, bottom: 76, left: 64 }
+  const H = narrow ? 230 : 290
+  const base = H - M.bottom
   const totalM = curve[curve.length - 1].walkedM
-  const { x, y, xTicks, yTicks, up, down, fill } = useMemo(() => {
+  const hasReturn = curve.some((p) => p.dir === 'down')
+  const turn = events.reduce((b, e) => (e.dir === 'up' && e.walkedM >= b.walkedM ? e : b), events[0]) // the farthest point going up
+
+  const { x, y, xTicks, yTicks, path, fill } = useMemo(() => {
     const elevs = curve.map((p) => elevFromM(p.elevM, units))
-    const yScale = scaleLinear().domain([Math.min(...elevs), Math.max(...elevs)]).nice().range([H - M.bottom, M.top])
+    const yScale = scaleLinear().domain([Math.min(...elevs), Math.max(...elevs)]).nice(4).range([base, M.top + 8])
     const xScale = scaleLinear().domain([0, totalM]).range([M.left, W - M.right])
     const dispMax = distFromM(totalM, units)
-    const xt = ticks(0, dispMax, narrow ? 4 : 7).map((d) => ({ d, m: (d / dispMax) * totalM }))
+    const special = [0, totalM, ...(hasReturn ? [turn.walkedM] : [])].map((m) => xScale(m))
+    const xt = ticks(0, dispMax, narrow ? 4 : 7)
+      .map((d) => ({ d, m: (d / dispMax) * totalM }))
+      .filter((t) => special.every((sx) => Math.abs(xScale(t.m) - sx) > 28))
     const px = (p: TrailPoint): [number, number] => [xScale(p.walkedM), yScale(elevFromM(p.elevM, units))]
-    const ln = line<TrailPoint>().x((p) => px(p)[0]).y((p) => px(p)[1])
-    const ar = area<TrailPoint>().x((p) => px(p)[0]).y0(H - M.bottom).y1((p) => px(p)[1])
-    const upPts = curve.filter((p) => p.dir === 'up')
-    const downPts = curve.filter((p) => p.dir === 'down')
     return {
-      x: xScale, y: yScale, xTicks: xt, yTicks: yScale.ticks(5),
-      up: ln(upPts) ?? '', down: downPts.length ? ln([upPts[upPts.length - 1], ...downPts]) ?? '' : '',
-      fill: ar(curve) ?? '',
+      x: xScale, y: yScale, xTicks: xt, yTicks: yScale.ticks(4),
+      path: line<TrailPoint>().x((p) => px(p)[0]).y((p) => px(p)[1])(curve) ?? '',
+      fill: area<TrailPoint>().x((p) => px(p)[0]).y0(base).y1((p) => px(p)[1])(curve) ?? '',
     }
-  }, [curve, totalM, units, W, H, narrow]) // eslint-disable-line react-hooks/exhaustive-deps -- M follows narrow
+  }, [curve, totalM, units, W, base, narrow, hasReturn, turn.walkedM]) // eslint-disable-line react-hooks/exhaustive-deps -- M follows narrow
 
-  const scrubFrom = (e: PointerEvent<SVGSVGElement>) => {
+  const walkedAt = (e: PointerEvent<SVGSVGElement>) => {
     const r = e.currentTarget.getBoundingClientRect()
     const vx = ((e.clientX - r.left) / r.width) * W
-    onScrub(clamp(x.invert(clamp(vx, M.left, W - M.right)), 0, totalM))
+    return clamp(x.invert(clamp(vx, M.left, W - M.right)), 0, totalM)
   }
-  const turn = events.reduce((b, e) => (e.dir === 'up' && e.walkedM >= b.walkedM ? e : b), events[0]) // the farthest point going up
-  const hasReturn = curve.some((p) => p.dir === 'down')
   const hx = x(pos.walkedM)
   const hy = y(elevFromM(pos.elev, units))
+  const dist = (m: number) => distFromM(m, units)
+  const fmtD = (m: number) => (dist(m) >= 10 ? dist(m).toFixed(0) : dist(m).toFixed(1).replace(/\.0$/, ''))
+
+  // checkpoint labels above the curve, skipping any that would collide (the turnaround always wins); then the clock row:
+  // two staggered lines, a time too close to the one before it on the same line is left to the table
+  const labelled: boolean[] = []
+  const clock: number[] = []
+  let lastX = -Infinity
+  const lastOnRow = [-Infinity, -Infinity]
+  events.forEach((e, i) => {
+    const cx = x(e.walkedM)
+    labelled.push(e === turn || cx - lastX >= LABEL_GAP)
+    if (labelled[i]) lastX = cx
+    const row = i % 2
+    const ok = !narrow && (cx - lastOnRow[row] >= CLOCK_GAP || i === events.length - 1)
+    if (ok) lastOnRow[row] = cx
+    clock.push(ok ? row : -1)
+  })
+
+  const youTag = `You, ${formatClock(nowMin)}`
+  const tagW = youTag.length * 6.6 + 16
+  const tagLeft = hx - tagW - 12 >= M.left ? hx - tagW - 12 : hx + 12
+  const ghostX = ghost === null ? null : x(ghost)
+  const label = `Elevation profile of ${hikeName}: Distance walked (${distUnit(units)}) against Elevation (${elevUnit(units)})${hasReturn ? ', the climb and then the return on the same trail' : ''}. You are ${fmtD(pos.walkedM)} ${distUnit(units)} along at ${formatClock(nowMin)}. Checkpoint times are in the table below.`
 
   return (
     <div ref={wrap} className="elevwrap">
-    <svg
-      className="elevchart" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
-      aria-label={`Elevation profile of ${hikeName}: distance walked in ${distUnit(units)} against elevation in ${elevUnit(units)}${hasReturn ? ', the climb and then the return' : ''}. Checkpoint times are in the table below.`}
-      onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); scrubFrom(e) }}
-      onPointerMove={(e) => { if (e.buttons === 1) scrubFrom(e) }}
-    >
+      <svg
+        className="elevchart" viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
+        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); onScrub(walkedAt(e)) }}
+        onPointerMove={(e) => { if (e.buttons === 1) { onScrub(walkedAt(e)); setGhost(null) } else if (e.pointerType === 'mouse') setGhost(walkedAt(e)) }}
+        onPointerLeave={() => setGhost(null)}
+      >
+        <title>{label}</title>
 
-      {/* grid and axes */}
-      {yTicks.map((t) => (
-        <g key={`y${t}`}>
-          <line className="grid" x1={M.left} x2={W - M.right} y1={y(t)} y2={y(t)} />
-          <text className="axis" x={M.left - 8} y={y(t)} textAnchor="end" dominantBaseline="middle">{t.toLocaleString('en-US')}</text>
-        </g>
-      ))}
-      {xTicks.map((t) => (
-        <g key={`x${t.d}`}>
-          <line className="tick" x1={x(t.m)} x2={x(t.m)} y1={H - M.bottom} y2={H - M.bottom + 5} />
-          <text className="axis" x={x(t.m)} y={H - M.bottom + 18} textAnchor="middle">{t.d}</text>
-        </g>
-      ))}
-      <line className="axisline" x1={M.left} x2={W - M.right} y1={H - M.bottom} y2={H - M.bottom} />
-      <line className="axisline" x1={M.left} x2={M.left} y1={M.top} y2={H - M.bottom} />
-      <text className="axis title" x={(M.left + W - M.right) / 2} y={H - 6} textAnchor="middle">Distance walked ({distUnit(units)})</text>
-      <text className="axis title" transform={`translate(14 ${(M.top + H - M.bottom) / 2}) rotate(-90)`} textAnchor="middle">Elevation ({elevUnit(units)})</text>
-
-      {/* the trail */}
-      <path d={fill} className="area" />
-      <path d={up} className="line-up" fill="none" />
-      {hasReturn && <path d={down} className="line-down" fill="none" />}
-
-      {/* checkpoints: filled = going up, hollow = coming back; each with its clock time */}
-      {events.map((e, i) => {
-        const cx = x(e.walkedM)
-        const cy = y(elevFromM(e.elevM, units))
-        const up = e.dir === 'up'
-        // neighbouring checkpoints can be a few pixels apart near the summit: alternate two label rows so they never overlap
-        const timeY = M.top - 14 - (i % 2) * 28
-        const labelled = !narrow || i === 0 || i === events.length - 1 || e === turn
-        const anchor = cx < M.left + 24 ? 'start' : cx > W - M.right - 40 ? 'end' : 'middle'
-        const tx = anchor === 'start' ? cx - 4 : anchor === 'end' ? cx + 4 : cx
-        return (
-          <g key={`${e.checkpoint.id}-${e.dir}-${i}`} className="cp">
-            <title>{`${checkpointLabel(e.checkpoint.id)} ${e.checkpoint.name}, ${up ? 'going up' : 'coming back'}, ${formatClock(e.time)}`}</title>
-            {labelled && <line className="cp-stem" x1={cx} x2={cx} y1={cy - 6} y2={timeY + 3} />}
-            <circle cx={cx} cy={cy} r={5} className={up ? 'cp-up' : 'cp-down'} />
-            {labelled && <text className="cp-label" x={tx} y={timeY - 13} textAnchor={anchor}>{checkpointLabel(e.checkpoint.id)}</text>}
-            {labelled && <text className="cp-time" x={tx} y={timeY} textAnchor={anchor}>{formatClock(e.time).replace(' ', '')}</text>}
+        {/* grid and elevation ticks, the unit on the top one */}
+        {yTicks.map((t, i) => (
+          <g key={`y${t}`}>
+            <line className="grid" x1={M.left} x2={W - M.right} y1={y(t)} y2={y(t)} />
+            <text className="axis" x={M.left - 6} y={y(t) + 4} textAnchor="end">{t.toLocaleString('en-US')}{i === yTicks.length - 1 ? ` ${elevUnit(units)}` : ''}</text>
           </g>
-        )
-      })}
+        ))}
 
-      {/* the hiker */}
-      <line className="hiker-line" x1={hx} x2={hx} y1={M.top} y2={H - M.bottom} />
-      <circle className="hiker" cx={hx} cy={hy} r={9} />
-      <circle className="hiker-dot" cx={hx} cy={hy} r={3} />
+        <path d={fill} className="area" />
+        <path d={path} className="line-up" fill="none" />
+        <line className="axisline" x1={M.left} x2={W - M.right} y1={base} y2={base} />
 
-    </svg>
+        {/* distance axis: 0, the turnaround, the total, and round numbers in between */}
+        <g className="axis">
+          <text x={M.left} y={base + 15} textAnchor="start">0 {distUnit(units)}</text>
+          {xTicks.map((t) => <text key={`x${t.d}`} x={x(t.m)} y={base + 15} textAnchor="middle">{t.d}</text>)}
+          {hasReturn && <text className="turn" x={x(turn.walkedM)} y={base + 15} textAnchor="middle">{fmtD(turn.walkedM)} turn back</text>}
+          <text x={W - M.right} y={base + 15} textAnchor="end">{fmtD(totalM)} {distUnit(units)}</text>
+        </g>
+
+        {/* checkpoints: hollow on the curve, the stop in focus filled; labels above */}
+        {events.map((e, i) => {
+          const cx = x(e.walkedM)
+          const cy = y(elevFromM(e.elevM, units))
+          const up = e.dir === 'up'
+          const anchor = cx < M.left + 12 ? 'start' : cx > W - M.right - 12 ? 'end' : 'middle'
+          return (
+            <g key={`${e.checkpoint.id}-${e.dir}-${i}`} className={`cp${i === currentEvent ? ' on' : ''}`}>
+              <title>{`${checkpointLabel(e.checkpoint.id)} ${e.checkpoint.name}, ${up ? 'going up' : 'coming back'}, ${formatClock(e.time)}`}</title>
+              <circle cx={cx} cy={cy} r={narrow ? 3.5 : 4} className={up ? 'cp-up' : 'cp-down'} />
+              {labelled[i] && <text className={`cp-label${e === turn ? ' turn' : ''}`} x={cx} y={cy - 10} textAnchor={anchor}>{checkpointLabel(e.checkpoint.id)}</text>}
+            </g>
+          )
+        })}
+
+        {/* clock row: the time you reach each checkpoint, going up and coming back */}
+        {!narrow && (
+          <g>
+            <text className="axis" x={M.left - 6} y={base + 50} textAnchor="end">Clock</text>
+            {events.map((e, i) => {
+              if (clock[i] < 0) return null
+              const cx = x(e.walkedM)
+              const ty = base + 42 + clock[i] * 16
+              const anchor = i === 0 ? 'start' : i === events.length - 1 ? 'end' : 'middle'
+              return (
+                <g key={`t${i}`}>
+                  <line className="tick" x1={cx} x2={cx} y1={base + 22} y2={ty - 11} />
+                  <text className={`cp-time${e === turn ? ' turn' : ''}`} x={cx} y={ty} textAnchor={anchor}>{short(e.time)}</text>
+                </g>
+              )
+            })}
+          </g>
+        )}
+
+        {/* hover ghost */}
+        {ghostX !== null && ghost !== null && (
+          <g className="ghost" aria-hidden="true">
+            <line x1={ghostX} x2={ghostX} y1={M.top} y2={base} />
+            <text x={clamp(ghostX, M.left + 30, W - M.right - 30)} y={M.top - 4} textAnchor="middle">{formatClock(timeAt(ghost))}</text>
+          </g>
+        )}
+
+        {/* the hiker */}
+        <line className="hiker-line" x1={hx} x2={hx} y1={M.top} y2={base} />
+        <circle className="hiker" cx={hx} cy={hy} r={narrow ? 7 : 8} />
+        {narrow
+          ? <text className="you" x={clamp(hx, M.left + 40, W - M.right - 40)} y={H - 6} textAnchor="middle">{youTag}</text>
+          : (
+            <g className="you-tag">
+              <rect x={tagLeft} y={clamp(hy - 32, M.top, base - 24)} width={tagW} height={24} rx={6} />
+              <text x={tagLeft + tagW / 2} y={clamp(hy - 32, M.top, base - 24) + 16} textAnchor="middle">{youTag}</text>
+            </g>
+          )}
+      </svg>
     </div>
   )
 }

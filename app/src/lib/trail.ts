@@ -65,3 +65,35 @@ export function durationLabel(min: number): string {
 
 /** "C0", "C1" ... for a checkpoint id like "c3" (falls back to the id upper-cased). */
 export const checkpointLabel = (id: string): string => id.toUpperCase()
+
+/**
+ * Latest start that still finishes at sunset. Walking times do not depend on the clock, so moving the start moves the finish by
+ * the same amount: latest start = start + margin.
+ */
+export const latestStart = (v: DaylightVerdict): number => v.startMin + v.marginMin
+
+/** The section's answer sentence, e.g. "Back at 12:44 pm, long before dark". `roundTrip` false reads "Done at". */
+export function trailHeadline(v: DaylightVerdict, roundTrip: boolean, fmt: (min: number) => string): string {
+  const lead = `${roundTrip ? 'Back' : 'Done'} at ${fmt(v.finishMin)}`
+  if (v.finishesAfterSunset) return `${lead}, ${durationLabel(-v.marginMin)} after dark`
+  if (v.marginMin >= 120) return `${lead}, long before dark`
+  if (v.marginMin >= 30) return `${lead}, before dark`
+  return `${lead}, only ${durationLabel(v.marginMin)} before sunset`
+}
+
+/** Hour ticks every `every` hours from lo to hi (clock minutes): "6 am", "8", "10", "noon", "2 pm" ... the last one "6 pm". */
+export function hourTicks(lo: number, hi: number, every = 2): { min: number; label: string }[] {
+  const out: { min: number; label: string }[] = []
+  const first = Math.ceil(lo / 60 / every) * every
+  for (let h = first; h * 60 <= hi; h += every) out.push({ min: h * 60, label: '' })
+  let pmShown = false
+  out.forEach((t, i) => {
+    const h24 = (t.min / 60) % 24
+    const h12 = h24 % 12 === 0 ? 12 : h24 % 12
+    const pm = h24 >= 12
+    const suffix = i === 0 || i === out.length - 1 || (pm && !pmShown && h24 !== 12)
+    if (pm && h24 !== 12) pmShown = true
+    t.label = h24 === 12 ? 'noon' : h24 === 0 ? 'midnight' : suffix ? `${h12} ${pm ? 'pm' : 'am'}` : String(h12)
+  })
+  return out
+}

@@ -35,7 +35,7 @@ test('hike page on a phone: 16 px gutter, one column, 44 px controls, chart text
   const cols = await page.locator('.hp-head').evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length)
   expect(cols).toBe(1)
   const small = await page.evaluate(() => {
-    const sel = '.hikepage button, .hikepage select, .hikepage a.back, .hikepage a.go, .hikepage .qcard'
+    const sel = '.hikepage button, .hikepage select, .hikepage a.back, .hikepage a.go, .hikepage .wq'
     return [...document.querySelectorAll<HTMLElement>(sel)]
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
       .filter(({ r }) => r.width > 0 && r.height > 0 && r.height < 43.5)

@@ -1,6 +1,6 @@
 # Plan 5b: Build the Hike page from the approved design (v2)
 
-**Status: DRAFT. PLAN ONLY. Nothing starts until the user says "go".** Design phase is done; this is the build plan that follows it.
+**Status: BUILT (steps 1 to 9). See the build notes at the end.** Design phase is done; this is the build plan that follows it.
 **Design (source of truth):** canvas https://claude.ai/artifact/PXSwjkPPh9qWRL3xPGnvBi, sources in `docs/design/hike-page/canvas-v2/`, numbers and how they were computed in `docs/design/hike-page/README.md` ("v2 (enhanced 2D)"). v1 (`canvas/`) is kept for reference only.
 **Decided by the user:** v2 is the base. 2D only: 3D is a later optional add-on and none is built here. Similar hikes stays exactly as deployed. "Walk it in 3D" button stays (deployed feature).
 **You own:** `app/src/screens/Hike/*`, `app/src/components/charts/*`, `app/src/styles/hike.css`, matching e2e specs. **Do not touch:** data shapes (`schema.ts`), Explore, walks, pipeline. Models in `app/src/models/` change only with a test and the user's OK.
@@ -49,3 +49,15 @@ Fresh verifier agent prompt:
 - [ ] axe clean, keyboard-only run works, reduced-motion works, contrast 4.5:1 both themes.
 - [ ] 23 of 23 render with no console error; hikes with no walk show no button; hikes with a walk keep the cloud transition.
 - [ ] `npm run check`, `npm run e2e`, `node scripts/verify-final-23.mjs --plan 4` pass; CLAUDE.md and About updated.
+
+## Build notes (2026-11-26)
+Built from the v2 design on branch `hike-page-build`: hero with answer sentence and stat tiles, sticky linked selection bar, When (quarter cards over one month chart), Advice vs data with a chart, On the trail, How much with a what-if panel, Similar hikes unchanged. Verified: `npm run check`, the full e2e suite, the `hike-all.spec.ts` sweep (all 23 hikes at every quarter, dark desktop and light phone, plus no city and no limits), and a separate verifier agent (inventory, keyboard, contrast, metric units).
+Fixed after verification: scroll restore after a 3D walk (the page scrolls inside `.hikepage`, not the window), a ghost second scroll area, the tie headline dropping the cost, sources reachable by keyboard (focus shows the source card, Esc leaves it), no-city wording, a missing-data e2e with a stubbed data file.
+Known gaps, not fixed:
+- The per-factor breakdown under the quarter cards was removed on purpose (v2 has no place for it); each card names only its limiting factor.
+- Quarter-card hover does not frame that quarter's months on the chart.
+- A few chart labels crowd each other (profile "turn back" and the C0 marker, the Q4 frame over "Q4 · Autumn").
+- Phone: the month chart opens scrolled a little and the selection bar scrolls sideways.
+- The checkpoint pill in the selection bar uses the default start time, not one changed in the trail block.
+- `lib/costParts.ts` still holds callout helpers the chart no longer uses.
+- `node scripts/verify-final-23.mjs --plan 4` fails on `meta.fake` (a data matter, not this page). About text was not changed because it does not describe the Hike page layout.

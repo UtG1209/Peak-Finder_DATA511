@@ -57,6 +57,12 @@ def length_fields(facts, route_type):
     return round(length, 1), LENGTH_TYPE_FOR_ROUTE[route_type]
 
 
+def walk_paths():
+    """hike id -> 'walks/<walk>/' from walks/manifest.json, the single source of truth for featured and walk_path."""
+    manifest = read_json(ROOT / "walks" / "manifest.json")
+    return {w["hike_id"]: f"walks/{wid}/" for wid, w in manifest["walks"].items()}
+
+
 def build_hike(base, pages, facts, fields, photos, ends, weather, aqi, geo=None):
     hike = dict(base)
     source = {name: "placeholder" for name in COVERAGE_FIELDS}
@@ -121,9 +127,11 @@ def main():
     )
     weather, aqi = read_json(PROCESSED / "weather.json"), read_json(PROCESSED / "aqi.json")
 
+    walks = walk_paths()
     hikes, coverage = [], []
     for base in base_hikes:
         hike, source = build_hike(base, pages, facts, fields, photos, ends, weather, aqi, geo)
+        hike["featured"], hike["walk_path"] = base["id"] in walks, walks.get(base["id"])
         hikes.append(hike)
         coverage.append({"id": base["id"], **source})
 

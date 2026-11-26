@@ -1,0 +1,39 @@
+{
+  "id": "delicate_arch",
+  "hike_id": "delicate-arch",
+  "title": "Delicate Arch Trail",
+  "map_label": "A 3D walk from the Wolfe Ranch trailhead across the slickrock to Delicate Arch.",
+  "end_label": "Delicate Arch",
+  "pad_wide": 0.045,
+  "snow": {
+    "winter": 1300
+  },
+  "checkpoints": [
+    {
+      "name": "Petroglyphs",
+      "at": 0.3
+    }
+  ],
+  "stops": [
+    {
+      "file": "Delicate Arch Trail, Arches National Park, Utah (2408102243).jpg",
+      "title": "Delicate Arch Trailhead",
+      "alt": "The trail sign at the Wolfe Ranch trailhead, with a map of the route to Delicate Arch.",
+      "text": "The route starts here, near Wolfe Ranch. The trail crosses a bridge, then climbs slickrock to the arch."
+    },
+    {
+      "key": "petroglyphs",
+      "at": 0.3,
+      "file": "Ute Indian Petroglyphs Delicate Arch Trail Arches National Park UT 20220407 164616108.jpg",
+      "title": "Ute petroglyphs",
+      "alt": "Ute rock art on a sandstone wall beside the Delicate Arch trail.",
+      "text": "A short spur off the trail leads to a wall of Ute rock art, early in the walk."
+    },
+    {
+      "file": "Delicate Arch at Sunrise - panoramio.jpg",
+      "title": "Delicate Arch",
+      "alt": "Delicate Arch standing on the rim of a slickrock bowl in low light.",
+      "text": "You have reached Delicate Arch, a free-standing arch on the edge of a slickrock bowl."
+    }
+  ]
+}

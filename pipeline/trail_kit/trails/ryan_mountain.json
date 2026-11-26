@@ -1,0 +1,204 @@
+{
+  "id": "ryan_mountain",
+  "title": "Ryan Mountain Trail Walk",
+  "hike_name": "Ryan Mountain Trail",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk up the Ryan Mountain Trail to the summit in Joshua Tree.",
+  "park": "Joshua Tree National Park, CA",
+  "start": {
+    "name": "Ryan Mountain Trailhead",
+    "lat": 34.002528,
+    "lon": -116.135929
+  },
+  "end": {
+    "name": "Ryan Mountain",
+    "lat": 33.98612,
+    "lon": -116.13473
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -116.15393,
+    33.97412,
+    -116.11673,
+    34.01453
+  ],
+  "bounds": {
+    "wide": [
+      -116.18593,
+      33.94612,
+      -116.08473,
+      34.04253
+    ],
+    "mid": [
+      -116.17193,
+      33.95712,
+      -116.09873,
+      34.03153
+    ],
+    "core": [
+      -116.16193,
+      33.96612,
+      -116.10873,
+      34.02253
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 1090.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Summit",
+    "key_stop": {
+      "label": "Summit",
+      "at_m": 2414
+    }
+  },
+  "profile_checkpoints": [],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Ryan Mountain Trail 01.jpg",
+      "alt": "The start of the Ryan Mountain trail in the desert, with yuccas and rock.",
+      "eyebrow": "Start · Ryan Mountain Trailhead",
+      "title": "Ryan Mountain Trailhead",
+      "text": "The route starts on Park Boulevard in Joshua Tree National Park. The trail climbs steadily over open desert.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Ryan Mountain Trail 04.jpg",
+      "alt": "The Ryan Mountain summit sign with the desert valley beyond.",
+      "eyebrow": "End · Ryan Mountain Summit",
+      "title": "Ryan Mountain Summit",
+      "text": "You have reached the summit of Ryan Mountain, about 5,460 feet up, with views over Joshua Tree.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1450,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

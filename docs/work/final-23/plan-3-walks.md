@@ -6,6 +6,8 @@
 **Wait for:** a hike needs real trailhead, end point and profile (Plan 1 step 2, Plan 2 step 3) before its walk is built. The kept priority hikes can start today.
 
 ## Where we are
+**Update 2026-11-25:** Tier A and Tier B are built and verified (9 walks). Tier C waits for Plans 1 and 2.
+
 Built and in the manifest: `angels_landing`, `grand_canyon`, `north_cascades` (legacy, about 35 MB each), `mount_washburn`, `fairy_falls_only`, `grinnell_glacier_overlook`, `highline_to_granite_park`. All 7 hikes are in the final 23, so nothing is deleted. `_shared/` holds shared assets.
 Budget: 30 MB per new walk after lossless optimization, aim 25. GitHub Pages total limit 1 GB. Walks stay in this repo (decision made); build each once and never rebuild.
 

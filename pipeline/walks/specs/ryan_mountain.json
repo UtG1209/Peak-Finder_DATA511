@@ -1,0 +1,25 @@
+{
+  "id": "ryan_mountain",
+  "hike_id": "ryan-mountain",
+  "title": "Ryan Mountain Trail",
+  "map_label": "A 3D walk up the Ryan Mountain Trail to the summit in Joshua Tree.",
+  "pad_wide": 0.05,
+  "snow": {
+    "winter": 1450
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "Ryan Mountain Trail 01.jpg",
+      "title": "Ryan Mountain Trailhead",
+      "alt": "The start of the Ryan Mountain trail in the desert, with yuccas and rock.",
+      "text": "The route starts on Park Boulevard in Joshua Tree National Park. The trail climbs steadily over open desert."
+    },
+    {
+      "file": "Ryan Mountain Trail 04.jpg",
+      "title": "Ryan Mountain Summit",
+      "alt": "The Ryan Mountain summit sign with the desert valley beyond.",
+      "text": "You have reached the summit of Ryan Mountain, about 5,460 feet up, with views over Joshua Tree."
+    }
+  ]
+}
