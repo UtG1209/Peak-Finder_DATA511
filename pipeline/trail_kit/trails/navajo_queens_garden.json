@@ -1,0 +1,261 @@
+{
+  "id": "navajo_queens_garden",
+  "title": "Queens Garden and Navajo Loop Walk",
+  "hike_name": "Queens Garden and Navajo Loop",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D loop from Sunrise Point down Queens Garden, back up the Navajo Loop and along the rim.",
+  "park": "Bryce Canyon National Park, UT",
+  "start": {
+    "name": "Sunrise Point (Queen's Garden Trailhead)",
+    "lat": 37.62844,
+    "lon": -112.16296
+  },
+  "end": {
+    "name": "Sunset Point",
+    "lat": 37.62221,
+    "lon": -112.16604
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -112.18413,
+    37.60623,
+    -112.14083,
+    37.64044
+  ],
+  "bounds": {
+    "wide": [
+      -112.20613,
+      37.58623,
+      -112.11883,
+      37.66044
+    ],
+    "mid": [
+      -112.20213,
+      37.58923,
+      -112.12283,
+      37.65744
+    ],
+    "core": [
+      -112.19213,
+      37.59823,
+      -112.13283,
+      37.64844
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 2100.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Sunrise Point",
+    "key_stop": {
+      "label": "Sunrise Point",
+      "at_m": 4666
+    }
+  },
+  "profile_checkpoints": [
+    {
+      "name": "Canyon floor",
+      "at": 0.4
+    },
+    {
+      "name": "Wall Street",
+      "at": 0.7
+    }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Sunrise Point Bryce Canyon November 2018 005.jpg",
+      "alt": "The hoodoos of Bryce Amphitheater seen from Sunrise Point.",
+      "eyebrow": "Start · Sunrise Point",
+      "title": "Sunrise Point",
+      "text": "The loop starts at the rim and drops into the amphitheater by Queens Garden.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.42,
+      "photo": "floor",
+      "commons_file": "Bryce Canyon - Navajo Loop Trail - Two Bridges - P1060639.jpg",
+      "alt": "A bridge on the Navajo Loop trail among the hoodoos.",
+      "eyebrow": "Canyon floor",
+      "title": "Canyon floor",
+      "text": "At the bottom the Queens Garden and Navajo Loop trails meet, among the hoodoos.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "floor"
+      }
+    },
+    {
+      "at": 0.68,
+      "photo": "wall",
+      "commons_file": "Wall Street, Navajo Loop Trail, Bryce Canyon National Park, Utah (35531017951).jpg",
+      "alt": "The narrow slot of Wall Street on the Navajo Loop trail.",
+      "eyebrow": "Wall Street",
+      "title": "Wall Street",
+      "text": "The climb back out passes through Wall Street, a narrow slot between tall walls.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "wall"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Bryce Amphitheater from Sunrise Point Highres 2013.jpg",
+      "alt": "Bryce Amphitheater and its hoodoos seen from the rim.",
+      "eyebrow": "End · Back on the rim",
+      "title": "Back on the rim",
+      "text": "The Rim Trail leads back to Sunrise Point, where the loop began.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 2250,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2450,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  },
+  "route_via": [
+    {
+      "lat": 37.6255455,
+      "lon": -112.1588312
+    },
+    {
+      "lat": 37.6182299,
+      "lon": -112.1620107
+    },
+    {
+      "lat": 37.6226998,
+      "lon": -112.1661263
+    }
+  ],
+  "route_loop": true
+}

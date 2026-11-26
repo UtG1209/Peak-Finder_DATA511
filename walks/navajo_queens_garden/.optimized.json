@@ -1,0 +1,29 @@
+{
+  "walk": "navajo_queens_garden",
+  "before_bytes": 7544632,
+  "types": {
+    "dem": {
+      "files": 17,
+      "before": 1930685,
+      "after": 1415048,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 2358388,
+      "after": 1750788,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 4,
+      "before": 440569,
+      "after": 440569,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 6421464
+}
