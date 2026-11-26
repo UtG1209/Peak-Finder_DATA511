@@ -1,0 +1,19 @@
+/* adviceCard.css: "Advice vs data" (v2 evidence style), a ruled section. Scoped under .advice.adv so it wins over the older .advice rules in hike.css. Tokens only. */
+.advice.adv { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: var(--space-6) var(--space-8); align-items: center; max-width: none; margin: 0; padding: var(--space-6) 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.advice.adv .adv-text { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+.hikepage .advice.adv .adv-eyebrow { margin: 0; padding: 0; border: 0; font: var(--fw-medium) var(--fs-micro) / var(--lh-body) var(--font-body); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); }
+.advice.adv .adv-claim { margin: 0; font: var(--fw-regular) var(--fs-h2) / var(--lh-snug) var(--font-display); color: var(--text); text-wrap: pretty; }
+.advice.adv .adv-finding { margin: 0; color: var(--text-body); line-height: var(--lh-body); }
+.advice.adv .adv-finding b { color: var(--text); font-weight: var(--fw-semibold); }
+.adv-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.adv-ico { width: var(--hit); height: var(--hit); display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid var(--line-strong); border-radius: var(--radius-3); background: transparent; color: var(--text); cursor: pointer; }
+.adv-ico:hover { background: var(--hover); }
+.advice.adv .adv-src { font-size: var(--fs-small); color: var(--accent-text); }
+.adv-chart { min-width: 0; }
+.adv-chart svg { display: block; overflow: visible; }
+.adv-chart text { font-family: var(--font-body); }
+.adv-cap { font-size: var(--fs-micro); fill: var(--text-muted); }
+.adv-lab { font-size: var(--fs-small); fill: var(--text-body); }
+.adv-val { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); fill: var(--text); }
+.adv-bar { fill: var(--line-strong); }
+.adv-bar.top { fill: var(--accent-text); }

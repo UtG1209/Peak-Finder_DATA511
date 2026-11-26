@@ -1,0 +1,60 @@
+/* hero.css: the Hike page hero (v2 Main board). Scoped under .hp-head.hero so it wins over the older header rules in hike.css. Tokens only. */
+.hp-head.hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); gap: var(--space-8); align-items: start; }
+.hp-head.hero .hp-photo { display: flex; flex-direction: column; gap: var(--space-2); }
+.hp-head.hero .hp-photo figcaption { margin: 0; }
+.hp-head.hero .hp-intro { padding: 0; display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; }
+.hp-head.hero .hero-title { display: flex; flex-direction: column; gap: var(--space-2); }
+.hp-head.hero .eyebrow { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: 0; font-size: var(--fs-micro); font-weight: var(--fw-medium); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); }
+.hp-head.hero .hero-diff { display: inline-flex; gap: var(--space-2); align-items: center; color: var(--text-body); }
+.hp-head.hero h1 { margin: 0; text-wrap: balance; }
+.hp-head.hero .desc { margin: 0; color: var(--text-body); font-size: var(--fs-body); line-height: var(--lh-body); max-width: 56ch; }
+.hp-head.hero .headline { margin: 0; font: var(--fw-regular) var(--fs-h2) / var(--lh-snug) var(--font-display); color: var(--text); max-width: 40ch; text-wrap: pretty; }
+
+.hp-head.hero .num { margin: 0; font-family: var(--font-num); font-stretch: 75%; font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums; line-height: var(--lh-tight); color: var(--text); }
+.hp-head.hero .cap { margin: 0; font-size: var(--fs-small); color: var(--text-muted); }
+
+/* three ruled numbers */
+.hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.hero-stats > div { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3) var(--space-4) var(--space-3) 0; min-width: 0; }
+.hero-stats > div + div { padding-left: var(--space-4); border-left: 1px solid var(--line); }
+.hero-stats dt { font-size: var(--fs-small); color: var(--text-muted); }
+.hp-head.hero .hero-stats .num { font-size: var(--fs-num-l); }
+.hp-head.hero .hero-stats .num-word { font-size: var(--fs-num-m); padding-top: var(--space-2); }
+
+/* NPS facts and the route glyph */
+.hero-facts { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); align-items: flex-end; }
+.hp-head.hero .facts { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); margin: 0; border: 0; }
+.hp-head.hero .facts > div { display: flex; flex-direction: column-reverse; gap: var(--space-1); padding: 0; margin: 0; border: 0; }
+.hp-head.hero .facts dt { font-size: var(--fs-small); letter-spacing: normal; text-transform: none; color: var(--text-muted); }
+.hp-head.hero .facts dd { margin: 0; font-size: var(--fs-num-m); }
+.hero-route { flex: none; }
+.hero-route path { fill: none; stroke: var(--accent-text); stroke-width: 2; stroke-linejoin: round; }
+
+/* gear: an icon and a word, no pills */
+.hp-head.hero .gear { margin: 0; gap: var(--space-2) var(--space-4); }
+.hp-head.hero .gear li { min-height: 0; padding: 0; border: 0; border-radius: 0; gap: var(--space-2); color: var(--text-body); }
+
+/* permit and closure: the hazard chip, always icon and words */
+.hero-notes { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+.hp-head.hero .hz { display: inline-flex; align-items: flex-start; gap: var(--space-2); margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-3); background: var(--hazard-soft); color: var(--hazard); font-size: var(--fs-body); font-weight: var(--fw-medium); }
+.hp-head.hero .hz .icon { flex: none; }
+.hp-head.hero .hz b { font-weight: var(--fw-semibold); }
+
+.hp-head.hero .hp-actions { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.hp-head.hero .hp-actions .go { min-height: var(--hit); display: inline-flex; align-items: center; gap: var(--space-2); padding: 0 var(--space-4); }
+.hero-btn { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--hit); padding: 0 var(--space-4); border-radius: var(--radius-3); border: 1px solid var(--line-strong); color: var(--text); font-weight: var(--fw-medium); text-decoration: none; box-sizing: border-box; }
+.hero-btn:hover { background: var(--hover); color: var(--text); }
+
+@media (max-width: 860px) {
+  .hp-head.hero { gap: var(--space-5); }
+  .hp-head.hero .headline { font-size: var(--fs-h3); }
+  .hero-stats > div { padding: var(--space-2) var(--space-2) var(--space-2) 0; }
+  .hero-stats > div + div { padding-left: var(--space-2); }
+  .hp-head.hero .hero-stats .num { font-size: var(--fs-num-m); }
+  .hp-head.hero .hero-stats .num-word { font-size: var(--fs-num-s); padding-top: 0; }
+}
+
+/* a source is one focus away: the title text as a card under the tile, Esc leaves it */
+.srcfocus { position: relative; border-radius: var(--radius-3); }
+.srcfocus:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.srcfocus:focus::after { content: attr(title); position: absolute; left: 0; top: 100%; z-index: 5; width: max-content; max-width: 260px; margin-top: var(--space-1); padding: var(--space-2) var(--space-3); background: var(--surface-2); color: var(--text); border: 1px solid var(--line-strong); border-radius: var(--radius-3); box-shadow: var(--shadow-overlay); font: var(--fw-regular) var(--fs-small) / var(--lh-body) var(--font-body); }

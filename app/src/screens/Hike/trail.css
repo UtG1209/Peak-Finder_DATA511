@@ -1,0 +1,107 @@
+/* trail.css: "On the trail" (v2, docs/design/hike-page/canvas-v2/Main.dc.html). Owned by TrailSection.tsx; every rule is scoped to
+   .trailsec so the older trail rules in styles/hike.css never win. Tokens only. */
+.trailsec { display: flex; flex-direction: column; gap: var(--space-5); }
+
+/* answer first */
+.trailsec .tr-sh { display: flex; flex-direction: column; gap: var(--space-1); }
+.trailsec .tr-sh h2 { margin: 0; font: var(--fw-medium) var(--fs-h2) / var(--lh-snug) var(--font-display); }
+.trailsec .tr-ans { margin: 0; max-width: 62ch; font: var(--fw-regular) var(--fs-h3) / var(--lh-snug) var(--font-display); color: var(--text-body); text-wrap: pretty; }
+.trailsec .tr-hz { display: inline-flex; align-items: flex-start; gap: var(--space-2); align-self: flex-start; margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-3); background: var(--hazard-soft); color: var(--hazard); font-size: var(--fs-body); font-weight: var(--fw-medium); max-width: 72ch; }
+.trailsec .tr-hz .icon { color: var(--hazard); margin-top: 1px; }
+.trailsec .tr-hz b { color: var(--hazard); }
+
+/* card (chart) and panel (stop card) */
+.trailsec .tr-grid { display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: stretch; }
+.trailsec .tr-card { flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-4); }
+.trailsec .tr-panel { flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-5); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-4); border-top: 1px solid var(--line); }
+
+.trailsec .tr-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-4); }
+.trailsec .starttime { display: inline-flex; flex-direction: row; align-items: center; gap: var(--space-2); font-size: var(--fs-body); font-weight: var(--fw-regular); letter-spacing: 0; text-transform: none; color: var(--text-body); }
+.trailsec .starttime input { min-height: var(--hit); padding: 0 var(--space-3); border-radius: var(--radius-3); border: 1px solid var(--line-strong); background: var(--surface); color: var(--text); font: var(--fw-medium) var(--fs-body) var(--font-body); }
+.trailsec .tr-controls .linkbtn { align-self: center; }
+
+/* the profile */
+.trailsec .chartbox { border: 0; padding: 0; touch-action: pan-y; border-radius: var(--radius-2); }
+.trailsec .chartbox:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+.trailsec .elevchart { cursor: ew-resize; }
+.trailsec .elevchart .grid { stroke: var(--line); }
+.trailsec .elevchart .axisline { stroke: var(--line-strong); }
+.trailsec .elevchart .tick { stroke: var(--line); stroke-width: 1; }
+.trailsec .elevchart .axis { fill: var(--text-muted); font-size: var(--fs-micro); font-weight: var(--fw-regular); }
+.trailsec .elevchart .axis .turn { fill: var(--text-body); }
+.trailsec .elevchart .area { fill: var(--accent-soft); }
+.trailsec .elevchart .line-up { stroke: var(--accent-text); stroke-width: 2; stroke-dasharray: none; stroke-linejoin: round; fill: none; }
+.trailsec .elevchart .cp-up, .trailsec .elevchart .cp-down { fill: var(--surface); stroke: var(--text); stroke-width: 1.5; }
+.trailsec .elevchart .cp.on circle { fill: var(--text); }
+.trailsec .elevchart .cp-label { fill: var(--text-body); font: var(--fw-semibold) var(--fs-micro) var(--font-body); }
+.trailsec .elevchart .cp-label.turn { fill: var(--text); }
+.trailsec .elevchart .cp-time { fill: var(--text-body); font: var(--fw-semibold) var(--fs-small) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.trailsec .elevchart .cp-time.turn { fill: var(--text); }
+.trailsec .elevchart .hiker-line { stroke: var(--accent); stroke-width: 2; stroke-dasharray: none; }
+.trailsec .elevchart .hiker { fill: var(--accent); stroke: var(--bg); stroke-width: 2; }
+.trailsec .elevchart .you-tag rect { fill: var(--accent); }
+.trailsec .elevchart .you-tag text { fill: var(--on-accent); font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+.trailsec .elevchart .you { fill: var(--accent-text); font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+.trailsec .elevchart .ghost line { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 3; }
+.trailsec .elevchart .ghost text { fill: var(--text-muted); font-size: var(--fs-micro); }
+
+/* scrubber */
+.trailsec .scrub-range { display: flex; flex-direction: column; gap: var(--space-1); }
+.trailsec .scrub-range input { width: 100%; height: var(--hit); margin: 0; accent-color: var(--accent); }
+
+/* daylight band */
+.trailsec .daylightband { border: 0; }
+.trailsec .daylightband .night { fill: var(--surface-sunk); }
+.trailsec .daylightband .day { fill: var(--line); stroke: none; }
+.trailsec .daylightband .hikebar { fill: var(--accent-text); }
+.trailsec .daylightband .hikedark { fill: var(--hazard); }
+.trailsec .daylightband .sun-label { fill: var(--text-muted); font-size: var(--fs-micro); font-weight: var(--fw-regular); }
+.trailsec .daylightband .sunset-mark { stroke: var(--text-muted); stroke-width: 1; }
+.trailsec .daylightband .hike-label { fill: var(--accent-text); font-size: var(--fs-micro); font-weight: var(--fw-semibold); }
+.trailsec .daylightband .hike-label.warn { fill: var(--hazard); }
+.trailsec .daylightband .axis { fill: var(--text-muted); font-size: var(--fs-micro); font-weight: var(--fw-regular); }
+.trailsec .daylightband .now { stroke: var(--text); stroke-width: 2; }
+
+/* stop card */
+.trailsec .tr-photo { margin: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.trailsec .tr-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius-3); display: block; background: var(--surface-sunk); }
+.trailsec .tr-photo a { color: var(--accent-text); }
+.trailsec .ro-stop { display: flex; flex-direction: column; gap: 2px; }
+.trailsec .ro-stop h3 { margin: 0; font: var(--fw-medium) var(--fs-h3) / var(--lh-snug) var(--font-display); }
+.trailsec .ro-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: 0; border: 0; }
+.trailsec .ro-facts > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 2px; padding: 0; border: 0; }
+.trailsec .ro-facts dt { font-size: var(--fs-small); letter-spacing: 0; text-transform: none; color: var(--text-muted); }
+.trailsec .ro-facts dd { margin: 0; font: var(--fw-semibold) var(--fs-num-m) / 1.1 var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; color: var(--text); }
+.trailsec .ro-time dd { display: flex; flex-direction: column; gap: 2px; }
+.trailsec .ro-time b { font: inherit; }
+.trailsec .ro-time span { font: var(--fw-regular) var(--fs-small) var(--font-body); letter-spacing: 0; text-transform: none; color: var(--accent-text); }
+.trailsec .scrub { display: flex; gap: var(--space-2); margin: 0; }
+.trailsec .tr-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--hit); padding: 0 var(--space-4); border-radius: var(--radius-3); border: 1px solid var(--line-strong); background: transparent; color: var(--text); font: var(--fw-medium) var(--fs-body) / 1 var(--font-body); cursor: pointer; }
+.trailsec .tr-btn:hover:not(:disabled) { background: var(--hover); }
+.trailsec .tr-btn.pri { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: var(--fw-semibold); }
+.trailsec .tr-btn.pri:hover:not(:disabled) { background: var(--accent-hover); }
+.trailsec .tr-btn:disabled { opacity: 1; background: transparent; border-color: var(--line); color: var(--text-muted); cursor: default; }
+.trailsec .tr-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.trailsec .ro-next { margin: 0; }
+.trailsec .ro-next b { color: var(--text-body); font-weight: var(--fw-semibold); }
+
+/* checkpoint table and the quarter table, collapsible */
+.trailsec .tr-table summary { display: flex; align-items: center; min-height: var(--hit); cursor: pointer; font: var(--fw-medium) var(--fs-h3) var(--font-display); color: var(--text); }
+.trailsec .tr-table summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.trailsec .strip-scroll { border: 0; }
+.trailsec table.cptable { font-size: var(--fs-body); }
+.trailsec table.cptable caption { caption-side: bottom; text-align: left; padding-top: var(--space-2); font-size: var(--fs-small); color: var(--text-muted); }
+.trailsec table.cptable thead th { font-size: var(--fs-small); font-weight: var(--fw-medium); letter-spacing: 0; text-transform: none; color: var(--text-muted); border-bottom: 1px solid var(--line-strong); padding: var(--space-2) var(--space-3) var(--space-2) 0; }
+.trailsec table.cptable td, .trailsec table.cptable th[scope='row'] { padding: var(--space-1) var(--space-3) var(--space-1) 0; color: var(--text-body); border-bottom: 1px solid var(--line); }
+.trailsec table.cptable td.n { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; color: var(--text); }
+.trailsec table.cptable th[scope='row'] .linkbtn { padding-left: var(--space-3); min-width: var(--hit); font: var(--fw-semibold) var(--fs-num-s) var(--font-num); text-decoration: none; color: var(--text); }
+.trailsec table.cptable tr.current { box-shadow: none; }
+.trailsec table.cptable tr.current > * { background: var(--selected); }
+.trailsec table.cptable tr.current > :first-child { box-shadow: inset 3px 0 0 var(--accent); }
+
+@media (max-width: 640px) {
+  .trailsec .tr-card, .trailsec .tr-panel { padding: var(--space-4); }
+  .trailsec .tr-ans { font-size: var(--fs-body-l); }
+  .trailsec .tr-controls { justify-content: flex-start; }
+  .trailsec .strip-scroll > table.cptable { min-width: 480px; }
+}

@@ -1,0 +1,84 @@
+/* when.css: the hike page "When" block (v2): answer sentence, quarter cards aligned over ONE month chart, hazard chips, table toggle.
+   Tokens only. Imported by screens/Hike/FitSection.tsx. The chart's plot runs from x 72 to 752 of a 760-wide viewBox:
+   the cards use the same insets (9.47% left, 1.05% right) so each card sits over its three month columns. */
+
+.hikepage .when-head { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--line-strong); }
+.hikepage .when-head h2 { margin: 0; padding: 0; border: 0; }
+.when-eyebrow { margin: 0; font-size: var(--fs-micro); font-weight: var(--fw-medium); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); }
+.when-ans { margin: 0; max-width: 62ch; font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-snug); color: var(--text-body); text-wrap: pretty; }
+
+.when-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-3); padding: var(--space-5); min-width: 0; }
+
+/* quarter cards */
+.when-q { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); padding: 0 1.05% 0 9.47%; margin-bottom: var(--space-3); }
+.wq { display: flex; flex-direction: column; gap: 6px; min-height: 44px; padding: var(--space-3); text-align: left; border: 1px solid var(--line); border-radius: var(--radius-3); background: var(--surface-2); color: var(--text); font: var(--fw-regular) var(--fs-body) / var(--lh-body) var(--font-body); cursor: pointer; transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease); }
+.wq:hover { background: var(--hover); }
+.wq.on { border: 2px solid var(--accent); padding: calc(var(--space-3) - 1px); background: var(--accent-soft); }
+.wq.off { background: transparent; border: 1px dashed var(--off-line); color: var(--off-text); }
+.wq.off.on { border: 2px dashed var(--accent); }
+.wq-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); font-size: var(--fs-small); color: var(--text-muted); }
+.wq-top b { color: var(--text); font-weight: var(--fw-semibold); }
+.wq.off .wq-top b { color: var(--off-text); }
+.wq-tag { font-size: var(--fs-micro); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--accent-text); }
+.wq-num { font: var(--fw-semibold) var(--fs-num-l) / var(--lh-tight) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.wq-why { font-size: var(--fs-small); color: var(--text-body); }
+.wq.off .wq-why, .wq-muted { color: var(--off-text); }
+.wq-hz { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--hazard); }
+.wq-meter { position: relative; height: 4px; border-radius: 2px; background: var(--surface-sunk); overflow: hidden; margin-top: auto; }
+.wq-meter i { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: var(--accent-text); }
+.wq.off .wq-meter i { background: var(--off-line); }
+
+/* hazards: amber, always with an icon and words */
+.when-hz { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-3); padding: 0 1.05% 0 9.47%; }
+.when-hz li { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-2); background: var(--hazard-soft); color: var(--hazard); font-size: var(--fs-small); font-weight: var(--fw-semibold); }
+
+/* the month chart */
+.wc-scroll { overflow-x: auto; scroll-snap-type: x proximity; }
+.wc-plot { position: relative; }
+.wc-svg { display: block; overflow: visible; }
+.wc-t { font-size: var(--fs-micro); font-family: var(--font-body); }
+.wc-n, .wc-n text { font-family: var(--font-num); font-stretch: 75%; font-weight: var(--fw-semibold); font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
+.wc-mname { font-family: var(--font-body); font-stretch: normal; font-weight: var(--fw-medium); }
+.wc-b { font-weight: var(--fw-semibold); }
+.wc-tx { fill: var(--text); } .wc-tb { fill: var(--text-body); } .wc-tm { fill: var(--text-muted); } .wc-ta { fill: var(--accent-text); } .wc-th { fill: var(--hazard); } .wc-off { fill: var(--off-text); }
+.wc-hover { fill: var(--hover); }
+.wc-picked { fill: var(--selected); }
+.wc-frame { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.wc-limit { fill: var(--accent-soft); }
+.wc-halo { paint-order: stroke; stroke: var(--accent-soft); stroke-width: 5px; stroke-linejoin: round; } /* the line and gridlines never strike through the label */
+.wc-hatch { stroke: var(--hazard); stroke-width: 1.5; opacity: 0.45; }
+.wc-grid { stroke: var(--line); stroke-width: 1; }
+.wc-grid.dash { stroke-dasharray: 3 3; }
+.wc-base { stroke: var(--line-strong); }
+.wc-band { fill: var(--line-strong); opacity: 0.35; }
+.wc-line { fill: none; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
+.wc-dot { fill: var(--text); }
+.wc-dot.on { fill: var(--accent-text); }
+.wc-missing { fill: var(--off); }
+.wc-bar { fill: var(--line-strong); }
+.wc-bar.inq { fill: var(--accent-text); }
+
+/* real buttons over the 12 columns (same insets as the plot) */
+.wc-cols { position: absolute; top: 0; bottom: 0; left: 9.47%; right: 1.05%; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.wc-col { min-width: 44px; min-height: 44px; padding: 0; border: 0; border-radius: var(--radius-2); background: transparent; cursor: pointer; scroll-snap-align: start; }
+.wc-col:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+
+.wc-tip { position: absolute; top: 18%; transform: translateX(var(--space-3)); display: flex; flex-direction: column; gap: 2px; min-width: 180px; padding: var(--space-3); border: 1px solid var(--line-strong); border-radius: var(--radius-2); background: var(--surface-2); color: var(--text-body); font-size: var(--fs-small); pointer-events: none; box-shadow: var(--shadow-overlay); }
+.wc-tip.left { transform: translateX(calc(-100% - var(--space-3))); }
+.wc-tip b { color: var(--text); font-weight: var(--fw-semibold); }
+.wc-tip small { color: var(--text-muted); font-size: var(--fs-micro); }
+
+.when-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); margin-top: var(--space-2); }
+.when-foot .fine { margin: 0; }
+.when-btn { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-4); border: 1px solid var(--line-strong); border-radius: var(--radius-2); background: transparent; color: var(--text); font: var(--fw-medium) var(--fs-body) / 1 var(--font-body); cursor: pointer; }
+.when-btn:hover { background: var(--hover); }
+
+@media (max-width: 640px) {
+  .when-card { padding: var(--space-4); }
+  .when-q { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0; }
+  .when-hz { padding: 0; }
+  .wc-plot { min-width: 600px; } /* 12 columns of at least 44 px; the chart scrolls inside its own box */
+  .when-foot { flex-direction: column; align-items: stretch; }
+}
+
+@media (prefers-reduced-motion: reduce) { .wq { transition: none; } }
