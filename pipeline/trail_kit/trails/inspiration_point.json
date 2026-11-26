@@ -1,0 +1,211 @@
+{
+  "id": "inspiration_point",
+  "title": "Jenny Lake to Inspiration Point Walk",
+  "hike_name": "Jenny Lake to Inspiration Point",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from the Jenny Lake area along the lake to Inspiration Point.",
+  "park": "Grand Teton National Park, WY",
+  "start": {
+    "name": "Jenny Lake Trailhead",
+    "lat": 43.751554,
+    "lon": -110.725424
+  },
+  "end": {
+    "name": "Inspiration Point",
+    "lat": 43.767153,
+    "lon": -110.748549
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -110.76655,
+    43.73955,
+    -110.70742,
+    43.77915
+  ],
+  "bounds": {
+    "wide": [
+      -110.79855,
+      43.71155,
+      -110.67542,
+      43.80715
+    ],
+    "mid": [
+      -110.78455,
+      43.72255,
+      -110.68942,
+      43.79615
+    ],
+    "core": [
+      -110.77455,
+      43.73155,
+      -110.69942,
+      43.78715
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 2060.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Inspiration Point",
+    "key_stop": {
+      "label": "Inspiration Point",
+      "at_m": 4586
+    }
+  },
+  "profile_checkpoints": [],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "GrandTetonNP JennyLake HistoricBoatkeepersCabin.jpg",
+      "alt": "The historic boatkeeper's cabin on the shore of Jenny Lake.",
+      "eyebrow": "Start · Jenny Lake Trailhead",
+      "title": "Jenny Lake Trailhead",
+      "text": "The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Jenny Lake from Inspiration Point - Grand Teton National Park.jpg",
+      "alt": "Jenny Lake seen from Inspiration Point, below the Teton peaks.",
+      "eyebrow": "End · Inspiration Point",
+      "title": "Inspiration Point",
+      "text": "You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1950,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2150,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}
