@@ -1,0 +1,229 @@
+{
+  "id": "emerald_lake",
+  "title": "Bear Lake to Emerald Lake Walk",
+  "hike_name": "Bear Lake to Emerald Lake",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from Bear Lake past Nymph and Dream Lakes to Emerald Lake.",
+  "park": "Rocky Mountain National Park, CO",
+  "start": {
+    "name": "Bear Lake Trailhead",
+    "lat": 40.31196,
+    "lon": -105.64595
+  },
+  "end": {
+    "name": "Emerald Lake (end of the Emerald Lake Trail)",
+    "lat": 40.3097,
+    "lon": -105.66675
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -105.68475,
+    40.2977,
+    -105.62795,
+    40.32396
+  ],
+  "bounds": {
+    "wide": [
+      -105.71675,
+      40.2697,
+      -105.59595,
+      40.35196
+    ],
+    "mid": [
+      -105.70275,
+      40.2807,
+      -105.60995,
+      40.34096
+    ],
+    "core": [
+      -105.69275,
+      40.2897,
+      -105.61995,
+      40.33196
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 1300.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Emerald Lake",
+    "key_stop": {
+      "label": "Emerald Lake",
+      "at_m": 2155
+    }
+  },
+  "profile_checkpoints": [
+    {
+      "name": "Dream Lake",
+      "at": 0.6
+    }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Bear Lake Trailhead, Estes Park, United States (Unsplash).jpg",
+      "alt": "The Bear Lake trailhead sign in Rocky Mountain National Park.",
+      "eyebrow": "Start · Bear Lake Trailhead",
+      "title": "Bear Lake Trailhead",
+      "text": "The route starts at Bear Lake, about 9,450 feet up in Rocky Mountain National Park.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.6,
+      "photo": "dream",
+      "commons_file": "Dream lake 2021.jpg",
+      "alt": "Dream Lake below the peaks of Rocky Mountain National Park.",
+      "eyebrow": "Dream Lake",
+      "title": "Dream Lake",
+      "text": "The trail passes Nymph Lake and then Dream Lake, with Hallett Peak above.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "dream"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Emerald Lake, Colorado (48051881866).jpg",
+      "alt": "Emerald Lake at the foot of Hallett Peak and Flattop Mountain.",
+      "eyebrow": "End · Emerald Lake",
+      "title": "Emerald Lake",
+      "text": "You have reached Emerald Lake, tucked under the cliffs of Hallett Peak.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 2500,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 3050,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}
