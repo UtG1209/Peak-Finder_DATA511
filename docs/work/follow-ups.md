@@ -19,7 +19,7 @@ Everything marked **Decision** needs the team's answer before work starts.
 
 ## Data gaps
 
-- **Hikes outside the priority 15** (23 hikes): placeholder trailheads, end points, elevations, gain, closed months, generated profiles, and cost rows with placeholder entrance fees. They need the same treatment as the priority hikes or they get cut. **Decision.**
+- **The 8 hikes outside the priority 15** (the 7 new ones and Mount Washburn): trailheads, end points, elevations, gain and closed months are now sourced (Plan 1 step 2). Still generated: profiles, and cost rows with placeholder entrance fees (Plan 2).
 - **Fares:** 5 priority cost rows keep a placeholder fare (ATL to ATL for Alum Cave, four quarters, where nobody flies; Seattle to Bangor Q1). DOT Table 6 only lists busy markets.
 - **Drive distance and time are understated** for Navajo Loop (about 1.3 mi), Hurricane Hill (about 17 mi) and Clingmans Dome (about 7 mi): ORS cannot reach the final road, so `pipeline/catalogue/drive_points.csv` routes to the nearest reachable point. Add a sourced extra distance, or accept and say so on About.
 - **Glacier closed months:** NPS says only "closed for the season", no typical dates, so none are recorded (Highline, Grinnell).
@@ -27,7 +27,10 @@ Everything marked **Decision** needs the team's answer before work starts.
   - Fairy Falls gain is a net 54 ft (NPS gives none).
   - Alum Cave gain is net.
   - Glacier Highline max elevation (7,273 ft) is route-derived.
-  - Hurricane Hill and Wheeler Peak summit elevations have no NPS figure and stay placeholders.
+  - Mount Washburn, Clingmans Dome and Longs Peak gains are net USGS differences, summit minus trailhead (NPS gives none).
+  - Moro Rock summit is USGS (6,711 ft): the NPS trailhead page's "6,275 ft" is a digit swap of its own 2,050 m.
+  - Moro Rock and General Sherman use the Lemon Cove station, about 30 km away and about 6,000 ft lower, so the typical high (102°F in July) is a foothills value. **Decision.**
+  - Zion Narrows has no closed months: NPS closes it when the river runs over 150 CFS, with no fixed dates.
 - **Fees:**
   - Delicate Arch (timed entry) and Glacier Highline (vehicle reservation) permit fees are UNVERIFIED and left at $0.
   - Great Smoky Mountains entrance is $0 UNVERIFIED (parking tag price not read).
@@ -47,7 +50,7 @@ Everything marked **Decision** needs the team's answer before work starts.
 
 - Decision made: walks stay in this repo and on GitHub Pages (15 to 20 hikes fits under the 1 GB Pages limit at 30 MB each; build each walk once and never rebuild it, because git history keeps every version).
 - 21 of the final 23 hikes have a walk (Plan 3, Tier A, B and C, 2026-11-25; each 4 to 12 MB). Anhinga and Zion Narrows get none on purpose.
-- Tier C used sourced OSM and GNIS coordinates added to `pipeline/catalogue/geo_facts.csv` (General Sherman, Moro Rock, Clingmans Dome, Emerald Lake, Longs Peak). Their other placeholders remain (see `hikes_coverage.csv`). Moro Rock's data says summit 6,275 ft but the route reaches 6,676 ft (NPS says about 6,725 ft): Plan 1 should check it. The Clingmans Dome route is 1.02 km against NPS 0.8 km one way (ratio 1.26, a warning, because the path starts at the lot's south end). The Longs Peak route is 10.4 km against NPS 12.1 km (OSM does not map the Homestretch scramble).
+- Tier C walks (General Sherman, Moro Rock, Clingmans Dome, Emerald Lake, Longs Peak) were built from OSM trailheads that match Plan 1's final coordinates to within about 25 m; Plan 1's geo_facts.csv rows are the ones in use. The Clingmans Dome route is 1.02 km against NPS 0.8 km one way (ratio 1.26, a warning, because the OSM path starts at the south end of the lot). The Longs Peak route is 10.4 km against NPS 12.1 km (OSM does not map the Homestretch scramble). The Emerald Lake walk ends at the lakeshore, 125 m from the lake-centre end point.
 - Walk photos: only summer photos are real for the new walks; the other seasons borrow one and the page says so. Cadillac and Alum Cave start photos are near the trailhead, not at it (the captions say so).
 - Walk page: the Back button reads "Back toHalf Dome..." (missing space) on every walk, and the end label of the elevation strip overlaps the distance on short walks. Template fix for the design track.
 

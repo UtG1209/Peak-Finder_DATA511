@@ -30,13 +30,23 @@ LANE_1_SOURCES = [
     ("FCC Area API (trailhead county)", "https://geo.fcc.gov/api/census/", "fcc"),
 ]
 
+# Point lookups recorded by hand in pipeline/catalogue/geo_facts.csv: no raw cache, so the date is the last lookup.
+LOOKUP_SOURCES = [
+    ("OpenStreetMap via Nominatim (trailheads and end points), © OpenStreetMap contributors, ODbL",
+     "https://www.openstreetmap.org/copyright", "2026-11-25"),
+    ("NPS Data API, places (trailheads and end points)", "https://www.nps.gov/subjects/developer/api-documentation.htm", "2026-11-25"),
+    ("USGS 3DEP Elevation Point Query Service (summit elevations, net gains)", "https://epqs.nationalmap.gov/v1/docs", "2026-11-25"),
+    ("USGS GNIS (summit points)", "https://www.usgs.gov/tools/geographic-names-information-system-gnis", "2026-11-24"),
+]
+
 
 def as_of(folder, fallback=None):
     files = [path for path in (RAW / folder).glob("*") if path.is_file()]
     if not files and fallback:  # raw cache not on this machine: keep the date already published
         return fallback
-    newest = max(path.stat().st_mtime for path in files)
-    return date.fromtimestamp(newest).isoformat()
+    newest = date.fromtimestamp(max(path.stat().st_mtime for path in files)).isoformat()
+    # Another machine may have published from newer downloads; never move the date back.
+    return max(newest, fallback) if fallback else newest
 
 
 LANE_2_SOURCES = ("DOT Consumer Airfare Report, Table 6", "GSA per diem", "EIA gasoline prices", "OpenRouteService")
@@ -49,12 +59,13 @@ def cost_sources(previous):
 
 
 def build(previous, hike_count):
-    own = {name for name, _, _ in LANE_1_SOURCES}
+    own = {name for name, _, _ in LANE_1_SOURCES + LOOKUP_SOURCES}
     old_dates = {s["name"]: s["as_of"] for s in previous["sources"]}
     sources = [{"name": name, "url": url, "as_of": as_of(folder, old_dates.get(name))} for name, url, folder in LANE_1_SOURCES]
+    sources += [{"name": name, "url": url, "as_of": looked_up} for name, url, looked_up in LOOKUP_SOURCES]
     sources += [dict(source, as_of=date.today().isoformat()) if source["name"] in LANE_2_SOURCES and "fake" in source["as_of"] and (ROOT / "data" / "processed" / "lane2" / "cost_sources.json").exists() else source for source in previous["sources"] if source["name"] not in own]
     return {
-        "fake": True,  # stays True until every data file is real (travel, cost, profiles, advice are still placeholders)
+        "fake": True,  # stays True until every data file is real (cost and profiles of 8 hikes are still placeholders); Plan 4 flips it
         "pipeline_version": PIPELINE_VERSION,
         "generated": date.today().isoformat(),
         "typical_years": previous["typical_years"],

@@ -48,6 +48,11 @@ def test_springdale_august_heat(cards):
     assert numbers == {"Station mean Aug high (F)": 97.9, "Days >= 100 F per August": 13.0}
 
 
+def test_seattle_las_vegas_q3_fare(cards):
+    numbers = cards["Flights to Las Vegas are cheap from Seattle"]["numbers"]
+    assert numbers == {"Q3 2025 average one-way fare ($)": 169.78}
+
+
 def test_every_card_has_a_source_and_a_known_hike(cards):
     hikes = {hike["id"] for hike in json.loads((advice.ROOT / "app/public/data/hikes.json").read_text("utf-8"))}
     for card in cards.values():
