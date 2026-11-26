@@ -1,0 +1,40 @@
+{
+  "id": "alum_cave_leconte",
+  "hike_id": "alum-cave-leconte",
+  "title": "Alum Cave Trail to Mount LeConte",
+  "map_label": "A 3D walk up the Alum Cave Trail through the spruce-fir forest to LeConte Lodge.",
+  "end_label": "LeConte Lodge",
+  "pad_wide": 0.05,
+  "snow": {
+    "winter": 1100,
+    "spring": 1600
+  },
+  "checkpoints": [
+    {
+      "name": "Alum Cave Bluffs",
+      "at": 0.4
+    }
+  ],
+  "stops": [
+    {
+      "file": "Alum Cave Trail 1.jpg",
+      "title": "Alum Cave Trailhead",
+      "alt": "The Alum Cave Trail with a view over forested ridges.",
+      "text": "The route starts on Newfound Gap Road in Great Smoky Mountains National Park. The photo shows the trail higher up."
+    },
+    {
+      "key": "viewpoint",
+      "at": 0.6,
+      "file": "Viewpoint along Alum Cave Trail ascending towards Mount LeConte, GSMNP, TN.jpg",
+      "title": "Viewpoint on the climb",
+      "alt": "A viewpoint on the Alum Cave Trail looking over the Smoky Mountains.",
+      "text": "Higher on the trail, breaks in the spruce-fir forest open views across the ridges."
+    },
+    {
+      "file": "View atop Cliff Tops on Mount LeConte, GSMNP, TN.jpg",
+      "title": "LeConte Lodge",
+      "alt": "The view from Cliff Tops near LeConte Lodge.",
+      "text": "You have reached LeConte Lodge. Cliff Tops, a short walk away, looks out over the Smokies."
+    }
+  ]
+}
