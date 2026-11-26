@@ -14,7 +14,8 @@ Done with `pipeline/cut_to_final.py` (idempotent; `pipeline/catalogue/final_hike
 6. Update CLAUDE.md: "40" and "38" hike counts (sections 0, 1, 4, 7), the "Mix" line, and add this folder to the docs list. `npm run docs:check` must pass.
 PR title: "Cut the dataset to the final 23 hikes". `npm run check` and `npm run validate:data` green.
 
-## Step 2: real hike fields for the 7 new hikes and Mount Washburn
+## Step 2: real hike fields for the 7 new hikes and Mount Washburn — DONE 2026-11-25
+Done: `geo_facts.csv` rows (OSM, NPS places, USGS 3DEP), NPS gains and Moro Rock length in `nps_facts.csv`, permit and closure notes, closed months for Mount Washburn and Clingmans Dome. Weather, AQI, daylight and `hike_month` re-run for all 23. Weak figures are in `follow-ups.md`.
 For each of `general-sherman-tree, moro-rock, clingmans-dome, anhinga-trail, emerald-lake, zion-narrows, longs-peak, mount-washburn`, replace every `placeholder` cell in `hikes_coverage.csv` with a sourced value, using the same tables the 15 priority hikes use (`nps_facts.csv`, `geo_facts.csv`, `end_points.csv`, `hike_fields.csv`, `closed_months.csv`):
 - Trailhead and end coordinates (OSM, GNIS or NPS), NPS length and gain, summit elevation (NPS or USGS), difficulty rule, closed months, permit note.
 - Longs Peak: summit 14,259 ft, NPS length about 15 mi round trip; needs the permit note for the August to October window and the "start before sunrise" note in `closure_note` or `description`.
