@@ -40,6 +40,51 @@
       "hike_id": "glacier-highline",
       "kit_trail": "highline_to_granite_park",
       "built": "2026-11-19"
+    },
+    "half_dome": {
+      "hike_id": "half-dome",
+      "kit_trail": "half_dome",
+      "built": "2026-11-25"
+    },
+    "delicate_arch": {
+      "hike_id": "delicate-arch",
+      "kit_trail": "delicate_arch",
+      "built": "2026-11-25"
+    },
+    "navajo_queens_garden": {
+      "hike_id": "navajo-loop-queens-garden",
+      "kit_trail": "navajo_queens_garden",
+      "built": "2026-11-25"
+    },
+    "skyline_trail": {
+      "hike_id": "skyline-trail",
+      "kit_trail": "skyline_trail",
+      "built": "2026-11-25"
+    },
+    "mesa_arch": {
+      "hike_id": "mesa-arch",
+      "kit_trail": "mesa_arch",
+      "built": "2026-11-25"
+    },
+    "cadillac_north_ridge": {
+      "hike_id": "cadillac-north-ridge",
+      "kit_trail": "cadillac_north_ridge",
+      "built": "2026-11-25"
+    },
+    "inspiration_point": {
+      "hike_id": "inspiration-point",
+      "kit_trail": "inspiration_point",
+      "built": "2026-11-25"
+    },
+    "alum_cave_leconte": {
+      "hike_id": "alum-cave-leconte",
+      "kit_trail": "alum_cave_leconte",
+      "built": "2026-11-25"
+    },
+    "ryan_mountain": {
+      "hike_id": "ryan-mountain",
+      "kit_trail": "ryan_mountain",
+      "built": "2026-11-25"
     }
   }
 }
