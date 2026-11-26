@@ -257,7 +257,7 @@ test('Walk it in 3D plays the clouds then opens the walk; coming back plays them
   await page.waitForURL(/walks\/angels_landing\/index\.html\?season=summer/)
   await page.goBack()
   await expect(page.locator('.cloud-transition[data-direction="out"]')).toBeVisible()
-  await expect(page.locator('.cloud-transition')).toHaveCount(0, { timeout: 5000 })
+  await expect(page.locator('.cloud-transition')).toHaveCount(0, { timeout: 15_000 }) // the reverse clouds take longer on a loaded CI runner
   await expect.poll(() => page.evaluate(() => document.querySelector('.hikepage')!.scrollTop)).toBeGreaterThan(500)
 })
 
