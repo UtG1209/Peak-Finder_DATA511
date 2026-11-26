@@ -68,7 +68,7 @@ describe('each walk is complete, credited and within budget', () => {
       const m = html.match(/const PROFILE\s*=\s*(\[\[[\s\S]*?\]\]);/)
       expect(m, 'const PROFILE').toBeTruthy()
       const profile = JSON.parse(m![1]) as number[][]
-      expect(profile.length).toBeGreaterThan(50)
+      expect(profile.length).toBeGreaterThan(30) // sanity floor; Moro Rock is a real 0.4 km (41 points) stair trail
       const hp = join(root, 'app/public/data/profiles', `${w.hike_id}.json`)
       const p = ProfileSchema.parse(JSON.parse(readFileSync(hp, 'utf8')))
       expect(p.osm_length_m).toBe(Math.round(profile.at(-1)![2])) // same route length as the walk

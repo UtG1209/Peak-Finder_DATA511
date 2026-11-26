@@ -61,12 +61,14 @@ def main(spec_path):
             "corridor_m": spec.get("corridor_m", 850),
         },
         "camera": {"pitch": spec.get("pitch", 50), "zoom": spec.get("zoom", 15.2), "scroll_vh": spec.get("scroll_vh", round(km * 450, -1))},
-        "profile_labels": {"start": "Trailhead", "end": spec.get("end_label", "Summit"), "key_stop": {"label": spec.get("end_label", "Summit"), "at_m": round(km * 1000)}},
+        "profile_labels": {"start": "Trailhead", "end": spec.get("end_label", "Summit"), "key_stop": {"label": spec.get("end_label", "Summit"), "at_m": spec.get("end_at_m", round(km * 1000))}},
         "profile_checkpoints": spec.get("checkpoints", []),
         "stops": [],
         "look": {"contrast": 0.0},
         "seasons": season_block(spec),
     }
+    if spec.get("osm_steps"):  # a trail that is mostly stairs (OSM highway=steps), e.g. Moro Rock
+        cfg["osm_steps"] = True
     if route_via:
         cfg["route_via"] = route_via
         cfg["route_loop"] = bool(spec.get("route_loop"))
