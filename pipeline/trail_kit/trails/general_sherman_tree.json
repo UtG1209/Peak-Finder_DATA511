@@ -1,0 +1,211 @@
+{
+  "id": "general_sherman_tree",
+  "title": "General Sherman Tree Trail Walk",
+  "hike_name": "General Sherman Tree Trail",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk down the Sherman Tree Trail to the General Sherman Tree in Sequoia National Park.",
+  "park": "Sequoia and Kings Canyon National Parks, CA",
+  "start": {
+    "name": "Sherman Tree Trailhead",
+    "lat": 36.58462,
+    "lon": -118.74986
+  },
+  "end": {
+    "name": "General Sherman Tree",
+    "lat": 36.58165,
+    "lon": -118.75144
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -118.76944,
+    36.56965,
+    -118.73186,
+    36.59662
+  ],
+  "bounds": {
+    "wide": [
+      -118.79644,
+      36.54565,
+      -118.70486,
+      36.62062
+    ],
+    "mid": [
+      -118.78744,
+      36.55265,
+      -118.71386,
+      36.61362
+    ],
+    "core": [
+      -118.77744,
+      36.56165,
+      -118.72386,
+      36.60462
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 16,
+    "scroll_vh": 800
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "General Sherman Tree",
+    "key_stop": {
+      "label": "General Sherman Tree",
+      "at_m": 745
+    }
+  },
+  "profile_checkpoints": [],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Sequoiadendron giganteum & Abies concolor, Sequoia National Park (20806362602).jpg",
+      "alt": "Giant sequoias and white firs near the Sherman Tree trailhead.",
+      "eyebrow": "Start · Sherman Tree Trailhead",
+      "title": "Sherman Tree Trailhead",
+      "text": "The route starts at the Sherman Tree trailhead on the Generals Highway, about 7,000 feet up. The paved trail descends through the grove.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "General Sherman Tree (54071103986).jpg",
+      "alt": "The General Sherman Tree, a giant sequoia, towering above visitors.",
+      "eyebrow": "End · General Sherman Tree",
+      "title": "General Sherman Tree",
+      "text": "You have reached the General Sherman Tree, by volume the largest known living tree on Earth.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1500,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2250,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

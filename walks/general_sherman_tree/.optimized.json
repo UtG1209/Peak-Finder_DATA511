@@ -1,0 +1,29 @@
+{
+  "walk": "general_sherman_tree",
+  "before_bytes": 6161751,
+  "types": {
+    "dem": {
+      "files": 17,
+      "before": 2143891,
+      "after": 1532918,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 2123114,
+      "after": 1660282,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 327143,
+      "after": 327143,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 5088015
+}
