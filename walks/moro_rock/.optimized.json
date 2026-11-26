@@ -1,0 +1,29 @@
+{
+  "walk": "moro_rock",
+  "before_bytes": 5385435,
+  "types": {
+    "dem": {
+      "files": 15,
+      "before": 1958791,
+      "after": 1409642,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 1639754,
+      "after": 1266112,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 281254,
+      "after": 281254,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 4462713
+}
