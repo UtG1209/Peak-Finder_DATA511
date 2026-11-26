@@ -1,0 +1,40 @@
+{
+  "id": "longs_peak",
+  "hike_id": "longs-peak",
+  "title": "Longs Peak via the Keyhole Route",
+  "map_label": "A 3D walk from the Longs Peak trailhead up the Keyhole route to the 14,259-foot summit.",
+  "pad_wide": 0.06,
+  "snow": {
+    "winter": 2600,
+    "spring": 3500
+  },
+  "checkpoints": [
+    {
+      "name": "The Keyhole",
+      "at": 0.8
+    }
+  ],
+  "stops": [
+    {
+      "file": "Morning on longs.bmp (2095720635).jpg",
+      "title": "Longs Peak Trailhead",
+      "alt": "Morning light over a sea of clouds seen from the tundra on the Longs Peak route.",
+      "text": "The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead."
+    },
+    {
+      "key": "keyhole",
+      "at": 0.8,
+      "file": "Keyhole.bmp (2095709501).jpg",
+      "title": "The Keyhole",
+      "alt": "The Keyhole, a notch in the ridge on the Longs Peak route.",
+      "text": "The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges."
+    },
+    {
+      "file": "From summit 2.bmp (2096482098).jpg",
+      "title": "Longs Peak Summit",
+      "alt": "The view down from the summit of Longs Peak.",
+      "text": "You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park."
+    }
+  ],
+  "end_at_m": 10400
+}

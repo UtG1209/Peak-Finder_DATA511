@@ -1,0 +1,29 @@
+{
+  "walk": "longs_peak",
+  "before_bytes": 14259187,
+  "types": {
+    "dem": {
+      "files": 39,
+      "before": 4924163,
+      "after": 3502118,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 18,
+      "before": 4140553,
+      "after": 3214716,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 247884,
+      "after": 247884,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 18
+  },
+  "page_replacements": 9,
+  "after_bytes": 11911374
+}
