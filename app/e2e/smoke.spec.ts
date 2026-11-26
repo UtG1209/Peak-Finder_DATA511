@@ -46,9 +46,9 @@ test('a hike opens with its cost graph and Back returns to a visible map', async
   await expect(page.locator('#detail.selected')).toBeVisible()
   await page.locator('#detail').getByRole('button', { name: /Open this hike/ }).click()
   await expect(page).toHaveURL(/#\/hike\//)
-  await expect(page.getByRole('heading', { name: 'What it costs' })).toBeVisible()
+  await expect(page.locator('#cost-h')).toBeVisible()
   await expect(page.locator('svg.costbars')).toBeVisible()
-  await expect(page.locator('.qcards .qcard')).toHaveCount(4)
+  await expect(page.locator('.when-q .wq')).toHaveCount(4)
 
   await page.getByRole('link', { name: /Back to map/ }).click()
   await expect(page.locator('#mapPane')).not.toHaveClass(/blurred/) // go=1 survives the round trip

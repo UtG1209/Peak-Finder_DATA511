@@ -2,8 +2,16 @@ export type Part = 'transport' | 'lodging' | 'food' | 'activity' | 'buffer'
 export const PART_LABEL: Record<Part, string> = { lodging: 'Lodging', food: 'Food', transport: 'Transport', activity: 'Park fees and permits', buffer: 'Buffer (15%)' }
 /** Short names for direct labels on the bars. */
 export const PART_SHORT: Record<Part, string> = { lodging: 'Lodging', food: 'Food', transport: 'Transport', activity: 'Fees', buffer: 'Buffer' }
-/** Stack order, bottom to top. */
-export const PART_ORDER: Part[] = ['lodging', 'food', 'transport', 'activity', 'buffer']
+/** Stack order, bottom to top (v2: the biggest part, getting there, at the base). */
+export const PART_ORDER: Part[] = ['transport', 'lodging', 'food', 'activity', 'buffer']
+/** Words for the direct labels beside the selected bar (v2). */
+export const PART_DIRECT: Record<Part, string> = { transport: 'Transport', lodging: 'Lodging', food: 'Food', activity: 'Entry and permit', buffer: 'Buffer, 15%:' }
+
+/** Words under a quarter label: "best and cheapest", "cheapest", "best fit" or nothing. */
+export function quarterNote(q: number, cheapest: number | null, best: number | null): string {
+  const t = quarterTags(q, cheapest, best).map((x) => x.kind)
+  return t.length === 2 ? 'best and cheapest' : t[0] === 'cheapest' ? 'cheapest' : t[0] === 'best' ? 'best fit' : ''
+}
 
 /** Text height in px (12 px type), and the padding a label needs above and below. */
 const LINE = 14
