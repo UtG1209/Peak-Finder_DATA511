@@ -19,7 +19,7 @@ Everything marked **Decision** needs the team's answer before work starts.
 
 ## Data gaps
 
-- **Hikes outside the priority 15** (23 hikes): placeholder trailheads, end points, elevations, gain, closed months, generated profiles, and cost rows with placeholder entrance fees. They need the same treatment as the priority hikes or they get cut. **Decision.**
+- **The 8 hikes outside the priority 15** (the 7 new ones and Mount Washburn): trailheads, end points, elevations, gain and closed months are now sourced (Plan 1 step 2). Still generated: profiles, and cost rows with placeholder entrance fees (Plan 2).
 - **Fares:** 5 priority cost rows keep a placeholder fare (ATL to ATL for Alum Cave, four quarters, where nobody flies; Seattle to Bangor Q1). DOT Table 6 only lists busy markets.
 - **Drive distance and time are understated** for Navajo Loop (about 1.3 mi), Hurricane Hill (about 17 mi) and Clingmans Dome (about 7 mi): ORS cannot reach the final road, so `pipeline/catalogue/drive_points.csv` routes to the nearest reachable point. Add a sourced extra distance, or accept and say so on About.
 - **Glacier closed months:** NPS says only "closed for the season", no typical dates, so none are recorded (Highline, Grinnell).
@@ -27,7 +27,10 @@ Everything marked **Decision** needs the team's answer before work starts.
   - Fairy Falls gain is a net 54 ft (NPS gives none).
   - Alum Cave gain is net.
   - Glacier Highline max elevation (7,273 ft) is route-derived.
-  - Hurricane Hill and Wheeler Peak summit elevations have no NPS figure and stay placeholders.
+  - Mount Washburn, Clingmans Dome and Longs Peak gains are net USGS differences, summit minus trailhead (NPS gives none).
+  - Moro Rock summit is USGS (6,711 ft): the NPS trailhead page's "6,275 ft" is a digit swap of its own 2,050 m.
+  - Moro Rock and General Sherman use the Lemon Cove station, about 30 km away and about 6,000 ft lower, so the typical high (102°F in July) is a foothills value. **Decision.**
+  - Zion Narrows has no closed months: NPS closes it when the river runs over 150 CFS, with no fixed dates.
 - **Fees:**
   - Delicate Arch (timed entry) and Glacier Highline (vehicle reservation) permit fees are UNVERIFIED and left at $0.
   - Great Smoky Mountains entrance is $0 UNVERIFIED (parking tag price not read).

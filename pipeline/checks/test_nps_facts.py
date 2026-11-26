@@ -27,9 +27,12 @@ def test_each_row_cites_an_nps_page():
 
 def test_numbers_are_numbers_and_length_has_a_type():
     for row in read("nps_facts.csv"):
-        for column in ("length_mi", "gain_ft", "max_elev_ft"):
+        for column in ("length_mi", "max_elev_ft"):
             if row[column]:
                 assert float(row[column]) > 0, (row["id"], column)
+        # A flat trail (Anhinga) really has 0 ft of gain.
+        if row["gain_ft"]:
+            assert float(row["gain_ft"]) >= 0, (row["id"], "gain_ft")
         assert bool(row["length_mi"]) == bool(row["length_type"]), row["id"]
         if row["length_type"]:
             assert row["length_type"] in LENGTH_TYPES, row["id"]

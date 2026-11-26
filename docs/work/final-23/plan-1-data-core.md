@@ -14,7 +14,8 @@ Done with `pipeline/cut_to_final.py` (idempotent; `pipeline/catalogue/final_hike
 6. Update CLAUDE.md: "40" and "38" hike counts (sections 0, 1, 4, 7), the "Mix" line, and add this folder to the docs list. `npm run docs:check` must pass.
 PR title: "Cut the dataset to the final 23 hikes". `npm run check` and `npm run validate:data` green.
 
-## Step 2: real hike fields for the 7 new hikes and Mount Washburn
+## Step 2: real hike fields for the 7 new hikes and Mount Washburn — DONE 2026-11-25
+Done: `geo_facts.csv` rows (OSM, NPS places, USGS 3DEP), NPS gains and Moro Rock length in `nps_facts.csv`, permit and closure notes, closed months for Mount Washburn and Clingmans Dome. Weather, AQI, daylight and `hike_month` re-run for all 23. Weak figures are in `follow-ups.md`.
 For each of `general-sherman-tree, moro-rock, clingmans-dome, anhinga-trail, emerald-lake, zion-narrows, longs-peak, mount-washburn`, replace every `placeholder` cell in `hikes_coverage.csv` with a sourced value, using the same tables the 15 priority hikes use (`nps_facts.csv`, `geo_facts.csv`, `end_points.csv`, `hike_fields.csv`, `closed_months.csv`):
 - Trailhead and end coordinates (OSM, GNIS or NPS), NPS length and gain, summit elevation (NPS or USGS), difficulty rule, closed months, permit note.
 - Longs Peak: summit 14,259 ft, NPS length about 15 mi round trip; needs the permit note for the August to October window and the "start before sunrise" note in `closure_note` or `description`.
@@ -23,16 +24,19 @@ For each of `general-sherman-tree, moro-rock, clingmans-dome, anhinga-trail, eme
 - A figure without a source stays marked `placeholder` and goes into `docs/work/follow-ups.md`.
 Check each new hike passes the gate in `candidates.csv` (station within 50 km, AQI county, IRMA visits, photo). If one fails, tell the team and swap it using the README swap rule; do not fake.
 
-## Step 3: monthly data and advice for the 23
+## Step 3: monthly data and advice for the 23 — DONE 2026-11-25
+Done: Zion Narrows shares USC00429717 with Angels Landing; Longs Peak and Emerald Lake share the ROMO crowd rows. The fare card is computed from DOT Table 6 (`travel.dot_rows`), with a known-answer test. No new cards (no new known answers). `meta.json` lists OSM, NPS places, USGS 3DEP and GNIS, and its as-of dates never move back.
 - `hike_month.json` already comes from GHCN, EPA, IRMA and daylight for all hikes; re-run `ghcn.py`, `epa_aqi.py`, `nps_visits.py`, `daylight.py` only for stations or counties you changed. Check Zion Narrows shares the Springdale station with Angels Landing and Longs Peak/Emerald Lake use Rocky Mountain (CO) rows.
 - `advice.json`: 7 real cards exist. Keep every card whose `hike_id` is in the 23 (the cut hikes must not own a card, or the Hike page and About show a dangling reference). The Las Vegas fare card is hard-coded in `advice.py`: either compute it from the Plan 2 fares or keep it and label it hand-checked on About. Add 1 to 3 new cards only if `docs/ai-vs-data-check.md` has known answers for them.
 - `meta.json`: `hike_count` 23, as-of dates updated, `cost_sources` merged by `meta.py` (Plan 2 writes them).
 
-## Step 4: photos
+## Step 4: photos — DONE 2026-11-25
+Checked, no change needed: the 8 licences match Commons today, every file is 900 px wide, author, `license_url` and `page` are set, alt text comes from the hike name.
 Main photos: all hikes already have a Commons photo with credit. For the 8 hikes above, confirm the licence is public domain, CC0, CC BY or CC BY-SA (`photos.py`), the file is 900 px in `app/public/photos/`, and `photo.author`, `license_url` and `page` are set. Alt text comes from the hike name; check the tile and hike header show the credit.
 Stop photos on the trail chart are Plan 2's (they live in profiles).
 
-## Step 5: checks and final data PR
+## Step 5: checks and final data PR — DONE 2026-11-25
+`pytest pipeline` 116 passed, `npm run validate:data` 17 passed, app tests 282 passed, build and budgets pass. On Windows, `npm test` from the repo root crashes every test file ("reading 'config'"), on `main` too; run it from `app/`.
 - `pipeline/checks/` known answers (Zion June 2023 564,036; Glacier Jul/Aug/Sep; Springdale 13.0 days; and so on) still pass.
 - Every hike has a station within 50 km or a `missing` flag.
 - No typical value uses 2020. Every photo licence is allowed.
