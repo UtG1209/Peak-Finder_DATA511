@@ -1,0 +1,233 @@
+{
+  "id": "half_dome",
+  "title": "Half Dome via the Mist Trail Walk",
+  "hike_name": "Half Dome via the Mist Trail",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from Happy Isles up past Vernal and Nevada Falls to the Half Dome cables and summit.",
+  "park": "Yosemite National Park, CA",
+  "start": {
+    "name": "Happy Isles Trailhead",
+    "lat": 37.73282,
+    "lon": -119.55778
+  },
+  "end": {
+    "name": "Summit",
+    "lat": 37.74441,
+    "lon": -119.53407
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -119.57578,
+    37.7127,
+    -119.501,
+    37.75641
+  ],
+  "bounds": {
+    "wide": [
+      -119.61778,
+      37.6767,
+      -119.459,
+      37.79241
+    ],
+    "mid": [
+      -119.59378,
+      37.6957,
+      -119.483,
+      37.77341
+    ],
+    "core": [
+      -119.58378,
+      37.7047,
+      -119.493,
+      37.76441
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 5860.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Summit",
+    "key_stop": {
+      "label": "Summit",
+      "at_m": 13033
+    }
+  },
+  "profile_checkpoints": [
+    {
+      "name": "Nevada Fall",
+      "at": 0.4
+    },
+    {
+      "name": "Sub Dome",
+      "at": 0.84
+    }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Happy Isles Bridge - Yosemite National Park, California, USA (27672490762).jpg",
+      "alt": "The Merced River rushing below the Happy Isles bridge.",
+      "eyebrow": "Start · Happy Isles Trailhead",
+      "title": "Happy Isles Trailhead",
+      "text": "The route starts here at the valley floor, about 4,000 feet up. Follow the Mist Trail toward Half Dome.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.84,
+      "photo": "subdome",
+      "commons_file": "Sub DOme Approach to Half Dome Cables.jpg",
+      "alt": "Half Dome rising above the granite of Sub Dome, with the cables running up its face.",
+      "eyebrow": "Sub Dome",
+      "title": "Sub Dome",
+      "text": "After Little Yosemite Valley the trail climbs the granite of Sub Dome. The cables are visible on the face ahead.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "subdome"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Halfdome top.jpg",
+      "alt": "Hikers gather on the edge of the Half Dome summit above Tenaya Canyon.",
+      "eyebrow": "End · Half Dome Summit",
+      "title": "Half Dome Summit",
+      "text": "You have reached the summit of Half Dome, about 4,800 feet above where you started. The final stretch climbs the cables.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1250,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2100,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

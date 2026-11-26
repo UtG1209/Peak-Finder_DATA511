@@ -1,0 +1,20 @@
+{
+  "id": "half_dome",
+  "hike_id": "half-dome",
+  "title": "Half Dome via the Mist Trail",
+  "map_label": "A 3D walk from Happy Isles up past Vernal and Nevada Falls to the Half Dome cables and summit.",
+  "via": [[-119.5436, 37.7276], [-119.5333, 37.7247], [-119.519, 37.7335], [-119.533, 37.7424]],
+  "snow": {"winter": 1250, "spring": 2100},
+  "checkpoints": [{"name": "Nevada Fall", "at": 0.4}, {"name": "Sub Dome", "at": 0.84}],
+  "stops": [
+    {"file": "Happy Isles Bridge - Yosemite National Park, California, USA (27672490762).jpg", "title": "Happy Isles Trailhead",
+     "alt": "The Merced River rushing below the Happy Isles bridge.",
+     "text": "The route starts here at the valley floor, about 4,000 feet up. Follow the Mist Trail toward Half Dome."},
+    {"key": "subdome", "at": 0.84, "file": "Sub DOme Approach to Half Dome Cables.jpg", "title": "Sub Dome",
+     "alt": "Half Dome rising above the granite of Sub Dome, with the cables running up its face.",
+     "text": "After Little Yosemite Valley the trail climbs the granite of Sub Dome. The cables are visible on the face ahead."},
+    {"file": "Halfdome top.jpg", "title": "Half Dome Summit",
+     "alt": "Hikers gather on the edge of the Half Dome summit above Tenaya Canyon.",
+     "text": "You have reached the summit of Half Dome, about 4,800 feet above where you started. The final stretch climbs the cables."}
+  ]
+}
