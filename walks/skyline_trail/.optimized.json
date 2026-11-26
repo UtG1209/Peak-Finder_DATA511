@@ -1,0 +1,29 @@
+{
+  "walk": "skyline_trail",
+  "before_bytes": 9563791,
+  "types": {
+    "dem": {
+      "files": 24,
+      "before": 3048901,
+      "after": 2172034,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 2345575,
+      "after": 1759126,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 393617,
+      "after": 393617,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 8100544
+}
