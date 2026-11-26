@@ -1,0 +1,67 @@
+{
+  "id": "navajo_queens_garden",
+  "hike_id": "navajo-loop-queens-garden",
+  "title": "Queens Garden and Navajo Loop",
+  "map_label": "A 3D loop from Sunrise Point down Queens Garden, back up the Navajo Loop and along the rim.",
+  "end_label": "Sunrise Point",
+  "pad_wide": 0.04,
+  "route_via": [
+    [
+      37.6255455,
+      -112.1588312
+    ],
+    [
+      37.6182299,
+      -112.1620107
+    ],
+    [
+      37.6226998,
+      -112.1661263
+    ]
+  ],
+  "route_loop": true,
+  "snow": {
+    "winter": 2250,
+    "spring": 2450
+  },
+  "checkpoints": [
+    {
+      "name": "Canyon floor",
+      "at": 0.4
+    },
+    {
+      "name": "Wall Street",
+      "at": 0.7
+    }
+  ],
+  "stops": [
+    {
+      "file": "Sunrise Point Bryce Canyon November 2018 005.jpg",
+      "title": "Sunrise Point",
+      "alt": "The hoodoos of Bryce Amphitheater seen from Sunrise Point.",
+      "text": "The loop starts at the rim and drops into the amphitheater by Queens Garden."
+    },
+    {
+      "key": "floor",
+      "at": 0.42,
+      "file": "Bryce Canyon - Navajo Loop Trail - Two Bridges - P1060639.jpg",
+      "title": "Canyon floor",
+      "alt": "A bridge on the Navajo Loop trail among the hoodoos.",
+      "text": "At the bottom the Queens Garden and Navajo Loop trails meet, among the hoodoos."
+    },
+    {
+      "key": "wall",
+      "at": 0.68,
+      "file": "Wall Street, Navajo Loop Trail, Bryce Canyon National Park, Utah (35531017951).jpg",
+      "title": "Wall Street",
+      "alt": "The narrow slot of Wall Street on the Navajo Loop trail.",
+      "text": "The climb back out passes through Wall Street, a narrow slot between tall walls."
+    },
+    {
+      "file": "Bryce Amphitheater from Sunrise Point Highres 2013.jpg",
+      "title": "Back on the rim",
+      "alt": "Bryce Amphitheater and its hoodoos seen from the rim.",
+      "text": "The Rim Trail leads back to Sunrise Point, where the loop began."
+    }
+  ]
+}

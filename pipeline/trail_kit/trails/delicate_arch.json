@@ -1,0 +1,222 @@
+{
+  "id": "delicate_arch",
+  "title": "Delicate Arch Trail Walk",
+  "hike_name": "Delicate Arch Trail",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from the Wolfe Ranch trailhead across the slickrock to Delicate Arch.",
+  "park": "Arches National Park, UT",
+  "start": {
+    "name": "Delicate Arch Trailhead",
+    "lat": 38.73569,
+    "lon": -109.52044
+  },
+  "end": {
+    "name": "Delicate Arch",
+    "lat": 38.74276,
+    "lon": -109.49402
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -109.53844,
+    38.72369,
+    -109.47602,
+    38.75476
+  ],
+  "bounds": {
+    "wide": [
+      -109.56544,
+      38.69969,
+      -109.44902,
+      38.77876
+    ],
+    "mid": [
+      -109.55644,
+      38.70669,
+      -109.45802,
+      38.77176
+    ],
+    "core": [
+      -109.54644,
+      38.71569,
+      -109.46802,
+      38.76276
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 1090.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Delicate Arch",
+    "key_stop": {
+      "label": "Delicate Arch",
+      "at_m": 2414
+    }
+  },
+  "profile_checkpoints": [
+    {
+      "name": "Petroglyphs",
+      "at": 0.3
+    }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Delicate Arch Trail, Arches National Park, Utah (2408102243).jpg",
+      "alt": "The trail sign at the Wolfe Ranch trailhead, with a map of the route to Delicate Arch.",
+      "eyebrow": "Start · Delicate Arch Trailhead",
+      "title": "Delicate Arch Trailhead",
+      "text": "The route starts here, near Wolfe Ranch. The trail crosses a bridge, then climbs slickrock to the arch.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.3,
+      "photo": "petroglyphs",
+      "commons_file": "Ute Indian Petroglyphs Delicate Arch Trail Arches National Park UT 20220407 164616108.jpg",
+      "alt": "Ute rock art on a sandstone wall beside the Delicate Arch trail.",
+      "eyebrow": "Ute petroglyphs",
+      "title": "Ute petroglyphs",
+      "text": "A short spur off the trail leads to a wall of Ute rock art, early in the walk.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "petroglyphs"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "Delicate Arch at Sunrise - panoramio.jpg",
+      "alt": "Delicate Arch standing on the rim of a slickrock bowl in low light.",
+      "eyebrow": "End · Delicate Arch",
+      "title": "Delicate Arch",
+      "text": "You have reached Delicate Arch, a free-standing arch on the edge of a slickrock bowl.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1300,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

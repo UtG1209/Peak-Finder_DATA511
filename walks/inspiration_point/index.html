@@ -1,0 +1,453 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jenny Lake to Inspiration Point Walk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one sticky full-screen 3D stage; a tall scroll track drives the hiker; story cards scroll over the stage. */
+:root {
+  --ink: #101418;
+  --panel: rgba(16, 20, 24, 0.82);
+  --line: #2A333B;
+  --text: #F2EFE9;
+  --muted: #B4BCC3;
+  --sand: #F08A4B;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
+body { margin: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
+.maplibregl-canvas { outline: none; }
+#stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
+#map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
+#hud {
+  position: absolute; z-index: 3; display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+}
+.chip { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; min-width: 120px; backdrop-filter: blur(6px); }
+.chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+.chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backToHike { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 64px); left: max(16px, env(safe-area-inset-left, 0px)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: 600 14px var(--body); text-decoration: none; backdrop-filter: blur(6px); }
+#backToHike:hover { border-color: var(--sand); }
+#backToHike:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+#profile {
+  position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 8px; backdrop-filter: blur(6px);
+}
+#profile svg { display: block; width: 100%; height: 70px; }
+#profile .lab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#timeMarkers line { stroke: rgba(242,239,233,.86); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers circle { fill: var(--sand); stroke: var(--text); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers text { fill: var(--text); stroke: rgba(16,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 700 10px var(--body); text-anchor: middle; }
+#backTransition { position: fixed; z-index: 20; inset: 0; display: none; overflow: hidden; pointer-events: none; background: linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%); }
+#backTransition.active { display: block; }
+#backTransition > div { position: absolute; inset: -10%; opacity: 0; background-repeat: repeat-x; background-position: center; will-change: transform,opacity; }
+#backFar { background-image: url(../_shared/clouds/wisps.webp); background-size: auto 110%; }
+#backMid { background-image: url(../_shared/clouds/cumulus.webp); background-size: auto 125%; }
+#backNear { background-image: url(../_shared/clouds/mass.webp); background-size: auto 150%; }
+#backVeil { inset: 0 !important; background: #edf4fb; }
+#backTitle { inset: 0 !important; display: flex; justify-content: center; align-items: center; color: #15222d; font: 800 clamp(24px,4vw,48px) var(--display); text-align: center; }
+#backTransition.active #backFar { opacity: .68; transform: scale(1.5); transition: transform 1.7s ease, opacity 1.7s ease; }
+#backTransition.active #backMid { opacity: .86; transform: scale(2); transition: transform 1.5s ease .12s, opacity 1.5s ease .12s; }
+#backTransition.active #backNear { opacity: 1; transform: scale(3.2); transition: transform 1.3s ease .24s, opacity 1.3s ease .24s; }
+#backTransition.active #backVeil { opacity: .9; transition: opacity .5s ease .8s; }
+#backTransition.active #backTitle { opacity: 1; transition: opacity .4s ease .8s; }
+@media (prefers-reduced-motion: reduce) { #backTransition *, #backTransition.active * { transition-duration: .01ms !important; } }
+#credits { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 126px); font-size: 10.5px; color: var(--text); background: rgba(16,20,24,0.6); padding: 4px 8px; border-radius: 6px; max-width: 70%; text-align: right; }
+#credits a { color: var(--text); }
+#status { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+#status[hidden], #hint[hidden] { display: none; }
+#track { position: relative; margin-top: -100vh; margin-top: -100dvh; height: 2060.0vh; pointer-events: none; }
+.step {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); width: min(380px, calc(100% - 32px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; box-sizing: border-box;
+  backdrop-filter: blur(6px); pointer-events: auto;
+}
+.step { padding: 0; overflow: hidden; width: min(400px, calc(100% - 32px)); }
+.step img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; max-width: 100%; background: #2a2018; }
+.step .body { padding: 14px 18px 14px; }
+.step .credit { margin-top: 10px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.step .credit a { color: var(--muted); }
+.step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
+.step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons[hidden] { display: none; }
+#seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+#seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
+#seasons button:focus-visible { outline: 2px solid var(--text); outline-offset: 1px; }
+.step .note { margin: 8px 0 0; font-size: 12px; line-height: 1.4; color: var(--sand); }
+.step .note[hidden] { display: none; }
+.hint { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); font-size: 13px; color: var(--text); background: var(--panel); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); }
+@media (max-width: 640px) {
+  #hud .chip { min-width: 0; padding: 8px 10px; }
+  #hud .chip .v { font-size: 18px; }
+  #brand { display: none; }
+  #backToHike { top: calc(env(safe-area-inset-top, 0px) + 12px); }
+  #seasons { top: calc(env(safe-area-inset-top, 0px) + 78px); }
+  #seasons button { padding: 7px 10px; }
+  #credits { bottom: calc(env(safe-area-inset-bottom, 0px) + 118px); max-width: 90%; }
+}
+</style>
+
+<style id="ciCss">
+/* Match the clouds-parting arrival used by the original trail walks. */
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro.ci-done{display:none}
+@keyframes ciGone{to{visibility:hidden;pointer-events:none}}
+#cloudIntro>*{position:absolute}
+#ciSky{inset:0;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%);opacity:1}
+.ciL{inset:-10%;opacity:1;will-change:transform,opacity}
+.ciL>div{position:absolute;inset:0;background-repeat:repeat}
+#ciFar{transform:scale(1.5)}#ciMid{transform:scale(2)}#ciNear{transform:scale(3.2)}
+#ciFar>div{background-image:url(../_shared/clouds/wisps.webp);background-size:1800px 900px;animation:ciDriftFar 140s linear infinite}
+#ciMid>div{background-image:url(../_shared/clouds/cumulus.webp);background-size:1500px 750px;animation:ciDriftMid 90s linear infinite}
+#ciNear>div{background-image:url(../_shared/clouds/mass.webp);background-size:2200px 1100px;animation:ciDriftNear 55s linear infinite}
+@keyframes ciDriftFar{from{background-position:0 0}to{background-position:-1800px 0}}
+@keyframes ciDriftMid{from{background-position:0 0}to{background-position:-1500px 0}}
+@keyframes ciDriftNear{from{background-position:0 0}to{background-position:-2200px 0}}
+#ciVeil{inset:0;background:#edf4fb;opacity:1}
+#ciTitle{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 24px;text-align:center;color:#1e3a5c;opacity:1}
+#ciTitle b{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.05;text-wrap:balance}
+#ciTitle span{font:600 14px "Inter",system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){#cloudIntro{display:none}}
+</style>
+
+<div id="cloudIntro" aria-hidden="true">
+  <div id="ciSky"></div><div id="ciFar" class="ciL"><div></div></div>
+  <div id="ciMid" class="ciL"><div></div></div><div id="ciNear" class="ciL"><div></div></div>
+  <div id="ciVeil"></div><div id="ciTitle"><b>Jenny Lake to Inspiration Point</b><span>Grand Teton National Park, WY</span></div>
+</div>
+
+<div id="stage">
+  <div id="map" role="img" aria-label="A 3D walk from the Jenny Lake area along the lake to Inspiration Point."></div>
+  <div id="status">Loading terrain…</div>
+  <div id="brand">Peak Finder · Trail walk</div>
+  <a id="backToHike" href="../../">← Back to <span>Jenny Lake to Inspiration Point</span></a>
+  <div id="hud" aria-live="polite">
+    <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
+    <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
+  </div>
+  <div id="seasons" role="group" aria-label="Season" hidden></div>
+  <div class="hint" id="hint">Scroll to walk the trail</div>
+  <div id="credits"><span id="seasonNote"></span> Imagery: <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener">USGS The National Map</a> · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, USGS 3DEP) · Trail: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div>
+  <div id="profile">
+    <svg id="profSvg" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-label="Elevation profile of the trail with your position marked" role="img">
+      <path id="profArea" fill="rgba(240,138,75,0.22)" stroke="none"></path>
+      <path id="profWalk" fill="rgba(240,138,75,0.55)" stroke="none"></path>
+      <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+      <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
+      <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+      <g id="timeMarkers" aria-hidden="true"></g>
+    </svg>
+    <div class="lab" style="position:relative"><span>Trailhead · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">Inspiration Point</span><span>Inspiration Point · <span id="profEnd"></span> km</span></div>
+  </div>
+</div>
+
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
+
+<div id="track">
+  <section class="step" data-at="0.01" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:GrandTetonNP_JennyLake_HistoricBoatkeepersCabin.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Magicpiano&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Jenny Lake Trailhead&quot;,&quot;text&quot;:&quot;The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:GrandTetonNP_JennyLake_HistoricBoatkeepersCabin.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Magicpiano&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Jenny Lake Trailhead&quot;,&quot;text&quot;:&quot;The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:GrandTetonNP_JennyLake_HistoricBoatkeepersCabin.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Magicpiano&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Jenny Lake Trailhead&quot;,&quot;text&quot;:&quot;The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:GrandTetonNP_JennyLake_HistoricBoatkeepersCabin.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Magicpiano&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Jenny Lake Trailhead&quot;,&quot;text&quot;:&quot;The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/trailhead.jpg" alt="The historic boatkeeper&#x27;s cabin on the shore of Jenny Lake." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">Start · Jenny Lake Trailhead</div><h2>Jenny Lake Trailhead</h2><p class="txt">The route starts at Jenny Lake in Grand Teton National Park, about 6,800 feet up.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:GrandTetonNP_JennyLake_HistoricBoatkeepersCabin.jpg" target="_blank" rel="noopener">Magicpiano</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank" rel="noopener">CC BY-SA 4.0</a> · Wikimedia Commons</p></div></section>
+  <section class="step" data-at="0.99" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Jenny_Lake_from_Inspiration_Point_-_Grand_Teton_National_Park.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;aparlette&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Inspiration Point&quot;,&quot;text&quot;:&quot;You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Jenny_Lake_from_Inspiration_Point_-_Grand_Teton_National_Park.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;aparlette&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Inspiration Point&quot;,&quot;text&quot;:&quot;You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Jenny_Lake_from_Inspiration_Point_-_Grand_Teton_National_Park.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;aparlette&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Inspiration Point&quot;,&quot;text&quot;:&quot;You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Jenny_Lake_from_Inspiration_Point_-_Grand_Teton_National_Park.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;aparlette&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Inspiration Point&quot;,&quot;text&quot;:&quot;You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/destination.jpg" alt="Jenny Lake seen from Inspiration Point, below the Teton peaks." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">End · Inspiration Point</div><h2>Inspiration Point</h2><p class="txt">You have reached Inspiration Point, a rock ledge above Jenny Lake with a wide view of the valley.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Jenny_Lake_from_Inspiration_Point_-_Grand_Teton_National_Park.jpg" target="_blank" rel="noopener">aparlette</a> · <a href="https://creativecommons.org/licenses/by/2.0" target="_blank" rel="noopener">CC BY 2.0</a> · Wikimedia Commons</p></div></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const PROFILE = [[-110.725424,43.751554,0,2071.5],[-110.725438,43.751516,10,2071.5],[-110.725561,43.751531,20,2070.4],[-110.725683,43.751547,30,2068.9],[-110.725805,43.751567,40,2068.5],[-110.725926,43.751587,50,2068.5],[-110.726048,43.751607,60,2068.5],[-110.726169,43.751627,70,2069.7],[-110.72629,43.751624,80,2071.3],[-110.726396,43.75158,90,2071.6],[-110.726496,43.751526,100,2071.7],[-110.726589,43.751467,110,2072.3],[-110.726676,43.751402,120,2072.6],[-110.726762,43.751337,130,2072.5],[-110.726848,43.751272,140,2072.2],[-110.726938,43.75121,150,2072.3],[-110.727029,43.751148,160,2072.4],[-110.727119,43.751087,170,2072.3],[-110.727215,43.75103,180,2072.6],[-110.727312,43.750973,190,2072.9],[-110.727413,43.750921,200,2074.0],[-110.727516,43.75087,210,2075.6],[-110.727621,43.750822,220,2076.3],[-110.727736,43.750788,230,2076.6],[-110.727853,43.750757,240,2077.5],[-110.727971,43.750729,250,2077.8],[-110.728061,43.750668,260,2078.1],[-110.728139,43.750599,270,2078.0],[-110.728188,43.750516,280,2078.7],[-110.728269,43.750452,290,2078.5],[-110.728369,43.750399,300,2076.5],[-110.728471,43.750347,310,2077.6],[-110.728574,43.750296,320,2078.5],[-110.728667,43.750237,330,2077.7],[-110.728758,43.750175,340,2076.9],[-110.72885,43.750115,350,2076.0],[-110.728899,43.750033,360,2074.2],[-110.728975,43.749965,370,2072.9],[-110.729064,43.749902,380,2072.4],[-110.729177,43.749868,390,2071.6],[-110.729298,43.749852,400,2071.1],[-110.729422,43.749846,410,2070.4],[-110.729543,43.749825,420,2070.3],[-110.729652,43.749781,430,2070.2],[-110.72976,43.749737,440,2071.7],[-110.729868,43.749693,450,2072.3],[-110.72999,43.749702,460,2072.8],[-110.730108,43.749732,470,2074.2],[-110.730199,43.749793,480,2075.5],[-110.730289,43.749855,490,2077.0],[-110.730395,43.749897,500,2079.0],[-110.730513,43.749926,510,2078.5],[-110.730634,43.749937,520,2077.1],[-110.730757,43.749926,530,2077.1],[-110.730878,43.749903,540,2077.5],[-110.730988,43.749865,550,2075.9],[-110.731099,43.749824,560,2076.1],[-110.731211,43.749785,570,2076.5],[-110.731324,43.749746,580,2075.7],[-110.731436,43.749707,590,2076.7],[-110.73154,43.749659,600,2076.2],[-110.73163,43.749598,610,2076.7],[-110.731707,43.749527,620,2077.0],[-110.731784,43.749456,630,2078.0],[-110.731858,43.749384,640,2078.1],[-110.731928,43.74931,650,2077.6],[-110.732016,43.749249,660,2077.7],[-110.732123,43.749204,670,2077.8],[-110.732218,43.749148,680,2077.5],[-110.732296,43.749078,690,2076.5],[-110.732353,43.748998,700,2074.3],[-110.732402,43.748916,710,2074.5],[-110.732467,43.748839,720,2075.2],[-110.732553,43.748774,730,2076.0],[-110.732652,43.748722,740,2076.7],[-110.732764,43.748682,750,2076.1],[-110.73288,43.74865,760,2075.0],[-110.732997,43.748659,770,2074.2],[-110.733117,43.748667,780,2072.7],[-110.733235,43.748684,790,2072.6],[-110.733358,43.748675,800,2072.1],[-110.733481,43.748669,810,2071.6],[-110.733598,43.748696,820,2071.6],[-110.733723,43.748694,830,2072.8],[-110.733847,43.748692,840,2073.4],[-110.733971,43.74869,850,2074.8],[-110.734096,43.748688,860,2075.4],[-110.73422,43.748688,870,2076.5],[-110.734344,43.748698,880,2077.2],[-110.734468,43.748707,890,2077.0],[-110.734589,43.748689,900,2076.3],[-110.73469,43.74864,910,2075.7],[-110.734767,43.74857,920,2074.7],[-110.734837,43.748495,930,2074.2],[-110.734907,43.748421,940,2074.1],[-110.734977,43.748347,950,2073.8],[-110.735053,43.748276,960,2073.7],[-110.735167,43.748255,970,2073.5],[-110.735288,43.748241,980,2073.1],[-110.735396,43.748196,990,2072.7],[-110.735503,43.748151,1000,2072.1],[-110.735593,43.748089,1010,2071.5],[-110.735683,43.748027,1020,2070.9],[-110.735774,43.747965,1030,2070.8],[-110.735891,43.747939,1040,2070.8],[-110.736012,43.747917,1050,2071.0],[-110.736133,43.747901,1060,2071.1],[-110.736257,43.747902,1070,2071.1],[-110.736382,43.747904,1080,2071.7],[-110.736506,43.747905,1090,2072.3],[-110.736628,43.747922,1100,2073.8],[-110.736748,43.747946,1110,2073.9],[-110.736868,43.747968,1120,2072.5],[-110.736993,43.74797,1130,2072.1],[-110.737117,43.747973,1140,2073.5],[-110.737241,43.74798,1150,2071.7],[-110.737362,43.748002,1160,2071.4],[-110.737482,43.748024,1170,2071.7],[-110.737603,43.748045,1180,2072.1],[-110.737726,43.748057,1190,2072.4],[-110.73785,43.748065,1200,2072.6],[-110.73797,43.748086,1210,2072.5],[-110.738083,43.748123,1220,2074.7],[-110.738196,43.74816,1230,2076.5],[-110.738308,43.748199,1240,2076.1],[-110.738418,43.748241,1250,2078.8],[-110.738529,43.748283,1260,2080.8],[-110.738643,43.748318,1270,2081.8],[-110.73876,43.748348,1280,2083.6],[-110.738877,43.748379,1290,2083.6],[-110.738995,43.748409,1300,2084.1],[-110.739112,43.748439,1310,2083.1],[-110.739226,43.748474,1320,2084.6],[-110.739341,43.74851,1330,2085.4],[-110.739458,43.74854,1340,2088.5],[-110.739576,43.748569,1350,2088.8],[-110.739688,43.748604,1360,2092.1],[-110.739766,43.748674,1370,2093.7],[-110.739844,43.748744,1380,2094.7],[-110.73991,43.748821,1390,2095.9],[-110.739972,43.748898,1400,2095.8],[-110.739939,43.748977,1410,2099.4],[-110.73988,43.749056,1420,2100.8],[-110.739821,43.749136,1430,2101.0],[-110.739834,43.749225,1440,2101.0],[-110.739847,43.749314,1450,2101.6],[-110.739821,43.749397,1460,2102.0],[-110.739756,43.749474,1470,2102.7],[-110.739701,43.749554,1480,2103.4],[-110.739646,43.749635,1490,2102.9],[-110.739588,43.749714,1500,2102.7],[-110.739553,43.749799,1510,2103.0],[-110.739538,43.749888,1520,2102.9],[-110.739523,43.749978,1530,2102.4],[-110.739522,43.750067,1540,2102.7],[-110.739527,43.750157,1550,2102.8],[-110.739574,43.750233,1560,2103.2],[-110.739663,43.750295,1570,2104.6],[-110.739718,43.750375,1580,2106.5],[-110.739763,43.750458,1590,2107.1],[-110.739789,43.750546,1600,2107.6],[-110.739802,43.750636,1610,2107.8],[-110.739825,43.750724,1620,2108.6],[-110.739864,43.750809,1630,2108.7],[-110.739927,43.750886,1640,2111.0],[-110.73997,43.75097,1650,2112.4],[-110.740001,43.751057,1660,2113.2],[-110.740022,43.751146,1670,2114.4],[-110.740039,43.751235,1680,2114.9],[-110.740056,43.751324,1690,2118.9],[-110.740094,43.751408,1700,2118.7],[-110.74016,43.751484,1710,2119.2],[-110.740226,43.75156,1720,2119.5],[-110.740292,43.751637,1730,2120.3],[-110.740341,43.751718,1740,2121.2],[-110.740369,43.751806,1750,2122.0],[-110.740398,43.751893,1760,2123.8],[-110.740445,43.751974,1770,2123.5],[-110.740526,43.752042,1780,2126.3],[-110.740606,43.752111,1790,2128.1],[-110.740687,43.75218,1800,2127.3],[-110.740767,43.752248,1810,2126.2],[-110.740856,43.752311,1820,2125.5],[-110.740946,43.752373,1830,2122.9],[-110.741036,43.752436,1840,2122.0],[-110.741126,43.752498,1850,2121.1],[-110.741216,43.75256,1860,2121.3],[-110.741299,43.752627,1870,2121.7],[-110.741358,43.752703,1880,2123.1],[-110.741394,43.75279,1890,2123.9],[-110.741426,43.752876,1900,2124.4],[-110.741437,43.752966,1910,2123.6],[-110.74146,43.753051,1920,2123.0],[-110.741556,43.753064,1930,2123.8],[-110.741633,43.752997,1940,2126.5],[-110.741692,43.752918,1950,2129.9],[-110.74175,43.752838,1960,2128.7],[-110.741808,43.752758,1970,2131.6],[-110.741877,43.752691,1980,2133.0],[-110.741977,43.752714,1990,2132.5],[-110.742016,43.752796,2000,2133.9],[-110.742009,43.752886,2010,2135.8],[-110.742001,43.752976,2020,2136.6],[-110.741994,43.753065,2030,2138.6],[-110.741987,43.753155,2040,2139.8],[-110.741973,43.753245,2050,2143.6],[-110.741955,43.753334,2060,2144.8],[-110.741948,43.753421,2070,2145.0],[-110.741997,43.753504,2080,2144.7],[-110.74204,43.753588,2090,2145.3],[-110.742039,43.753678,2100,2145.7],[-110.742038,43.753768,2110,2146.9],[-110.742037,43.753857,2120,2148.5],[-110.742001,43.753938,2130,2151.2],[-110.741923,43.754008,2140,2153.2],[-110.741904,43.754093,2150,2153.8],[-110.741908,43.754183,2160,2154.1],[-110.741912,43.754273,2170,2153.7],[-110.741916,43.754362,2180,2151.4],[-110.741985,43.754433,2190,2151.9],[-110.742071,43.754497,2200,2152.7],[-110.742158,43.754562,2210,2153.7],[-110.742244,43.754627,2220,2154.6],[-110.74231,43.754702,2230,2155.5],[-110.742364,43.754783,2240,2157.4],[-110.742417,43.754864,2250,2155.0],[-110.74247,43.754946,2260,2155.5],[-110.742523,43.755027,2270,2154.4],[-110.742558,43.755112,2280,2158.3],[-110.742565,43.755202,2290,2159.3],[-110.742572,43.755291,2300,2160.9],[-110.742579,43.755381,2310,2161.5],[-110.742579,43.755471,2320,2162.3],[-110.742577,43.755561,2330,2164.4],[-110.742613,43.755646,2340,2164.8],[-110.742661,43.755729,2350,2166.3],[-110.742721,43.755807,2360,2167.4],[-110.742785,43.755885,2370,2167.9],[-110.742841,43.755965,2380,2169.1],[-110.742891,43.756047,2390,2171.7],[-110.742938,43.75613,2400,2172.3],[-110.742986,43.756213,2410,2173.6],[-110.743039,43.756295,2420,2175.8],[-110.743091,43.756376,2430,2176.4],[-110.74315,43.756455,2440,2176.9],[-110.743215,43.756532,2450,2177.9],[-110.743279,43.756609,2460,2179.4],[-110.743344,43.756686,2470,2180.6],[-110.74341,43.756762,2480,2182.5],[-110.743482,43.756835,2490,2183.9],[-110.743555,43.756909,2500,2182.4],[-110.743627,43.756982,2510,2183.4],[-110.743694,43.757057,2520,2183.8],[-110.743741,43.75714,2530,2183.2],[-110.743789,43.757223,2540,2184.3],[-110.743837,43.757306,2550,2184.7],[-110.743885,43.757389,2560,2183.8],[-110.743932,43.757473,2570,2183.1],[-110.74398,43.757556,2580,2180.9],[-110.744028,43.757639,2590,2182.7],[-110.74407,43.757723,2600,2177.8],[-110.744112,43.757808,2610,2180.0],[-110.744153,43.757893,2620,2175.8],[-110.744193,43.757978,2630,2176.8],[-110.744199,43.758068,2640,2174.7],[-110.744206,43.758157,2650,2172.3],[-110.744213,43.758247,2660,2171.6],[-110.74422,43.758337,2670,2169.4],[-110.744226,43.758427,2680,2168.3],[-110.744233,43.758517,2690,2165.9],[-110.74424,43.758606,2700,2164.9],[-110.744248,43.758696,2710,2168.8],[-110.744255,43.758786,2720,2166.9],[-110.744262,43.758876,2730,2166.0],[-110.744273,43.758965,2740,2163.8],[-110.744285,43.759055,2750,2162.8],[-110.744297,43.759144,2760,2160.1],[-110.744309,43.759234,2770,2158.8],[-110.744311,43.759324,2780,2156.1],[-110.744311,43.759414,2790,2155.0],[-110.744311,43.759504,2800,2154.3],[-110.744319,43.759593,2810,2153.4],[-110.744341,43.759682,2820,2156.3],[-110.744363,43.75977,2830,2153.4],[-110.744385,43.759858,2840,2152.3],[-110.744408,43.759947,2850,2150.3],[-110.744433,43.760035,2860,2155.0],[-110.744461,43.760123,2870,2149.6],[-110.74449,43.76021,2880,2147.2],[-110.744518,43.760298,2890,2150.7],[-110.744546,43.760385,2900,2147.7],[-110.744565,43.760474,2910,2146.5],[-110.74458,43.760563,2920,2144.7],[-110.744595,43.760653,2930,2147.9],[-110.744607,43.760742,2940,2147.2],[-110.744605,43.760832,2950,2146.0],[-110.744604,43.760922,2960,2146.5],[-110.744604,43.761012,2970,2147.2],[-110.744617,43.761101,2980,2147.3],[-110.744631,43.761191,2990,2143.4],[-110.744645,43.76128,3000,2140.5],[-110.744668,43.761368,3010,2137.7],[-110.744691,43.761457,3020,2139.6],[-110.744714,43.761545,3030,2137.7],[-110.744754,43.761629,3040,2132.7],[-110.744811,43.761709,3050,2133.3],[-110.744897,43.761774,3060,2133.8],[-110.744986,43.761837,3070,2130.0],[-110.745081,43.761895,3080,2129.9],[-110.745176,43.761954,3090,2128.6],[-110.74527,43.762012,3100,2127.2],[-110.745363,43.762072,3110,2126.3],[-110.745456,43.762132,3120,2123.4],[-110.745549,43.762192,3130,2122.2],[-110.745642,43.762251,3140,2123.5],[-110.745735,43.762311,3150,2124.4],[-110.745828,43.762371,3160,2123.7],[-110.745921,43.762431,3170,2123.3],[-110.746014,43.76249,3180,2122.7],[-110.746112,43.762546,3190,2124.4],[-110.746204,43.762607,3200,2127.4],[-110.746296,43.762667,3210,2128.9],[-110.746394,43.762722,3220,2133.7],[-110.746497,43.762773,3230,2134.6],[-110.746599,43.762824,3240,2134.6],[-110.746702,43.762875,3250,2135.0],[-110.746804,43.762926,3260,2134.3],[-110.746909,43.762975,3270,2135.5],[-110.747004,43.763032,3280,2136.5],[-110.747093,43.763095,3290,2137.8],[-110.747138,43.763179,3300,2139.1],[-110.747182,43.763263,3310,2143.1],[-110.747291,43.763302,3320,2146.5],[-110.747406,43.763337,3330,2147.1],[-110.747409,43.763408,3340,2151.0],[-110.74737,43.763491,3350,2151.6],[-110.74743,43.763568,3360,2151.6],[-110.747444,43.763657,3370,2150.2],[-110.747493,43.763733,3380,2148.0],[-110.747597,43.763778,3390,2147.3],[-110.747721,43.763786,3400,2143.9],[-110.747836,43.763816,3410,2144.8],[-110.747945,43.763859,3420,2145.4],[-110.748038,43.763915,3430,2145.2],[-110.748104,43.763991,3440,2144.5],[-110.748143,43.764076,3450,2145.4],[-110.748183,43.764162,3460,2143.6],[-110.748203,43.76425,3470,2143.9],[-110.74824,43.764329,3480,2142.2],[-110.748353,43.764367,3490,2140.4],[-110.748466,43.764404,3500,2137.7],[-110.748543,43.764468,3510,2138.2],[-110.748598,43.764549,3520,2137.9],[-110.748669,43.764618,3530,2137.2],[-110.748779,43.76466,3540,2136.1],[-110.748894,43.764686,3550,2134.9],[-110.749018,43.76468,3560,2134.6],[-110.749143,43.764674,3570,2134.5],[-110.749265,43.764671,3580,2133.3],[-110.74935,43.764737,3590,2130.7],[-110.749467,43.764719,3600,2129.8],[-110.749588,43.764704,3610,2129.4],[-110.749691,43.764754,3620,2128.5],[-110.749796,43.764802,3630,2127.3],[-110.749908,43.764841,3640,2127.6],[-110.750022,43.764877,3650,2126.9],[-110.750118,43.764927,3660,2126.6],[-110.75018,43.765005,3670,2126.2],[-110.750241,43.765084,3680,2123.6],[-110.750246,43.765173,3690,2123.6],[-110.750241,43.765263,3700,2124.2],[-110.750217,43.765351,3710,2124.0],[-110.750214,43.76544,3720,2125.1],[-110.750131,43.765484,3730,2126.9],[-110.750011,43.765508,3740,2125.7],[-110.749887,43.765502,3750,2128.7],[-110.749763,43.765495,3760,2129.9],[-110.749639,43.765492,3770,2134.7],[-110.749514,43.765485,3780,2138.6],[-110.74939,43.765478,3790,2138.7],[-110.749266,43.76548,3800,2139.5],[-110.74915,43.765507,3810,2137.1],[-110.749035,43.765541,3820,2141.3],[-110.74894,43.765591,3830,2142.8],[-110.748861,43.765661,3840,2142.7],[-110.748772,43.765721,3850,2144.8],[-110.748665,43.76576,3860,2144.0],[-110.748661,43.765832,3870,2145.0],[-110.74875,43.765887,3880,2145.7],[-110.74887,43.765891,3890,2149.4],[-110.748985,43.765856,3900,2152.7],[-110.749105,43.765841,3910,2153.3],[-110.74923,43.765841,3920,2155.6],[-110.749349,43.765859,3930,2156.4],[-110.749459,43.7659,3940,2159.0],[-110.74955,43.765961,3950,2160.9],[-110.749622,43.766033,3960,2161.8],[-110.749745,43.766048,3970,2161.6],[-110.749784,43.766082,3980,2165.4],[-110.749674,43.766124,3990,2164.6],[-110.749589,43.766188,4000,2166.2],[-110.749489,43.766236,4010,2167.7],[-110.749366,43.766246,4020,2169.2],[-110.749245,43.766257,4030,2170.5],[-110.749138,43.766302,4040,2172.4],[-110.74907,43.766376,4050,2175.5],[-110.748973,43.76643,4060,2176.1],[-110.748887,43.766485,4070,2178.2],[-110.74893,43.766563,4080,2179.1],[-110.749034,43.7666,4090,2180.6],[-110.749158,43.766607,4100,2182.6],[-110.749282,43.766613,4110,2181.8],[-110.749401,43.766631,4120,2186.6],[-110.749374,43.766684,4130,2185.2],[-110.749256,43.766707,4140,2189.8],[-110.749136,43.766729,4150,2190.8],[-110.749016,43.766754,4160,2188.7],[-110.748903,43.76679,4170,2198.7],[-110.748783,43.766781,4180,2200.2],[-110.748662,43.766782,4190,2199.6],[-110.748541,43.766804,4200,2197.4],[-110.748424,43.766835,4210,2197.7],[-110.74832,43.76688,4220,2199.9],[-110.748256,43.766952,4230,2198.1],[-110.7483,43.767025,4240,2199.5],[-110.748407,43.76707,4250,2198.9],[-110.748435,43.767156,4260,2199.4],[-110.748435,43.767181,4263,2199.4]]; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
+const TOTAL = PROFILE[PROFILE.length - 1][2];
+const WALK_TIMES = (() => {
+  try {
+    const rows = JSON.parse(new URLSearchParams(location.search).get('times') || '[]');
+    return Array.isArray(rows) ? rows.filter(x => Number.isFinite(+x.dist_m) && Number.isFinite(+x.time) && (x.dir === 'up' || x.dir === 'down')) : [];
+  } catch (_) { return []; }
+})();
+const base = new URL('.', location.href).href;
+const WIDE = [-110.79855, 43.71155, -110.67542, 43.80715];
+const CORE = [-110.77455, 43.73155, -110.69942, 43.78715];
+const MID = [-110.78455, 43.72255, -110.68942, 43.79615];
+const KEY_M = 4586;   // distance (m) of the marked stop on the profile
+const PITCH = 50, ZOOM = 15.2;
+const HEADING = null; // null = short lookahead (old behaviour) or [metres behind, metres ahead] = long chord, smoother on switchbacks
+const SEASONS = {"default":"by_month","labels":{"spring":"Spring","summer":"Summer","autumn":"Autumn","winter":"Winter"},"map":{"winter":{"overlay":true,"paint":{"saturation":-0.2,"contrast":0.0,"brightness_min":0.0,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#8aa3bd","horizon-color":"#dfe6ec","fog-color":"#dfe6ec"},"shade":{"exaggeration":0.55,"shadow":"rgba(40,62,110,0.50)","highlight":"rgba(255,255,255,0.45)","accent":"rgba(40,62,110,0.25)"}},"spring":{"overlay":true,"paint":{"saturation":0.55,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":6},"sky":{"sky-color":"#4a8fdc","horizon-color":"#eadfce","fog-color":"#e6d9c6"},"shade":{"exaggeration":0.45,"shadow":"rgba(40,50,80,0.45)","highlight":"rgba(255,240,220,0.40)","accent":"rgba(50,40,60,0.25)"}},"summer":{"overlay":false,"paint":{"saturation":0.12,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":8},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null},"autumn":{"overlay":false,"paint":{"saturation":0.18,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null}},"note":"Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real."}; // null, or {default, labels, map: {season: {overlay, paint, sky}}, note}
+const fmt1 = n => (n / 1000).toFixed(1);
+const ft = m => Math.round(m * 3.28084).toLocaleString('en-US');
+
+document.getElementById('hudTotal').textContent = fmt1(TOTAL);
+document.getElementById('profEnd').textContent = fmt1(TOTAL);
+const elevAt = d => { const i = Math.max(0, Math.min(PROFILE.length - 1, Math.round(d / 10))); return PROFILE[i][3]; };
+const gain = Math.abs(PROFILE[PROFILE.length - 1][3] - PROFILE[0][3]); // size of the net change, so descents read as positive
+function fillTokens(root) {
+  root.querySelectorAll('[data-elev]').forEach(el => {
+    const d = Math.min(+el.dataset.elev, TOTAL); const e = elevAt(d);
+    el.textContent = Math.round(e).toLocaleString('en-US') + ' m (' + ft(e) + ' ft)';
+  });
+  root.querySelectorAll('[data-gain]').forEach(el => { el.textContent = Math.round(gain).toLocaleString('en-US') + ' m (' + ft(gain) + ' ft)'; });
+}
+fillTokens(document);
+
+// Elevation profile
+(function drawProfile() {
+  const emin = Math.min(...PROFILE.map(p => p[3])) - 20, emax = Math.max(...PROFILE.map(p => p[3])) + 10;
+  const X = d => d / TOTAL * 1000, Y = e => 66 - (e - emin) / (emax - emin) * 60;
+  const line = PROFILE.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ');
+  document.getElementById('profLine').setAttribute('d', line);
+  document.getElementById('profArea').setAttribute('d', line + ' L1000 70 L0 70 Z');
+  window.__prof = { X, Y };
+  const marks = document.getElementById('timeMarkers');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const clock = minutes => { const n = ((Math.round(minutes) % 1440) + 1440) % 1440; return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
+  WALK_TIMES.forEach(mark => {
+    const x = X(Math.max(0, Math.min(TOTAL, +mark.dist_m))), y = mark.dir === 'up' ? 18 : 53;
+    const line = document.createElementNS(svgNS, 'line'); line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', y + 4); line.setAttribute('y2', mark.dir === 'up' ? 37 : 49); marks.appendChild(line);
+    const dot = document.createElementNS(svgNS, 'circle'); dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', 3); marks.appendChild(dot);
+    const text = document.createElementNS(svgNS, 'text'); text.setAttribute('x', x); text.setAttribute('y', mark.dir === 'up' ? 11 : 68); text.textContent = `${clock(+mark.time)} ${mark.dir === 'up' ? '↑' : '↓'}`; marks.appendChild(text);
+  });
+  const sx = X(KEY_M); document.getElementById('profScout').setAttribute('x1', sx); document.getElementById('profScout').setAttribute('x2', sx);
+  document.getElementById('scoutLab').style.left = (KEY_M / TOTAL * 100) + '%';
+})();
+function setProfile(d) {
+  const { X, Y } = window.__prof; const x = X(d);
+  document.getElementById('profCursor').setAttribute('x1', x); document.getElementById('profCursor').setAttribute('x2', x);
+  const pts = PROFILE.filter(p => p[2] <= d);
+  if (pts.length > 1) document.getElementById('profWalk').setAttribute('d', pts.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ') + ' L' + x.toFixed(1) + ' 70 L0 70 Z');
+}
+
+// Geometry helpers
+function pointAt(d) {
+  d = Math.max(0, Math.min(TOTAL, d));
+  const i = Math.min(PROFILE.length - 2, Math.floor(d / 10));
+  const a = PROFILE[i], b = PROFILE[i + 1]; const span = (b[2] - a[2]) || 1; const t = Math.max(0, Math.min(1, (d - a[2]) / span));
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+function bearing(p, q) {
+  const r = Math.PI / 180, l1 = p[1] * r, l2 = q[1] * r, dl = (q[0] - p[0]) * r;
+  const y = Math.sin(dl) * Math.cos(l2), x = Math.cos(l1) * Math.sin(l2) - Math.sin(l1) * Math.cos(l2) * Math.cos(dl);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+function headingAt(d) {
+  if (HEADING) {
+    // direction of the straight line from a point behind to a point well ahead: ignores individual hairpins
+    const end = d > TOTAL - 150;
+    const from = end ? TOTAL - 600 : d - HEADING[0], to = end ? TOTAL : d + HEADING[1];
+    return (bearing(pointAt(from), pointAt(to)));
+  }
+  // average direction over the next 60–260 m so the camera turns smoothly on switchbacks
+  const p = pointAt(d); let sx = 0, sy = 0;
+  for (let k = 60; k <= 260; k += 20) { const b = bearing(p, pointAt(Math.min(TOTAL, d + k))) * Math.PI / 180; sx += Math.sin(b); sy += Math.cos(b); }
+  if (d > TOTAL - 70) { const b = bearing(pointAt(TOTAL - 120), pointAt(TOTAL)) * Math.PI / 180; sx = Math.sin(b); sy = Math.cos(b); }
+  return (Math.atan2(sx, sy) * 180 / Math.PI + 360) % 360;
+}
+
+// Place story cards along the track
+const track = document.getElementById('track');
+function layoutSteps() {
+  const H = track.offsetHeight - innerHeight;
+  document.querySelectorAll('.step').forEach(s => { s.style.top = (innerHeight * 0.18 + H * (+s.dataset.at)) + 'px'; });
+}
+layoutSteps(); addEventListener('resize', layoutSteps);
+
+// Season overlays: one raster source and layer per season that draws something (snow, green or autumn tint); hidden until chosen
+const seasonSources = {}, seasonLayers = [];
+if (SEASONS) for (const [name, m] of Object.entries(SEASONS.map)) if (m.overlay) {
+  seasonSources['season_' + name] = { type: 'raster', tileSize: 512, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'season/' + name + '/{z}/{x}/{y}.webp'] };
+  seasonLayers.push({ id: 'season_' + name, type: 'raster', source: 'season_' + name, layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0 } });
+}
+const map = new maplibregl.Map({
+  container: 'map',
+  interactive: false,
+  attributionControl: false,
+  maxPitch: 85,
+  pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+  center: pointAt(0), zoom: ZOOM, pitch: PITCH, bearing: headingAt(0),
+  style: {
+    version: 8,
+    sky: { 'sky-color': '#3f86d8', 'horizon-color': '#f6d2a8', 'fog-color': '#efc9a0', 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 },
+    sources: {
+      dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      demHs: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      imgLow: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      imgMid: { type: 'raster', tileSize: 256, minzoom: 13, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      // Overzoom the complete z14 imagery instead of requesting sparse z15–16
+      // tiles beyond the fetched corridor, which leave black gaps in the view.
+      imgHigh: { type: 'raster', tileSize: 256, minzoom: 14, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      ahead: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: PROFILE.map(p => [p[0], p[1]]) } } },
+      walked: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [pointAt(0), pointAt(1)] } } },
+      hiker: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: pointAt(0) } } },
+      ...seasonSources
+    },
+    layers: [
+      { id: 'bg', type: 'background', paint: { 'background-color': '#b98a62' } },
+      { id: 'imgLow', type: 'raster', source: 'imgLow', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgMid', type: 'raster', source: 'imgMid', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgHigh', type: 'raster', source: 'imgHigh', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      ...seasonLayers,
+      { id: 'shade', type: 'hillshade', source: 'demHs', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-illumination-direction': 300, 'hillshade-shadow-color': 'rgba(40, 14, 4, 0.55)', 'hillshade-highlight-color': 'rgba(255, 226, 180, 0.35)', 'hillshade-accent-color': 'rgba(60, 20, 6, 0.25)' } },
+      { id: 'ahead', type: 'line', source: 'ahead', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 3, 'line-opacity': 0.75, 'line-dasharray': [1.5, 1.5] } },
+      { id: 'walked', type: 'line', source: 'walked', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#F08A4B', 'line-width': 5 } },
+      { id: 'hikerHalo', type: 'circle', source: 'hiker', paint: { 'circle-radius': 14, 'circle-color': '#F08A4B', 'circle-opacity': 0.35, 'circle-pitch-alignment': 'map' } },
+      { id: 'hiker', type: 'circle', source: 'hiker', paint: { 'circle-radius': 7, 'circle-color': '#F08A4B', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5, 'circle-pitch-alignment': 'map' } }
+    ],
+    terrain: { source: 'dem', exaggeration: 1 }
+  }
+});
+// Season switch: swaps the overlay, the imagery grading, the sky and each card's photo and wording
+function setSeason(name) {
+  const m = SEASONS.map[name];
+  Object.keys(SEASONS.map).forEach(n => { if (map.getLayer('season_' + n)) map.setLayoutProperty('season_' + n, 'visibility', n === name ? 'visible' : 'none'); });
+  for (const id of ['imgLow', 'imgMid', 'imgHigh']) {
+    map.setPaintProperty(id, 'raster-saturation', m.paint.saturation);
+    map.setPaintProperty(id, 'raster-contrast', m.paint.contrast);
+    map.setPaintProperty(id, 'raster-brightness-min', m.paint.brightness_min);
+    map.setPaintProperty(id, 'raster-brightness-max', m.paint.brightness_max);
+    map.setPaintProperty(id, 'raster-hue-rotate', m.paint.hue);
+  }
+  const sh = m.shade || { exaggeration: 0.35, shadow: 'rgba(40, 14, 4, 0.55)', highlight: 'rgba(255, 226, 180, 0.35)', accent: 'rgba(60, 20, 6, 0.25)' };
+  map.setPaintProperty('shade', 'hillshade-exaggeration', sh.exaggeration);
+  map.setPaintProperty('shade', 'hillshade-shadow-color', sh.shadow);
+  map.setPaintProperty('shade', 'hillshade-highlight-color', sh.highlight);
+  map.setPaintProperty('shade', 'hillshade-accent-color', sh.accent);
+  map.setSky({ 'sky-color': m.sky['sky-color'], 'horizon-color': m.sky['horizon-color'], 'fog-color': m.sky['fog-color'], 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 });
+  document.querySelectorAll('.step[data-seasons]').forEach(st => {
+    const v = JSON.parse(st.dataset.seasons)[name];
+    const img = st.querySelector('img'); if (!img.src.endsWith(v.src)) img.src = v.src;
+    st.querySelector('h2').innerHTML = v.title;
+    st.querySelector('.txt').innerHTML = v.text; fillTokens(st);
+    st.querySelector('.credit').innerHTML = v.credit;
+    const note = st.querySelector('.note'); note.textContent = v.note; note.hidden = !v.note;
+  });
+  document.querySelectorAll('#seasons button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.season === name)));
+  document.getElementById('seasonNote').textContent = SEASONS.note;
+  try { history.replaceState(null, '', '?season=' + name + location.hash); } catch (e) {}
+  map.triggerRepaint();
+}
+function initSeasons() {
+  if (!SEASONS) return;
+  const box = document.getElementById('seasons'); box.hidden = false;
+  for (const name of ['spring', 'summer', 'autumn', 'winter']) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.season = name; b.textContent = SEASONS.labels[name];
+    b.addEventListener('click', () => setSeason(name)); box.appendChild(b);
+  }
+  const q = new URLSearchParams(location.search).get('season');
+  const mo = new Date().getMonth(); // northern hemisphere
+  const auto = mo >= 2 && mo <= 4 ? 'spring' : mo >= 5 && mo <= 7 ? 'summer' : mo >= 8 && mo <= 10 ? 'autumn' : 'winter';
+  setSeason(SEASONS.map[q] ? q : auto);
+}
+map.on('error', e => { console.warn('map error', e && e.error && e.error.message); });
+map.on('load', () => { document.getElementById('status').hidden = true; initSeasons(); tick(); });
+map.once('idle', () => { document.getElementById('status').hidden = true; });
+map.on('styledata', () => { if (map.getSource('hiker')) tick(); });
+
+// Scroll drives distance; the camera eases toward it each frame
+let target = 0, current = 0, lastIdx = -1, raf = 0;
+let bear = headingAt(0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function progress() {
+  const r = track.getBoundingClientRect(); const H = track.offsetHeight - innerHeight;
+  return Math.max(0, Math.min(1, -r.top / (H || 1)));
+}
+function onScroll() { target = progress() * TOTAL; document.getElementById('hint').hidden = target > 40; if (!raf) raf = requestAnimationFrame(tick); }
+addEventListener('scroll', onScroll, { passive: true });
+function tick() {
+  raf = 0;
+  if (!map.getSource('hiker')) return;
+  current += (target - current) * (reduce ? 1 : 0.12);
+  if (Math.abs(target - current) < 0.5) current = target;
+  const p = pointAt(current);
+  // low-pass the camera heading so it never snaps round (instant under reduced motion)
+  const want = headingAt(current), dBear = ((want - bear + 540) % 360) - 180;
+  bear = (bear + dBear * (reduce ? 1 : 0.08) + 360) % 360;
+  map.jumpTo({ center: p, bearing: bear, pitch: PITCH, zoom: ZOOM });
+  document.getElementById('status').hidden = true;
+  map.getSource('hiker').setData({ type: 'Feature', geometry: { type: 'Point', coordinates: p } });
+  const idx = Math.floor(current / 10);
+  if (idx !== lastIdx) {
+    lastIdx = idx;
+    const coords = PROFILE.filter(q => q[2] <= current).map(q => [q[0], q[1]]); coords.push(p);
+    if (coords.length < 2) coords.unshift(pointAt(0));
+    map.getSource('walked').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } });
+  }
+  const e = elevAt(current);
+  document.getElementById('hudDist').textContent = fmt1(current) + ' km';
+  document.getElementById('hudElev').textContent = Math.round(e).toLocaleString('en-US') + ' m';
+  document.getElementById('hudFt').textContent = ft(e) + ' ft';
+  setProfile(current);
+  if (current !== target || Math.abs(dBear) > 0.3) raf = requestAnimationFrame(tick);
+}
+</script>
+
+<script>
+// Wait for the terrain or a time limit, then open the clouds onto the 3D walk.
+(function () {
+  var root = document.getElementById('cloudIntro');
+  if (!root) return;
+  var started = Date.now(), parted = false, MIN = 1600, MAX = 6500;
+  var ids = ['ciSky', 'ciFar', 'ciMid', 'ciNear', 'ciVeil', 'ciTitle'], el = {};
+  ids.forEach(function (i) { el[i] = document.getElementById(i); });
+  function part() {
+    if (parted) return; parted = true;
+    var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
+    root.style.pointerEvents = 'none';
+    setTimeout(function () { root.classList.add('ci-done'); }, 3200);
+  }
+  var imgsOk = 0, terrainOk = false;
+  ['wisps', 'cumulus', 'mass'].forEach(function (n) { var im = new Image(); im.onload = im.onerror = function () { imgsOk++; check(); }; im.src = '../_shared/clouds/' + n + '.webp'; });
+  var st = document.getElementById('status');
+  function statusHidden() { return !st || st.hidden || getComputedStyle(st).display === 'none'; }
+  if (statusHidden()) terrainOk = true;
+  else if (window.MutationObserver) new MutationObserver(function () { if (statusHidden()) { terrainOk = true; check(); } }).observe(st, { attributes: true });
+  function check() { if (parted) return; var wait = Math.max(0, MIN - (Date.now() - started)); if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait); }
+  setTimeout(part, MAX);
+  addEventListener('click', part, { once: true });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
+  check();
+})();
+</script>
+
+<script>
+(function () {
+  const button = document.getElementById('backToHike');
+  const overlay = document.getElementById('backTransition');
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('back');
+  const siteRoot = new URL('../../', location.href);
+  let backUrl = siteRoot.href;
+  if (requested) {
+    try {
+      backUrl = requested.startsWith('#/') ? siteRoot.href + requested : new URL(requested, location.href).href;
+    } catch (_) {}
+  }
+  button.href = backUrl;
+  let leaving = false;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    overlay.classList.add('active');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      // Back restores the exact hike page state and scroll position when opened from the app.
+      let cameFromApp = false;
+      try {
+        const ref = new URL(document.referrer);
+        cameFromApp = ref.origin === location.origin && ref.pathname === siteRoot.pathname;
+      } catch (_) {}
+      if (cameFromApp && history.length > 1) history.back();
+      else location.assign(backUrl);
+    }, reduced ? 100 : 2200);
+  });
+})();
+</script>

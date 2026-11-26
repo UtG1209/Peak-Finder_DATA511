@@ -1,0 +1,26 @@
+{
+  "id": "cadillac_north_ridge",
+  "hike_id": "cadillac-north-ridge",
+  "title": "Cadillac North Ridge Trail",
+  "map_label": "A 3D walk up the open granite of the North Ridge Trail to the summit of Cadillac Mountain.",
+  "pad_wide": 0.05,
+  "snow": {
+    "winter": 60,
+    "spring": 250
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "Bar Harbor – USA - Acadia All-American Road - Acadia-Nationalpark - stone Bridge - panoramio.jpg",
+      "title": "Cadillac North Ridge Trailhead",
+      "alt": "A stone bridge on the Acadia Park Loop Road near the start of the trail.",
+      "text": "The route starts beside the Park Loop Road on the north side of Cadillac Mountain, close to sea level. The photo shows a stone bridge near the start."
+    },
+    {
+      "file": "Cadillac Mountain, Acadia National Park, ME - panoramio.jpg",
+      "title": "Cadillac Mountain Summit",
+      "alt": "The granite summit of Cadillac Mountain with the Atlantic and islands beyond.",
+      "text": "You have reached the summit of Cadillac Mountain, 1,530 feet up, with views over Frenchman Bay."
+    }
+  ]
+}

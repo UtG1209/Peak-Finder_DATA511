@@ -1,0 +1,29 @@
+{
+  "walk": "ryan_mountain",
+  "before_bytes": 5089612,
+  "types": {
+    "dem": {
+      "files": 17,
+      "before": 1835314,
+      "after": 1338546,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 4,
+      "before": 903034,
+      "after": 666618,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 306874,
+      "after": 306874,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 4
+  },
+  "page_replacements": 9,
+  "after_bytes": 4356497
+}

@@ -1,0 +1,453 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesa Arch Trail Walk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one sticky full-screen 3D stage; a tall scroll track drives the hiker; story cards scroll over the stage. */
+:root {
+  --ink: #101418;
+  --panel: rgba(16, 20, 24, 0.82);
+  --line: #2A333B;
+  --text: #F2EFE9;
+  --muted: #B4BCC3;
+  --sand: #F08A4B;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
+body { margin: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
+.maplibregl-canvas { outline: none; }
+#stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
+#map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
+#hud {
+  position: absolute; z-index: 3; display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+}
+.chip { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; min-width: 120px; backdrop-filter: blur(6px); }
+.chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+.chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backToHike { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 64px); left: max(16px, env(safe-area-inset-left, 0px)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: 600 14px var(--body); text-decoration: none; backdrop-filter: blur(6px); }
+#backToHike:hover { border-color: var(--sand); }
+#backToHike:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+#profile {
+  position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 8px; backdrop-filter: blur(6px);
+}
+#profile svg { display: block; width: 100%; height: 70px; }
+#profile .lab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#timeMarkers line { stroke: rgba(242,239,233,.86); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers circle { fill: var(--sand); stroke: var(--text); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers text { fill: var(--text); stroke: rgba(16,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 700 10px var(--body); text-anchor: middle; }
+#backTransition { position: fixed; z-index: 20; inset: 0; display: none; overflow: hidden; pointer-events: none; background: linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%); }
+#backTransition.active { display: block; }
+#backTransition > div { position: absolute; inset: -10%; opacity: 0; background-repeat: repeat-x; background-position: center; will-change: transform,opacity; }
+#backFar { background-image: url(../_shared/clouds/wisps.webp); background-size: auto 110%; }
+#backMid { background-image: url(../_shared/clouds/cumulus.webp); background-size: auto 125%; }
+#backNear { background-image: url(../_shared/clouds/mass.webp); background-size: auto 150%; }
+#backVeil { inset: 0 !important; background: #edf4fb; }
+#backTitle { inset: 0 !important; display: flex; justify-content: center; align-items: center; color: #15222d; font: 800 clamp(24px,4vw,48px) var(--display); text-align: center; }
+#backTransition.active #backFar { opacity: .68; transform: scale(1.5); transition: transform 1.7s ease, opacity 1.7s ease; }
+#backTransition.active #backMid { opacity: .86; transform: scale(2); transition: transform 1.5s ease .12s, opacity 1.5s ease .12s; }
+#backTransition.active #backNear { opacity: 1; transform: scale(3.2); transition: transform 1.3s ease .24s, opacity 1.3s ease .24s; }
+#backTransition.active #backVeil { opacity: .9; transition: opacity .5s ease .8s; }
+#backTransition.active #backTitle { opacity: 1; transition: opacity .4s ease .8s; }
+@media (prefers-reduced-motion: reduce) { #backTransition *, #backTransition.active * { transition-duration: .01ms !important; } }
+#credits { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 126px); font-size: 10.5px; color: var(--text); background: rgba(16,20,24,0.6); padding: 4px 8px; border-radius: 6px; max-width: 70%; text-align: right; }
+#credits a { color: var(--text); }
+#status { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+#status[hidden], #hint[hidden] { display: none; }
+#track { position: relative; margin-top: -100vh; margin-top: -100dvh; height: 700vh; pointer-events: none; }
+.step {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); width: min(380px, calc(100% - 32px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; box-sizing: border-box;
+  backdrop-filter: blur(6px); pointer-events: auto;
+}
+.step { padding: 0; overflow: hidden; width: min(400px, calc(100% - 32px)); }
+.step img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; max-width: 100%; background: #2a2018; }
+.step .body { padding: 14px 18px 14px; }
+.step .credit { margin-top: 10px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.step .credit a { color: var(--muted); }
+.step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
+.step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons[hidden] { display: none; }
+#seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+#seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
+#seasons button:focus-visible { outline: 2px solid var(--text); outline-offset: 1px; }
+.step .note { margin: 8px 0 0; font-size: 12px; line-height: 1.4; color: var(--sand); }
+.step .note[hidden] { display: none; }
+.hint { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); font-size: 13px; color: var(--text); background: var(--panel); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); }
+@media (max-width: 640px) {
+  #hud .chip { min-width: 0; padding: 8px 10px; }
+  #hud .chip .v { font-size: 18px; }
+  #brand { display: none; }
+  #backToHike { top: calc(env(safe-area-inset-top, 0px) + 12px); }
+  #seasons { top: calc(env(safe-area-inset-top, 0px) + 78px); }
+  #seasons button { padding: 7px 10px; }
+  #credits { bottom: calc(env(safe-area-inset-bottom, 0px) + 118px); max-width: 90%; }
+}
+</style>
+
+<style id="ciCss">
+/* Match the clouds-parting arrival used by the original trail walks. */
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro.ci-done{display:none}
+@keyframes ciGone{to{visibility:hidden;pointer-events:none}}
+#cloudIntro>*{position:absolute}
+#ciSky{inset:0;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%);opacity:1}
+.ciL{inset:-10%;opacity:1;will-change:transform,opacity}
+.ciL>div{position:absolute;inset:0;background-repeat:repeat}
+#ciFar{transform:scale(1.5)}#ciMid{transform:scale(2)}#ciNear{transform:scale(3.2)}
+#ciFar>div{background-image:url(../_shared/clouds/wisps.webp);background-size:1800px 900px;animation:ciDriftFar 140s linear infinite}
+#ciMid>div{background-image:url(../_shared/clouds/cumulus.webp);background-size:1500px 750px;animation:ciDriftMid 90s linear infinite}
+#ciNear>div{background-image:url(../_shared/clouds/mass.webp);background-size:2200px 1100px;animation:ciDriftNear 55s linear infinite}
+@keyframes ciDriftFar{from{background-position:0 0}to{background-position:-1800px 0}}
+@keyframes ciDriftMid{from{background-position:0 0}to{background-position:-1500px 0}}
+@keyframes ciDriftNear{from{background-position:0 0}to{background-position:-2200px 0}}
+#ciVeil{inset:0;background:#edf4fb;opacity:1}
+#ciTitle{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 24px;text-align:center;color:#1e3a5c;opacity:1}
+#ciTitle b{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.05;text-wrap:balance}
+#ciTitle span{font:600 14px "Inter",system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){#cloudIntro{display:none}}
+</style>
+
+<div id="cloudIntro" aria-hidden="true">
+  <div id="ciSky"></div><div id="ciFar" class="ciL"><div></div></div>
+  <div id="ciMid" class="ciL"><div></div></div><div id="ciNear" class="ciL"><div></div></div>
+  <div id="ciVeil"></div><div id="ciTitle"><b>Mesa Arch Trail</b><span>Canyonlands National Park, UT</span></div>
+</div>
+
+<div id="stage">
+  <div id="map" role="img" aria-label="A 3D walk from the Mesa Arch trailhead to the cliff-edge arch in Canyonlands."></div>
+  <div id="status">Loading terrain…</div>
+  <div id="brand">Peak Finder · Trail walk</div>
+  <a id="backToHike" href="../../">← Back to <span>Mesa Arch Trail</span></a>
+  <div id="hud" aria-live="polite">
+    <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
+    <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
+  </div>
+  <div id="seasons" role="group" aria-label="Season" hidden></div>
+  <div class="hint" id="hint">Scroll to walk the trail</div>
+  <div id="credits"><span id="seasonNote"></span> Imagery: <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener">USGS The National Map</a> · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, USGS 3DEP) · Trail: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div>
+  <div id="profile">
+    <svg id="profSvg" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-label="Elevation profile of the trail with your position marked" role="img">
+      <path id="profArea" fill="rgba(240,138,75,0.22)" stroke="none"></path>
+      <path id="profWalk" fill="rgba(240,138,75,0.55)" stroke="none"></path>
+      <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+      <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
+      <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+      <g id="timeMarkers" aria-hidden="true"></g>
+    </svg>
+    <div class="lab" style="position:relative"><span>Trailhead · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">Mesa Arch</span><span>Mesa Arch · <span id="profEnd"></span> km</span></div>
+  </div>
+</div>
+
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
+
+<div id="track">
+  <section class="step" data-at="0.01" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mesa_Arch_trail_-_panoramio.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Peter K.&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/3.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 3.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch Trailhead&quot;,&quot;text&quot;:&quot;The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mesa_Arch_trail_-_panoramio.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Peter K.&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/3.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 3.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch Trailhead&quot;,&quot;text&quot;:&quot;The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mesa_Arch_trail_-_panoramio.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Peter K.&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/3.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 3.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch Trailhead&quot;,&quot;text&quot;:&quot;The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Mesa_Arch_trail_-_panoramio.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Peter K.&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/3.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 3.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch Trailhead&quot;,&quot;text&quot;:&quot;The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/trailhead.jpg" alt="The short trail to Mesa Arch crossing slickrock and juniper." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">Start · Mesa Arch Trailhead</div><h2>Mesa Arch Trailhead</h2><p class="txt">The route starts here on the Island in the Sky mesa. It is a short, easy loop to the arch.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Mesa_Arch_trail_-_panoramio.jpg" target="_blank" rel="noopener">Peter K.</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0" target="_blank" rel="noopener">CC BY-SA 3.0</a> · Wikimedia Commons</p></div></section>
+  <section class="step" data-at="0.99" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_Through_Mesa_Arch_Canyonlands_NP_Utah_2023.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Larry D. Moore&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch&quot;,&quot;text&quot;:&quot;You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_Through_Mesa_Arch_Canyonlands_NP_Utah_2023.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Larry D. Moore&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch&quot;,&quot;text&quot;:&quot;You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_Through_Mesa_Arch_Canyonlands_NP_Utah_2023.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Larry D. Moore&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch&quot;,&quot;text&quot;:&quot;You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:View_Through_Mesa_Arch_Canyonlands_NP_Utah_2023.jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Larry D. Moore&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by/4.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY 4.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Mesa Arch&quot;,&quot;text&quot;:&quot;You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/destination.jpg" alt="The canyon seen through the opening of Mesa Arch." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">End · Mesa Arch</div><h2>Mesa Arch</h2><p class="txt">You have reached Mesa Arch, which frames the canyon far below. It is a popular spot at sunrise.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:View_Through_Mesa_Arch_Canyonlands_NP_Utah_2023.jpg" target="_blank" rel="noopener">Larry D. Moore</a> · <a href="https://creativecommons.org/licenses/by/4.0" target="_blank" rel="noopener">CC BY 4.0</a> · Wikimedia Commons</p></div></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const PROFILE = [[-109.868161,38.38918,0,1873.0],[-109.868065,38.38915,10,1873.7],[-109.86799,38.389082,20,1874.4],[-109.867928,38.389006,30,1874.8],[-109.867876,38.388926,40,1875.5],[-109.867826,38.388845,50,1876.1],[-109.867767,38.388768,60,1876.3],[-109.867712,38.388691,70,1877.3],[-109.867725,38.388604,80,1877.7],[-109.867628,38.38856,90,1878.3],[-109.86759,38.388487,100,1878.6],[-109.867602,38.388412,110,1878.8],[-109.867533,38.38834,120,1879.2],[-109.86746,38.388271,130,1879.4],[-109.867383,38.388205,140,1879.6],[-109.867295,38.388147,150,1879.7],[-109.867212,38.388086,160,1879.9],[-109.867152,38.38801,170,1879.9],[-109.867058,38.387963,180,1879.9],[-109.866947,38.387941,190,1879.5],[-109.866834,38.387938,200,1879.2],[-109.866728,38.387966,210,1879.4],[-109.866623,38.388,220,1879.2],[-109.86651,38.387998,230,1879.2],[-109.866407,38.388037,240,1879.6],[-109.866306,38.388078,250,1879.6],[-109.866227,38.388141,260,1879.8],[-109.866135,38.388185,270,1879.9],[-109.866021,38.388186,280,1879.9],[-109.86591,38.388164,290,1879.9],[-109.865801,38.388147,300,1879.8],[-109.865708,38.388198,310,1879.8],[-109.865605,38.388236,320,1879.7],[-109.865494,38.388256,330,1878.8],[-109.865384,38.388281,340,1878.2],[-109.865282,38.388318,350,1877.4],[-109.865189,38.388267,360,1876.6],[-109.865124,38.388195,370,1875.9],[-109.86504,38.388142,380,1875.0],[-109.864937,38.388109,390,1873.8],[-109.864853,38.388048,400,1872.4],[-109.864815,38.387968,410,1870.7],[-109.864818,38.387888,420,1870.8],[-109.864727,38.38789,430,1869.1],[-109.864645,38.387951,440,1867.8],[-109.864533,38.387956,450,1866.7],[-109.86443,38.387996,460,1865.9],[-109.864343,38.387938,470,1863.8],[-109.86423,38.387942,480,1862.8],[-109.864152,38.388008,490,1863.6],[-109.864053,38.388051,500,1863.5],[-109.863951,38.388087,510,1863.6],[-109.863839,38.388072,520,1861.4],[-109.863727,38.388051,530,1858.9],[-109.863618,38.388024,540,1854.4],[-109.863562,38.38801,545,1854.4]]; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
+const TOTAL = PROFILE[PROFILE.length - 1][2];
+const WALK_TIMES = (() => {
+  try {
+    const rows = JSON.parse(new URLSearchParams(location.search).get('times') || '[]');
+    return Array.isArray(rows) ? rows.filter(x => Number.isFinite(+x.dist_m) && Number.isFinite(+x.time) && (x.dir === 'up' || x.dir === 'down')) : [];
+  } catch (_) { return []; }
+})();
+const base = new URL('.', location.href).href;
+const WIDE = [-109.91316, 38.35205, -109.81845, 38.42518];
+const CORE = [-109.89416, 38.36805, -109.83745, 38.40918];
+const MID = [-109.90416, 38.35905, -109.82745, 38.41818];
+const KEY_M = 483;   // distance (m) of the marked stop on the profile
+const PITCH = 50, ZOOM = 16;
+const HEADING = null; // null = short lookahead (old behaviour) or [metres behind, metres ahead] = long chord, smoother on switchbacks
+const SEASONS = {"default":"by_month","labels":{"spring":"Spring","summer":"Summer","autumn":"Autumn","winter":"Winter"},"map":{"winter":{"overlay":true,"paint":{"saturation":-0.2,"contrast":0.0,"brightness_min":0.0,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#8aa3bd","horizon-color":"#dfe6ec","fog-color":"#dfe6ec"},"shade":{"exaggeration":0.55,"shadow":"rgba(40,62,110,0.50)","highlight":"rgba(255,255,255,0.45)","accent":"rgba(40,62,110,0.25)"}},"spring":{"overlay":false,"paint":{"saturation":0.55,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":6},"sky":{"sky-color":"#4a8fdc","horizon-color":"#eadfce","fog-color":"#e6d9c6"},"shade":{"exaggeration":0.45,"shadow":"rgba(40,50,80,0.45)","highlight":"rgba(255,240,220,0.40)","accent":"rgba(50,40,60,0.25)"}},"summer":{"overlay":false,"paint":{"saturation":0.12,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":8},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null},"autumn":{"overlay":false,"paint":{"saturation":0.18,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null}},"note":"Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real."}; // null, or {default, labels, map: {season: {overlay, paint, sky}}, note}
+const fmt1 = n => (n / 1000).toFixed(1);
+const ft = m => Math.round(m * 3.28084).toLocaleString('en-US');
+
+document.getElementById('hudTotal').textContent = fmt1(TOTAL);
+document.getElementById('profEnd').textContent = fmt1(TOTAL);
+const elevAt = d => { const i = Math.max(0, Math.min(PROFILE.length - 1, Math.round(d / 10))); return PROFILE[i][3]; };
+const gain = Math.abs(PROFILE[PROFILE.length - 1][3] - PROFILE[0][3]); // size of the net change, so descents read as positive
+function fillTokens(root) {
+  root.querySelectorAll('[data-elev]').forEach(el => {
+    const d = Math.min(+el.dataset.elev, TOTAL); const e = elevAt(d);
+    el.textContent = Math.round(e).toLocaleString('en-US') + ' m (' + ft(e) + ' ft)';
+  });
+  root.querySelectorAll('[data-gain]').forEach(el => { el.textContent = Math.round(gain).toLocaleString('en-US') + ' m (' + ft(gain) + ' ft)'; });
+}
+fillTokens(document);
+
+// Elevation profile
+(function drawProfile() {
+  const emin = Math.min(...PROFILE.map(p => p[3])) - 20, emax = Math.max(...PROFILE.map(p => p[3])) + 10;
+  const X = d => d / TOTAL * 1000, Y = e => 66 - (e - emin) / (emax - emin) * 60;
+  const line = PROFILE.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ');
+  document.getElementById('profLine').setAttribute('d', line);
+  document.getElementById('profArea').setAttribute('d', line + ' L1000 70 L0 70 Z');
+  window.__prof = { X, Y };
+  const marks = document.getElementById('timeMarkers');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const clock = minutes => { const n = ((Math.round(minutes) % 1440) + 1440) % 1440; return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
+  WALK_TIMES.forEach(mark => {
+    const x = X(Math.max(0, Math.min(TOTAL, +mark.dist_m))), y = mark.dir === 'up' ? 18 : 53;
+    const line = document.createElementNS(svgNS, 'line'); line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', y + 4); line.setAttribute('y2', mark.dir === 'up' ? 37 : 49); marks.appendChild(line);
+    const dot = document.createElementNS(svgNS, 'circle'); dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', 3); marks.appendChild(dot);
+    const text = document.createElementNS(svgNS, 'text'); text.setAttribute('x', x); text.setAttribute('y', mark.dir === 'up' ? 11 : 68); text.textContent = `${clock(+mark.time)} ${mark.dir === 'up' ? '↑' : '↓'}`; marks.appendChild(text);
+  });
+  const sx = X(KEY_M); document.getElementById('profScout').setAttribute('x1', sx); document.getElementById('profScout').setAttribute('x2', sx);
+  document.getElementById('scoutLab').style.left = (KEY_M / TOTAL * 100) + '%';
+})();
+function setProfile(d) {
+  const { X, Y } = window.__prof; const x = X(d);
+  document.getElementById('profCursor').setAttribute('x1', x); document.getElementById('profCursor').setAttribute('x2', x);
+  const pts = PROFILE.filter(p => p[2] <= d);
+  if (pts.length > 1) document.getElementById('profWalk').setAttribute('d', pts.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ') + ' L' + x.toFixed(1) + ' 70 L0 70 Z');
+}
+
+// Geometry helpers
+function pointAt(d) {
+  d = Math.max(0, Math.min(TOTAL, d));
+  const i = Math.min(PROFILE.length - 2, Math.floor(d / 10));
+  const a = PROFILE[i], b = PROFILE[i + 1]; const span = (b[2] - a[2]) || 1; const t = Math.max(0, Math.min(1, (d - a[2]) / span));
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+function bearing(p, q) {
+  const r = Math.PI / 180, l1 = p[1] * r, l2 = q[1] * r, dl = (q[0] - p[0]) * r;
+  const y = Math.sin(dl) * Math.cos(l2), x = Math.cos(l1) * Math.sin(l2) - Math.sin(l1) * Math.cos(l2) * Math.cos(dl);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+function headingAt(d) {
+  if (HEADING) {
+    // direction of the straight line from a point behind to a point well ahead: ignores individual hairpins
+    const end = d > TOTAL - 150;
+    const from = end ? TOTAL - 600 : d - HEADING[0], to = end ? TOTAL : d + HEADING[1];
+    return (bearing(pointAt(from), pointAt(to)));
+  }
+  // average direction over the next 60–260 m so the camera turns smoothly on switchbacks
+  const p = pointAt(d); let sx = 0, sy = 0;
+  for (let k = 60; k <= 260; k += 20) { const b = bearing(p, pointAt(Math.min(TOTAL, d + k))) * Math.PI / 180; sx += Math.sin(b); sy += Math.cos(b); }
+  if (d > TOTAL - 70) { const b = bearing(pointAt(TOTAL - 120), pointAt(TOTAL)) * Math.PI / 180; sx = Math.sin(b); sy = Math.cos(b); }
+  return (Math.atan2(sx, sy) * 180 / Math.PI + 360) % 360;
+}
+
+// Place story cards along the track
+const track = document.getElementById('track');
+function layoutSteps() {
+  const H = track.offsetHeight - innerHeight;
+  document.querySelectorAll('.step').forEach(s => { s.style.top = (innerHeight * 0.18 + H * (+s.dataset.at)) + 'px'; });
+}
+layoutSteps(); addEventListener('resize', layoutSteps);
+
+// Season overlays: one raster source and layer per season that draws something (snow, green or autumn tint); hidden until chosen
+const seasonSources = {}, seasonLayers = [];
+if (SEASONS) for (const [name, m] of Object.entries(SEASONS.map)) if (m.overlay) {
+  seasonSources['season_' + name] = { type: 'raster', tileSize: 512, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'season/' + name + '/{z}/{x}/{y}.webp'] };
+  seasonLayers.push({ id: 'season_' + name, type: 'raster', source: 'season_' + name, layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0 } });
+}
+const map = new maplibregl.Map({
+  container: 'map',
+  interactive: false,
+  attributionControl: false,
+  maxPitch: 85,
+  pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+  center: pointAt(0), zoom: ZOOM, pitch: PITCH, bearing: headingAt(0),
+  style: {
+    version: 8,
+    sky: { 'sky-color': '#3f86d8', 'horizon-color': '#f6d2a8', 'fog-color': '#efc9a0', 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 },
+    sources: {
+      dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      demHs: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      imgLow: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      imgMid: { type: 'raster', tileSize: 256, minzoom: 13, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      // Overzoom the complete z14 imagery instead of requesting sparse z15–16
+      // tiles beyond the fetched corridor, which leave black gaps in the view.
+      imgHigh: { type: 'raster', tileSize: 256, minzoom: 14, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      ahead: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: PROFILE.map(p => [p[0], p[1]]) } } },
+      walked: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [pointAt(0), pointAt(1)] } } },
+      hiker: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: pointAt(0) } } },
+      ...seasonSources
+    },
+    layers: [
+      { id: 'bg', type: 'background', paint: { 'background-color': '#b98a62' } },
+      { id: 'imgLow', type: 'raster', source: 'imgLow', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgMid', type: 'raster', source: 'imgMid', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgHigh', type: 'raster', source: 'imgHigh', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      ...seasonLayers,
+      { id: 'shade', type: 'hillshade', source: 'demHs', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-illumination-direction': 300, 'hillshade-shadow-color': 'rgba(40, 14, 4, 0.55)', 'hillshade-highlight-color': 'rgba(255, 226, 180, 0.35)', 'hillshade-accent-color': 'rgba(60, 20, 6, 0.25)' } },
+      { id: 'ahead', type: 'line', source: 'ahead', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 3, 'line-opacity': 0.75, 'line-dasharray': [1.5, 1.5] } },
+      { id: 'walked', type: 'line', source: 'walked', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#F08A4B', 'line-width': 5 } },
+      { id: 'hikerHalo', type: 'circle', source: 'hiker', paint: { 'circle-radius': 14, 'circle-color': '#F08A4B', 'circle-opacity': 0.35, 'circle-pitch-alignment': 'map' } },
+      { id: 'hiker', type: 'circle', source: 'hiker', paint: { 'circle-radius': 7, 'circle-color': '#F08A4B', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5, 'circle-pitch-alignment': 'map' } }
+    ],
+    terrain: { source: 'dem', exaggeration: 1 }
+  }
+});
+// Season switch: swaps the overlay, the imagery grading, the sky and each card's photo and wording
+function setSeason(name) {
+  const m = SEASONS.map[name];
+  Object.keys(SEASONS.map).forEach(n => { if (map.getLayer('season_' + n)) map.setLayoutProperty('season_' + n, 'visibility', n === name ? 'visible' : 'none'); });
+  for (const id of ['imgLow', 'imgMid', 'imgHigh']) {
+    map.setPaintProperty(id, 'raster-saturation', m.paint.saturation);
+    map.setPaintProperty(id, 'raster-contrast', m.paint.contrast);
+    map.setPaintProperty(id, 'raster-brightness-min', m.paint.brightness_min);
+    map.setPaintProperty(id, 'raster-brightness-max', m.paint.brightness_max);
+    map.setPaintProperty(id, 'raster-hue-rotate', m.paint.hue);
+  }
+  const sh = m.shade || { exaggeration: 0.35, shadow: 'rgba(40, 14, 4, 0.55)', highlight: 'rgba(255, 226, 180, 0.35)', accent: 'rgba(60, 20, 6, 0.25)' };
+  map.setPaintProperty('shade', 'hillshade-exaggeration', sh.exaggeration);
+  map.setPaintProperty('shade', 'hillshade-shadow-color', sh.shadow);
+  map.setPaintProperty('shade', 'hillshade-highlight-color', sh.highlight);
+  map.setPaintProperty('shade', 'hillshade-accent-color', sh.accent);
+  map.setSky({ 'sky-color': m.sky['sky-color'], 'horizon-color': m.sky['horizon-color'], 'fog-color': m.sky['fog-color'], 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 });
+  document.querySelectorAll('.step[data-seasons]').forEach(st => {
+    const v = JSON.parse(st.dataset.seasons)[name];
+    const img = st.querySelector('img'); if (!img.src.endsWith(v.src)) img.src = v.src;
+    st.querySelector('h2').innerHTML = v.title;
+    st.querySelector('.txt').innerHTML = v.text; fillTokens(st);
+    st.querySelector('.credit').innerHTML = v.credit;
+    const note = st.querySelector('.note'); note.textContent = v.note; note.hidden = !v.note;
+  });
+  document.querySelectorAll('#seasons button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.season === name)));
+  document.getElementById('seasonNote').textContent = SEASONS.note;
+  try { history.replaceState(null, '', '?season=' + name + location.hash); } catch (e) {}
+  map.triggerRepaint();
+}
+function initSeasons() {
+  if (!SEASONS) return;
+  const box = document.getElementById('seasons'); box.hidden = false;
+  for (const name of ['spring', 'summer', 'autumn', 'winter']) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.season = name; b.textContent = SEASONS.labels[name];
+    b.addEventListener('click', () => setSeason(name)); box.appendChild(b);
+  }
+  const q = new URLSearchParams(location.search).get('season');
+  const mo = new Date().getMonth(); // northern hemisphere
+  const auto = mo >= 2 && mo <= 4 ? 'spring' : mo >= 5 && mo <= 7 ? 'summer' : mo >= 8 && mo <= 10 ? 'autumn' : 'winter';
+  setSeason(SEASONS.map[q] ? q : auto);
+}
+map.on('error', e => { console.warn('map error', e && e.error && e.error.message); });
+map.on('load', () => { document.getElementById('status').hidden = true; initSeasons(); tick(); });
+map.once('idle', () => { document.getElementById('status').hidden = true; });
+map.on('styledata', () => { if (map.getSource('hiker')) tick(); });
+
+// Scroll drives distance; the camera eases toward it each frame
+let target = 0, current = 0, lastIdx = -1, raf = 0;
+let bear = headingAt(0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function progress() {
+  const r = track.getBoundingClientRect(); const H = track.offsetHeight - innerHeight;
+  return Math.max(0, Math.min(1, -r.top / (H || 1)));
+}
+function onScroll() { target = progress() * TOTAL; document.getElementById('hint').hidden = target > 40; if (!raf) raf = requestAnimationFrame(tick); }
+addEventListener('scroll', onScroll, { passive: true });
+function tick() {
+  raf = 0;
+  if (!map.getSource('hiker')) return;
+  current += (target - current) * (reduce ? 1 : 0.12);
+  if (Math.abs(target - current) < 0.5) current = target;
+  const p = pointAt(current);
+  // low-pass the camera heading so it never snaps round (instant under reduced motion)
+  const want = headingAt(current), dBear = ((want - bear + 540) % 360) - 180;
+  bear = (bear + dBear * (reduce ? 1 : 0.08) + 360) % 360;
+  map.jumpTo({ center: p, bearing: bear, pitch: PITCH, zoom: ZOOM });
+  document.getElementById('status').hidden = true;
+  map.getSource('hiker').setData({ type: 'Feature', geometry: { type: 'Point', coordinates: p } });
+  const idx = Math.floor(current / 10);
+  if (idx !== lastIdx) {
+    lastIdx = idx;
+    const coords = PROFILE.filter(q => q[2] <= current).map(q => [q[0], q[1]]); coords.push(p);
+    if (coords.length < 2) coords.unshift(pointAt(0));
+    map.getSource('walked').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } });
+  }
+  const e = elevAt(current);
+  document.getElementById('hudDist').textContent = fmt1(current) + ' km';
+  document.getElementById('hudElev').textContent = Math.round(e).toLocaleString('en-US') + ' m';
+  document.getElementById('hudFt').textContent = ft(e) + ' ft';
+  setProfile(current);
+  if (current !== target || Math.abs(dBear) > 0.3) raf = requestAnimationFrame(tick);
+}
+</script>
+
+<script>
+// Wait for the terrain or a time limit, then open the clouds onto the 3D walk.
+(function () {
+  var root = document.getElementById('cloudIntro');
+  if (!root) return;
+  var started = Date.now(), parted = false, MIN = 1600, MAX = 6500;
+  var ids = ['ciSky', 'ciFar', 'ciMid', 'ciNear', 'ciVeil', 'ciTitle'], el = {};
+  ids.forEach(function (i) { el[i] = document.getElementById(i); });
+  function part() {
+    if (parted) return; parted = true;
+    var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
+    root.style.pointerEvents = 'none';
+    setTimeout(function () { root.classList.add('ci-done'); }, 3200);
+  }
+  var imgsOk = 0, terrainOk = false;
+  ['wisps', 'cumulus', 'mass'].forEach(function (n) { var im = new Image(); im.onload = im.onerror = function () { imgsOk++; check(); }; im.src = '../_shared/clouds/' + n + '.webp'; });
+  var st = document.getElementById('status');
+  function statusHidden() { return !st || st.hidden || getComputedStyle(st).display === 'none'; }
+  if (statusHidden()) terrainOk = true;
+  else if (window.MutationObserver) new MutationObserver(function () { if (statusHidden()) { terrainOk = true; check(); } }).observe(st, { attributes: true });
+  function check() { if (parted) return; var wait = Math.max(0, MIN - (Date.now() - started)); if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait); }
+  setTimeout(part, MAX);
+  addEventListener('click', part, { once: true });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
+  check();
+})();
+</script>
+
+<script>
+(function () {
+  const button = document.getElementById('backToHike');
+  const overlay = document.getElementById('backTransition');
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('back');
+  const siteRoot = new URL('../../', location.href);
+  let backUrl = siteRoot.href;
+  if (requested) {
+    try {
+      backUrl = requested.startsWith('#/') ? siteRoot.href + requested : new URL(requested, location.href).href;
+    } catch (_) {}
+  }
+  button.href = backUrl;
+  let leaving = false;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    overlay.classList.add('active');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      // Back restores the exact hike page state and scroll position when opened from the app.
+      let cameFromApp = false;
+      try {
+        const ref = new URL(document.referrer);
+        cameFromApp = ref.origin === location.origin && ref.pathname === siteRoot.pathname;
+      } catch (_) {}
+      if (cameFromApp && history.length > 1) history.back();
+      else location.assign(backUrl);
+    }, reduced ? 100 : 2200);
+  });
+})();
+</script>

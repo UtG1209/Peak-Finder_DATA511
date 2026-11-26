@@ -1,0 +1,29 @@
+{
+  "walk": "mesa_arch",
+  "before_bytes": 5063703,
+  "types": {
+    "dem": {
+      "files": 21,
+      "before": 2584993,
+      "after": 1936012,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 4,
+      "before": 704494,
+      "after": 544166,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 241275,
+      "after": 241275,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 4
+  },
+  "page_replacements": 9,
+  "after_bytes": 4254463
+}

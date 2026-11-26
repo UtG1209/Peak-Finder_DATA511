@@ -1,0 +1,29 @@
+{
+  "walk": "alum_cave_leconte",
+  "before_bytes": 10996075,
+  "types": {
+    "dem": {
+      "files": 30,
+      "before": 4031670,
+      "after": 2963908,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 18,
+      "before": 3402361,
+      "after": 2577080,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 330483,
+      "after": 330483,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 18
+  },
+  "page_replacements": 9,
+  "after_bytes": 9103101
+}

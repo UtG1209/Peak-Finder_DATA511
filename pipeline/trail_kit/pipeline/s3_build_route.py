@@ -57,7 +57,15 @@ def main(trail_id):
     reach = nx.node_connected_component(G, end_node)
     start_node = min(reach, key=lambda k: haversine(k, start))
     path = nx.shortest_path(G, start_node, end_node, weight="w")
-    names = [G[u][v]["name"] for u, v in zip(path, path[1:])]
+    if cfg.get("route_via"):  # optional: pass through these points in order (a loop, or a way that is not the shortest)
+        pts = [start] + [(v["lat"], v["lon"]) for v in cfg["route_via"]] + [start if cfg.get("route_loop") else end]
+        nodes = [min(G.nodes, key=lambda k: haversine(k, p)) for p in pts]
+        path = [nodes[0]]
+        for a, b in zip(nodes, nodes[1:]):
+            # OSM leaves small gaps between pieces; points under 80 m apart are joined straight
+            path += [b] if haversine(a, b) <= 80 else nx.shortest_path(G, a, b, weight="w")[1:]
+        start_node = nodes[0]
+    names = [G[u][v]["name"] if G.has_edge(u, v) else "link" for u, v in zip(path, path[1:])]
     print(f"[route] bridged {links} gaps; start node {haversine(start_node, start):.0f} m from start point")
     print("[route] trail pieces used:", [(k, len(list(g))) for k, g in groupby(names)])
 

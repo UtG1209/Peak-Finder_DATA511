@@ -1,0 +1,29 @@
+{
+  "walk": "cadillac_north_ridge",
+  "before_bytes": 9140122,
+  "types": {
+    "dem": {
+      "files": 26,
+      "before": 2061136,
+      "after": 1451458,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 12,
+      "before": 3225801,
+      "after": 2253666,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 357785,
+      "after": 357785,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 12
+  },
+  "page_replacements": 9,
+  "after_bytes": 7558378
+}
