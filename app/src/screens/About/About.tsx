@@ -40,8 +40,8 @@ export default function About() {
       <Link to="/" className="back"><Icon name="arrow-left" />Back to map</Link>
       <h1>About the data</h1>
       <p className="lede">
-        Peak Finder answers three questions in order: <b>where</b> to hike, <b>when</b> (which quarter) and <b>how much</b> it will cost,
-        for <b>{data.hikes.length} hikes</b> in lower-48 US national parks. Everything comes from free, public, <em>past</em> data (2015 to 2024, without 2020). We show <b>typical</b> values, never forecasts or price quotes.
+        Peak Finder answers three questions in order: <b>where</b> to hike, <b>when</b> (which quarter) and <b>how much</b> it will cost.
+        Everything comes from free, public, <em>past</em> data (2015 to 2024, without 2020). We show <b>typical</b> values, never forecasts or price quotes.
         Our pitch: <i>is the travel advice still true?</i> We check common advice against official numbers.
       </p>
       {meta.fake && (
