@@ -1,6 +1,6 @@
 # Hike page redesign: design (Plan 5, step 1)
 
-Status: **draft for the user to decide on.** No app code changed.
+Status: **v2 is built** in `app/src/screens/Hike/` (Plan 5b, branch `hike-page-v2` then `hike-page-build`). The boards here stay as the reference for how it should look.
 
 - Design canvas (Claude Design, private link): https://claude.ai/artifact/3eNUHj6xX1d1ZLWX38TCQ5 . Sources of each board are in `canvas/`: wireframes (desktop, phone), mockups (desktop dark, desktop light, phone dark), 3D options sheet.
 - Live 3D world (three.js, real data, hover and click): `3d-options.html` here, also https://claude.ai/artifact/NYuZPpDx4785PVQ5JiyULZ . It loads three 0.170 from jsDelivr, so open it through a web server or the link, not `file://`. Not yet run in a browser by me.

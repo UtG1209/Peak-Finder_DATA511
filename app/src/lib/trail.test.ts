@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { flatProfile } from '../test/fixtures'
 import { finishTime, timeline } from '../models/checkpoints'
-import { checkpointLabel, daylightVerdict, durationLabel, trailCurve, turnaroundEvent } from './trail'
+import { checkpointLabel, daylightVerdict, durationLabel, hourTicks, latestStart, trailCurve, trailHeadline, turnaroundEvent } from './trail'
 
 describe('trailCurve (the two-hump chart)', () => {
   const profile = flatProfile({ nps_length_m: 2000, scale: 2 })
@@ -67,4 +67,28 @@ describe('labels', () => {
     expect(durationLabel(-90)).toBe('1 h 30 min')
   })
   it('checkpointLabel', () => expect(checkpointLabel('c3')).toBe('C3'))
+})
+
+describe('latestStart, trailHeadline, hourTicks', () => {
+  const p = flatProfile()
+  const fmt = (m: number) => `${m}`
+  it('latest start finishes exactly at sunset', () => {
+    const v = daylightVerdict(timeline(p, 18 * 60 + 50), '06:00', '19:00')
+    expect(v.finishesAfterSunset).toBe(true)
+    const s = latestStart(v)
+    expect(finishTime(timeline(p, s))).toBeCloseTo(19 * 60, 6)
+  })
+  it('headline words follow the margin', () => {
+    const tl = timeline(p, 7 * 60)
+    const f = finishTime(tl)
+    const at = (sunset: number) => daylightVerdict(tl, '06:00', `${Math.floor(sunset / 60)}:${String(Math.round(sunset) % 60).padStart(2, '0')}`)
+    expect(trailHeadline(at(f + 180), true, fmt)).toMatch(/^Back at .*, long before dark$/)
+    expect(trailHeadline(at(f + 60), false, fmt)).toMatch(/^Done at .*, before dark$/)
+    expect(trailHeadline(at(f + 10), true, fmt)).toMatch(/only \d+ min before sunset$/)
+    expect(trailHeadline(daylightVerdict(tl, '06:00', '07:05'), true, fmt)).toMatch(/after dark$/)
+  })
+  it('hour ticks: am/pm on the ends and the first afternoon tick, noon in words', () => {
+    expect(hourTicks(6 * 60, 18 * 60).map((t) => t.label)).toEqual(['6 am', '8', '10', 'noon', '2 pm', '4', '6 pm'])
+    expect(hourTicks(5 * 60 + 10, 9 * 60).map((t) => t.label)).toEqual(['6 am', '8 am'])
+  })
 })

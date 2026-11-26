@@ -65,7 +65,7 @@ test('clicking a peak opens its tile; the tile opens the hike; Back returns to t
   const before = await mapCentre(page)
   await page.locator('#detail').getByRole('button', { name: /Open this hike/ }).click()
   await expect(page).toHaveURL(/#\/hike\//, { timeout: 10_000 })
-  await expect(page.getByRole('heading', { name: 'What it costs' })).toBeVisible()
+  await expect(page.locator('#cost-h')).toBeVisible()
 
   await page.getByRole('link', { name: /Back to map/ }).first().click()
   await expect(page.locator('#mapPane')).not.toHaveClass(/blurred/)

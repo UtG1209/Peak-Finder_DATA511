@@ -1,0 +1,67 @@
+/* cost.css: the v2 "How much" block (CostSection + CostBars). Tokens only; rules are scoped to .costsec so they win over the older ones in hike.css. */
+.costsec .cost-sh { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-5); }
+.costsec .cost-sh .eyebrow { color: var(--text-muted); }
+.costsec .cost-sh h2 { margin: 0; }
+.costsec .cost-ans { margin: 0; max-width: 62ch; font: var(--fw-regular) var(--fs-h3) / var(--lh-snug) var(--font-display); color: var(--text-body); text-wrap: pretty; }
+
+.costsec .cost-grid { display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: stretch; }
+.costsec .cost-card { flex: 999 1 620px; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-4); padding: var(--space-5); }
+.costsec .cost-panel { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: var(--space-4); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-4); padding: var(--space-5); }
+.costsec .cost-cap { margin: var(--space-2) 0 0; font-size: var(--fs-small); line-height: var(--lh-snug); color: var(--text-muted); }
+.costsec .cost-cap a { color: var(--text-body); }
+
+/* what if */
+.costsec .wi-h { margin: 0; font: var(--fw-medium) var(--fs-h3) / var(--lh-tight) var(--font-display); color: var(--text); }
+.costsec .wi-field { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2) var(--space-3); color: var(--text-body); font-size: var(--fs-body); }
+.costsec label.wi-field .select { flex: 1 1 160px; max-width: 220px; }
+.costsec .wi-mode .seg2 { flex: 1 1 auto; justify-content: stretch; }
+.costsec .wi-mode .seg2 button { flex: 1 1 0; white-space: nowrap; }
+.costsec .stepper, .costsec .seg2 { background: transparent; }
+.costsec .stepper button { background: transparent; }
+.costsec .seg2 button { background: transparent; color: var(--text-body); }
+.costsec .seg2 button[aria-pressed='true'] { background: var(--accent-soft); color: var(--accent-text); }
+.costsec .wi-delta { display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding-top: var(--space-4); border-top: 1px solid var(--line); }
+.costsec .wi-delta > div { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px var(--space-3); }
+.costsec .wi-delta dt { color: var(--text-body); }
+.costsec .wi-delta dd { margin: 0; }
+.costsec .wi-delta .num { font: var(--fw-semibold) var(--fs-num-m) / var(--lh-tight) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; color: var(--text); }
+.costsec .wi-delta .wi-note { grid-column: 1 / -1; font-size: var(--fs-small); line-height: var(--lh-snug); color: var(--text-muted); }
+.costsec .cost-panel .fine { margin: 0; }
+
+/* bars: the unselected ones recede, the selected one is outlined and labelled beside it */
+.costsec .costbars .qbar:not(.sel) .bar { opacity: 0.7; }
+.costsec .costbars .fill { stroke: none; }
+.costsec .costbars .seg:hover .fill, .costsec .costbars .seg.on .fill { stroke: var(--text); stroke-width: 1.5; }
+.costsec .costbars .seg:focus-visible .fill { stroke: var(--focus); stroke-width: 3; }
+.costsec .costbars .outline { fill: none; stroke: var(--text); stroke-width: 1.5; pointer-events: none; }
+.costsec .costbars .total { fill: var(--text-body); font-size: var(--fs-num-s); }
+.costsec .costbars .qbar.sel .total { fill: var(--text); }
+.costsec .costbars .qlabel .qn { fill: var(--text-body); font: var(--fw-medium) var(--fs-small) var(--font-body); }
+.costsec .costbars .qbar.sel .qlabel .qn { fill: var(--accent-text); font-weight: var(--fw-semibold); }
+.costsec .costbars .qlabel .qnote { fill: var(--text-muted); font: var(--fw-regular) var(--fs-small) var(--font-body); }
+.costsec .costbars .direct { pointer-events: none; }
+.costsec .costbars .leader { stroke: var(--line-strong); }
+.costsec .costbars .dl { fill: var(--text); font-size: var(--fs-small); }
+.costsec .costbars .dl.big { font-weight: var(--fw-semibold); }
+.costsec .costbars .dsub { fill: var(--text-muted); font-size: var(--fs-micro); }
+
+/* phone: the direct labels become a list of buttons under the chart */
+.costsec .costleg { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: flex; flex-direction: column; }
+.costsec .costleg button { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: var(--space-3); width: 100%; min-height: var(--hit); padding: 0 var(--space-1); border: 0; border-top: 1px solid var(--line); border-radius: 0; background: none; color: var(--text-body); font: var(--fw-regular) var(--fs-body) var(--font-body); text-align: left; }
+.costsec .costleg button[aria-pressed='true'] { background: var(--selected); }
+.costsec .costleg b { font: var(--fw-semibold) var(--fs-num-s) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; color: var(--text); }
+.costsec .costleg .sw { width: 12px; height: 12px; border-radius: 2px; }
+.costsec .costleg .sw.p-transport { background: var(--cat-3); }
+.costsec .costleg .sw.p-lodging { background: var(--cat-1); }
+.costsec .costleg .sw.p-food { background: var(--cat-2); }
+.costsec .costleg .sw.p-activity { background: var(--cat-4); }
+.costsec .costleg .sw.p-buffer { background: repeating-linear-gradient(45deg, var(--hatch-b) 0 2px, var(--hatch-a) 2px 5px); }
+
+/* the popover for a segment sits under the chart, ruled */
+.costsec .costdetail { margin-top: var(--space-4); min-height: 0; }
+.costsec .cd-amt { margin-left: var(--space-2); font: var(--fw-semibold) var(--fs-num-m) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 600px) {
+  .costsec .cost-card, .costsec .cost-panel { padding: var(--space-4); }
+  .costsec .wi-mode .seg2 { width: 100%; }
+}

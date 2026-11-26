@@ -48,6 +48,8 @@ const SCREENS: { name: string; url: string; phoneOnly?: boolean; ready: (p: Page
     url: './#/hike/angels-landing?from=SEA&q=3&temp=60-85&smoke=3&go=1',
     ready: async (p) => {
       await expect(p.locator('.costbars')).toBeVisible()
+      await expect(p.locator('.wc-col').first()).toBeVisible()
+      await p.locator('.when-btn').click() // the month table is behind "Show as table"
       await expect(p.locator('table.strip')).toBeVisible()
       await expect(p.locator('.elevchart')).toBeVisible()
       await expect(p.locator('.daylightband')).toBeVisible()

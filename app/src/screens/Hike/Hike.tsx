@@ -11,20 +11,29 @@ import { toLimits } from '../../lib/filters'
 import { QUARTERS } from '../../lib/quarters'
 import { useFilters } from '../../lib/useFilters'
 import { walkUrl } from '../../lib/walks'
-import { bestQuarter, computeMatch } from '../../models/match'
+import { bestQuarter, computeMatch, quarterValues } from '../../models/match'
+import { headline } from '../../models/headline'
+import { CITIES } from '../../lib/cities'
+import { fmtTemp } from '../../lib/units'
 import { tripCost, type TravelMode } from '../../models/cost'
-import { MonthStrip } from '../../components/charts/MonthStrip'
-import { stripColumns } from '../../lib/monthStrip'
 import { AdviceCard } from './AdviceCard'
+import { SelectionProvider } from './selection'
 import { FitSection } from './FitSection'
 import { HikeHeader } from './HikeHeader'
+import { SelectionBar } from './SelectionBar'
+import { heroStats } from '../../models/heroStats'
 import { TrailSection } from './TrailSection'
 import CloudTransition from '../../components/CloudTransition'
-import { saveWalkReturn, takeWalkReturn } from '../../lib/walkReturn'
+import { saveWalkReturn } from '../../lib/walkReturn'
+import { useWalkReturn } from './useWalkReturn'
 import { SimilarHikes } from './SimilarHikes'
 import { CostSection } from './CostSection'
 
 export default function Hike() {
+  return <SelectionProvider><HikePage /></SelectionProvider>
+}
+
+function HikePage() {
   const { id } = useParams()
   const { data, index } = useData()
   const [filters, update] = useFilters()
@@ -36,25 +45,15 @@ export default function Hike() {
   // a new page: put keyboard and screen-reader focus on its title, so Tab starts at the top of this page and the change is announced
   const title = useRef<HTMLHeadingElement>(null)
   useEffect(() => { title.current?.focus({ preventScroll: true }) }, [id])
-  const [openingWalk, setOpeningWalk] = useState(false)
-  // Back from the 3D walk: play the clouds in reverse and put the page back where it was (the walk reloads the app, so the position is kept in sessionStorage)
-  const [returnY, setReturnY] = useState<number | null>(() => (id ? takeWalkReturn(window.sessionStorage, id) : null))
-  const returning = returnY != null
+  const { openingWalk, setOpeningWalk, returning, setReturnY } = useWalkReturn(id)
+  // opening another hike (a Similar hikes card) starts at the top. The page scrolls inside .hikepage, not the window.
+  // Coming back from a 3D walk keeps its own saved position instead (useWalkReturn).
   useEffect(() => {
-    // charts and photos load after mount, so the page may be too short at first: keep trying for about a second
-    let raf = 0
-    const t0 = performance.now()
-    const restore = () => {
-      if (returnY == null) return
-      window.scrollTo(0, returnY)
-      if (Math.abs(window.scrollY - returnY) > 2 && performance.now() - t0 < 1200) raf = requestAnimationFrame(restore)
-    }
-    restore()
-    // the page is restored from the back/forward cache with the overlay still up: drop it and play the reverse
-    const onShow = (e: PageTransitionEvent) => { if (e.persisted) { setOpeningWalk(false); setReturnY(window.scrollY) } }
-    window.addEventListener('pageshow', onShow)
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('pageshow', onShow) }
-  }, [returnY])
+    if (returning) return
+    document.querySelector('.hikepage')?.scrollTo(0, 0)
+    window.scrollTo(0, 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const backTo = { pathname: '/', search: `?${new URLSearchParams(window.location.hash.split('?')[1] ?? '').toString()}` }
   const limits = toLimits(filters)
@@ -87,6 +86,16 @@ export default function Hike() {
 
   const best = (bestQuarter(matches.map((m) => m.match), costs.map((c) => c?.total ?? null)) + 1) as Quarter
   const sel = QUARTERS[filters.q - 1]
+  const bestValues = quarterValues(byQuarter[best - 1])
+  const answer = headline({
+    matches: matches.map((m) => m.match),
+    costs: costs.map((c) => c?.total ?? null),
+    best,
+    anyLimit: Object.values(limits).some((v) => v !== null),
+    high: bestValues.temp == null ? null : fmtTemp(bestValues.temp, filters.units),
+    smoky: bestValues.smoky,
+    city: CITIES.find((c) => c.code === filters.from)?.name ?? null,
+  })
   const advice = data.advice.find((a) => a.hike_id === hike.id)
   const walkHref = walkUrl(hike, sel.season, { back: window.location.hash, backname: hike.name })
 
@@ -96,20 +105,20 @@ export default function Hike() {
 
       <HikeHeader
         hike={hike}
+        headline={answer}
         units={filters.units}
         walkHref={walkHref}
         seasonLabel={sel.season}
         titleRef={title}
-        onWalkStart={() => { saveWalkReturn(window.sessionStorage, hike.id, window.scrollY); setOpeningWalk(true) }}
+        onWalkStart={() => { saveWalkReturn(window.sessionStorage, hike.id, document.querySelector('.hikepage')?.scrollTop ?? window.scrollY); setOpeningWalk(true) }}
+        best={best}
+        {...heroStats({ matches: matches.map((m) => m.match), costs: costs.map((c) => c?.total ?? null), best, anyLimit: Object.values(limits).some((v) => v !== null) })}
       />
+      <SelectionBar hike={hike} quarterMonths={byQuarter} travellers={travellers} nights={nights} mode={mode} />
 
-      <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} />
+      <FitSection matches={matches} best={best} months={byQuarter[filters.q - 1]} filters={filters} onQuarter={(q) => update({ q })} hike={hike} year={byQuarter.flat()} costs={costs.map((c) => c?.total ?? null)} />
 
-      <section aria-labelledby="months-h" className="monthsec">
-        <h2 id="months-h">Month by month</h2>
-        <MonthStrip columns={stripColumns(byQuarter.flat(), filters, filters.units)} chosenLabel={sel.label} />
-        {advice && <AdviceCard advice={advice} />}
-      </section>
+      {advice && <AdviceCard advice={advice} />}
 
       <TrailSection hike={hike} quarterMonths={byQuarter} q={filters.q} units={filters.units} onQuarter={(q) => update({ q })} />
 

@@ -1,0 +1,23 @@
+/* selectionBar.css: the sticky "Your selection" bar (v2). Tokens only. */
+.selbar { flex: none; position: sticky; top: 0; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); padding: var(--space-2) var(--space-3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius-4); box-shadow: var(--shadow-overlay); }
+.selbar-title { font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text); }
+.selbar-grp { display: flex; align-items: center; gap: var(--space-2); }
+.selbar-lab { font-size: var(--fs-small); color: var(--text-muted); }
+.selbar-seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); overflow: hidden; }
+.selbar-seg button { min-height: var(--hit); min-width: var(--hit); padding: 0 var(--space-3); border: 0; background: transparent; color: var(--text-body); font: var(--fw-medium) var(--fs-body) / 1 var(--font-body); cursor: pointer; }
+.selbar-seg button:hover { background: var(--hover); }
+.selbar-seg button[aria-pressed='true'] { background: var(--accent-soft); color: var(--accent-text); }
+.selbar-ico { width: var(--hit); height: var(--hit); display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid var(--line-strong); border-radius: var(--radius-3); background: transparent; color: var(--text); cursor: pointer; }
+.selbar-ico:hover { background: var(--hover); }
+.selbar-month { min-width: var(--space-8); text-align: center; font: var(--fw-semibold) var(--fs-num-s) / var(--lh-tight) var(--font-num); font-stretch: 75%; font-variant-numeric: tabular-nums; color: var(--text); }
+.selbar-pill { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-3); background: var(--surface); color: var(--text); font: var(--fw-medium) var(--fs-body) / 1 var(--font-body); cursor: pointer; }
+.selbar-pill:hover { background: var(--hover); }
+.selbar-note { margin-left: auto; font-size: var(--fs-small); color: var(--text-muted); }
+
+/* phone: compact, one scrolling row so the bar never covers more than a strip of the page */
+@media (max-width: 860px) {
+  .selbar { flex-wrap: nowrap; overflow-x: auto; gap: var(--space-3); padding: var(--space-1) var(--space-2); border-radius: var(--radius-3); }
+  .selbar-title, .selbar-note { display: none; }
+  .selbar-grp { flex: none; }
+  .selbar-pill { white-space: nowrap; }
+}

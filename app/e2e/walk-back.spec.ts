@@ -15,7 +15,7 @@ test("the walk's own Back button returns to the hike page, clouds in reverse, sa
   await page.route('**/walks/angels_landing/index.html*', (r) => r.fulfill({ path: WALK_HTML, contentType: 'text/html' }))
   await page.goto(HIKE)
   await expect(page.locator('.elevchart')).toBeVisible()
-  await page.evaluate(() => window.scrollTo(0, 900))
+  await page.evaluate(() => { document.querySelector('.hikepage')!.scrollTop = 900 }) // the page scrolls inside .hikepage
   await page.getByRole('link', { name: /Walk it in 3D/ }).evaluate((a: HTMLElement) => a.click())
   await page.waitForURL(/walks\/angels_landing\/index\.html\?season=summer/)
   const back = page.locator('#backToHike')
@@ -25,5 +25,5 @@ test("the walk's own Back button returns to the hike page, clouds in reverse, sa
   await expect(page.locator('.hp-head h1')).toHaveText('Angels Landing')
   expect(page.url()).toContain('q=3') // same quarter and limits
   await expect(page.locator('.cloud-transition')).toHaveCount(0, { timeout: 8000 })
-  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(500)
+  await expect.poll(() => page.evaluate(() => document.querySelector('.hikepage')!.scrollTop)).toBeGreaterThan(500)
 })

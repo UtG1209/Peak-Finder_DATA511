@@ -35,9 +35,13 @@ for (const size of [{ tag: 'desktop', width: 1400, height: 850 }, { tag: 'phone'
     await expect(page).toHaveURL(/#\/hike\//)
     await expect(page.locator('h1')).toBeFocused() // the new page's title takes focus, so Tab starts at the top of it
     // 5. quarter strip: choose Q2 with the keyboard
-    await tabTo(page, `(el) => el.classList.contains('qcard') && /Q2/.test(el.textContent || '')`, 'the Q2 card')
+    await tabTo(page, `(el) => el.classList.contains('wq')`, 'a quarter card') // one tab stop; arrows move between the cards
+    for (let i = 0; i < 4; i++) {
+      if (await page.evaluate(() => /Q2/.test(document.activeElement?.textContent || ''))) break
+      await page.keyboard.press('ArrowRight')
+    }
     await page.keyboard.press('Enter')
-    await expect(page.locator('.qcard.sel')).toContainText('Q2')
+    await expect(page.locator('.wq.on')).toContainText('Q2')
     // 6. cost chart: a stacked segment opens its line items, Escape closes them
     await tabTo(page, `(el) => el.classList.contains('seg')`, 'a cost segment')
     await page.keyboard.press('Enter')
