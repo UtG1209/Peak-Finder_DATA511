@@ -1,0 +1,41 @@
+{
+  "id": "emerald_lake",
+  "hike_id": "emerald-lake",
+  "title": "Bear Lake to Emerald Lake",
+  "map_label": "A 3D walk from Bear Lake past Nymph and Dream Lakes to Emerald Lake.",
+  "end_label": "Emerald Lake",
+  "pad_wide": 0.05,
+  "snow": {
+    "winter": 2500,
+    "spring": 3050
+  },
+  "checkpoints": [
+    {
+      "name": "Dream Lake",
+      "at": 0.6
+    }
+  ],
+  "stops": [
+    {
+      "file": "Bear Lake Trailhead, Estes Park, United States (Unsplash).jpg",
+      "title": "Bear Lake Trailhead",
+      "alt": "The Bear Lake trailhead sign in Rocky Mountain National Park.",
+      "text": "The route starts at Bear Lake, about 9,450 feet up in Rocky Mountain National Park."
+    },
+    {
+      "key": "dream",
+      "at": 0.6,
+      "file": "Dream lake 2021.jpg",
+      "title": "Dream Lake",
+      "alt": "Dream Lake below the peaks of Rocky Mountain National Park.",
+      "text": "The trail passes Nymph Lake and then Dream Lake, with Hallett Peak above."
+    },
+    {
+      "file": "Emerald Lake, Colorado (48051881866).jpg",
+      "title": "Emerald Lake",
+      "alt": "Emerald Lake at the foot of Hallett Peak and Flattop Mountain.",
+      "text": "You have reached Emerald Lake, tucked under the cliffs of Hallett Peak."
+    }
+  ],
+  "end_at_m": 2155
+}

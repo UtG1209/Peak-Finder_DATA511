@@ -1,0 +1,30 @@
+{
+  "id": "general_sherman_tree",
+  "hike_id": "general-sherman-tree",
+  "title": "General Sherman Tree Trail",
+  "map_label": "A 3D walk down the Sherman Tree Trail to the General Sherman Tree in Sequoia National Park.",
+  "end_label": "General Sherman Tree",
+  "pad_wide": 0.04,
+  "scroll_vh": 800,
+  "zoom": 16,
+  "snow": {
+    "winter": 1500,
+    "spring": 2250
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "Sequoiadendron giganteum & Abies concolor, Sequoia National Park (20806362602).jpg",
+      "title": "Sherman Tree Trailhead",
+      "alt": "Giant sequoias and white firs near the Sherman Tree trailhead.",
+      "text": "The route starts at the Sherman Tree trailhead on the Generals Highway, about 7,000 feet up. The paved trail descends through the grove."
+    },
+    {
+      "file": "General Sherman Tree (54071103986).jpg",
+      "title": "General Sherman Tree",
+      "alt": "The General Sherman Tree, a giant sequoia, towering above visitors.",
+      "text": "You have reached the General Sherman Tree, by volume the largest known living tree on Earth."
+    }
+  ],
+  "end_at_m": 745
+}

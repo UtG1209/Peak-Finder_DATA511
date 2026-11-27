@@ -1,0 +1,454 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Longs Peak via the Keyhole Route Walk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: one sticky full-screen 3D stage; a tall scroll track drives the hiker; story cards scroll over the stage. */
+:root {
+  --ink: #101418;
+  --panel: rgba(16, 20, 24, 0.82);
+  --line: #2A333B;
+  --text: #F2EFE9;
+  --muted: #B4BCC3;
+  --sand: #F08A4B;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--ink); color: var(--text); font-family: var(--body); }
+body { margin: 0; }
+.maplibregl-map { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+.maplibregl-canvas-container, .maplibregl-canvas { position: absolute; left: 0; top: 0; touch-action: pan-y; }
+.maplibregl-canvas { outline: none; }
+#stage { position: sticky; top: 0; height: 100vh; height: 100dvh; width: 100%; overflow: hidden; }
+#map { position: absolute; inset: 0; background: linear-gradient(#7fa7c9, #e9cfae 70%, #c98a5a); }
+#hud {
+  position: absolute; z-index: 3; display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  right: max(16px, env(safe-area-inset-right, 0px));
+}
+.chip { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; min-width: 120px; backdrop-filter: blur(6px); }
+.chip .k { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chip .v { font-family: var(--display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+.chip .s { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#brand { position: absolute; z-index: 3; top: calc(env(safe-area-inset-top, 0px) + 16px); left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--display); font-weight: 800; font-size: 18px; background: var(--panel); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); }
+#backToHike { position: absolute; z-index: 5; top: calc(env(safe-area-inset-top, 0px) + 64px); left: max(16px, env(safe-area-inset-left, 0px)); min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--text); font: 600 14px var(--body); text-decoration: none; backdrop-filter: blur(6px); }
+#backToHike:hover { border-color: var(--sand); }
+#backToHike:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+#profile {
+  position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px 8px; backdrop-filter: blur(6px);
+}
+#profile svg { display: block; width: 100%; height: 70px; }
+#profile .lab { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#timeMarkers line { stroke: rgba(242,239,233,.86); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers circle { fill: var(--sand); stroke: var(--text); stroke-width: 1; vector-effect: non-scaling-stroke; }
+#timeMarkers text { fill: var(--text); stroke: rgba(16,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 700 10px var(--body); text-anchor: middle; }
+#backTransition { position: fixed; z-index: 20; inset: 0; display: none; overflow: hidden; pointer-events: none; background: linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%); }
+#backTransition.active { display: block; }
+#backTransition > div { position: absolute; inset: -10%; opacity: 0; background-repeat: repeat-x; background-position: center; will-change: transform,opacity; }
+#backFar { background-image: url(../_shared/clouds/wisps.webp); background-size: auto 110%; }
+#backMid { background-image: url(../_shared/clouds/cumulus.webp); background-size: auto 125%; }
+#backNear { background-image: url(../_shared/clouds/mass.webp); background-size: auto 150%; }
+#backVeil { inset: 0 !important; background: #edf4fb; }
+#backTitle { inset: 0 !important; display: flex; justify-content: center; align-items: center; color: #15222d; font: 800 clamp(24px,4vw,48px) var(--display); text-align: center; }
+#backTransition.active #backFar { opacity: .68; transform: scale(1.5); transition: transform 1.7s ease, opacity 1.7s ease; }
+#backTransition.active #backMid { opacity: .86; transform: scale(2); transition: transform 1.5s ease .12s, opacity 1.5s ease .12s; }
+#backTransition.active #backNear { opacity: 1; transform: scale(3.2); transition: transform 1.3s ease .24s, opacity 1.3s ease .24s; }
+#backTransition.active #backVeil { opacity: .9; transition: opacity .5s ease .8s; }
+#backTransition.active #backTitle { opacity: 1; transition: opacity .4s ease .8s; }
+@media (prefers-reduced-motion: reduce) { #backTransition *, #backTransition.active * { transition-duration: .01ms !important; } }
+#credits { position: absolute; z-index: 3; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 126px); font-size: 10.5px; color: var(--text); background: rgba(16,20,24,0.6); padding: 4px 8px; border-radius: 6px; max-width: 70%; text-align: right; }
+#credits a { color: var(--text); }
+#status { position: absolute; z-index: 4; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); pointer-events: none; }
+#status[hidden], #hint[hidden] { display: none; }
+#track { position: relative; margin-top: -100vh; margin-top: -100dvh; height: 5430.0vh; pointer-events: none; }
+.step {
+  position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); width: min(380px, calc(100% - 32px));
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; box-sizing: border-box;
+  backdrop-filter: blur(6px); pointer-events: auto;
+}
+.step { padding: 0; overflow: hidden; width: min(400px, calc(100% - 32px)); }
+.step img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; max-width: 100%; background: #2a2018; }
+.step .body { padding: 14px 18px 14px; }
+.step .credit { margin-top: 10px; font-size: 11px; line-height: 1.4; color: var(--muted); }
+.step .credit a { color: var(--muted); }
+.step .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand); font-weight: 600; }
+.step h2 { font-family: var(--display); font-weight: 800; font-size: 26px; line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.step p { margin: 0; font-size: 15px; line-height: 1.5; color: #D8DDE1; }
+#seasons { position: absolute; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 118px); display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; backdrop-filter: blur(6px); }
+#seasons[hidden] { display: none; }
+#seasons button { font: 600 13px var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+#seasons button[aria-pressed="true"] { background: var(--sand); color: #1a0f08; }
+#seasons button:focus-visible { outline: 2px solid var(--text); outline-offset: 1px; }
+.step .note { margin: 8px 0 0; font-size: 12px; line-height: 1.4; color: var(--sand); }
+.step .note[hidden] { display: none; }
+.hint { position: absolute; z-index: 3; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 120px); font-size: 13px; color: var(--text); background: var(--panel); padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); }
+@media (max-width: 640px) {
+  #hud .chip { min-width: 0; padding: 8px 10px; }
+  #hud .chip .v { font-size: 18px; }
+  #brand { display: none; }
+  #backToHike { top: calc(env(safe-area-inset-top, 0px) + 12px); }
+  #seasons { top: calc(env(safe-area-inset-top, 0px) + 78px); }
+  #seasons button { padding: 7px 10px; }
+  #credits { bottom: calc(env(safe-area-inset-bottom, 0px) + 118px); max-width: 90%; }
+}
+</style>
+
+<style id="ciCss">
+/* Match the clouds-parting arrival used by the original trail walks. */
+#cloudIntro{position:fixed;inset:0;z-index:100;overflow:hidden;pointer-events:none;background:#edf4fb;animation:ciGone 0s linear 12s forwards}
+#cloudIntro.ci-done{display:none}
+@keyframes ciGone{to{visibility:hidden;pointer-events:none}}
+#cloudIntro>*{position:absolute}
+#ciSky{inset:0;background:linear-gradient(180deg,#3a82d4 0%,#78b0ea 52%,#cfe5fa 100%);opacity:1}
+.ciL{inset:-10%;opacity:1;will-change:transform,opacity}
+.ciL>div{position:absolute;inset:0;background-repeat:repeat}
+#ciFar{transform:scale(1.5)}#ciMid{transform:scale(2)}#ciNear{transform:scale(3.2)}
+#ciFar>div{background-image:url(../_shared/clouds/wisps.webp);background-size:1800px 900px;animation:ciDriftFar 140s linear infinite}
+#ciMid>div{background-image:url(../_shared/clouds/cumulus.webp);background-size:1500px 750px;animation:ciDriftMid 90s linear infinite}
+#ciNear>div{background-image:url(../_shared/clouds/mass.webp);background-size:2200px 1100px;animation:ciDriftNear 55s linear infinite}
+@keyframes ciDriftFar{from{background-position:0 0}to{background-position:-1800px 0}}
+@keyframes ciDriftMid{from{background-position:0 0}to{background-position:-1500px 0}}
+@keyframes ciDriftNear{from{background-position:0 0}to{background-position:-2200px 0}}
+#ciVeil{inset:0;background:#edf4fb;opacity:1}
+#ciTitle{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 24px;text-align:center;color:#1e3a5c;opacity:1}
+#ciTitle b{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-size:clamp(28px,4vw,52px);line-height:1.05;text-wrap:balance}
+#ciTitle span{font:600 14px "Inter",system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){#cloudIntro{display:none}}
+</style>
+
+<div id="cloudIntro" aria-hidden="true">
+  <div id="ciSky"></div><div id="ciFar" class="ciL"><div></div></div>
+  <div id="ciMid" class="ciL"><div></div></div><div id="ciNear" class="ciL"><div></div></div>
+  <div id="ciVeil"></div><div id="ciTitle"><b>Longs Peak via the Keyhole Route</b><span>Rocky Mountain National Park, CO</span></div>
+</div>
+
+<div id="stage">
+  <div id="map" role="img" aria-label="A 3D walk from the Longs Peak trailhead up the Keyhole route to the 14,259-foot summit."></div>
+  <div id="status">Loading terrain…</div>
+  <div id="brand">Peak Finder · Trail walk</div>
+  <a id="backToHike" href="../../">← Back to <span>Longs Peak via the Keyhole Route</span></a>
+  <div id="hud" aria-live="polite">
+    <div class="chip"><div class="k">Walked</div><div class="v" id="hudDist">0.0 km</div><div class="s">of <span id="hudTotal"></span> km</div></div>
+    <div class="chip"><div class="k">Elevation</div><div class="v" id="hudElev">–</div><div class="s" id="hudFt">–</div></div>
+  </div>
+  <div id="seasons" role="group" aria-label="Season" hidden></div>
+  <div class="hint" id="hint">Scroll to walk the trail</div>
+  <div id="credits"><span id="seasonNote"></span> Imagery: <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener">USGS The National Map</a> · Elevation: <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">Terrain Tiles</a> (Mapzen, USGS 3DEP) · Trail: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div>
+  <div id="profile">
+    <svg id="profSvg" viewBox="0 0 1000 70" preserveAspectRatio="none" aria-label="Elevation profile of the trail with your position marked" role="img">
+      <path id="profArea" fill="rgba(240,138,75,0.22)" stroke="none"></path>
+      <path id="profWalk" fill="rgba(240,138,75,0.55)" stroke="none"></path>
+      <path id="profLine" fill="none" stroke="#F08A4B" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+      <line id="profScout" y1="0" y2="70" stroke="#B4BCC3" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line>
+      <line id="profCursor" y1="0" y2="70" stroke="#F2EFE9" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+      <g id="timeMarkers" aria-hidden="true"></g>
+    </svg>
+    <div class="lab" style="position:relative"><span>Trailhead · 0 km</span><span id="scoutLab" style="position:absolute;transform:translateX(-50%)">Summit</span><span>Summit · <span id="profEnd"></span> km</span></div>
+  </div>
+</div>
+
+<div id="backTransition" aria-hidden="true"><div id="backFar"></div><div id="backMid"></div><div id="backNear"></div><div id="backVeil"></div><div id="backTitle">Returning to Peak Finder</div></div>
+
+<div id="track">
+  <section class="step" data-at="0.01" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Morning_on_longs.bmp_(2095720635).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Trailhead&quot;,&quot;text&quot;:&quot;The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Morning_on_longs.bmp_(2095720635).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Trailhead&quot;,&quot;text&quot;:&quot;The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Morning_on_longs.bmp_(2095720635).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Trailhead&quot;,&quot;text&quot;:&quot;The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/trailhead.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Morning_on_longs.bmp_(2095720635).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Trailhead&quot;,&quot;text&quot;:&quot;The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/trailhead.jpg" alt="Morning light over a sea of clouds seen from the tundra on the Longs Peak route." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">Start · Longs Peak Trailhead</div><h2>Longs Peak Trailhead</h2><p class="txt">The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Morning_on_longs.bmp_(2095720635).jpg" target="_blank" rel="noopener">Ben+Sam</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0" target="_blank" rel="noopener">CC BY-SA 2.0</a> · Wikimedia Commons</p></div></section>
+  <section class="step" data-at="0.8" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/keyhole.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Keyhole.bmp_(2095709501).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Keyhole&quot;,&quot;text&quot;:&quot;The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/keyhole.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Keyhole.bmp_(2095709501).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Keyhole&quot;,&quot;text&quot;:&quot;The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/keyhole.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Keyhole.bmp_(2095709501).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Keyhole&quot;,&quot;text&quot;:&quot;The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/keyhole.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:Keyhole.bmp_(2095709501).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;The Keyhole&quot;,&quot;text&quot;:&quot;The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/keyhole.jpg" alt="The Keyhole, a notch in the ridge on the Longs Peak route." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">The Keyhole</div><h2>The Keyhole</h2><p class="txt">The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Keyhole.bmp_(2095709501).jpg" target="_blank" rel="noopener">Ben+Sam</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0" target="_blank" rel="noopener">CC BY-SA 2.0</a> · Wikimedia Commons</p></div></section>
+  <section class="step" data-at="0.99" data-seasons="{&quot;spring&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:From_summit_2.bmp_(2096482098).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Summit&quot;,&quot;text&quot;:&quot;You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.&quot;,&quot;note&quot;:&quot;No real spring photo of this spot, so this is the nearest season: summer.&quot;},&quot;summer&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:From_summit_2.bmp_(2096482098).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Summit&quot;,&quot;text&quot;:&quot;You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.&quot;,&quot;note&quot;:&quot;&quot;},&quot;autumn&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:From_summit_2.bmp_(2096482098).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Summit&quot;,&quot;text&quot;:&quot;You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.&quot;,&quot;note&quot;:&quot;No real autumn photo of this spot, so this is the nearest season: summer.&quot;},&quot;winter&quot;:{&quot;src&quot;:&quot;photos/destination.jpg&quot;,&quot;credit&quot;:&quot;Photo: &lt;a href=\&quot;https://commons.wikimedia.org/wiki/File:From_summit_2.bmp_(2096482098).jpg\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;Ben+Sam&lt;/a&gt; \u00b7 &lt;a href=\&quot;https://creativecommons.org/licenses/by-sa/2.0\&quot; target=\&quot;_blank\&quot; rel=\&quot;noopener\&quot;&gt;CC BY-SA 2.0&lt;/a&gt; \u00b7 Wikimedia Commons&quot;,&quot;title&quot;:&quot;Longs Peak Summit&quot;,&quot;text&quot;:&quot;You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.&quot;,&quot;note&quot;:&quot;No real winter photo of this spot, so this is the nearest season: summer.&quot;}}"><img src="photos/destination.jpg" alt="The view down from the summit of Longs Peak." loading="lazy" width="900" height="675"><div class="body"><div class="eyebrow">End · Longs Peak Summit</div><h2>Longs Peak Summit</h2><p class="txt">You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.</p><p class="note" hidden></p><p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:From_summit_2.bmp_(2096482098).jpg" target="_blank" rel="noopener">Ben+Sam</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0" target="_blank" rel="noopener">CC BY-SA 2.0</a> · Wikimedia Commons</p></div></section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const PROFILE = [[-105.5565,40.27199,0,2861.6],[-105.556579,40.272057,10,2862.3],[-105.556657,40.272124,20,2863.0],[-105.556739,40.272182,30,2863.5],[-105.556846,40.27215,40,2864.1],[-105.556897,40.27207,50,2864.4],[-105.556935,40.271984,60,2866.4],[-105.556969,40.271898,70,2866.9],[-105.557001,40.271812,80,2868.5],[-105.557031,40.271725,90,2868.5],[-105.557074,40.271642,100,2869.8],[-105.557138,40.271612,110,2869.8],[-105.55723,40.271668,120,2871.2],[-105.557324,40.271722,130,2872.6],[-105.557424,40.271769,140,2875.4],[-105.557525,40.271816,150,2876.9],[-105.557626,40.271862,160,2879.0],[-105.557705,40.271925,170,2880.8],[-105.557766,40.272002,180,2883.3],[-105.557854,40.272062,190,2884.8],[-105.557954,40.272109,200,2886.7],[-105.558036,40.272173,210,2887.8],[-105.558106,40.272246,220,2889.1],[-105.558183,40.272313,230,2888.6],[-105.558267,40.272376,240,2890.5],[-105.558363,40.272428,250,2894.1],[-105.558456,40.272482,260,2895.6],[-105.558537,40.272547,270,2897.2],[-105.558617,40.272613,280,2899.0],[-105.558705,40.272673,290,2901.3],[-105.558793,40.272733,300,2902.9],[-105.558879,40.272794,310,2903.7],[-105.558966,40.272855,320,2904.8],[-105.559054,40.272915,330,2905.5],[-105.559142,40.272975,340,2907.0],[-105.559231,40.273033,350,2907.9],[-105.559324,40.273089,360,2908.5],[-105.559414,40.273147,370,2909.1],[-105.559501,40.273208,380,2909.2],[-105.559587,40.273269,390,2909.7],[-105.559653,40.273343,400,2910.1],[-105.559742,40.273402,410,2909.9],[-105.559833,40.273459,420,2909.0],[-105.559924,40.273517,430,2908.9],[-105.56001,40.273578,440,2908.9],[-105.560096,40.273639,450,2908.9],[-105.560196,40.273687,460,2909.5],[-105.560296,40.273734,470,2909.2],[-105.560396,40.273782,480,2909.0],[-105.560496,40.273829,490,2908.6],[-105.560594,40.273879,500,2911.3],[-105.560691,40.27393,510,2911.0],[-105.560799,40.273962,520,2911.2],[-105.560914,40.273942,530,2912.7],[-105.56103,40.27394,540,2914.4],[-105.561147,40.273951,550,2915.7],[-105.561264,40.27396,560,2915.8],[-105.56138,40.27395,570,2918.3],[-105.561497,40.273963,580,2918.7],[-105.561614,40.27397,590,2919.9],[-105.561732,40.273973,600,2921.8],[-105.561845,40.273994,610,2922.3],[-105.561953,40.274029,620,2922.9],[-105.562053,40.274075,630,2925.6],[-105.562145,40.274131,640,2926.6],[-105.562237,40.274188,650,2927.5],[-105.562329,40.274243,660,2928.3],[-105.562424,40.274296,670,2928.8],[-105.562528,40.274339,680,2930.4],[-105.562627,40.274388,690,2931.4],[-105.562725,40.274438,700,2932.5],[-105.562823,40.274488,710,2935.5],[-105.562921,40.274539,720,2937.6],[-105.563016,40.274592,730,2938.1],[-105.56311,40.274645,740,2939.5],[-105.563205,40.274698,750,2940.3],[-105.563307,40.274744,760,2942.5],[-105.56341,40.274788,770,2943.0],[-105.563514,40.274829,780,2945.9],[-105.563619,40.274871,790,2947.4],[-105.563727,40.274906,800,2947.9],[-105.563839,40.274933,810,2949.1],[-105.563954,40.274955,820,2949.7],[-105.564069,40.274974,830,2950.4],[-105.564184,40.274991,840,2950.8],[-105.564302,40.275,850,2951.9],[-105.564419,40.275008,860,2952.7],[-105.564536,40.275016,870,2953.5],[-105.56465,40.27504,880,2954.3],[-105.564764,40.275064,890,2955.5],[-105.564871,40.2751,900,2956.6],[-105.564976,40.275141,910,2958.4],[-105.565071,40.275194,920,2960.1],[-105.565163,40.275251,930,2961.2],[-105.565223,40.275327,940,2960.8],[-105.565289,40.27526,950,2963.4],[-105.565316,40.275172,960,2966.2],[-105.565324,40.275083,970,2966.9],[-105.565314,40.274993,980,2969.3],[-105.565302,40.274904,990,2968.9],[-105.56528,40.274816,1000,2970.6],[-105.565272,40.274727,1010,2972.7],[-105.56528,40.274637,1020,2973.7],[-105.565285,40.274547,1030,2975.9],[-105.565265,40.274458,1040,2976.8],[-105.565274,40.274369,1050,2977.7],[-105.565294,40.274281,1060,2979.4],[-105.565324,40.274194,1070,2982.3],[-105.565366,40.27411,1080,2982.9],[-105.565413,40.274027,1090,2985.7],[-105.565462,40.273946,1100,2986.0],[-105.565517,40.273866,1110,2988.1],[-105.565572,40.273787,1120,2991.1],[-105.565633,40.27371,1130,2990.9],[-105.565694,40.273633,1140,2993.5],[-105.565763,40.27356,1150,2995.7],[-105.565831,40.273486,1160,2998.0],[-105.565899,40.273413,1170,2997.3],[-105.565967,40.27334,1180,2999.6],[-105.566034,40.273266,1190,3001.5],[-105.566096,40.273189,1200,3003.6],[-105.566157,40.273112,1210,3002.7],[-105.566217,40.273035,1220,3005.0],[-105.56627,40.272954,1230,3007.0],[-105.566321,40.272873,1240,3006.9],[-105.566367,40.272791,1250,3008.8],[-105.566399,40.272704,1260,3010.5],[-105.566407,40.272617,1270,3011.2],[-105.566379,40.27253,1280,3012.3],[-105.56635,40.272443,1290,3015.2],[-105.566336,40.272354,1300,3015.2],[-105.566318,40.272265,1310,3016.4],[-105.566308,40.272176,1320,3018.2],[-105.566336,40.27209,1330,3018.6],[-105.566401,40.272016,1340,3019.9],[-105.566479,40.271948,1350,3021.0],[-105.566544,40.271874,1360,3022.1],[-105.566614,40.271802,1370,3023.5],[-105.566697,40.271738,1380,3024.7],[-105.566776,40.271671,1390,3026.3],[-105.566853,40.271603,1400,3025.3],[-105.566916,40.271527,1410,3025.4],[-105.566982,40.271453,1420,3025.8],[-105.567037,40.271373,1430,3026.1],[-105.567066,40.271287,1440,3025.2],[-105.567138,40.271268,1450,3026.9],[-105.567209,40.27134,1460,3029.7],[-105.56729,40.271405,1470,3031.5],[-105.567329,40.271489,1480,3033.6],[-105.56732,40.271578,1490,3035.1],[-105.567299,40.271666,1500,3036.6],[-105.567295,40.271754,1510,3039.4],[-105.567341,40.271836,1520,3040.6],[-105.567416,40.271905,1530,3043.2],[-105.567498,40.27197,1540,3045.5],[-105.567582,40.272033,1550,3047.4],[-105.567662,40.272099,1560,3049.5],[-105.56774,40.272166,1570,3051.4],[-105.567799,40.272243,1580,3053.8],[-105.567859,40.272321,1590,3053.8],[-105.567918,40.272399,1600,3056.7],[-105.567979,40.272476,1610,3058.8],[-105.568034,40.272555,1620,3058.4],[-105.568052,40.272642,1630,3058.2],[-105.568046,40.272731,1640,3059.7],[-105.568034,40.272821,1650,3061.2],[-105.568021,40.27291,1660,3062.6],[-105.567991,40.272997,1670,3066.0],[-105.567956,40.273083,1680,3064.8],[-105.567931,40.27317,1690,3066.4],[-105.567925,40.27326,1700,3069.0],[-105.567998,40.273214,1710,3071.6],[-105.568082,40.27315,1720,3073.0],[-105.568161,40.273083,1730,3074.3],[-105.568244,40.27302,1740,3075.5],[-105.568333,40.272962,1750,3076.1],[-105.568408,40.272892,1760,3077.6],[-105.568479,40.272821,1770,3076.3],[-105.568566,40.272761,1780,3077.8],[-105.568658,40.272704,1790,3080.8],[-105.568757,40.272656,1800,3082.1],[-105.56887,40.272635,1810,3082.1],[-105.568986,40.272639,1820,3082.5],[-105.569103,40.272651,1830,3084.2],[-105.56922,40.272664,1840,3084.4],[-105.569337,40.272677,1850,3084.4],[-105.569448,40.272705,1860,3084.3],[-105.569558,40.272738,1870,3085.6],[-105.569668,40.27277,1880,3085.7],[-105.569777,40.272803,1890,3087.3],[-105.569886,40.272837,1900,3087.1],[-105.569991,40.272878,1910,3088.9],[-105.570096,40.27292,1920,3090.6],[-105.5702,40.272961,1930,3090.3],[-105.570309,40.272996,1940,3091.8],[-105.570419,40.273029,1950,3091.6],[-105.570528,40.273062,1960,3093.4],[-105.570639,40.273092,1970,3092.9],[-105.570752,40.273119,1980,3094.8],[-105.570864,40.273147,1990,3094.8],[-105.570976,40.273174,2000,3096.2],[-105.571089,40.273201,2010,3095.9],[-105.571201,40.273229,2020,3095.7],[-105.571311,40.273261,2030,3097.8],[-105.571418,40.273298,2040,3097.2],[-105.571523,40.273339,2050,3098.9],[-105.571626,40.273382,2060,3100.2],[-105.571729,40.273426,2070,3100.1],[-105.571839,40.273458,2080,3101.4],[-105.571951,40.273486,2090,3101.7],[-105.572061,40.273518,2100,3104.1],[-105.572168,40.273556,2110,3104.1],[-105.572275,40.273593,2120,3106.6],[-105.572386,40.273623,2130,3106.8],[-105.572502,40.273637,2140,3109.1],[-105.572619,40.273643,2150,3109.8],[-105.572737,40.273649,2160,3110.3],[-105.572853,40.273665,2170,3110.6],[-105.572966,40.27369,2180,3112.0],[-105.573079,40.273716,2190,3114.1],[-105.573191,40.273742,2200,3114.5],[-105.573305,40.273766,2210,3117.3],[-105.573419,40.273788,2220,3118.1],[-105.573534,40.27381,2230,3118.7],[-105.573648,40.273832,2240,3120.7],[-105.573763,40.273851,2250,3120.8],[-105.573878,40.27387,2260,3120.9],[-105.573995,40.273882,2270,3121.3],[-105.574112,40.273894,2280,3121.6],[-105.574221,40.273926,2290,3123.0],[-105.574329,40.273963,2300,3124.7],[-105.574436,40.274,2310,3124.4],[-105.574541,40.274041,2320,3125.4],[-105.574645,40.274083,2330,3125.0],[-105.574754,40.274118,2340,3125.1],[-105.574864,40.274149,2350,3124.6],[-105.574972,40.274185,2360,3125.9],[-105.575074,40.27423,2370,3127.2],[-105.575176,40.274275,2380,3126.2],[-105.575278,40.27432,2390,3126.9],[-105.575376,40.27437,2400,3129.4],[-105.575474,40.27442,2410,3132.1],[-105.575573,40.274469,2420,3131.8],[-105.575683,40.274501,2430,3134.6],[-105.575793,40.274533,2440,3134.3],[-105.575903,40.274565,2450,3137.4],[-105.576014,40.274596,2460,3137.2],[-105.576126,40.274623,2470,3140.1],[-105.576242,40.27464,2480,3139.8],[-105.576357,40.274658,2490,3139.5],[-105.576473,40.274675,2500,3138.8],[-105.576588,40.274693,2510,3141.4],[-105.576704,40.27471,2520,3141.0],[-105.57682,40.274728,2530,3140.3],[-105.576935,40.274747,2540,3143.1],[-105.57705,40.274765,2550,3142.7],[-105.577165,40.274784,2560,3141.9],[-105.577281,40.274803,2570,3141.6],[-105.577396,40.274822,2580,3144.6],[-105.577511,40.274843,2590,3144.0],[-105.577618,40.274834,2600,3144.5],[-105.577677,40.274765,2610,3145.0],[-105.577681,40.274675,2620,3143.6],[-105.577702,40.274587,2630,3143.0],[-105.577744,40.274503,2640,3142.5],[-105.577789,40.274421,2650,3144.9],[-105.577847,40.274342,2660,3147.6],[-105.5779,40.274262,2670,3147.2],[-105.577952,40.274181,2680,3150.4],[-105.577978,40.274268,2690,3151.1],[-105.577987,40.274357,2700,3152.5],[-105.577997,40.274447,2710,3153.2],[-105.578034,40.274532,2720,3158.7],[-105.578085,40.274613,2730,3159.5],[-105.578147,40.274689,2740,3164.2],[-105.578223,40.274757,2750,3168.3],[-105.578288,40.274829,2760,3171.7],[-105.578323,40.274803,2770,3171.7],[-105.578321,40.274713,2780,3171.6],[-105.578317,40.274624,2790,3171.4],[-105.578322,40.274534,2800,3170.5],[-105.578341,40.274445,2810,3170.0],[-105.578334,40.274358,2820,3169.3],[-105.578384,40.274332,2830,3171.9],[-105.578437,40.274413,2840,3172.5],[-105.578494,40.274491,2850,3176.0],[-105.578558,40.274567,2860,3178.8],[-105.57862,40.274643,2870,3181.3],[-105.578668,40.274725,2880,3181.3],[-105.578716,40.274807,2890,3183.7],[-105.578766,40.274888,2900,3183.5],[-105.578823,40.274967,2910,3186.0],[-105.57888,40.275046,2920,3188.2],[-105.578937,40.275124,2930,3187.7],[-105.579,40.2752,2940,3189.7],[-105.579076,40.275266,2950,3191.6],[-105.579146,40.275338,2960,3193.0],[-105.579216,40.275309,2970,3196.6],[-105.579254,40.275226,2980,3197.1],[-105.579274,40.275137,2990,3198.2],[-105.579333,40.27506,3000,3201.1],[-105.579388,40.27498,3010,3204.0],[-105.579435,40.274898,3020,3204.4],[-105.579462,40.274812,3030,3204.7],[-105.579477,40.274723,3040,3208.0],[-105.579509,40.274636,3050,3208.2],[-105.579544,40.27455,3060,3208.3],[-105.579573,40.274464,3070,3211.0],[-105.579575,40.274374,3080,3211.1],[-105.579588,40.274285,3090,3211.0],[-105.579627,40.274201,3100,3210.9],[-105.579667,40.274117,3110,3213.1],[-105.579693,40.274029,3120,3212.9],[-105.579731,40.273944,3130,3215.1],[-105.579776,40.273861,3140,3214.9],[-105.579827,40.27378,3150,3217.3],[-105.579879,40.273699,3160,3217.2],[-105.57993,40.273618,3170,3219.1],[-105.579981,40.273537,3180,3218.9],[-105.580032,40.273456,3190,3221.1],[-105.580081,40.273374,3200,3223.6],[-105.580131,40.273293,3210,3224.5],[-105.5801,40.273219,3220,3225.3],[-105.58,40.273172,3230,3225.9],[-105.579899,40.273128,3240,3225.0],[-105.579808,40.27307,3250,3227.1],[-105.579705,40.273027,3260,3229.1],[-105.579606,40.27298,3270,3228.2],[-105.579519,40.272919,3280,3229.8],[-105.579432,40.272858,3290,3230.9],[-105.579365,40.272786,3300,3232.0],[-105.579327,40.272702,3310,3236.8],[-105.57926,40.272628,3320,3237.8],[-105.579184,40.272559,3330,3238.7],[-105.579105,40.272492,3340,3239.4],[-105.579026,40.272427,3350,3239.9],[-105.578985,40.272343,3360,3242.2],[-105.578956,40.272256,3370,3244.9],[-105.578914,40.272173,3380,3246.6],[-105.578845,40.272101,3390,3246.9],[-105.57879,40.272021,3400,3248.2],[-105.578758,40.271935,3410,3248.1],[-105.578742,40.271846,3420,3250.6],[-105.578723,40.271758,3430,3251.8],[-105.578692,40.271671,3440,3251.5],[-105.578679,40.271582,3450,3253.9],[-105.578665,40.271492,3460,3255.2],[-105.578652,40.271403,3470,3257.6],[-105.578638,40.271314,3480,3258.4],[-105.578639,40.271224,3490,3259.1],[-105.578643,40.271134,3500,3260.7],[-105.578648,40.271044,3510,3261.5],[-105.578653,40.270954,3520,3262.2],[-105.578613,40.270873,3530,3263.4],[-105.578584,40.270788,3540,3262.6],[-105.578554,40.270702,3550,3263.1],[-105.578531,40.270615,3560,3264.0],[-105.578534,40.270525,3570,3264.5],[-105.578541,40.270435,3580,3265.0],[-105.578579,40.270351,3590,3266.1],[-105.57865,40.27028,3600,3268.3],[-105.578695,40.270198,3610,3268.9],[-105.578699,40.270108,3620,3271.6],[-105.578735,40.270042,3630,3272.6],[-105.57878,40.270121,3640,3271.6],[-105.578852,40.270192,3650,3272.7],[-105.578943,40.270249,3660,3273.7],[-105.579039,40.270301,3670,3274.7],[-105.579138,40.270349,3680,3278.2],[-105.579232,40.270403,3690,3278.9],[-105.579325,40.270459,3700,3279.5],[-105.579422,40.270509,3710,3280.0],[-105.579535,40.270526,3720,3281.4],[-105.579647,40.270553,3730,3284.0],[-105.579751,40.270595,3740,3284.2],[-105.579867,40.27061,3750,3285.6],[-105.579984,40.270609,3760,3286.9],[-105.580102,40.270607,3770,3289.5],[-105.58022,40.270606,3780,3290.7],[-105.580332,40.270631,3790,3292.1],[-105.580445,40.270656,3800,3293.3],[-105.580562,40.270664,3810,3294.7],[-105.580673,40.270693,3820,3294.6],[-105.580779,40.270731,3830,3297.2],[-105.580893,40.270753,3840,3297.0],[-105.581009,40.27077,3850,3298.2],[-105.581122,40.270743,3860,3302.3],[-105.581231,40.270709,3870,3303.4],[-105.581347,40.270694,3880,3304.6],[-105.581464,40.270686,3890,3306.9],[-105.581581,40.270675,3900,3309.4],[-105.581697,40.270659,3910,3310.6],[-105.581814,40.270646,3920,3312.8],[-105.581931,40.270635,3930,3314.0],[-105.582048,40.270626,3940,3316.5],[-105.582164,40.270611,3950,3319.1],[-105.582272,40.270576,3960,3320.1],[-105.582386,40.270552,3970,3322.5],[-105.582501,40.270548,3980,3324.5],[-105.582596,40.2706,3990,3324.2],[-105.582683,40.27066,4000,3323.9],[-105.58278,40.270709,4010,3323.6],[-105.582895,40.270729,4020,3324.5],[-105.583011,40.270745,4030,3326.3],[-105.583127,40.27076,4040,3325.9],[-105.583243,40.270764,4050,3326.7],[-105.583359,40.270747,4060,3329.9],[-105.583475,40.270736,4070,3330.9],[-105.583592,40.270743,4080,3332.6],[-105.583708,40.270758,4090,3332.3],[-105.583826,40.270758,4100,3333.1],[-105.583942,40.27077,4110,3334.8],[-105.584053,40.2708,4120,3335.7],[-105.584164,40.270831,4130,3335.8],[-105.584256,40.270871,4140,3336.9],[-105.58432,40.270945,4150,3338.3],[-105.584357,40.271028,4160,3339.5],[-105.584402,40.271108,4170,3341.8],[-105.584471,40.271181,4180,3344.3],[-105.58455,40.271248,4190,3346.8],[-105.584654,40.271288,4200,3349.6],[-105.584768,40.271307,4210,3351.1],[-105.584885,40.271318,4220,3353.8],[-105.585003,40.271311,4230,3355.2],[-105.585115,40.271287,4240,3356.4],[-105.585224,40.271253,4250,3357.4],[-105.585333,40.271219,4260,3358.4],[-105.585442,40.271184,4270,3358.3],[-105.585551,40.27115,4280,3359.4],[-105.58566,40.271116,4290,3360.7],[-105.585772,40.271093,4300,3361.8],[-105.585888,40.271106,4310,3362.9],[-105.586002,40.271128,4320,3365.1],[-105.586115,40.271152,4330,3367.6],[-105.586231,40.271137,4340,3367.7],[-105.586347,40.271122,4350,3370.1],[-105.586464,40.271108,4360,3371.2],[-105.58658,40.271095,4370,3372.4],[-105.586697,40.271083,4380,3374.8],[-105.586814,40.271071,4390,3374.6],[-105.586932,40.271065,4400,3375.6],[-105.587049,40.27106,4410,3377.3],[-105.587167,40.271056,4420,3377.9],[-105.58728,40.27108,4430,3379.8],[-105.587395,40.271099,4440,3380.8],[-105.587512,40.271108,4450,3381.2],[-105.587626,40.271132,4460,3381.9],[-105.58773,40.271173,4470,3383.4],[-105.58784,40.271204,4480,3383.7],[-105.587956,40.2712,4490,3383.9],[-105.58807,40.271212,4500,3385.7],[-105.588183,40.271239,4510,3385.9],[-105.588291,40.271274,4520,3386.1],[-105.588403,40.271302,4530,3387.5],[-105.588491,40.271361,4540,3388.8],[-105.588559,40.271434,4550,3390.1],[-105.588605,40.271516,4560,3391.6],[-105.588668,40.271592,4570,3393.3],[-105.588743,40.271661,4580,3394.9],[-105.588828,40.271723,4590,3396.5],[-105.58891,40.271787,4600,3398.1],[-105.588971,40.271864,4610,3401.2],[-105.589035,40.271939,4620,3402.9],[-105.589131,40.271989,4630,3402.8],[-105.589246,40.27201,4640,3404.4],[-105.589356,40.272039,4650,3404.5],[-105.58946,40.272082,4660,3406.3],[-105.589566,40.272121,4670,3406.4],[-105.589674,40.272156,4680,3408.3],[-105.589783,40.27219,4690,3408.5],[-105.589888,40.272231,4700,3410.2],[-105.589982,40.272284,4710,3412.0],[-105.590063,40.272349,4720,3413.7],[-105.590157,40.272402,4730,3415.1],[-105.590261,40.272446,4740,3414.9],[-105.590354,40.272499,4750,3416.1],[-105.590462,40.272535,4760,3417.2],[-105.59057,40.272569,4770,3417.1],[-105.590685,40.272588,4780,3418.5],[-105.590791,40.272627,4790,3418.4],[-105.590892,40.272674,4800,3419.8],[-105.590965,40.27274,4810,3421.1],[-105.591004,40.272824,4820,3422.6],[-105.591023,40.272913,4830,3425.3],[-105.59101,40.272997,4840,3426.9],[-105.590913,40.273048,4850,3429.2],[-105.590811,40.273092,4860,3429.3],[-105.590704,40.27313,4870,3431.5],[-105.590593,40.27316,4880,3431.7],[-105.590476,40.273165,4890,3431.8],[-105.590358,40.273168,4900,3432.2],[-105.590241,40.273177,4910,3434.3],[-105.59021,40.27324,4920,3436.5],[-105.590315,40.27328,4930,3436.3],[-105.590422,40.273318,4940,3438.0],[-105.590532,40.273349,4950,3437.9],[-105.590624,40.273405,4960,3439.9],[-105.590716,40.273462,4970,3441.7],[-105.590807,40.273518,4980,3443.7],[-105.590904,40.273569,4990,3445.7],[-105.591009,40.27361,5000,3445.8],[-105.591125,40.273628,5010,3446.1],[-105.59124,40.273641,5020,3448.9],[-105.591357,40.273627,5030,3447.6],[-105.591474,40.273617,5040,3448.3],[-105.591591,40.27361,5050,3450.0],[-105.591709,40.273618,5060,3451.2],[-105.591825,40.273613,5070,3452.5],[-105.591935,40.273582,5080,3454.8],[-105.592044,40.273547,5090,3454.8],[-105.592156,40.273521,5100,3456.2],[-105.592271,40.273499,5110,3458.6],[-105.592387,40.273508,5120,3461.4],[-105.592502,40.273519,5130,3463.3],[-105.592616,40.273495,5140,3466.0],[-105.592731,40.273481,5150,3467.6],[-105.592849,40.273479,5160,3469.3],[-105.592964,40.273496,5170,3472.9],[-105.59308,40.2735,5180,3474.6],[-105.593197,40.273494,5190,3476.2],[-105.593315,40.273494,5200,3479.3],[-105.593433,40.273495,5210,3480.8],[-105.593549,40.273483,5220,3483.9],[-105.593666,40.273469,5230,3485.4],[-105.593777,40.273493,5240,3486.9],[-105.593888,40.273478,5250,3488.3],[-105.594005,40.273463,5260,3490.7],[-105.594118,40.273443,5270,3491.9],[-105.594223,40.273402,5280,3492.4],[-105.594329,40.273362,5290,3494.3],[-105.594436,40.273325,5300,3495.5],[-105.59455,40.273348,5310,3496.7],[-105.594659,40.273326,5320,3497.9],[-105.594759,40.273283,5330,3499.7],[-105.594876,40.273273,5340,3500.8],[-105.594994,40.273282,5350,3501.7],[-105.595108,40.273261,5360,3503.5],[-105.595226,40.273253,5370,3504.3],[-105.595343,40.273245,5380,3505.1],[-105.595461,40.273237,5390,3506.5],[-105.595578,40.273229,5400,3507.3],[-105.595695,40.273222,5410,3508.9],[-105.595813,40.273219,5420,3509.6],[-105.595931,40.273212,5430,3510.4],[-105.596048,40.273201,5440,3512.2],[-105.596165,40.273192,5450,3513.0],[-105.596283,40.273195,5460,3513.9],[-105.596398,40.273179,5470,3515.7],[-105.596511,40.273154,5480,3516.4],[-105.596625,40.273132,5490,3517.3],[-105.59674,40.273118,5500,3519.1],[-105.596855,40.273138,5510,3520.0],[-105.596969,40.273124,5520,3520.9],[-105.597081,40.273096,5530,3522.3],[-105.597194,40.273077,5540,3523.1],[-105.597312,40.273083,5550,3523.8],[-105.597429,40.273084,5560,3525.6],[-105.597547,40.273078,5570,3526.6],[-105.597665,40.273072,5580,3527.6],[-105.597782,40.273066,5590,3529.5],[-105.5979,40.273062,5600,3530.5],[-105.598018,40.273058,5610,3532.4],[-105.598135,40.273049,5620,3533.3],[-105.59825,40.27303,5630,3533.7],[-105.598363,40.273017,5640,3535.6],[-105.598478,40.273037,5650,3536.5],[-105.598581,40.273079,5660,3538.2],[-105.598687,40.273106,5670,3539.5],[-105.598798,40.273076,5680,3541.9],[-105.598913,40.273057,5690,3543.1],[-105.599028,40.273039,5700,3544.0],[-105.599142,40.273014,5710,3546.2],[-105.599254,40.272987,5720,3547.4],[-105.599366,40.272977,5730,3548.5],[-105.59948,40.273001,5740,3551.3],[-105.599594,40.27301,5750,3552.8],[-105.59971,40.272994,5760,3554.3],[-105.599827,40.272978,5770,3557.1],[-105.599943,40.272963,5780,3558.2],[-105.600059,40.272948,5790,3559.4],[-105.60017,40.272919,5800,3561.8],[-105.600283,40.272913,5810,3563.2],[-105.600399,40.272909,5820,3564.7],[-105.600508,40.272878,5830,3567.6],[-105.60061,40.272834,5840,3569.0],[-105.600704,40.272779,5850,3570.8],[-105.600813,40.272762,5860,3572.1],[-105.600928,40.27278,5870,3573.4],[-105.601043,40.272798,5880,3575.7],[-105.601161,40.272793,5890,3577.4],[-105.601275,40.272802,5900,3581.0],[-105.601302,40.272715,5910,3582.1],[-105.601348,40.272635,5920,3582.7],[-105.601455,40.272607,5930,3586.1],[-105.601573,40.2726,5940,3587.8],[-105.60169,40.272594,5950,3589.5],[-105.601808,40.272589,5960,3593.0],[-105.601923,40.272575,5970,3595.3],[-105.602026,40.272532,5980,3597.1],[-105.602137,40.272518,5990,3602.0],[-105.602243,40.272556,6000,3603.7],[-105.602352,40.272588,6010,3605.5],[-105.602468,40.272574,6020,3608.4],[-105.602583,40.272557,6030,3614.5],[-105.602701,40.272555,6040,3618.8],[-105.602818,40.272553,6050,3624.8],[-105.602932,40.272578,6060,3626.9],[-105.603043,40.272607,6070,3628.9],[-105.603147,40.272648,6080,3630.9],[-105.603245,40.272661,6090,3633.0],[-105.603332,40.272602,6100,3635.3],[-105.603442,40.27259,6110,3640.3],[-105.603555,40.272606,6120,3642.7],[-105.603606,40.272687,6130,3645.3],[-105.603663,40.272765,6140,3645.4],[-105.603719,40.272843,6150,3647.9],[-105.603739,40.272931,6160,3648.4],[-105.603762,40.273019,6170,3650.8],[-105.603846,40.273078,6180,3651.1],[-105.603937,40.273134,6190,3655.4],[-105.603933,40.273217,6200,3653.8],[-105.603911,40.273304,6210,3654.2],[-105.603916,40.273391,6220,3655.0],[-105.603959,40.273475,6230,3657.4],[-105.603978,40.273563,6240,3657.9],[-105.604021,40.273646,6250,3660.3],[-105.604078,40.273724,6260,3660.6],[-105.604109,40.273811,6270,3662.3],[-105.604136,40.273898,6280,3662.7],[-105.604176,40.27398,6290,3663.1],[-105.604243,40.274053,6300,3664.6],[-105.604296,40.274134,6310,3666.1],[-105.604349,40.274214,6320,3666.8],[-105.604411,40.274289,6330,3669.6],[-105.604517,40.27432,6340,3670.4],[-105.60463,40.274343,6350,3672.4],[-105.604744,40.274363,6360,3674.9],[-105.604856,40.274389,6370,3675.9],[-105.60497,40.274411,6380,3677.9],[-105.60508,40.274442,6390,3680.0],[-105.605197,40.274435,6400,3680.7],[-105.605301,40.274395,6410,3680.5],[-105.605371,40.274324,6420,3680.3],[-105.605405,40.274239,6430,3680.6],[-105.605408,40.27415,6440,3680.8],[-105.605417,40.27406,6450,3681.1],[-105.605455,40.273976,6460,3681.3],[-105.605531,40.273912,6470,3682.8],[-105.605629,40.273863,6480,3684.0],[-105.605664,40.273779,6490,3684.8],[-105.605715,40.2737,6500,3685.2],[-105.605758,40.273616,6510,3686.6],[-105.605826,40.273543,6520,3687.6],[-105.605859,40.273458,6530,3688.1],[-105.605884,40.273372,6540,3688.6],[-105.605959,40.273305,6550,3690.4],[-105.606048,40.273246,6560,3690.9],[-105.606152,40.273204,6570,3691.8],[-105.606267,40.273201,6580,3692.4],[-105.606379,40.273228,6590,3692.7],[-105.606495,40.273244,6600,3692.7],[-105.606611,40.273259,6610,3692.9],[-105.606728,40.273254,6620,3693.1],[-105.606846,40.273253,6630,3693.3],[-105.606959,40.273273,6640,3693.8],[-105.607076,40.273269,6650,3694.1],[-105.607192,40.273285,6660,3694.4],[-105.607298,40.273324,6670,3694.2],[-105.607385,40.273383,6680,3694.1],[-105.607466,40.273448,6690,3694.0],[-105.607553,40.273508,6700,3694.0],[-105.607652,40.273558,6710,3694.6],[-105.607762,40.273585,6720,3694.5],[-105.607879,40.273594,6730,3695.1],[-105.607992,40.273615,6740,3697.3],[-105.608103,40.273647,6750,3697.1],[-105.608211,40.273682,6760,3698.2],[-105.608326,40.273703,6770,3698.5],[-105.608443,40.273708,6780,3699.5],[-105.608558,40.273726,6790,3700.6],[-105.60867,40.273756,6800,3702.5],[-105.608782,40.273782,6810,3700.4],[-105.608895,40.273807,6820,3701.0],[-105.608972,40.273771,6830,3701.5],[-105.608897,40.273702,6840,3704.0],[-105.60883,40.273628,6850,3709.6],[-105.608788,40.273545,6860,3710.9],[-105.608755,40.273458,6870,3712.9],[-105.608706,40.273377,6880,3713.9],[-105.608644,40.273301,6890,3716.0],[-105.608576,40.273227,6900,3717.7],[-105.608529,40.273145,6910,3717.5],[-105.608473,40.273066,6920,3717.0],[-105.608412,40.272989,6930,3718.2],[-105.608345,40.272915,6940,3717.7],[-105.608275,40.272843,6950,3718.4],[-105.608251,40.272758,6960,3719.7],[-105.608338,40.272702,6970,3722.1],[-105.608452,40.272693,6980,3723.3],[-105.608567,40.272714,6990,3724.5],[-105.608683,40.272719,7000,3725.3],[-105.608791,40.272686,7010,3727.4],[-105.608892,40.27264,7020,3728.8],[-105.609005,40.272616,7030,3729.9],[-105.609121,40.272601,7040,3730.4],[-105.609236,40.272579,7050,3732.0],[-105.60935,40.272556,7060,3733.3],[-105.609463,40.272532,7070,3733.9],[-105.60958,40.272526,7080,3734.5],[-105.609695,40.272514,7090,3736.7],[-105.609802,40.272478,7100,3737.2],[-105.609909,40.27244,7110,3738.6],[-105.609905,40.272378,7120,3739.7],[-105.609798,40.272341,7130,3739.2],[-105.609701,40.27229,7140,3739.9],[-105.609597,40.272247,7150,3740.1],[-105.609493,40.272204,7160,3739.6],[-105.60939,40.272161,7170,3740.3],[-105.609286,40.272118,7180,3741.2],[-105.609183,40.272074,7190,3740.8],[-105.609082,40.272029,7200,3741.6],[-105.608985,40.271977,7210,3742.8],[-105.608895,40.27192,7220,3744.5],[-105.608801,40.271866,7230,3744.7],[-105.608695,40.271826,7240,3747.4],[-105.60858,40.271808,7250,3747.9],[-105.608465,40.271788,7260,3751.2],[-105.608369,40.27176,7270,3751.6],[-105.608477,40.271726,7280,3753.8],[-105.608593,40.271712,7290,3753.2],[-105.608711,40.271708,7300,3752.9],[-105.608828,40.27171,7310,3752.4],[-105.608946,40.271717,7320,3752.4],[-105.609064,40.271716,7330,3752.5],[-105.609179,40.271703,7340,3753.3],[-105.609291,40.271675,7350,3754.0],[-105.609403,40.271646,7360,3758.1],[-105.609516,40.271621,7370,3760.4],[-105.609632,40.271606,7380,3761.5],[-105.60975,40.27161,7390,3762.7],[-105.609867,40.271617,7400,3765.3],[-105.609985,40.271624,7410,3766.4],[-105.610102,40.27162,7420,3767.4],[-105.61022,40.271619,7430,3769.3],[-105.610338,40.271624,7440,3770.2],[-105.610455,40.271634,7450,3771.0],[-105.610572,40.271644,7460,3772.6],[-105.610688,40.271641,7470,3773.3],[-105.610804,40.271626,7480,3774.5],[-105.610917,40.271599,7490,3778.0],[-105.61101,40.271545,7500,3778.2],[-105.611075,40.27147,7510,3783.0],[-105.611164,40.271411,7520,3782.8],[-105.611248,40.271354,7530,3784.1],[-105.611195,40.271278,7540,3785.9],[-105.611114,40.271213,7550,3787.8],[-105.611012,40.271168,7560,3789.9],[-105.610913,40.271119,7570,3791.8],[-105.610819,40.271065,7580,3793.4],[-105.610725,40.27101,7590,3794.5],[-105.610632,40.270955,7600,3794.4],[-105.610539,40.2709,7610,3794.8],[-105.610444,40.270848,7620,3795.0],[-105.610346,40.270797,7630,3795.2],[-105.610248,40.270747,7640,3795.3],[-105.610151,40.270696,7650,3794.7],[-105.61005,40.27065,7660,3794.6],[-105.609945,40.27061,7670,3794.6],[-105.609839,40.27057,7680,3792.9],[-105.60974,40.270522,7690,3793.0],[-105.609733,40.270454,7700,3793.9],[-105.609834,40.270408,7710,3795.9],[-105.609927,40.270355,7720,3798.4],[-105.609995,40.270281,7730,3800.8],[-105.610043,40.2702,7740,3802.3],[-105.610104,40.270123,7750,3803.6],[-105.610169,40.270048,7760,3805.1],[-105.610263,40.269996,7770,3806.7],[-105.610372,40.269962,7780,3808.1],[-105.610445,40.269898,7790,3809.3],[-105.610465,40.269811,7800,3810.6],[-105.610435,40.269725,7810,3812.0],[-105.610416,40.269637,7820,3814.7],[-105.610414,40.269547,7830,3815.8],[-105.610441,40.26946,7840,3816.9],[-105.610484,40.269377,7850,3817.6],[-105.610498,40.269288,7860,3819.7],[-105.610493,40.269198,7870,3820.8],[-105.610482,40.269109,7880,3823.1],[-105.610444,40.269024,7890,3824.6],[-105.610423,40.268938,7900,3825.6],[-105.610439,40.268849,7910,3827.4],[-105.610454,40.268762,7920,3828.3],[-105.610483,40.268681,7930,3829.1],[-105.610584,40.268636,7940,3830.3],[-105.610682,40.268586,7950,3831.8],[-105.610795,40.268563,7960,3831.9],[-105.610903,40.268531,7970,3832.1],[-105.611009,40.268491,7980,3833.2],[-105.611115,40.268451,7990,3834.2],[-105.611222,40.268413,8000,3834.2],[-105.611337,40.2684,8010,3834.1],[-105.611451,40.268376,8020,3834.7],[-105.611486,40.268292,8030,3835.7],[-105.611514,40.268205,8040,3836.3],[-105.611524,40.268116,8050,3838.2],[-105.611546,40.268027,8060,3839.1],[-105.611587,40.267946,8070,3839.5],[-105.611683,40.267895,8080,3840.0],[-105.611778,40.267843,8090,3840.5],[-105.611843,40.267771,8100,3841.0],[-105.611851,40.267681,8110,3841.8],[-105.611859,40.267591,8120,3843.1],[-105.611891,40.267505,8130,3843.5],[-105.611919,40.267418,8140,3843.7],[-105.611955,40.267332,8150,3844.7],[-105.611991,40.267246,8160,3845.1],[-105.612015,40.267158,8170,3845.7],[-105.612073,40.26708,8180,3846.7],[-105.612156,40.267017,8190,3847.3],[-105.612252,40.266965,8200,3847.3],[-105.612305,40.266888,8210,3847.8],[-105.612379,40.266821,8220,3848.7],[-105.612476,40.266773,8230,3848.8],[-105.61259,40.266754,8240,3849.4],[-105.612689,40.266721,8250,3849.5],[-105.612759,40.266649,8260,3850.1],[-105.612833,40.26658,8270,3850.8],[-105.612925,40.266525,8280,3851.5],[-105.61296,40.26644,8290,3852.4],[-105.613026,40.266366,8300,3852.9],[-105.613087,40.266289,8310,3854.2],[-105.613099,40.266201,8320,3854.7],[-105.613118,40.266113,8330,3855.3],[-105.613178,40.266035,8340,3856.4],[-105.613236,40.265957,8350,3857.0],[-105.613289,40.265877,8360,3857.7],[-105.613315,40.26579,8370,3858.2],[-105.613344,40.265703,8380,3859.1],[-105.613376,40.265616,8390,3859.6],[-105.613413,40.265532,8400,3860.0],[-105.61352,40.265502,8410,3860.5],[-105.613609,40.265454,8420,3860.6],[-105.613667,40.265376,8430,3861.6],[-105.61372,40.265296,8440,3862.2],[-105.613733,40.265208,8450,3862.7],[-105.613796,40.265139,8460,3863.3],[-105.613905,40.265129,8470,3863.7],[-105.614018,40.265154,8480,3863.9],[-105.614129,40.265139,8490,3864.1],[-105.614195,40.265066,8500,3864.8],[-105.614265,40.264995,8510,3865.5],[-105.614352,40.264934,8520,3866.3],[-105.614427,40.264866,8530,3867.2],[-105.614489,40.264789,8540,3868.2],[-105.614551,40.264713,8550,3869.0],[-105.614622,40.264642,8560,3869.9],[-105.614704,40.264577,8570,3870.9],[-105.614787,40.264513,8580,3871.9],[-105.614869,40.264449,8590,3872.8],[-105.614928,40.264373,8600,3873.6],[-105.614984,40.264295,8610,3874.0],[-105.615051,40.264221,8620,3874.7],[-105.615114,40.264145,8630,3875.3],[-105.615171,40.264066,8640,3876.2],[-105.615192,40.263979,8650,3876.7],[-105.61525,40.263902,8660,3877.2],[-105.615337,40.263843,8670,3877.6],[-105.615434,40.263793,8680,3878.1],[-105.615492,40.263716,8690,3879.0],[-105.615547,40.263636,8700,3880.1],[-105.615604,40.263558,8710,3880.9],[-105.615662,40.263479,8720,3882.7],[-105.615728,40.263405,8730,3883.9],[-105.615794,40.26333,8740,3884.9],[-105.615885,40.263276,8750,3885.8],[-105.615985,40.263228,8760,3886.2],[-105.616081,40.263176,8770,3887.2],[-105.616173,40.26312,8780,3888.3],[-105.616254,40.263055,8790,3889.3],[-105.616335,40.26299,8800,3890.4],[-105.616416,40.262925,8810,3892.2],[-105.616514,40.262875,8820,3894.3],[-105.616612,40.262824,8830,3896.7],[-105.616709,40.262774,8840,3897.7],[-105.616806,40.262722,8850,3900.3],[-105.616894,40.262664,8860,3903.3],[-105.616977,40.2626,8870,3904.4],[-105.61706,40.262535,8880,3906.1],[-105.617146,40.262474,8890,3908.0],[-105.617237,40.262417,8900,3910.0],[-105.61731,40.262347,8910,3911.8],[-105.617398,40.262289,8920,3913.8],[-105.617486,40.262231,8930,3915.6],[-105.617558,40.26216,8940,3917.2],[-105.61763,40.262089,8950,3918.8],[-105.617703,40.262019,8960,3920.5],[-105.617811,40.261987,8970,3921.7],[-105.617924,40.261961,8980,3923.6],[-105.618019,40.261916,8990,3925.7],[-105.618085,40.261842,9000,3927.1],[-105.618152,40.261768,9010,3929.3],[-105.618226,40.261698,9020,3931.6],[-105.618301,40.261629,9030,3934.2],[-105.618376,40.26156,9040,3936.9],[-105.61846,40.261496,9050,3939.3],[-105.618556,40.261445,9060,3941.2],[-105.618659,40.261402,9070,3942.7],[-105.618762,40.261358,9080,3944.3],[-105.618875,40.261335,9090,3947.5],[-105.618991,40.261318,9100,3949.2],[-105.619106,40.261301,9110,3950.9],[-105.619214,40.261277,9120,3955.6],[-105.619289,40.261207,9130,3955.5],[-105.619364,40.261138,9140,3958.2],[-105.619474,40.261108,9150,3963.0],[-105.619585,40.261079,9160,3965.6],[-105.619687,40.261038,9170,3967.1],[-105.619771,40.260975,9180,3968.7],[-105.619868,40.260925,9190,3970.3],[-105.619971,40.260881,9200,3973.1],[-105.620081,40.26085,9210,3977.9],[-105.620192,40.260819,9220,3980.6],[-105.620302,40.260788,9230,3982.9],[-105.620398,40.26074,9240,3985.2],[-105.620478,40.260674,9250,3987.6],[-105.620577,40.260625,9260,3991.2],[-105.620676,40.260577,9270,4000.0],[-105.620762,40.260516,9280,4005.6],[-105.620843,40.260451,9290,4012.2],[-105.620924,40.260385,9300,4015.3],[-105.620986,40.260314,9310,4024.4],[-105.620986,40.260226,9320,4028.3],[-105.621008,40.260144,9330,4033.2],[-105.621007,40.260055,9340,4039.1],[-105.620987,40.259966,9350,4038.8],[-105.620988,40.259877,9360,4035.5],[-105.620953,40.259792,9370,4033.7],[-105.620914,40.259707,9380,4039.6],[-105.620889,40.259619,9390,4038.1],[-105.620858,40.259534,9400,4034.9],[-105.620813,40.259452,9410,4040.7],[-105.620782,40.259367,9420,4038.9],[-105.620729,40.259286,9430,4042.1],[-105.620671,40.259208,9440,4041.0],[-105.620615,40.259129,9450,4044.8],[-105.620589,40.259041,9460,4043.4],[-105.620553,40.258958,9470,4045.7],[-105.620464,40.2589,9480,4050.6],[-105.620365,40.258851,9490,4054.8],[-105.62025,40.258849,9500,4061.0],[-105.620157,40.258804,9510,4065.9],[-105.620106,40.258724,9520,4070.8],[-105.620107,40.258635,9530,4068.9],[-105.620099,40.258546,9540,4065.6],[-105.620099,40.258457,9550,4064.1],[-105.620124,40.258369,9560,4060.9],[-105.620162,40.258284,9570,4052.8],[-105.6202,40.258199,9580,4051.4],[-105.620241,40.258115,9590,4043.4],[-105.620284,40.258031,9600,4042.4],[-105.620337,40.257951,9610,4038.4],[-105.620382,40.257868,9620,4043.2],[-105.620387,40.25778,9630,4043.5],[-105.620368,40.257692,9640,4041.0],[-105.620332,40.257606,9650,4038.5],[-105.620304,40.257519,9660,4040.2],[-105.620281,40.25743,9670,4037.7],[-105.620292,40.257342,9680,4034.9],[-105.620316,40.257254,9690,4031.7],[-105.62034,40.257166,9700,4026.8],[-105.620333,40.257077,9710,4031.3],[-105.620328,40.256987,9720,4039.2],[-105.620361,40.256901,9730,4040.6],[-105.620386,40.256813,9740,4042.3],[-105.620399,40.256724,9750,4045.6],[-105.620398,40.256634,9760,4047.1],[-105.620379,40.256546,9770,4048.6],[-105.620392,40.256457,9780,4052.4],[-105.620373,40.256368,9790,4053.8],[-105.62035,40.25628,9800,4054.7],[-105.620311,40.256195,9810,4059.4],[-105.620251,40.256118,9820,4060.1],[-105.620191,40.256041,9830,4064.9],[-105.620126,40.255969,9840,4070.8],[-105.620032,40.255914,9850,4076.7],[-105.619941,40.255857,9860,4084.4],[-105.619859,40.255792,9870,4094.0],[-105.619778,40.255727,9880,4102.0],[-105.619721,40.25565,9890,4107.1],[-105.61967,40.255571,9900,4108.9],[-105.619556,40.255548,9910,4116.5],[-105.61948,40.255479,9920,4123.3],[-105.619388,40.255424,9930,4130.7],[-105.619289,40.255381,9940,4140.5],[-105.619188,40.255352,9950,4146.8],[-105.619112,40.255283,9960,4152.6],[-105.619011,40.25524,9970,4157.3],[-105.618911,40.255194,9980,4162.5],[-105.618831,40.255128,9990,4168.7],[-105.61875,40.255063,10000,4175.5],[-105.618691,40.254986,10010,4181.8],[-105.61864,40.254905,10020,4184.0],[-105.61859,40.254824,10030,4194.3],[-105.618524,40.254749,10040,4203.6],[-105.618464,40.254673,10050,4206.4],[-105.618423,40.254589,10060,4216.0],[-105.618393,40.254504,10070,4225.6],[-105.618323,40.254432,10080,4236.3],[-105.618252,40.25436,10090,4244.7],[-105.618149,40.254321,10100,4248.7],[-105.618045,40.254279,10110,4255.2],[-105.61794,40.254239,10120,4260.3],[-105.617834,40.254201,10130,4270.2],[-105.617725,40.254166,10140,4264.3],[-105.617623,40.254121,10150,4266.7],[-105.617531,40.254066,10160,4261.2],[-105.617438,40.254011,10170,4256.4],[-105.617334,40.253969,10180,4251.2],[-105.61723,40.253926,10190,4256.7],[-105.617134,40.253874,10200,4253.0],[-105.61704,40.253821,10210,4247.6],[-105.61694,40.253773,10220,4241.2],[-105.616829,40.25376,10230,4243.4],[-105.616725,40.2538,10240,4252.5],[-105.616639,40.253862,10250,4258.4],[-105.616532,40.253897,10260,4256.5],[-105.616434,40.253946,10270,4261.2],[-105.616348,40.254006,10280,4266.5],[-105.616272,40.254075,10290,4273.1],[-105.61619,40.254139,10300,4281.7],[-105.616105,40.254201,10310,4292.2],[-105.616016,40.25426,10320,4302.7],[-105.615927,40.254319,10330,4310.6],[-105.615839,40.254379,10340,4317.5],[-105.615754,40.254441,10350,4316.7],[-105.615668,40.254503,10360,4322.8],[-105.615583,40.254565,10370,4331.1],[-105.615498,40.254627,10380,4338.4],[-105.615413,40.25469,10390,4342.2],[-105.61533,40.254754,10400,4343.9],[-105.615249,40.254819,10410,4344.8],[-105.615215,40.254846,10414,4345.6]]; // [lon, lat, distance m, elevation m] every 10 m, from OSM trail + Terrain Tiles
+const TOTAL = PROFILE[PROFILE.length - 1][2];
+const WALK_TIMES = (() => {
+  try {
+    const rows = JSON.parse(new URLSearchParams(location.search).get('times') || '[]');
+    return Array.isArray(rows) ? rows.filter(x => Number.isFinite(+x.dist_m) && Number.isFinite(+x.time) && (x.dir === 'up' || x.dir === 'down')) : [];
+  } catch (_) { return []; }
+})();
+const base = new URL('.', location.href).href;
+const WIDE = [-105.67523, 40.20689, -105.4965, 40.31999];
+const CORE = [-105.64123, 40.23489, -105.5305, 40.29199];
+const MID = [-105.65123, 40.22589, -105.5205, 40.30099];
+const KEY_M = 10400;   // distance (m) of the marked stop on the profile
+const PITCH = 50, ZOOM = 15.2;
+const HEADING = null; // null = short lookahead (old behaviour) or [metres behind, metres ahead] = long chord, smoother on switchbacks
+const SEASONS = {"default":"by_month","labels":{"spring":"Spring","summer":"Summer","autumn":"Autumn","winter":"Winter"},"map":{"winter":{"overlay":true,"paint":{"saturation":-0.2,"contrast":0.0,"brightness_min":0.0,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#8aa3bd","horizon-color":"#dfe6ec","fog-color":"#dfe6ec"},"shade":{"exaggeration":0.55,"shadow":"rgba(40,62,110,0.50)","highlight":"rgba(255,255,255,0.45)","accent":"rgba(40,62,110,0.25)"}},"spring":{"overlay":true,"paint":{"saturation":0.55,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":6},"sky":{"sky-color":"#4a8fdc","horizon-color":"#eadfce","fog-color":"#e6d9c6"},"shade":{"exaggeration":0.45,"shadow":"rgba(40,50,80,0.45)","highlight":"rgba(255,240,220,0.40)","accent":"rgba(50,40,60,0.25)"}},"summer":{"overlay":false,"paint":{"saturation":0.12,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":8},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null},"autumn":{"overlay":false,"paint":{"saturation":0.18,"contrast":0.0,"brightness_min":0.03,"brightness_max":1.0,"hue":0},"sky":{"sky-color":"#3f86d8","horizon-color":"#f6d2a8","fog-color":"#efc9a0"},"shade":null}},"note":"Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real."}; // null, or {default, labels, map: {season: {overlay, paint, sky}}, note}
+const fmt1 = n => (n / 1000).toFixed(1);
+const ft = m => Math.round(m * 3.28084).toLocaleString('en-US');
+
+document.getElementById('hudTotal').textContent = fmt1(TOTAL);
+document.getElementById('profEnd').textContent = fmt1(TOTAL);
+const elevAt = d => { const i = Math.max(0, Math.min(PROFILE.length - 1, Math.round(d / 10))); return PROFILE[i][3]; };
+const gain = Math.abs(PROFILE[PROFILE.length - 1][3] - PROFILE[0][3]); // size of the net change, so descents read as positive
+function fillTokens(root) {
+  root.querySelectorAll('[data-elev]').forEach(el => {
+    const d = Math.min(+el.dataset.elev, TOTAL); const e = elevAt(d);
+    el.textContent = Math.round(e).toLocaleString('en-US') + ' m (' + ft(e) + ' ft)';
+  });
+  root.querySelectorAll('[data-gain]').forEach(el => { el.textContent = Math.round(gain).toLocaleString('en-US') + ' m (' + ft(gain) + ' ft)'; });
+}
+fillTokens(document);
+
+// Elevation profile
+(function drawProfile() {
+  const emin = Math.min(...PROFILE.map(p => p[3])) - 20, emax = Math.max(...PROFILE.map(p => p[3])) + 10;
+  const X = d => d / TOTAL * 1000, Y = e => 66 - (e - emin) / (emax - emin) * 60;
+  const line = PROFILE.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ');
+  document.getElementById('profLine').setAttribute('d', line);
+  document.getElementById('profArea').setAttribute('d', line + ' L1000 70 L0 70 Z');
+  window.__prof = { X, Y };
+  const marks = document.getElementById('timeMarkers');
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const clock = minutes => { const n = ((Math.round(minutes) % 1440) + 1440) % 1440; return `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`; };
+  WALK_TIMES.forEach(mark => {
+    const x = X(Math.max(0, Math.min(TOTAL, +mark.dist_m))), y = mark.dir === 'up' ? 18 : 53;
+    const line = document.createElementNS(svgNS, 'line'); line.setAttribute('x1', x); line.setAttribute('x2', x); line.setAttribute('y1', y + 4); line.setAttribute('y2', mark.dir === 'up' ? 37 : 49); marks.appendChild(line);
+    const dot = document.createElementNS(svgNS, 'circle'); dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', 3); marks.appendChild(dot);
+    const text = document.createElementNS(svgNS, 'text'); text.setAttribute('x', x); text.setAttribute('y', mark.dir === 'up' ? 11 : 68); text.textContent = `${clock(+mark.time)} ${mark.dir === 'up' ? '↑' : '↓'}`; marks.appendChild(text);
+  });
+  const sx = X(KEY_M); document.getElementById('profScout').setAttribute('x1', sx); document.getElementById('profScout').setAttribute('x2', sx);
+  document.getElementById('scoutLab').style.left = (KEY_M / TOTAL * 100) + '%';
+})();
+function setProfile(d) {
+  const { X, Y } = window.__prof; const x = X(d);
+  document.getElementById('profCursor').setAttribute('x1', x); document.getElementById('profCursor').setAttribute('x2', x);
+  const pts = PROFILE.filter(p => p[2] <= d);
+  if (pts.length > 1) document.getElementById('profWalk').setAttribute('d', pts.map((p, i) => (i ? 'L' : 'M') + X(p[2]).toFixed(1) + ' ' + Y(p[3]).toFixed(1)).join(' ') + ' L' + x.toFixed(1) + ' 70 L0 70 Z');
+}
+
+// Geometry helpers
+function pointAt(d) {
+  d = Math.max(0, Math.min(TOTAL, d));
+  const i = Math.min(PROFILE.length - 2, Math.floor(d / 10));
+  const a = PROFILE[i], b = PROFILE[i + 1]; const span = (b[2] - a[2]) || 1; const t = Math.max(0, Math.min(1, (d - a[2]) / span));
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+}
+function bearing(p, q) {
+  const r = Math.PI / 180, l1 = p[1] * r, l2 = q[1] * r, dl = (q[0] - p[0]) * r;
+  const y = Math.sin(dl) * Math.cos(l2), x = Math.cos(l1) * Math.sin(l2) - Math.sin(l1) * Math.cos(l2) * Math.cos(dl);
+  return (Math.atan2(y, x) / r + 360) % 360;
+}
+function headingAt(d) {
+  if (HEADING) {
+    // direction of the straight line from a point behind to a point well ahead: ignores individual hairpins
+    const end = d > TOTAL - 150;
+    const from = end ? TOTAL - 600 : d - HEADING[0], to = end ? TOTAL : d + HEADING[1];
+    return (bearing(pointAt(from), pointAt(to)));
+  }
+  // average direction over the next 60–260 m so the camera turns smoothly on switchbacks
+  const p = pointAt(d); let sx = 0, sy = 0;
+  for (let k = 60; k <= 260; k += 20) { const b = bearing(p, pointAt(Math.min(TOTAL, d + k))) * Math.PI / 180; sx += Math.sin(b); sy += Math.cos(b); }
+  if (d > TOTAL - 70) { const b = bearing(pointAt(TOTAL - 120), pointAt(TOTAL)) * Math.PI / 180; sx = Math.sin(b); sy = Math.cos(b); }
+  return (Math.atan2(sx, sy) * 180 / Math.PI + 360) % 360;
+}
+
+// Place story cards along the track
+const track = document.getElementById('track');
+function layoutSteps() {
+  const H = track.offsetHeight - innerHeight;
+  document.querySelectorAll('.step').forEach(s => { s.style.top = (innerHeight * 0.18 + H * (+s.dataset.at)) + 'px'; });
+}
+layoutSteps(); addEventListener('resize', layoutSteps);
+
+// Season overlays: one raster source and layer per season that draws something (snow, green or autumn tint); hidden until chosen
+const seasonSources = {}, seasonLayers = [];
+if (SEASONS) for (const [name, m] of Object.entries(SEASONS.map)) if (m.overlay) {
+  seasonSources['season_' + name] = { type: 'raster', tileSize: 512, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'season/' + name + '/{z}/{x}/{y}.webp'] };
+  seasonLayers.push({ id: 'season_' + name, type: 'raster', source: 'season_' + name, layout: { visibility: 'none' }, paint: { 'raster-fade-duration': 0 } });
+}
+const map = new maplibregl.Map({
+  container: 'map',
+  interactive: false,
+  attributionControl: false,
+  maxPitch: 85,
+  pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+  center: pointAt(0), zoom: ZOOM, pitch: PITCH, bearing: headingAt(0),
+  style: {
+    version: 8,
+    sky: { 'sky-color': '#3f86d8', 'horizon-color': '#f6d2a8', 'fog-color': '#efc9a0', 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 },
+    sources: {
+      dem: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      demHs: { type: 'raster-dem', encoding: 'terrarium', tileSize: 256, minzoom: 10, maxzoom: 13, bounds: WIDE, tiles: [base + 'dem/{z}/{x}/{y}.webp'] },
+      imgLow: { type: 'raster', tileSize: 256, minzoom: 12, maxzoom: 12, bounds: WIDE, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      imgMid: { type: 'raster', tileSize: 256, minzoom: 13, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      // Overzoom the complete z14 imagery instead of requesting sparse z15–16
+      // tiles beyond the fetched corridor, which leave black gaps in the view.
+      imgHigh: { type: 'raster', tileSize: 256, minzoom: 14, maxzoom: 14, bounds: MID, tiles: [base + 'img/{z}/{x}/{y}.jpg'] },
+      ahead: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: PROFILE.map(p => [p[0], p[1]]) } } },
+      walked: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: [pointAt(0), pointAt(1)] } } },
+      hiker: { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Point', coordinates: pointAt(0) } } },
+      ...seasonSources
+    },
+    layers: [
+      { id: 'bg', type: 'background', paint: { 'background-color': '#b98a62' } },
+      { id: 'imgLow', type: 'raster', source: 'imgLow', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgMid', type: 'raster', source: 'imgMid', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      { id: 'imgHigh', type: 'raster', source: 'imgHigh', paint: { 'raster-fade-duration': 0, 'raster-saturation': 0.38, 'raster-contrast': 0.0, 'raster-brightness-min': 0.03, 'raster-hue-rotate': -4 } },
+      ...seasonLayers,
+      { id: 'shade', type: 'hillshade', source: 'demHs', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-illumination-direction': 300, 'hillshade-shadow-color': 'rgba(40, 14, 4, 0.55)', 'hillshade-highlight-color': 'rgba(255, 226, 180, 0.35)', 'hillshade-accent-color': 'rgba(60, 20, 6, 0.25)' } },
+      { id: 'ahead', type: 'line', source: 'ahead', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#ffffff', 'line-width': 3, 'line-opacity': 0.75, 'line-dasharray': [1.5, 1.5] } },
+      { id: 'walked', type: 'line', source: 'walked', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#F08A4B', 'line-width': 5 } },
+      { id: 'hikerHalo', type: 'circle', source: 'hiker', paint: { 'circle-radius': 14, 'circle-color': '#F08A4B', 'circle-opacity': 0.35, 'circle-pitch-alignment': 'map' } },
+      { id: 'hiker', type: 'circle', source: 'hiker', paint: { 'circle-radius': 7, 'circle-color': '#F08A4B', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5, 'circle-pitch-alignment': 'map' } }
+    ],
+    terrain: { source: 'dem', exaggeration: 1 }
+  }
+});
+// Season switch: swaps the overlay, the imagery grading, the sky and each card's photo and wording
+function setSeason(name) {
+  const m = SEASONS.map[name];
+  Object.keys(SEASONS.map).forEach(n => { if (map.getLayer('season_' + n)) map.setLayoutProperty('season_' + n, 'visibility', n === name ? 'visible' : 'none'); });
+  for (const id of ['imgLow', 'imgMid', 'imgHigh']) {
+    map.setPaintProperty(id, 'raster-saturation', m.paint.saturation);
+    map.setPaintProperty(id, 'raster-contrast', m.paint.contrast);
+    map.setPaintProperty(id, 'raster-brightness-min', m.paint.brightness_min);
+    map.setPaintProperty(id, 'raster-brightness-max', m.paint.brightness_max);
+    map.setPaintProperty(id, 'raster-hue-rotate', m.paint.hue);
+  }
+  const sh = m.shade || { exaggeration: 0.35, shadow: 'rgba(40, 14, 4, 0.55)', highlight: 'rgba(255, 226, 180, 0.35)', accent: 'rgba(60, 20, 6, 0.25)' };
+  map.setPaintProperty('shade', 'hillshade-exaggeration', sh.exaggeration);
+  map.setPaintProperty('shade', 'hillshade-shadow-color', sh.shadow);
+  map.setPaintProperty('shade', 'hillshade-highlight-color', sh.highlight);
+  map.setPaintProperty('shade', 'hillshade-accent-color', sh.accent);
+  map.setSky({ 'sky-color': m.sky['sky-color'], 'horizon-color': m.sky['horizon-color'], 'fog-color': m.sky['fog-color'], 'sky-horizon-blend': 0.55, 'horizon-fog-blend': 0.55, 'fog-ground-blend': 0.25, 'atmosphere-blend': 0.5 });
+  document.querySelectorAll('.step[data-seasons]').forEach(st => {
+    const v = JSON.parse(st.dataset.seasons)[name];
+    const img = st.querySelector('img'); if (!img.src.endsWith(v.src)) img.src = v.src;
+    st.querySelector('h2').innerHTML = v.title;
+    st.querySelector('.txt').innerHTML = v.text; fillTokens(st);
+    st.querySelector('.credit').innerHTML = v.credit;
+    const note = st.querySelector('.note'); note.textContent = v.note; note.hidden = !v.note;
+  });
+  document.querySelectorAll('#seasons button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.season === name)));
+  document.getElementById('seasonNote').textContent = SEASONS.note;
+  try { history.replaceState(null, '', '?season=' + name + location.hash); } catch (e) {}
+  map.triggerRepaint();
+}
+function initSeasons() {
+  if (!SEASONS) return;
+  const box = document.getElementById('seasons'); box.hidden = false;
+  for (const name of ['spring', 'summer', 'autumn', 'winter']) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.season = name; b.textContent = SEASONS.labels[name];
+    b.addEventListener('click', () => setSeason(name)); box.appendChild(b);
+  }
+  const q = new URLSearchParams(location.search).get('season');
+  const mo = new Date().getMonth(); // northern hemisphere
+  const auto = mo >= 2 && mo <= 4 ? 'spring' : mo >= 5 && mo <= 7 ? 'summer' : mo >= 8 && mo <= 10 ? 'autumn' : 'winter';
+  setSeason(SEASONS.map[q] ? q : auto);
+}
+map.on('error', e => { console.warn('map error', e && e.error && e.error.message); });
+map.on('load', () => { document.getElementById('status').hidden = true; initSeasons(); tick(); });
+map.once('idle', () => { document.getElementById('status').hidden = true; });
+map.on('styledata', () => { if (map.getSource('hiker')) tick(); });
+
+// Scroll drives distance; the camera eases toward it each frame
+let target = 0, current = 0, lastIdx = -1, raf = 0;
+let bear = headingAt(0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function progress() {
+  const r = track.getBoundingClientRect(); const H = track.offsetHeight - innerHeight;
+  return Math.max(0, Math.min(1, -r.top / (H || 1)));
+}
+function onScroll() { target = progress() * TOTAL; document.getElementById('hint').hidden = target > 40; if (!raf) raf = requestAnimationFrame(tick); }
+addEventListener('scroll', onScroll, { passive: true });
+function tick() {
+  raf = 0;
+  if (!map.getSource('hiker')) return;
+  current += (target - current) * (reduce ? 1 : 0.12);
+  if (Math.abs(target - current) < 0.5) current = target;
+  const p = pointAt(current);
+  // low-pass the camera heading so it never snaps round (instant under reduced motion)
+  const want = headingAt(current), dBear = ((want - bear + 540) % 360) - 180;
+  bear = (bear + dBear * (reduce ? 1 : 0.08) + 360) % 360;
+  map.jumpTo({ center: p, bearing: bear, pitch: PITCH, zoom: ZOOM });
+  document.getElementById('status').hidden = true;
+  map.getSource('hiker').setData({ type: 'Feature', geometry: { type: 'Point', coordinates: p } });
+  const idx = Math.floor(current / 10);
+  if (idx !== lastIdx) {
+    lastIdx = idx;
+    const coords = PROFILE.filter(q => q[2] <= current).map(q => [q[0], q[1]]); coords.push(p);
+    if (coords.length < 2) coords.unshift(pointAt(0));
+    map.getSource('walked').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } });
+  }
+  const e = elevAt(current);
+  document.getElementById('hudDist').textContent = fmt1(current) + ' km';
+  document.getElementById('hudElev').textContent = Math.round(e).toLocaleString('en-US') + ' m';
+  document.getElementById('hudFt').textContent = ft(e) + ' ft';
+  setProfile(current);
+  if (current !== target || Math.abs(dBear) > 0.3) raf = requestAnimationFrame(tick);
+}
+</script>
+
+<script>
+// Wait for the terrain or a time limit, then open the clouds onto the 3D walk.
+(function () {
+  var root = document.getElementById('cloudIntro');
+  if (!root) return;
+  var started = Date.now(), parted = false, MIN = 1600, MAX = 6500;
+  var ids = ['ciSky', 'ciFar', 'ciMid', 'ciNear', 'ciVeil', 'ciTitle'], el = {};
+  ids.forEach(function (i) { el[i] = document.getElementById(i); });
+  function part() {
+    if (parted) return; parted = true;
+    var o = '1.6s ease', t = '2.6s cubic-bezier(.2,.6,.3,1)';
+    function layer(e, s, d) { if (!e) return; e.style.transition = 'opacity ' + o + ' ' + d + 's, transform ' + t + ' ' + d + 's'; e.style.opacity = '0'; e.style.transform = 'scale(' + s + ')'; }
+    layer(el.ciFar, 3.2, 0); layer(el.ciMid, 5, 0.12); layer(el.ciNear, 9, 0.24);
+    if (el.ciVeil) { el.ciVeil.style.transition = 'opacity .9s ease'; el.ciVeil.style.opacity = '0'; }
+    if (el.ciSky) { el.ciSky.style.transition = 'opacity 1.6s ease .6s'; el.ciSky.style.opacity = '0'; }
+    if (el.ciTitle) { el.ciTitle.style.transition = 'opacity .5s ease'; el.ciTitle.style.opacity = '0'; }
+    root.style.pointerEvents = 'none';
+    setTimeout(function () { root.classList.add('ci-done'); }, 3200);
+  }
+  var imgsOk = 0, terrainOk = false;
+  ['wisps', 'cumulus', 'mass'].forEach(function (n) { var im = new Image(); im.onload = im.onerror = function () { imgsOk++; check(); }; im.src = '../_shared/clouds/' + n + '.webp'; });
+  var st = document.getElementById('status');
+  function statusHidden() { return !st || st.hidden || getComputedStyle(st).display === 'none'; }
+  if (statusHidden()) terrainOk = true;
+  else if (window.MutationObserver) new MutationObserver(function () { if (statusHidden()) { terrainOk = true; check(); } }).observe(st, { attributes: true });
+  function check() { if (parted) return; var wait = Math.max(0, MIN - (Date.now() - started)); if (imgsOk >= 3 && terrainOk) setTimeout(function () { setTimeout(part, 500); }, wait); }
+  setTimeout(part, MAX);
+  addEventListener('click', part, { once: true });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') part(); });
+  check();
+})();
+</script>
+
+<script>
+(function () {
+  const button = document.getElementById('backToHike');
+  const overlay = document.getElementById('backTransition');
+  const params = new URLSearchParams(location.search);
+  const requested = params.get('back');
+  const siteRoot = new URL('../../', location.href);
+  let backUrl = siteRoot.href;
+  if (requested) {
+    try {
+      backUrl = requested.startsWith('#/') ? siteRoot.href + requested : new URL(requested, location.href).href;
+    } catch (_) {}
+  }
+  button.href = backUrl;
+  let leaving = false;
+  button.addEventListener('click', event => {
+    event.preventDefault();
+    if (leaving) return;
+    leaving = true;
+    overlay.classList.add('active');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(() => {
+      // Back restores the exact hike page state and scroll position when opened from the app.
+      let cameFromApp = false;
+      try {
+        const ref = new URL(document.referrer);
+        cameFromApp = ref.origin === location.origin && ref.pathname === siteRoot.pathname;
+      } catch (_) {}
+      if (cameFromApp && history.length > 1) history.back();
+      else location.assign(backUrl);
+    }, reduced ? 100 : 2200);
+  });
+})();
+</script>

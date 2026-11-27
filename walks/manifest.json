@@ -85,6 +85,31 @@
       "hike_id": "ryan-mountain",
       "kit_trail": "ryan_mountain",
       "built": "2026-11-25"
+    },
+    "general_sherman_tree": {
+      "hike_id": "general-sherman-tree",
+      "kit_trail": "general_sherman_tree",
+      "built": "2026-11-25"
+    },
+    "clingmans_dome": {
+      "hike_id": "clingmans-dome",
+      "kit_trail": "clingmans_dome",
+      "built": "2026-11-25"
+    },
+    "emerald_lake": {
+      "hike_id": "emerald-lake",
+      "kit_trail": "emerald_lake",
+      "built": "2026-11-25"
+    },
+    "moro_rock": {
+      "hike_id": "moro-rock",
+      "kit_trail": "moro_rock",
+      "built": "2026-11-25"
+    },
+    "longs_peak": {
+      "hike_id": "longs-peak",
+      "kit_trail": "longs_peak",
+      "built": "2026-11-25"
     }
   }
 }

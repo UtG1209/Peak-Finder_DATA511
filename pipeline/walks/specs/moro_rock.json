@@ -1,0 +1,31 @@
+{
+  "id": "moro_rock",
+  "hike_id": "moro-rock",
+  "title": "Moro Rock Trail",
+  "map_label": "A 3D walk up the stairs of Moro Rock to the summit in Sequoia National Park.",
+  "end_label": "Moro Rock summit",
+  "pad_wide": 0.04,
+  "scroll_vh": 700,
+  "zoom": 16,
+  "snow": {
+    "winter": 1500,
+    "spring": 2100
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "Moro Rock Trail Sequoia July 2017 001.jpg",
+      "title": "Moro Rock Trailhead",
+      "alt": "The start of the Moro Rock trail at the base of the granite dome.",
+      "text": "The route starts at the Moro Rock parking area. About 350 stairs climb the granite dome."
+    },
+    {
+      "file": "View from Moro Rock 01 2013.jpg",
+      "title": "Moro Rock Summit",
+      "alt": "The view from the top of Moro Rock over the Sierra foothills.",
+      "text": "You have reached the summit of Moro Rock, about 6,300 feet up, with views of the Great Western Divide."
+    }
+  ],
+  "osm_steps": true,
+  "end_at_m": 395
+}

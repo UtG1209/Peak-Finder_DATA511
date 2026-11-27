@@ -1,0 +1,29 @@
+{
+  "walk": "emerald_lake",
+  "before_bytes": 8183387,
+  "types": {
+    "dem": {
+      "files": 25,
+      "before": 3168296,
+      "after": 2256752,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 2534475,
+      "after": 1965660,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 3,
+      "before": 401004,
+      "after": 401004,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 6703097
+}

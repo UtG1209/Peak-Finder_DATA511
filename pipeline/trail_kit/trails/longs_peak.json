@@ -1,0 +1,229 @@
+{
+  "id": "longs_peak",
+  "title": "Longs Peak via the Keyhole Route Walk",
+  "hike_name": "Longs Peak via the Keyhole Route",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk from the Longs Peak trailhead up the Keyhole route to the 14,259-foot summit.",
+  "park": "Rocky Mountain National Park, CO",
+  "start": {
+    "name": "Longs Peak Trailhead",
+    "lat": 40.27199,
+    "lon": -105.5565
+  },
+  "end": {
+    "name": "Longs Peak summit",
+    "lat": 40.25489,
+    "lon": -105.61523
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -105.63323,
+    40.24289,
+    -105.5385,
+    40.28399
+  ],
+  "bounds": {
+    "wide": [
+      -105.67523,
+      40.20689,
+      -105.4965,
+      40.31999
+    ],
+    "mid": [
+      -105.65123,
+      40.22589,
+      -105.5205,
+      40.30099
+    ],
+    "core": [
+      -105.64123,
+      40.23489,
+      -105.5305,
+      40.29199
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 15.2,
+    "scroll_vh": 5430.0
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Summit",
+    "key_stop": {
+      "label": "Summit",
+      "at_m": 10400
+    }
+  },
+  "profile_checkpoints": [
+    {
+      "name": "The Keyhole",
+      "at": 0.8
+    }
+  ],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Morning on longs.bmp (2095720635).jpg",
+      "alt": "Morning light over a sea of clouds seen from the tundra on the Longs Peak route.",
+      "eyebrow": "Start · Longs Peak Trailhead",
+      "title": "Longs Peak Trailhead",
+      "text": "The route starts at the Longs Peak trailhead, about 9,400 feet up. Most hikers start before dawn to be off the summit before afternoon storms. The photo shows the view higher on the route, not the trailhead.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.8,
+      "photo": "keyhole",
+      "commons_file": "Keyhole.bmp (2095709501).jpg",
+      "alt": "The Keyhole, a notch in the ridge on the Longs Peak route.",
+      "eyebrow": "The Keyhole",
+      "title": "The Keyhole",
+      "text": "The Keyhole is a notch in the ridge at about 13,100 feet. Beyond it the route becomes a scramble along ledges.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "keyhole"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "From summit 2.bmp (2096482098).jpg",
+      "alt": "The view down from the summit of Longs Peak.",
+      "eyebrow": "End · Longs Peak Summit",
+      "title": "Longs Peak Summit",
+      "text": "You have reached the summit of Longs Peak, 14,259 feet up, the highest point in Rocky Mountain National Park.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 2600,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 3500,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  }
+}

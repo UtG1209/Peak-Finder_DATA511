@@ -49,7 +49,8 @@ Everything marked **Decision** needs the team's answer before work starts.
 ## Walks
 
 - Decision made: walks stay in this repo and on GitHub Pages (15 to 20 hikes fits under the 1 GB Pages limit at 30 MB each; build each walk once and never rebuild it, because git history keeps every version).
-- 16 of the final 23 hikes have a walk (Plan 3 built Tier A and B on 2026-11-25: Half Dome, Delicate Arch, Mesa Arch, Navajo Loop, Skyline, Cadillac North Ridge, Inspiration Point, Alum Cave, Ryan Mountain; each 4 to 12 MB). Still to build: Longs Peak, Emerald Lake, General Sherman, Moro Rock, Clingmans Dome, after Plans 1 and 2 give them real trailheads and profiles. Anhinga and Zion Narrows get none on purpose.
+- 21 of the final 23 hikes have a walk (Plan 3, Tier A, B and C, 2026-11-25; each 4 to 12 MB). Anhinga and Zion Narrows get none on purpose.
+- Tier C walks (General Sherman, Moro Rock, Clingmans Dome, Emerald Lake, Longs Peak) were built from OSM trailheads that match Plan 1's final coordinates to within about 25 m; Plan 1's geo_facts.csv rows are the ones in use. The Clingmans Dome route is 1.02 km against NPS 0.8 km one way (ratio 1.26, a warning, because the OSM path starts at the south end of the lot). The Longs Peak route is 10.4 km against NPS 12.1 km (OSM does not map the Homestretch scramble). The Emerald Lake walk ends at the lakeshore, 125 m from the lake-centre end point.
 - Walk photos: only summer photos are real for the new walks; the other seasons borrow one and the page says so. Cadillac and Alum Cave start photos are near the trailhead, not at it (the captions say so).
 - Walk page: the Back button reads "Back toHalf Dome..." (missing space) on every walk, and the end label of the elevation strip overlaps the distance on short walks. Template fix for the design track.
 

@@ -1,0 +1,212 @@
+{
+  "id": "moro_rock",
+  "title": "Moro Rock Trail Walk",
+  "hike_name": "Moro Rock Trail",
+  "brand": "Peak Finder · Trail walk",
+  "map_label": "A 3D walk up the stairs of Moro Rock to the summit in Sequoia National Park.",
+  "park": "Sequoia and Kings Canyon National Parks, CA",
+  "start": {
+    "name": "Moro Rock Trailhead (Moro Rock parking)",
+    "lat": 36.54696,
+    "lon": -118.76554
+  },
+  "end": {
+    "name": "Moro Rock summit",
+    "lat": 36.54409,
+    "lon": -118.76511
+  },
+  "gap_bridge_m": 80,
+  "osm_bbox": [
+    -118.78354,
+    36.53209,
+    -118.74711,
+    36.55896
+  ],
+  "bounds": {
+    "wide": [
+      -118.81054,
+      36.50809,
+      -118.72011,
+      36.58296
+    ],
+    "mid": [
+      -118.80154,
+      36.51509,
+      -118.72911,
+      36.57596
+    ],
+    "core": [
+      -118.79154,
+      36.52409,
+      -118.73911,
+      36.56696
+    ],
+    "corridor_m": 850
+  },
+  "camera": {
+    "pitch": 50,
+    "zoom": 16,
+    "scroll_vh": 700
+  },
+  "profile_labels": {
+    "start": "Trailhead",
+    "end": "Moro Rock summit",
+    "key_stop": {
+      "label": "Moro Rock summit",
+      "at_m": 395
+    }
+  },
+  "profile_checkpoints": [],
+  "stops": [
+    {
+      "at": 0.01,
+      "photo": "trailhead",
+      "commons_file": "Moro Rock Trail Sequoia July 2017 001.jpg",
+      "alt": "The start of the Moro Rock trail at the base of the granite dome.",
+      "eyebrow": "Start · Moro Rock Trailhead",
+      "title": "Moro Rock Trailhead",
+      "text": "The route starts at the Moro Rock parking area. About 350 stairs climb the granite dome.",
+      "elev_at_m": 0,
+      "season_photos": {
+        "summer": "trailhead"
+      }
+    },
+    {
+      "at": 0.99,
+      "photo": "destination",
+      "commons_file": "View from Moro Rock 01 2013.jpg",
+      "alt": "The view from the top of Moro Rock over the Sierra foothills.",
+      "eyebrow": "End · Moro Rock Summit",
+      "title": "Moro Rock Summit",
+      "text": "You have reached the summit of Moro Rock, about 6,300 feet up, with views of the Great Western Divide.",
+      "elev_at_m": "end",
+      "season_photos": {
+        "summer": "destination"
+      }
+    }
+  ],
+  "look": {
+    "contrast": 0.0
+  },
+  "seasons": {
+    "default": "by_month",
+    "labels": {
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter"
+    },
+    "fallback": {
+      "winter": [
+        "spring",
+        "autumn",
+        "summer"
+      ],
+      "spring": [
+        "winter",
+        "summer",
+        "autumn"
+      ],
+      "summer": [
+        "autumn",
+        "spring",
+        "winter"
+      ],
+      "autumn": [
+        "summer",
+        "spring",
+        "winter"
+      ]
+    },
+    "note": "Season view is illustrative: snow and colour are drawn on the map, not measured. The photos are real.",
+    "map": {
+      "winter": {
+        "snowline_m": 1500,
+        "soft_m": 250,
+        "noise_m": 150,
+        "north_m": 200,
+        "steep_from": 45,
+        "steep_to": 66,
+        "patchy": 0.12,
+        "alpha": 0.82,
+        "paint": {
+          "saturation": -0.2,
+          "contrast": 0.0,
+          "brightness_min": 0.0,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#8aa3bd",
+          "horizon-color": "#dfe6ec",
+          "fog-color": "#dfe6ec"
+        },
+        "shade": {
+          "exaggeration": 0.55,
+          "shadow": "rgba(40,62,110,0.50)",
+          "highlight": "rgba(255,255,255,0.45)",
+          "accent": "rgba(40,62,110,0.25)"
+        }
+      },
+      "spring": {
+        "snowline_m": 2100,
+        "soft_m": 220,
+        "noise_m": 220,
+        "north_m": 300,
+        "steep_from": 42,
+        "steep_to": 62,
+        "patchy": 0.35,
+        "alpha": 0.9,
+        "paint": {
+          "saturation": 0.55,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 6
+        },
+        "sky": {
+          "sky-color": "#4a8fdc",
+          "horizon-color": "#eadfce",
+          "fog-color": "#e6d9c6"
+        },
+        "shade": {
+          "exaggeration": 0.45,
+          "shadow": "rgba(40,50,80,0.45)",
+          "highlight": "rgba(255,240,220,0.40)",
+          "accent": "rgba(50,40,60,0.25)"
+        }
+      },
+      "summer": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.12,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 8
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      },
+      "autumn": {
+        "alpha": 0,
+        "paint": {
+          "saturation": 0.18,
+          "contrast": 0.0,
+          "brightness_min": 0.03,
+          "brightness_max": 1.0,
+          "hue": 0
+        },
+        "sky": {
+          "sky-color": "#3f86d8",
+          "horizon-color": "#f6d2a8",
+          "fog-color": "#efc9a0"
+        }
+      }
+    }
+  },
+  "osm_steps": true
+}

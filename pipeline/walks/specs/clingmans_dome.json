@@ -1,0 +1,30 @@
+{
+  "id": "clingmans_dome",
+  "hike_id": "clingmans-dome",
+  "title": "Clingmans Dome (Kuwohi) Tower Trail",
+  "map_label": "A 3D walk up the paved trail from the parking area to the Kuwohi observation tower.",
+  "end_label": "Observation Tower",
+  "pad_wide": 0.04,
+  "scroll_vh": 800,
+  "zoom": 16,
+  "snow": {
+    "winter": 1400,
+    "spring": 1900
+  },
+  "checkpoints": [],
+  "stops": [
+    {
+      "file": "2017-05-17 13 47 42 View north along the Clingmans Dome Trail at the Clingmans Dome Information Center and Store in Great Smoky Mountains National Park, within Swain County, North Carolina.jpg",
+      "title": "Clingmans Dome Trailhead",
+      "alt": "The Clingmans Dome trail seen from the information center near the parking area.",
+      "text": "The route starts at the Clingmans Dome parking area, over 6,300 feet up. A steep paved path climbs to the tower."
+    },
+    {
+      "file": "2017-05-17 13 28 32 Panoramic view east and south from the observation tower on Clingmans Dome in Great Smoky Mountains National Park, on the border of Sevier County, Tennessee and Swain County, North Carolina.jpg",
+      "title": "Observation Tower",
+      "alt": "A panoramic view east and south from the Clingmans Dome observation tower.",
+      "text": "You have reached the observation tower at the highest point in the Great Smoky Mountains."
+    }
+  ],
+  "end_at_m": 1010
+}

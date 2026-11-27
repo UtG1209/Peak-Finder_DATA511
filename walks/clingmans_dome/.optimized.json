@@ -1,0 +1,29 @@
+{
+  "walk": "clingmans_dome",
+  "before_bytes": 5278709,
+  "types": {
+    "dem": {
+      "files": 19,
+      "before": 2507372,
+      "after": 1797570,
+      "worst": 1.0
+    },
+    "season": {
+      "files": 8,
+      "before": 677344,
+      "after": 509616,
+      "worst": 1.0
+    },
+    "photos": {
+      "files": 2,
+      "before": 250975,
+      "after": 250975,
+      "worst": 1.0
+    }
+  },
+  "season_modes": {
+    "lossless": 8
+  },
+  "page_replacements": 9,
+  "after_bytes": 4401248
+}

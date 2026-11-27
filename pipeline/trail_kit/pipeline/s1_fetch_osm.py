@@ -18,7 +18,7 @@ def main(trail_id):
     bb = f"{s},{w},{n},{e}"       # Overpass wants south,west,north,east
     query = f"""[out:json][timeout:60];
 (
-  way["highway"~"path|footway"]({bb});
+  way["highway"~"{"path|footway|steps" if cfg.get("osm_steps") else "path|footway"}"]({bb});
   node["tourism"="viewpoint"]({bb});
   node["natural"~"peak|saddle"]({bb});
   node["highway"="bus_stop"]({bb});
